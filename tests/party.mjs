@@ -4,8 +4,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
-  GAME_DIR, symbol, layout, value, field, readBits, id, constName, species, move, item, tmhmMoves,
+  GAME_DIR, symbol, layout, value, field, readBits, id, constName, species, move, item,
 } from './game.mjs';
+import { listFor, matchesList, checkStats, isZCrystal, isMegaStone, baseSpecies, typesOf, megaFormeFor } from './sets.mjs';
 
 const NATURES = ['Hardy', 'Lonely', 'Brave', 'Adamant', 'Naughty', 'Bold', 'Docile', 'Relaxed', 'Impish', 'Lax',
   'Timid', 'Hasty', 'Serious', 'Jolly', 'Naive', 'Modest', 'Mild', 'Quiet', 'Bashful', 'Rash', 'Calm', 'Gentle',
@@ -108,47 +109,24 @@ export const itemName = (it) => (it ? item(it).name : 'no item');
 
 export function formatMon(mon) {
   if (!mon) return '(empty)';
-  const evTotal = mon.evs.reduce((x, y) => x + y, 0);
-  return `${mon.speciesName.padEnd(12)} (${String(species(mon.species).bst).padStart(3)}) Lv${mon.level} ${mon.nature.padEnd(7)} HP ${mon.hp}/${mon.maxHp}`
-    + ` IV ${mon.ivs.join('/')} EV ${mon.evs.join('/')} (${evTotal})${mon.shiny ? ' SHINY' : ''}`
-    + ` @ ${itemName(mon.heldItem)}`
+  return `${mon.speciesName.padEnd(12)} (${String(species(mon.species).bst).padStart(3)}) Lv${mon.level} ${mon.nature.padEnd(7)}`
+    + ` EV ${mon.evs.join('/')}${mon.shiny ? ' SHINY' : ''} @ ${itemName(mon.heldItem)}`
     + `\n               ${mon.moveNames.join(', ')}`;
 }
 
 // --- Rules ------------------------------------------------------------------------
+// Written out here independently of dailyred_team.c; only its tunable numbers
+// and lists (odds, levels, the legendaries, the later evolutions) are read
+// from it, so tuning them keeps the tests in step.
 
-// Everything the species can learn by level-up (any level) or TM/HM, from the
-// ROM's own learnset tables.
-const learnableCache = new Map();
-export function learnableMoves(sp) {
-  if (!learnableCache.has(sp)) {
-    const info = species(sp);
-    const teachable = new Set(info.teachable);
-    learnableCache.set(sp, new Set([...info.levelUp.map((l) => l.move), ...tmhmMoves().filter((m) => teachable.has(m))]));
-  }
-  return learnableCache.get(sp);
-}
-
-// Moves whose damage doesn't come from the user's Attack / Sp. Atk (written
-// out here independently of dailyred_team.c).
-const FIXED_DAMAGE_EFFECTS = new Set(['BIDE', 'OHKO', 'FIXED_PERCENT_DAMAGE', 'FIXED_HP_DAMAGE', 'LEVEL_DAMAGE', 'PSYWAVE',
-  'REFLECT_DAMAGE', 'ENDEAVOR', 'FINAL_GAMBIT']);
-// Moves whose type is decided in battle.
-const VARIABLE_TYPE_EFFECTS = new Set(['HIDDEN_POWER', 'WEATHER_BALL', 'NATURAL_GIFT', 'CHANGE_TYPE_ON_ITEM', 'REVELATION_DANCE',
-  'AURA_WHEEL', 'TERRAIN_PULSE', 'RAGING_BULL', 'IVY_CUDGEL', 'TERA_BLAST', 'TERA_STARSTORM']);
-export const isDamaging = (m) => move(m).category !== 'STATUS';
-export const usesAttackingStat = (m) => isDamaging(m) && !FIXED_DAMAGE_EFFECTS.has(move(m).effect);
-
-// The constants and pools in dailyred_team.c, so the tests always match the game.
 const teamSource = readFileSync(join(GAME_DIR, 'src/dailyred_team.c'), 'utf8');
 const define = (name) => Number(teamSource.match(new RegExp(`#define ${name}\\s+(\\d+)`))[1]);
 export const MIN_TEAM_BST = define('MIN_TEAM_BASE_STAT_TOTAL');
-export const MIN_TEAM_IV = define('MIN_TEAM_IV');
 export const LEGENDARY_TEAM_ODDS = define('LEGENDARY_TEAM_ODDS');
+export const MIRROR_RED_ODDS = define('MIRROR_RED_ODDS');
+const LEVEL_STARTER = define('LEVEL_STARTER');
+const LEVEL_PIKACHU = define('LEVEL_PIKACHU');
 const listIn = (pattern, prefix) => [...teamSource.match(pattern)[1].matchAll(new RegExp(`\\b${prefix}_(\\w+)`, 'g'))].map((m) => m[1]);
-const GENERAL_ITEMS = new Set(listIn(/sBattleItems\[\] =\s*\{([^}]*)\}/, 'ITEM').map((n) => id('ITEM', n)));
-const BOOSTERS = new Map([...teamSource.match(/sTypeBoostItems\[NUMBER_OF_MON_TYPES\] =\s*\{([^}]*)\}/)[1]
-  .matchAll(/\[TYPE_(\w+)\]\s*=\s*ITEM_(\w+)/g)].map((m) => [id('ITEM', m[2]), m[1]]));
 export const LEGENDARY_LIST = listIn(/sLegendaries\[\] =\s*\{([^}]*)\}/, 'SPECIES').map((n) => id('SPECIES', n));
 
 export const isLegendary = (mon) => species(mon.species).legendary;
@@ -182,64 +160,90 @@ export function laterEvolutions() {
 // The player's species pool: the scope above, in regular form.
 export const isEligibleSpecies = (sp) => (sp >= 1 && sp <= id('SPECIES', 'DEOXYS')) || laterEvolutions().has(sp);
 export const LATER_EVOLUTION_LIST = listIn(/sLaterEvolutions\[\] =\s*\{([^}]*)\}/, 'SPECIES').map((n) => id('SPECIES', n));
+export const isFinalStage = (sp) => species(sp).evolutions.length === 0;
 
-// The EV rule, written independently of the C code: 252 into each of the two
-// highest base stats (Attack / Sp. Atk only if an attack of that category uses
-// them; ties go Atk, SpA, Speed, HP, Def, SpD) and 6 into HP, or into the
-// third-best stat if HP is one of the two.
-export function expectedEVs(mon) {
-  const base = species(mon.species).baseStats;
-  const usable = [true, false, true, true, false, true];
-  for (const m of mon.moves.filter(Boolean)) {
-    if (usesAttackingStat(m)) usable[move(m).category === 'PHYSICAL' ? 1 : 4] = true;
-  }
-  const order = [1, 4, 3, 0, 2, 5].filter((stat) => usable[stat]).sort((a, b) => base[b] - base[a]); // sort is stable
-  const evs = [0, 0, 0, 0, 0, 0];
-  evs[order[0]] = 252;
-  evs[order[1]] = 252;
-  evs[order[0] !== 0 && order[1] !== 0 ? 0 : order[2]] = 6;
-  return evs;
+// RED's starter -> the player's possible starters (as the spec states it).
+const S = (name) => id('SPECIES', name);
+export const COUNTERS = new Map([
+  ['VENUSAUR', ['CHARIZARD', 'TYPHLOSION', 'BLAZIKEN']],
+  ['CHARIZARD', ['BLASTOISE', 'FERALIGATR', 'SWAMPERT']],
+  ['BLASTOISE', ['VENUSAUR', 'MEGANIUM', 'SCEPTILE']],
+].map(([red, mine]) => [S(red), mine.map(S)]));
+
+// The first draw of the player's RNG after boot (seeded with the seed itself,
+// see dailyred.c): the mirror-RED roll.
+export function predictPlayerRolls(seed) {
+  const state = (Math.imul(1103515245, seed >>> 0) + 24691) >>> 0;
+  return { mirror: (state >>> 16) % 100 < MIRROR_RED_ODDS };
 }
 
-// Checks a party read from RAM against the player's team rules. Returns a
-// list of problems (empty when the team is valid).
-export function validateTeam({ count, party }) {
+// Checks a party read from RAM against the player's team rules, given RED's
+// party for the same run (his starter decides ours) and, for the first team
+// after boot, predictPlayerRolls(seed). Returns a list of problems (empty
+// when the team is valid).
+export function validateTeam({ count, party }, redParty, rolls = null) {
   const problems = [];
   if (count !== 6 || !party.every(Boolean)) problems.push(`party has ${count} Pokemon, expected 6`);
   const mons = party.filter(Boolean);
-  if (new Set(mons.map((m) => m.species)).size !== mons.length) problems.push('duplicate species');
+  if (new Set(mons.map((m) => baseSpecies(m.species))).size !== mons.length) problems.push('the same species twice');
   const total = teamBaseStatTotal(mons);
   if (total < MIN_TEAM_BST) problems.push(`team base stat total ${total} is under the minimum ${MIN_TEAM_BST}`);
-  if (mons.filter(isLegendary).length > 1) problems.push('more than one legendary');
+
+  // The starter: one that counters RED's (any of the nine if he has all three).
+  const redStarters = (redParty ?? []).filter((m) => m && COUNTERS.has(m.species)).map((m) => m.species);
+  const allowed = redStarters.length === 1 ? COUNTERS.get(redStarters[0]) : [...COUNTERS.values()].flat();
+  const starters = mons.filter((m) => allowed.includes(m.species) && m.level === LEVEL_STARTER);
+  if (starters.length !== 1) problems.push(`${starters.length} starters for RED's ${redStarters.map((sp) => species(sp).name).join('/') || '?'}`);
+  const starter = starters[0];
+  if (starter) {
+    const tag = starter.speciesName;
+    const megas = species(starter.species).formChanges.filter((f) => f.method === 'BATTLE_MEGA_EVOLUTION_ITEM');
+    if (megas.length) {
+      const mega = megaFormeFor(starter);
+      if (!mega) problems.push(`${tag} doesn't hold its Mega Stone`);
+      else matchesList(starter, listFor(mega, 'MEGA'), problems, tag);
+    } else {
+      const crystal = starter.heldItem ? item(starter.heldItem) : null;
+      if (!isZCrystal(starter.heldItem) || !species(starter.species).types.includes(crystal.secondaryId)) {
+        problems.push(`${tag} (no Mega) doesn't hold its type's Z-Crystal`);
+      }
+      matchesList(starter, listFor(starter.species, 'ZMOVE'), problems, tag);
+    }
+  }
+
+  // The mirror day: a shiny Pikachu like RED's, and a legendary for sure.
+  const pikachu = mons.find((m) => m.species === S('PIKACHU'));
+  const mirror = Boolean(pikachu);
+  if (rolls && rolls.mirror !== mirror) problems.push(`mirror day ${mirror}, the seed's roll says ${rolls.mirror}`);
+  if (pikachu) {
+    if (!pikachu.shiny) problems.push('the mirror Pikachu isn\'t shiny');
+    if (pikachu.level !== LEVEL_PIKACHU) problems.push(`Pikachu: level ${pikachu.level}`);
+    if (pikachu.heldItem !== id('ITEM', 'LIGHT_BALL') || !pikachu.moves.includes(id('MOVE', 'VOLT_TACKLE'))) problems.push('Pikachu lacks its Light Ball or Volt Tackle');
+    matchesList(pikachu, listFor(S('PIKACHU'), 'NORMAL'), problems, 'Pikachu');
+  }
+  const legendaries = mons.filter((m) => LEGENDARY_LIST.includes(m.species));
+  if (legendaries.length > 1) problems.push(`${legendaries.length} legendaries`);
+  if (mirror && legendaries.length !== 1) problems.push('a mirror day without its legendary');
+
+  // The other Pokemon.
   for (const m of mons) {
     const tag = m.speciesName;
-    if (!isEligibleSpecies(m.species)) problems.push(`${tag}: not an eligible species`);
-    if (m.level !== 100) problems.push(`${tag}: level ${m.level}`);
-    if (m.hp !== m.maxHp || m.hp === 0) problems.push(`${tag}: HP ${m.hp}/${m.maxHp}`);
-    if (m.moveNames.length === 0) problems.push(`${tag}: no moves`);
-    if (new Set(m.moveNames).size !== m.moveNames.length) problems.push(`${tag}: duplicate moves`);
-    const learnable = learnableMoves(m.species);
-    for (const mv of m.moves.filter(Boolean)) {
-      if (!learnable.has(mv)) problems.push(`${tag}: can't learn ${move(mv).name}`);
-    }
-    const expected = Math.min(4, learnable.size);
-    if (m.moveNames.length !== expected) problems.push(`${tag}: ${m.moveNames.length} moves, expected ${expected}`);
-    if ([...learnable].some(isDamaging) && !m.moves.filter(Boolean).some(isDamaging)) problems.push(`${tag}: no damaging move`);
-    const evTotal = m.evs.reduce((a, b) => a + b, 0);
-    if (evTotal > 510 || m.evs.some((e) => e > 252)) problems.push(`${tag}: illegal EVs ${m.evs.join('/')}`);
-    if (m.ivs.some((iv) => iv < MIN_TEAM_IV || iv > 31)) problems.push(`${tag}: IVs ${m.ivs.join('/')} not all ${MIN_TEAM_IV}-31`);
-    const wantEVs = expectedEVs(m);
-    if (wantEVs.join('/') !== m.evs.join('/')) problems.push(`${tag}: EVs ${m.evs.join('/')}, expected ${wantEVs.join('/')}`);
-    if (m.pp.some((pp, i) => m.moves[i] && pp === 0)) problems.push(`${tag}: a move has 0 PP`);
-    const boostType = BOOSTERS.get(m.heldItem);
-    if (boostType) {
-      const attacks = m.moves.filter((mv) => mv && usesAttackingStat(mv) && !VARIABLE_TYPE_EFFECTS.has(move(mv).effect));
-      if (!attacks.some((mv) => move(mv).type === boostType)) problems.push(`${tag}: holds a ${boostType} booster without a ${boostType} attack`);
-    } else if (!GENERAL_ITEMS.has(m.heldItem)) {
-      problems.push(`${tag}: held item ${itemName(m.heldItem)} isn't in the item pool`);
-    }
+    checkStats(m, problems);
     if (!m.fateful || m.metLocation !== value('METLOC_FATEFUL_ENCOUNTER')) problems.push(`${tag}: not marked as an event Pokemon`);
+    if (m === starter || m === pikachu) continue;
+    if (!isEligibleSpecies(m.species)) problems.push(`${tag}: not an in-scope species`);
+    if (!isFinalStage(m.species)) problems.push(`${tag}: not fully evolved`);
+    if (isMegaStone(m.heldItem) || isZCrystal(m.heldItem)) problems.push(`${tag} holds ${item(m.heldItem).name}`);
+    const list = listFor(m.species, 'NORMAL');
+    matchesList(m, list, problems, tag);
+    if (list && m.level !== list.level) problems.push(`${tag}: level ${m.level}, its tier's is ${list.level}`);
+    if (m.level < 95 || m.level > 98) problems.push(`${tag}: level ${m.level} outside 95-98`);
   }
+
+  // No type on more than two of the six.
+  const typeCounts = new Map();
+  for (const m of mons) for (const t of typesOf(m)) typeCounts.set(t, (typeCounts.get(t) ?? 0) + 1);
+  for (const [t, n] of typeCounts) if (n > 2) problems.push(`${n} ${t}-type Pokemon`);
   return problems;
 }
 

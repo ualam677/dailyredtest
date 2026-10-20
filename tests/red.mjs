@@ -7,6 +7,9 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { GAME_DIR, symbol, layout, value, field, rom, romOffset, id, constName, species, move, item } from './game.mjs';
 import { decodeMon } from './party.mjs';
+import { setLists, listFor, matchesList, checkStats, perfectStats, isZCrystal, isMegaStone, baseSpecies, typesOf } from './sets.mjs';
+
+export { setLists, perfectStats };
 
 const redSource = readFileSync(join(GAME_DIR, 'src/dailyred_red.c'), 'utf8');
 const define = (name) => Number(redSource.match(new RegExp(`#define ${name}\\s+(\\d+)`))[1]);
@@ -84,52 +87,6 @@ export function readRedParty(memory) {
   return Array.from({ length: value('PARTY_SIZE') }, (_, i) => decodeMon(memory.read(base + i * size, size)));
 }
 
-// The generated set table, from the ROM.
-let setTable;
-export function setLists() {
-  if (setTable) return setTable;
-  const L = layout('DailyRedSetList'), T = layout('DailyRedSet');
-  const lists = [];
-  const listBase = romOffset(symbol('gDailyRedSetLists'));
-  const count = rom().readUInt16LE(romOffset(symbol('gDailyRedNumSetLists')));
-  const kinds = ['NORMAL', 'MEGA', 'ZMOVE', 'TERA'];
-  for (let i = 0; i < count; i++) {
-    const r = (f) => field(rom(), listBase + i * L.size, 'DailyRedSetList', f);
-    const sets = [];
-    for (let j = 0; j < r('numSets'); j++) {
-      const at = romOffset(symbol('gDailyRedSets')) + (r('firstSet') + j) * T.size;
-      const s = (f) => field(rom(), at, 'DailyRedSet', f);
-      sets.push({ species: s('species'), item: s('item'), ability: s('ability'), moves: s('moves'), evs: s('evs'),
-        nature: s('nature'), teraType: s('teraType'), ivs: s('ivs') });
-    }
-    lists.push({ species: r('species'), kind: kinds[r('kind')], sets });
-  }
-  return (setTable = lists);
-}
-const listFor = (sp, kind) => setLists().find((l) => l.species === sp && l.kind === kind);
-
-// --- Rules -------------------------------------------------------------------------
-
-const NATURE_UP_DOWN = (n) => [1 + Math.floor(n / 5), 1 + (n % 5)]; // stat indices in HP/Atk/Def/Spe/SpA/SpD order
-const NATURES = ['Hardy', 'Lonely', 'Brave', 'Adamant', 'Naughty', 'Bold', 'Docile', 'Relaxed', 'Impish', 'Lax',
-  'Timid', 'Hasty', 'Serious', 'Jolly', 'Naive', 'Modest', 'Mild', 'Quiet', 'Bashful', 'Rash', 'Calm', 'Gentle',
-  'Sassy', 'Careful', 'Quirky'];
-
-// Stats with every IV at 31 (what hyper training gives).
-export function perfectStats(mon) {
-  const base = species(mon.species).baseStats;
-  const n = NATURES.indexOf(mon.nature);
-  const [up, down] = NATURE_UP_DOWN(n);
-  return base.map((b, i) => {
-    const core = Math.floor(((2 * b + 31 + Math.floor(mon.evs[i] / 4)) * mon.level) / 100);
-    if (i === 0) return core + mon.level + 10;
-    let stat = core + 5;
-    if (up !== down && i === up) stat = Math.floor((stat * 110) / 100);
-    if (up !== down && i === down) stat = Math.floor((stat * 90) / 100);
-    return stat;
-  });
-}
-
 export function genderOf(mon) {
   const ratio = species(mon.species).genderRatio;
   if (ratio === value('MON_GENDERLESS')) return 'genderless';
@@ -138,26 +95,7 @@ export function genderOf(mon) {
   return (mon.personality & 0xFF) < ratio ? 'female' : 'male';
 }
 
-const holdEffect = (it) => (it ? item(it).holdEffect : 'NONE');
-const isZCrystal = (it) => holdEffect(it) === 'Z_CRYSTAL';
-const isMegaStone = (it) => holdEffect(it) === 'MEGA_STONE';
-const base = (sp) => species(sp).forms[0] ?? sp;
-const typesOf = (mon) => new Set([...species(mon.species).types, ...(MEGA_FORMES.has(mon.heldItem) ? species(MEGA_FORMES.get(mon.heldItem)).types : [])]);
-const sameMoves = (a, b) => a.filter(Boolean).slice().sort().join() === b.filter(Boolean).slice().sort().join();
-
-// Whether a Pokemon carries one of the sets of its list (moves, item, ability,
-// EVs, nature, Tera type).
-function matchesList(mon, list, problems, tag) {
-  if (!list) {
-    problems.push(`${tag}: no set list`);
-    return;
-  }
-  const evs = [0, 1, 2, 4, 5, 3].map((i) => mon.evs[i]); // Showdown order HP/Atk/Def/SpA/SpD/Spe
-  const ok = list.sets.some((s) => s.species === mon.species && s.item === mon.heldItem && s.ability === mon.ability
-    && sameMoves(s.moves, mon.moves) && s.evs.join() === evs.join() && NATURES[s.nature] === mon.nature
-    && (s.teraType === value('TYPE_NONE') ? mon.teraType === value('TYPE_MYSTERY') : mon.teraType === s.teraType));
-  if (!ok) problems.push(`${tag}: isn't one of its ${list.kind} sets (${mon.moveNames.join(', ')} @ ${mon.heldItem ? item(mon.heldItem).name : 'no item'})`);
-}
+const base = baseSpecies;
 
 // Checks RED's six against his rules; `rolls` is predictRolls(seed) for the
 // first team after boot (later teams: pass null to skip the roll checks).
@@ -170,10 +108,7 @@ export function validateRed(party, rolls = null) {
 
   for (const m of mons) {
     const tag = m.speciesName;
-    if (!m.hyperTrained.every(Boolean)) problems.push(`${tag}: not every stat hyper trained`);
-    if (m.stats.join() !== perfectStats(m).join()) problems.push(`${tag}: stats ${m.stats.join('/')}, perfect would be ${perfectStats(m).join('/')}`);
-    if (m.hp !== m.maxHp) problems.push(`${tag}: HP ${m.hp}/${m.maxHp}`);
-    if (m.pp.some((pp, i) => m.moves[i] && pp === 0)) problems.push(`${tag}: a move has 0 PP`);
+    checkStats(m, problems);
     const gender = genderOf(m);
     const ratio = species(m.species).genderRatio;
     const fixed = [value('MON_MALE'), value('MON_FEMALE'), value('MON_GENDERLESS')].includes(ratio);

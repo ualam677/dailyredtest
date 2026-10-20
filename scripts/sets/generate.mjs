@@ -61,11 +61,20 @@ const GENS = [7, 8, 9];
 const generators = new Map(GENS.map((gen) => [gen, Teams.getGenerator(`gen${gen}randombattle`, SEED)]));
 const dexes = new Map(GENS.map((gen) => [gen, Dex.forGen(gen)]));
 const entriesOf = (gen) => Object.keys(generators.get(gen).randomSets);
+// Pokemon Champions' Random Battles: the only sets for the Megas added after
+// Gen 7 (Mega Meganium, Mega Feraligatr). Its stat points become EVs below.
+const CHAMPIONS = 'champions';
+generators.set(CHAMPIONS, Teams.getGenerator('gen9championsrandombattle', SEED));
+dexes.set(CHAMPIONS, Dex.forGen(9));
 
 // RED's legendaries: their sets may hold a Z-Crystal (see dailyred_red.c).
 const RED_LEGENDARIES = ['articuno', 'zapdos', 'moltres', 'raikou', 'entei', 'suicune', 'mewtwo', 'mew',
   'deoxys', 'deoxysattack', 'deoxysdefense', 'deoxysspeed'];
 const KANTO_STARTERS = ['venusaur', 'charizard', 'blastoise'];
+// The player's starter, picked to counter RED's (see dailyred_team.c): Megas
+// with their stone, and Typhlosion (no Mega) with a Firium Z.
+const LATER_MEGAS = ['meganiummega', 'feraligatrmega'];
+const Z_STARTERS = ['typhlosion'];
 
 // Every final-stage starter of Generations 1-9 (their whole families are left
 // out of RED's random pick).
@@ -206,10 +215,16 @@ function speciesWithAbility(speciesKey, abilityKey) {
 // Showdown picks a random cosmetic forme for some species (Vivillon's
 // patterns, Florges' colors, Minior's cores...). They battle the same, so the
 // table keeps the default one.
+// The same goes for formes that battle exactly like their base species (same
+// types, base stats and abilities), like Dudunsparce-Three-Segment.
 function battleSpecies(dex, name) {
   const species = dex.species.get(name);
   const base = dex.species.get(species.baseSpecies);
-  return base.cosmeticFormes?.includes(species.name) ? base : species;
+  if (base.cosmeticFormes?.includes(species.name)) return base;
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  if (species !== base && !species.battleOnly && same(species.types, base.types) && same(species.baseStats, base.baseStats)
+    && same(species.abilities, base.abilities)) return base;
+  return species;
 }
 
 // The first stage of a species' family (formes without an evolution line of
@@ -246,6 +261,31 @@ for (const id of KANTO_STARTERS) {
   lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, forceZ: true });
   lists.push({ id, gen: 9, kind: 'TERA', species: dexes.get(9).species.get(id), details: {} });
 }
+for (const id of LATER_MEGAS) lists.push({ id, gen: CHAMPIONS, kind: 'MEGA', species: Dex.species.get(id), details: {} });
+for (const id of Z_STARTERS) lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, forceZ: true });
+
+// The player's level for each species, from its Gen 7 Showdown tier (Gen 8,
+// then Gen 9, for species Gen 7 doesn't have): the stronger the tier, the
+// lower the level. A "BL" tier (banned to the tier above) counts as the tier
+// above.
+const TIER_LEVELS = [
+  [['AG', 'Uber', '(Uber)', 'OU', '(OU)', 'UUBL'], 95],
+  [['UU', '(UU)', 'RUBL'], 96],
+  [['RU', '(RU)', 'NUBL'], 97],
+];
+const LOWEST_TIER_LEVEL = 98; // NU and below (PUBL counts as NU's "tier above" but stays here)
+const UNTIERED = ['Illegal', 'Unreleased', 'CAP', 'CAP NFE', 'CAP LC', ''];
+function tierOf(species) {
+  for (const gen of GENS) {
+    const tier = dexes.get(gen).species.get(species.name).tier ?? '';
+    if (!UNTIERED.includes(tier)) return { tier, gen };
+  }
+  return { tier: Dex.species.get(species.name).tier ?? 'none', gen: 9 };
+}
+function tierLevel(tier) {
+  for (const [tiers, level] of TIER_LEVELS) if (tiers.includes(tier)) return level;
+  return LOWEST_TIER_LEVEL;
+}
 
 // RED's random pick from any generation: fully evolved, not a starter (nor
 // Pikachu's family), legendary, mythical, Ultra Beast or Paradox Pokemon.
@@ -281,8 +321,10 @@ function canonicalSet(dex, set) {
 // The Z-Crystal for a set without one: its strongest STAB type (primary type
 // first on ties).
 function addZCrystal(dex, set) {
-  if (dex.items.get(set.item).zMove) return set;
   const species = dex.species.get(set.species);
+  const held = dex.items.get(set.item);
+  // Keep a crystal Showdown chose if it's for one of the species' types.
+  if (held.zMove && held.zMoveType && species.types.includes(held.zMoveType)) return set;
   let best = null;
   for (const id of set.moves) {
     const move = dex.moves.get(id);
@@ -326,6 +368,12 @@ function gimmickReason(dex, list, set) {
 }
 const dropped = new Map(); // reason -> samples
 
+// Champions sets have stat points (up to 32 per stat), not EVs: every stat
+// with points gets 85 EVs, as in the other generations' sets.
+function championsEVs(set) {
+  return { ...set, evs: Object.fromEntries(Object.entries(set.evs).map(([stat, points]) => [stat, points > 0 ? 85 : 0])) };
+}
+
 const startTime = Date.now();
 for (const list of lists) {
   const generator = generators.get(list.gen);
@@ -333,6 +381,7 @@ for (const list of lists) {
   const counts = new Map();
   for (let i = 0; i < SAMPLES; i++) {
     let set = generator.randomSet(list.id, { ...list.details }, false);
+    if (list.gen === CHAMPIONS) set = championsEVs(set);
     const reason = gimmickReason(dex, list, set);
     if (reason) {
       dropped.set(reason, (dropped.get(reason) ?? 0) + 1);
@@ -403,6 +452,10 @@ for (const list of lists.filter((l) => l.sets.length)) {
     firstSet,
     numSets: outSets.length - firstSet,
     randomPick: isRandomPick(list) && !SPECIES_SPECIAL.has(SPECIES.get(key)),
+    ...(() => {
+      const { tier, gen } = tierOf(list.species);
+      return { tier, tierGen: gen, level: tierLevel(tier) };
+    })(),
   });
 }
 
@@ -429,7 +482,8 @@ lines.push(`// Generated by scripts/sets/generate.mjs. Don't edit by hand: chang
 lines.push(`// script's options and run it again.`);
 lines.push(`//`);
 lines.push(`// Source: Pokémon Showdown ${PS_VERSION} (MIT license), Random Battle sets from`);
-lines.push(`// Gen 7 (Gen 8, then Gen 9, for species Gen 7 doesn't have). ${SAMPLES} randomSet()`);
+lines.push(`// Gen 7 (Gen 8, then Gen 9, for species Gen 7 doesn't have; Pokémon Champions for`);
+lines.push(`// Mega Meganium and Mega Feraligatr). ${SAMPLES} randomSet()`);
 lines.push(`// calls per list, sets under ${MIN_SHARE * 100}% dropped, at most ${MAX_SETS} per list.`);
 lines.push(`// Gimmick sets left out (gimmickReason in the script): ${[...dropped.keys()].join('; ')}.`);
 lines.push(`// ${outSets.length} sets in ${outLists.length} lists; ${pickGroups.size} species for RED's random pick.`);
@@ -456,7 +510,7 @@ lines.push(``);
 lines.push(`const struct DailyRedSet gDailyRedSets[] =`);
 lines.push(`{`);
 for (const l of outLists) {
-  lines.push(`    // ${l.name}, ${l.kind} (Gen ${l.gen})`);
+  lines.push(`    // ${l.name}, ${l.kind} (${l.gen === CHAMPIONS ? 'Champions' : `Gen ${l.gen}`})`);
   for (let i = 0; i < l.numSets; i++) {
     const s = outSets[l.firstSet + i];
     const moves = [...s.moves, 'MOVE_NONE', 'MOVE_NONE', 'MOVE_NONE'].slice(0, 4).map((m) => strip('MOVE_', m));
@@ -471,10 +525,13 @@ lines.push(`#undef SET`);
 lines.push(`#undef EVS`);
 lines.push(`#undef IVS`);
 lines.push(``);
+lines.push(`// .level: the player's level for the species, from its Showdown tier (95 for`);
+lines.push(`// OU and up, 96 UU, 97 RU, 98 NU and below; "BL" tiers count as the tier above).`);
+lines.push(``);
 lines.push(`const struct DailyRedSetList gDailyRedSetLists[] =`);
 lines.push(`{`);
 outLists.forEach((l, i) => {
-  lines.push(`    [${i}] = {.species = ${l.species}, .firstSet = ${l.firstSet}, .numSets = ${l.numSets}, .kind = DAILYRED_SETS_${l.kind}}, // ${l.name}`);
+  lines.push(`    [${i}] = {.species = ${l.species}, .firstSet = ${l.firstSet}, .numSets = ${l.numSets}, .kind = DAILYRED_SETS_${l.kind}, .level = ${l.level}}, // ${l.name}, Gen ${l.tierGen} ${l.tier}`);
 });
 lines.push(`};`);
 lines.push(``);
@@ -504,7 +561,7 @@ const droppedTotal = [...dropped.values()].reduce((a, b) => a + b, 0);
 console.log(`Gimmick samples dropped: ${droppedTotal} (${[...dropped].map(([r, n]) => `${r}: ${n}`).join('; ')})`
   + `${noSets.length ? `; no sets left for ${noSets.join(', ')}` : ''}.`);
 const distinct = lists.filter((l) => l.sets.length).reduce((a, l) => a + l.distinct, 0);
-const byGen = GENS.map((g) => `Gen ${g}: ${outLists.filter((l) => l.gen === g).length}`).join(', ');
+const byGen = [...GENS, CHAMPIONS].map((g) => `${g === CHAMPIONS ? 'Champions' : `Gen ${g}`}: ${outLists.filter((l) => l.gen === g).length}`).join(', ');
 console.log(`Wrote ${relative(process.cwd(), OUT)}: ${outSets.length} sets (of ${distinct} distinct generated) in `
   + `${outLists.length} lists (${byGen}), ${pickGroups.size} species for RED's random pick `
   + `(sampling took ${sampleSeconds.toFixed(1)}s).`);

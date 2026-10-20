@@ -16,7 +16,7 @@ reimplemented in JavaScript.
 
 - [Quick start (macOS)](#quick-start-macos)
 - [How it works](#how-it-works)
-- [Team generation](#team-generation)
+- [Your team](#your-team)
 - [RED's team](#reds-team)
   - [Sets](#sets)
 - [Development workflow](#development-workflow)
@@ -165,81 +165,63 @@ write to it. The win and battle counters use script variables 0x409B and
 0x409D, which neither FireRed nor the shared Emerald code touches (the
 expansion's step counter code writes to some of FireRed's "unused" ones).
 
-## Team generation
+## Your team
 
-`expansion/src/dailyred_team.c` builds each team with the game's own data
-(`GetSpeciesLevelUpLearnset`, `GetTMHMMoveId` and `CanLearnTeachableMove`,
-`CreateMon`, `CalculateMonStats`):
+`expansion/src/dailyred_team.c` builds your team at the start of each run,
+right after RED's (his starter decides yours), from the seed:
 
-- **Species:** 6 different Pokémon from Daily Red's species scope (below)
-  whose **base stat totals add up to at least 2700** (`MIN_TEAM_BASE_STAT_TOTAL`).
-  **Legendaries are a 1-in-8 roll** (`LEGENDARY_TEAM_ODDS`): 1 team in 8 gets
-  exactly one legendary or mythical Pokémon, in a random party slot, and the
-  other 7 get none. The generator then redraws the rest of the team until it
-  meets the minimum, so every qualifying team is equally likely. Per-species
-  rules live in `IsEligibleSpecies`, e.g. add "fully evolved only" there.
+- **A starter that counters RED's**, level 100:
 
-  Why a minimum: RED's original team totals 2974 (Pikachu, Espeon, Snorlax
-  and the Kanto starters; his usual teams are stronger). A fully random team
-  averages about 2490, and most include a very weak Pokémon, which made most
-  runs hopeless. A team can still include one weak Pokémon if the rest make up
-  for it. About 1 random draw in 8 meets 2700, and about 1 qualifying team in
-  16 out-totals RED's (base stats from the expansion, which uses the latest
-  games' values).
+  | RED's starter | Yours (one at random) |
+  |---|---|
+  | Venusaur | Charizard, Typhlosion, Blaziken |
+  | Charizard | Blastoise, Feraligatr, Swampert |
+  | Blastoise | Venusaur, Meganium, Sceptile |
 
-  Why legendaries are a separate roll: they average 613 against 404 for
-  everything else, so a stat minimum on its own mostly gets met by drawing
-  one: at 2700, 55% of qualifying teams would have one.
+  It holds its Mega Stone (Charizard: X or Y at random; Meganium and
+  Feraligatr have the Megas from Pokémon Legends: Z-A, with Mega Sol and
+  Dragonize) and gets one of that Mega's sets. Typhlosion has no Mega, so it
+  holds a Firium Z. On RED's original-team days (he has all three Kanto
+  starters) it's any of the nine.
+- **Five fully evolved Pokémon** from Daily Red's species scope (below), never
+  holding a Mega Stone or a Z-Crystal. **Legendaries are a 1-in-8 roll**
+  (`LEGENDARY_TEAM_ODDS`): 1 team in 8 has exactly one, the rest none.
+- **5% of days mirror RED's team** (`MIRROR_RED_ODDS`): the starter, a
+  **shiny Pikachu** (level 100, Light Ball and Volt Tackle, like his), a
+  legendary for sure, and three more.
+- **No species twice, no type on more than two** of the six (a Mega's types
+  count with its base form's), and the six's **base stats add up to at least
+  2700** (`MIN_TEAM_BASE_STAT_TOTAL`; RED's original team totals 2974). The
+  rest of the team is redrawn until it meets the minimum, so every qualifying
+  team is equally likely.
+- **Sets and stats:** every Pokémon gets one of its Showdown Random Battle
+  sets from the same table as RED's (see [Sets](#sets)), with perfect stats
+  (every IV maxed by hyper training) and the set's nature and EVs.
+- **Levels by Showdown tier**, so strong Pokémon are a little lower: 95 for OU
+  and up (Ubers, OU), 96 UU, 97 RU, 98 NU and below. A "BL" tier (banned to
+  the tier above) counts as the tier above (UUBL 95, RUBL 96, NUBL 97). The
+  tier is Gen 7's, or Gen 8's / Gen 9's for Pokémon Gen 7 doesn't have
+  (Kleavor, Ursaluna, Annihilape…). The starter and the mirror Pikachu are
+  level 100.
+- **The party order is random**; reorder it from the party menu.
+- You're the original trainer, so everything obeys, and Pokémon are marked as
+  event Pokémon so Mew and Deoxys obey too. Natural shinies happen at the
+  usual odds.
 
-  **Species scope ("Generations 1–3"):** the 386 Pokémon of Generations 1–3,
-  their evolutions from later games (`sLaterEvolutions`: Magnezone, Leafeon,
-  Glaceon, Sylveon, Gallade, Togekiss, Kleavor, Annihilape and the rest, 29 in
-  all), and the Mega Evolutions of any of those (`DailyRed_IsSpeciesInScope`).
-  Teams are drawn from the regular forms; a Mega only appears in battle, from a
-  held Mega Stone. Regional forms (Alolan Raichu, Galarian Ponyta…) count as
-  later-generation Pokémon, so they and their evolutions (Sirfetch'd,
-  Obstagoon, Sneasler, Clodsire…) are out. The tests rebuild the
-  later-evolution list from the ROM's own evolution tables and check it
-  against `sLaterEvolutions`.
+**Species scope ("Generations 1–3"):** the 386 Pokémon of Generations 1–3,
+their evolutions from later games (`sLaterEvolutions`: Magnezone, Leafeon,
+Glaceon, Sylveon, Gallade, Togekiss, Kleavor, Annihilape and the rest, 29 in
+all), and the Mega Evolutions of any of those (`DailyRed_IsSpeciesInScope`).
+Teams are drawn from the regular forms; a Mega only appears in battle, from a
+held Mega Stone. Regional forms (Alolan Raichu, Galarian Ponyta…) count as
+later-generation Pokémon, so they and their evolutions (Sirfetch'd,
+Obstagoon, Sneasler, Clodsire…) are out. The tests rebuild the
+later-evolution list from the ROM's own evolution tables and check it
+against `sLaterEvolutions`.
 
-- **Moves:** up to 4 different moves picked uniformly from everything the
-  species can learn **by level-up (any level) or TM/HM**. Level-up learnsets
-  are the expansion's (the latest games'); the TMs and HMs are FireRed's 58. One rule on top: if
-  none of the four can deal damage and the species has any damaging move, one
-  pick is swapped for a damaging move. Species with fewer than 4 learnable moves
-  (Ditto, Unown, Magikarp, Smeargle…) get all of them.
-- **Stats:** level 100, random personality (so random nature, gender, ability
-  and the usual 1/8192 shiny chance), and trained close to RED's level:
-  - **IVs** random from 25 to 31 in every stat (`MIN_TEAM_IV`); RED's are all 31.
-  - **EVs** 252 into each of its two highest base stats and the last 6 into
-    HP, or into its third-best stat if HP is one of the two
-    (`AssignFocusedEVs`). Attack and Sp. Atk only count if one of its attacks
-    uses them (each move's physical/special category decides which, and
-    fixed-damage moves like Seismic Toss count for neither), so a Gyarados with
-    only Surf and Ice Beam doesn't waste points on Attack. Fast Pokémon end up
-    as fast as RED's; slow walls put their points into bulk instead.
-
-  The player is the original trainer, so everything obeys, and Pokémon are
-  marked as event Pokémon so Mew and Deoxys obey too.
-- **Held items:** each Pokémon holds one, picked uniformly from a pool of
-  generally useful battle items (`sBattleItems`: Leftovers, Choice Band,
-  Quick Claw, Lum Berry, pinch berries…) plus the type booster for each type
-  it actually attacks with (Charcoal only if it has a Fire attack, Fairy
-  Feather for Fairy, and so on; moves whose type is decided in battle, like
-  Hidden Power, don't count). There are still no bag items.
-- **Safety:** each Pokémon is validated (level, HP, at least one move, no
-  duplicate moves, PP). If a Pokémon somehow failed 10 times, the game would
-  use its own default level-100 moveset for it rather than hand over
-  something broken.
-
-Trade-offs in this first version: the move picker ignores move tutors and egg
-moves (add them in `GetLearnableMoves`), and it's deliberately not
-competitive. Splash, Water Sport or three status moves plus one attack are all
-possible. Items are picked without looking at the moveset beyond type
-boosters, so a Choice Band can land on a Pokémon that mostly uses status
-moves, and species-specific items (Light Ball, Thick Club…) aren't in the pool.
 The generator uses its own RNG state, separate from the game's `Random()`, so
-teams depend only on the seed.
+teams depend only on the seed. The odds, levels and minimum are `#define`s at
+the top of `dailyred_team.c`.
 
 ## RED's team
 
@@ -304,9 +286,11 @@ The odds and levels are `#define`s at the top of `dailyred_red.c`
 his entry in `trainers_frlg.party` (omniscient, smart switching and switch-in
 choices, PP-stall prevention, Smart Tera, and predicting your switches and
 moves). That entry's party, his HeartGold/SoulSilver team, only stands in for
-the real one where the game reads it outside the battle (the battle transition
-and prize money). His class, `TRAINER_CLASS_DAILYRED`, is his alone: it shows
-as "PKMN TRAINER" and gives him his own battle theme.
+the real one where the game reads it outside the battle (prize money). His
+class, `TRAINER_CLASS_DAILYRED`, is his alone: it shows as "PKMN TRAINER" and
+gives him his own battle theme. `Mugshot: Yellow` in the same entry gives his
+battle the Champion's VS encounter transition (the mugshot bands with RED and
+LEAF) instead of a regular one.
 
 ### Sets
 
@@ -322,10 +306,14 @@ It calls Showdown's `randomSet()` 400 times per species and keeps up to 10 of
 the sets it produced (those that came up at least 2% of the time), with
 Showdown's odds. Sets come from Gen 7 Random Battles (the last generation with
 Mega Evolution and Z-Moves); species Gen 7 doesn't have (Galarian forms, Gen
-8–9 species) come from Gen 8, then Gen 9. Each species has a list per kind:
+8–9 species) come from Gen 8, then Gen 9, and Mega Meganium and Mega
+Feraligatr from Showdown's Pokémon Champions Random Battles (their stat points
+become 85 EVs per stat, like the other sets). Each list also has your level
+for the species, from its Showdown tier (see [Your team](#your-team)). Each species has a list per kind:
 `NORMAL` (no Mega Stone or Z-Crystal: Showdown's sets for a team that already
 has its Z-Move user), `MEGA` (a Mega Evolution's sets), `ZMOVE` (Z-Crystals
-allowed, for RED's legendaries and his starters on Mega Mewtwo days) and
+allowed, for RED's legendaries; for his starters on Mega Mewtwo days and your
+Typhlosion it's always the crystal for their strongest STAB type) and
 `TERA` (Gen 9 sets with their Tera type, for the starters). Gimmick sets are
 left out: status Z-Moves (a Normalium Z for Hold Hands, Celebrate, Happy Hour
 or Conversion), Splash, Gen 8 sets built for Dynamax (unless a Gen 8 species
@@ -333,7 +321,7 @@ has nothing else) and Tera Blast outside the Tera sets; the remaining sets
 keep Showdown's odds among themselves. The script checks
 every species, move, item and ability against the expansion's constants and
 every ability against what the species can have, and fails on anything
-missing. The player's team will use the same table.
+missing. Your team uses the same table.
 
 ### RED's battle theme
 
@@ -408,19 +396,21 @@ npm run smoke      # the game loop (~3 min)
 npm run site       # the website on desktop and phone (~1 min)
 npm run teams -- 1 2 3            # print + validate the teams (yours and RED's) for these seeds
 npm run teams -- --random 40      # 40 random seeds
-npm run teams -- --red-cases      # a seed for each of RED's rolls (25 seeds)
+npm run teams -- --red-cases      # a seed for each of RED's rolls, and mirror days (28 seeds)
 npm run gimmicks   # RED Mega Evolves, uses Z-Moves and Terastallizes in battle (~3 min)
 npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 min)
 ```
 
 `npm run smoke` checks that:
-- each seed's team is valid: 6 different in-scope species with a combined
-  base stat total of at least 2700 and at most one legendary, level 100, full
-  HP, IVs 25–31, EVs exactly as `AssignFocusedEVs` would place them (checked
-  by an independent JavaScript copy of the rule), an item from the pool (type
-  boosters only with a matching attack), at least one damaging move, and every
-  move learnable by the species. The learnable-move check reads the ROM's
-  learnset tables, so it's independent of the C generator.
+- your team follows its rules (`validateTeam` in `tests/party.mjs`, written
+  independently of the C code) for each seed and after each run: a starter
+  that counters RED's (read from his party) with its Mega Stone, or Typhlosion
+  with a Firium Z; the others fully evolved, in scope, holding no Mega Stone
+  or Z-Crystal, at their tier's level (95–98); at most one legendary; one of
+  each Pokémon's Showdown sets; perfect stats; no type on more than two and
+  no species twice; a base stat total of at least 2700; and mirror-RED days
+  exactly when the seed's roll (predicted in JavaScript) says so, checked on a
+  mirror-day seed too (shiny Pikachu, a legendary).
 - the same seed gives the same team, and different seeds give different ones.
 - the player starts at the foot of the stairs, RED faces away from them (and
   again after every run), and talking to RED starts a trainer battle on the
@@ -428,7 +418,8 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
 - battle style is SET from the start, the Options menu can't change it, and
   when one of RED's Pokémon is knocked out he sends the next one with no
   "Will LEAF change POKéMON?" prompt.
-- RED's AI flags in the ROM are Smart Trainer and Prediction; every entry
+- RED's AI flags in the ROM are Smart Trainer and Prediction, and his battle
+  opens with the Champion's VS mugshot transition; every entry
   of his any-generation pick is fully evolved and not a starter, legendary,
   Ultra Beast or Paradox Pokémon; all of Pikachu's sets have a Light Ball and
   Volt Tackle; no `NORMAL` set holds a Mega Stone or Z-Crystal; and there are
@@ -566,7 +557,8 @@ tests/                               headless browser tests, the teams tool and 
 
 Inside `expansion/`, the Daily Red code is `include/dailyred.h`,
 `include/constants/dailyred.h`, `src/dailyred.c` (game flow and seed),
-`src/dailyred_team.c` (team generator), `src/dailyred_red.c` (RED's team),
+`src/dailyred_team.c` (your team), `src/dailyred_red.c` (RED's team),
+`src/dailyred_mon.c` (helpers both use),
 `src/dailyred_sets.c` (the generated sets), RED's entry at the end of
 `src/data/trainers_frlg.party`, `data/maps/DailyRed_Summit/` plus
 `data/layouts/DailyRed_Summit/` (the map), and his battle theme:

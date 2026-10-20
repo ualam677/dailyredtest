@@ -14,7 +14,7 @@ import {
   bitsWrite, saveSnapshot, loadSnapshot, u32, battleInput, helplessWrites,
 } from './lib.mjs';
 import { GAME_DIR, id, readBits, layout, field, rom, romOffset, textAt, species, item, move, constName, wideValue } from './game.mjs';
-import { readParty, formatMon, validateTeam, friendshipWrites, laterEvolutions, LATER_EVOLUTION_LIST } from './party.mjs';
+import { readParty, formatMon, validateTeam, friendshipWrites, laterEvolutions, LATER_EVOLUTION_LIST, predictPlayerRolls } from './party.mjs';
 import { readRedParty, validateRed, predictRolls, formatRedMon, validatePickGroups, setLists } from './red.mjs';
 
 const OUT = new URL('./output/', import.meta.url).pathname;
@@ -43,9 +43,14 @@ function check(ok, message) {
 
 const teamKey = (party) => party.map((m) => m && `${m.species}:${m.moves.join(',')}`).join('|');
 
-function checkTeam(label, team) {
-  const problems = validateTeam(team);
-  check(problems.length === 0, `${label}: valid team (6 different in-scope species, level 100, learnable moves, legal stats, held items)${problems.length ? ': ' + problems.join('; ') : ''}`);
+// The player's team for the run (redParty: RED's for the same run, whose
+// starter decides ours; rolls: the seed's predicted rolls, for the first team
+// after boot).
+function checkTeam(label, team, redParty, rolls = null) {
+  const problems = validateTeam(team, redParty, rolls);
+  const mirror = team.party.some((m) => m?.speciesName === 'PIKACHU' || m?.constName === 'PIKACHU');
+  check(problems.length === 0, `${label}: your team follows its rules (counter-starter, ${mirror ? 'mirror-RED day' : 'five fully evolved in-scope Pokemon'}, `
+    + `Showdown sets, tier levels, perfect stats, types)${problems.length ? ': ' + problems.join('; ') : ''}`);
 }
 
 // RED's team for the run, from RAM (rolls: the seed's predicted rolls, for
@@ -108,6 +113,8 @@ check(value('B_AFFECTION_MECHANICS') === 0 && value('B_FRIENDSHIP_BOOST') === 0,
   const flags = rom().readBigUInt64LE(at + layout('Trainer').aiFlags.off);
   const want = wideValue('AI_FLAG_SMART_TRAINER') | wideValue('AI_FLAG_PREDICTION');
   check((flags & want) === want, `RED's AI is Smart Trainer (smart switching, omniscient...) with Prediction (flags 0x${flags.toString(16)})`);
+  const mugshot = readBits(rom(), at, layout('Trainer').mugshotColor);
+  check(mugshot === value('MUGSHOT_COLOR_YELLOW'), `RED's battle opens with the Champion's VS mugshot transition (yellow; got color ${mugshot})`);
   const picks = validatePickGroups();
   check(picks.problems.length === 0, `RED's any-generation pick has ${picks.count} species (${picks.formes} formes), all fully evolved and none a starter, legendary, Ultra Beast or Paradox${picks.problems.length ? ': ' + picks.problems.join('; ') : ''}`);
   const lists = setLists();
@@ -153,7 +160,7 @@ try {
     (teams[seed] ??= []).push(teamKey(team.party));
     (reds[seed] ??= []).push(redKey(red));
     if (teams[seed].length === 1) {
-      checkTeam(`seed ${seed}`, team);
+      checkTeam(`seed ${seed}`, team, red, predictPlayerRolls(seed));
       console.log(team.party.map((m) => '      ' + formatMon(m)).join('\n'));
       checkRed(`seed ${seed}`, red, predictRolls(seed));
       console.log(red.map((m) => '      ' + formatRedMon(m)).join('\n'));
@@ -161,6 +168,20 @@ try {
     await page.close();
   }
   check(teams[1001][0] === teams[1001][1] && reds[1001][0] === reds[1001][1], 'same seed gives the same team, and the same RED');
+
+  // A mirror-RED day: the first seed from 1 up whose roll says so.
+  {
+    let mirrorSeed = 1;
+    while (!predictPlayerRolls(mirrorSeed).mirror) mirrorSeed++;
+    page = await browser.newPage();
+    await bootGame(page, server.url, { seed: mirrorSeed });
+    const s = await waitFor(page, (st) => st.inOverworld, { what: 'overworld (mirror day)' });
+    const team = readParty(s.mem);
+    checkTeam(`seed ${mirrorSeed} (mirror day)`, team, readRedParty(s.mem), predictPlayerRolls(mirrorSeed));
+    console.log(team.party.map((m) => '      ' + formatMon(m)).join('\n'));
+    check(team.party.some((m) => m?.species === id('SPECIES', 'PIKACHU') && m.shiny), `seed ${mirrorSeed} is a mirror day: a shiny Pikachu on your team`);
+    await page.close();
+  }
   check(teams[1001][0] !== teams[2002][0] && reds[1001][0] !== reds[2002][0], 'different seeds give different teams, and a different RED');
 
   // 2. Boot, look around, open the menus.
@@ -254,9 +275,9 @@ try {
   s = await finishBattle(page, 0);
   check(readVar(s.mem, VAR_WINS) === 1 && readVar(s.mem, VAR_BATTLES) === 1, 'win is recorded (1 win / 1 battle)');
   const team2 = readParty(s.mem);
-  checkTeam('team after a win', team2);
-  check(teamKey(team2.party) !== teamKey(team1.party), 'a new team is generated after the win');
   const red2 = readRedParty(s.mem);
+  checkTeam('team after a win', team2, red2);
+  check(teamKey(team2.party) !== teamKey(team1.party), 'a new team is generated after the win');
   checkRed('after a win', red2);
   check(redKey(red2) !== redKey(red.party), 'RED gets a new team after the win');
   check(redFacing(s.mem) === value('DIR_NORTH'), 'RED faces the drop again for the next run');
@@ -272,7 +293,7 @@ try {
   ]);
   s = await getStatus(page);
   const maxFriends = readParty(s.mem);
-  check(maxFriends.party.every((m) => m.friendship === value('MAX_FRIENDSHIP')) && validateTeam(maxFriends).length === 0, 'the team is at max friendship (and its data still checks out)');
+  check(maxFriends.party.every((m) => m.friendship === value('MAX_FRIENDSHIP')) && validateTeam(maxFriends, readRedParty(s.mem)).length === 0, 'the team is at max friendship (and its data still checks out)');
   // RED brings only his lead to this battle, so his smart AI has nothing to
   // switch to instead of using the Tackle the test gives it below.
   const redPartySize = layout('Pokemon').size;
@@ -331,7 +352,7 @@ try {
   s = await finishBattle(page, 1);
   check(readVar(s.mem, VAR_WINS) === 1 && readVar(s.mem, VAR_BATTLES) === 2, 'loss is recorded (1 win / 2 battles), no white-out');
   const team3 = readParty(s.mem);
-  checkTeam('team after a loss', team3);
+  checkTeam('team after a loss', team3, readRedParty(s.mem));
   check(teamKey(team3.party) !== teamKey(team2.party), 'a new team is generated after the loss');
   await screenshot(page, `${OUT}/12-after-loss.png`);
 
@@ -383,7 +404,7 @@ try {
   s = await waitFor(page, (st) => st.inOverworld, { what: 'overworld after the title screen' });
   await sleep(1000);
   await screenshot(page, `${OUT}/13-no-seed-start.png`);
-  checkTeam('team without a seed', readParty(s.mem));
+  checkTeam('team without a seed', readParty(s.mem), readRedParty(s.mem));
 } catch (err) {
   failures++;
   console.log('FAIL ', err.message);

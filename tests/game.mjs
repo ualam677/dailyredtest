@@ -57,7 +57,7 @@ const NAMED = [
   'B_AFFECTION_MECHANICS', 'B_FRIENDSHIP_BOOST', 'MAX_FRIENDSHIP', 'AFFECTION_FIVE_HEARTS', 'POCKET_KEY_ITEMS',
   'TYPE_NONE', 'TYPE_MYSTERY', 'MON_MALE', 'MON_FEMALE', 'MON_GENDERLESS',
   'DAILYRED_SETS_NORMAL', 'DAILYRED_SETS_MEGA', 'DAILYRED_SETS_ZMOVE', 'DAILYRED_SETS_TERA',
-  'TRAINERS_COUNT', 'DIFFICULTY_NORMAL',
+  'TRAINERS_COUNT', 'DIFFICULTY_NORMAL', 'MUGSHOT_COLOR_YELLOW', 'B_TRANSITION_MUGSHOT',
   'GIMMICKS_COUNT', 'GIMMICK_MEGA', 'GIMMICK_Z_MOVE', 'GIMMICK_DYNAMAX', 'GIMMICK_TERA',
 ];
 
@@ -116,15 +116,15 @@ const STRUCTS = {
     type: 'struct DailyRedSet',
     fields: ['ivs', 'species', 'item', 'ability', 'moves[]', 'evs[]', 'nature', 'teraType', 'friendship', 'weight'],
   },
-  DailyRedSetList: { type: 'struct DailyRedSetList', fields: ['species', 'firstSet', 'numSets', 'kind'] },
+  DailyRedSetList: { type: 'struct DailyRedSetList', fields: ['species', 'firstSet', 'numSets', 'kind', 'level'] },
   DailyRedPickGroup: { type: 'struct DailyRedPickGroup', fields: ['first', 'count'] },
   BattleStruct: { type: 'struct BattleStruct', fields: ['gimmick.activated[]'] },
   AiThinkingStruct: { type: 'struct AiThinkingStruct', fields: ['aiFlags[]'] },
-  Trainer: { type: 'struct Trainer', fields: ['aiFlags', 'party', 'trainerClass'], bits: ['partySize'] },
+  Trainer: { type: 'struct Trainer', fields: ['aiFlags', 'party', 'trainerClass'], bits: ['partySize', 'mugshotColor'] },
 };
 
 const HEADERS = [
-  'global.h', 'gba/m4a_internal.h', 'main.h', 'battle.h', 'battle_setup.h', 'dailyred.h', 'data.h', 'battle_gimmick.h', 'constants/battle_ai.h', 'event_object_movement.h', 'fieldmap.h', 'item.h', 'move.h', 'pokemon.h',
+  'global.h', 'gba/m4a_internal.h', 'main.h', 'battle.h', 'battle_setup.h', 'dailyred.h', 'data.h', 'battle_gimmick.h', 'battle_transition.h', 'constants/battle_ai.h', 'event_object_movement.h', 'fieldmap.h', 'item.h', 'move.h', 'pokemon.h',
   'constants/abilities.h', 'constants/battle.h', 'constants/battle_move_effects.h', 'constants/dailyred.h', 'constants/event_objects.h',
   'constants/form_change_types.h', 'constants/global.h', 'constants/hold_effects.h', 'constants/items.h', 'constants/map_event_ids.h',
   'constants/moves.h', 'constants/opponents.h', 'constants/pokemon.h', 'constants/region_map_sections.h', 'constants/species.h',
