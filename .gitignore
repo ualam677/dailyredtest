@@ -4,6 +4,8 @@
 /.toolchain/
 # scripts/get-pokefirered.sh (pret/pokefirered + patches/)
 /pokefirered/
+# pokeemerald-expansion checkout + patches/expansion-dailyred.patch (work in progress)
+/expansion/
 # scripts/fetch-vendor.sh
 /web/vendor/
 # scripts/build-rom.sh. Build output; don't commit it.
@@ -13,5 +15,6 @@
 /.wrangler/
 
 /tests/node_modules/
+/scripts/sets/node_modules/
 /tests/output/
 .DS_Store
