@@ -108,7 +108,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 |---|---|
 | Copyright screen → straight in (seed set) | `src/intro_frlg.c` → `CB2_DailyRed_StartFromCopyright` (`src/dailyred.c`) |
 | Title screen → straight in (no seed) | `src/title_screen_frlg.c` → `CB2_DailyRed_StartFromTitle` |
-| New game data: LEAF (FireRed's female player), fast text | `StartNewGame` in `src/dailyred.c`, then vanilla `CB2_NewGame` |
+| New game data: the player is named Blue (on FireRed's female player, LEAF's sprites) and RED is named Red, fast text | `StartNewGame` in `src/dailyred.c`, then vanilla `CB2_NewGame` |
 | Team + warp to the summit instead of the bedroom | `src/new_game.c` → `DailyRed_InitNewGame` |
 | The summit: an open peak with no exits; stairs up to RED, who faces the drop | `data/maps/DailyRed_Summit/`, `data/layouts/DailyRed_Summit/` |
 | Snow on the summit, as scenery only: it doesn't start Snow in RED's battle | `data/maps/DailyRed_Summit/map.json`; the battle check in `src/battle_util.c` |
@@ -159,7 +159,7 @@ grep -rn "Daily Red" expansion/src expansion/include expansion/data
 The summit layout is a copy of Navel Rock's summit (the peak where Ho-Oh
 appears) with the arrival ladder removed. RED stands on the tip at (9, 11)
 facing north, out over the drop, and turns around when you talk to him. RED and
-LEAF use FireRed's own player sprites.
+the player (named Blue) use FireRed's own player sprites, RED's and LEAF's.
 
 The status block in RAM is `volatile`: nothing in the game reads it, and the
 expansion builds with link-time optimization, which would otherwise drop every
@@ -201,7 +201,8 @@ right after RED's (his starter decides yours), from the seed:
   team is equally likely.
 - **Sets and stats:** every Pokémon gets one of its Showdown Random Battle
   sets from the same table as RED's (see [Sets](#sets)), with perfect stats
-  (every IV maxed by hyper training) and the set's nature and EVs.
+  (every IV maxed by hyper training) and the set's competitive nature and
+  EVs (see [Sets](#sets)).
 - **Levels by Showdown tier**, so strong Pokémon are a little lower: 95 for OU
   and up (Ubers, OU), 96 UU, 97 RU, 98 NU and below. A "BL" tier (banned to
   the tier above) counts as the tier above (UUBL 95, RUBL 96, NUBL 97). The
@@ -250,9 +251,9 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 
 | Legendary roll | Odds | Venusaur | Charizard | Blastoise |
 |---|---|---|---|---|
-| His bird | 43% | Moltres | Zapdos | Articuno |
-| Johto dog | 20% | Entei | Raikou | Suicune |
-| Galarian bird | 15% | Galarian Moltres | Galarian Zapdos | Galarian Articuno |
+| His bird | 43% | Moltres | Articuno | Zapdos |
+| Johto dog | 20% | Entei | Suicune | Raikou |
+| Galarian bird | 15% | Galarian Moltres | Galarian Articuno | Galarian Zapdos |
 | Mewtwo (level 100) | 10% | | | |
 | Deoxys (any forme) | 5% | | | |
 | Mew (1% of days a shiny one) | 5% | | | |
@@ -320,8 +321,9 @@ game's files; run it again after changing the art:
   pictures are 64×64 and 15 colours, and he's 69 pixels tall, so the script
   drops 5 near-identical rows from his jeans (keeping his cap and shoes
   whole). The first frame is his trainer picture (the VS transition); in
-  battle his sprite uses both frames, uncompressed in the ROM, and tips his
-  cap once he has slid in (`DailyRed_AnimateTrainerSprite`).
+  battle his sprite uses both frames, uncompressed in the ROM: he slides in
+  with his cap down, then lifts it to look at you and tips it back down
+  (`DailyRed_AnimateTrainerSprite`).
 - The battle interface (healthboxes, HP/EXP bars, textbox, status icons,
   gimmick buttons, text colours) and the window frames and message box in
   `graphics/text_window/` are the HGSS-style ones from
@@ -359,8 +361,15 @@ the sets it produced (those that came up at least 2% of the time), with
 Showdown's odds. Sets come from Gen 7 Random Battles (the last generation with
 Mega Evolution and Z-Moves); species Gen 7 doesn't have (Galarian forms, Gen
 8–9 species) come from Gen 8, then Gen 9, and Mega Meganium and Mega
-Feraligatr from Showdown's Pokémon Champions Random Battles (their stat points
-become 85 EVs per stat, like the other sets). Each list also has your level
+Feraligatr from Showdown's Pokémon Champions Random Battles. Random Battle
+sets have a neutral nature and the same EVs in every stat, so every set gets a
+competitive spread instead (`competitiveSpread`): from Showdown's role for the
+set, its attacks and its base stats, a fast attacker gets +Speed and 252
+attack / 252 Speed (Jolly, Timid), a bulky one +attack and 252 HP / 252
+attack (Adamant, Modest), a mixed one boosts its main attack or Speed at a
+defence's expense (Naive, Lonely…), a defensive one +the defence it needs and
+252 HP / 252 in it (Bold, Impish, Calm, Careful), and Trick Room or Gyro Ball
+sets give up Speed (Brave, Quiet, Relaxed, Sassy). Each list also has your level
 for the species, from its Showdown tier (see [Your team](#your-team)). Each species has a list per kind:
 `NORMAL` (no Mega Stone or Z-Crystal: Showdown's sets for a team that already
 has its Z-Move user), `MEGA` (a Mega Evolution's sets), `ZMOVE` (Z-Crystals
@@ -470,7 +479,7 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
   in the ROM too).
 - battle style is SET from the start, the Options menu can't change it, and
   when one of RED's Pokémon is knocked out he sends the next one with no
-  "Will LEAF change POKéMON?" prompt.
+  "Will Blue change POKéMON?" prompt.
 - RED's AI flags in the ROM are Smart Trainer and Prediction, his battle
   opens with the VS mugshot transition on his red band and uses his HGSS sprite;
   every entry of his Gen 1–3 pick is in the Gen 1–3 Pokédex, fully evolved

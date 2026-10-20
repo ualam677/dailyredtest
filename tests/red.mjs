@@ -41,8 +41,8 @@ export const POOL = [...redSource.match(/sRedPool\[\] =\s*\{([^}]*)\}/)[1].match
 // The starters, with what they pair with (as the spec states it).
 const STARTERS = [
   { name: 'VENUSAUR', stones: ['VENUSAURITE'], bird: 'MOLTRES', galarianBird: 'MOLTRES_GALAR', dog: 'ENTEI', z: 'GRASSIUM_Z' },
-  { name: 'CHARIZARD', stones: ['CHARIZARDITE_X', 'CHARIZARDITE_Y'], bird: 'ZAPDOS', galarianBird: 'ZAPDOS_GALAR', dog: 'RAIKOU', z: 'FIRIUM_Z' },
-  { name: 'BLASTOISE', stones: ['BLASTOISINITE'], bird: 'ARTICUNO', galarianBird: 'ARTICUNO_GALAR', dog: 'SUICUNE', z: 'WATERIUM_Z' },
+  { name: 'CHARIZARD', stones: ['CHARIZARDITE_X', 'CHARIZARDITE_Y'], bird: 'ARTICUNO', galarianBird: 'ARTICUNO_GALAR', dog: 'SUICUNE', z: 'FIRIUM_Z' },
+  { name: 'BLASTOISE', stones: ['BLASTOISINITE'], bird: 'ZAPDOS', galarianBird: 'ZAPDOS_GALAR', dog: 'RAIKOU', z: 'WATERIUM_Z' },
 ];
 const MEGA_FORMES = new Map([
   ['VENUSAURITE', 'VENUSAUR_MEGA'], ['CHARIZARDITE_X', 'CHARIZARD_MEGA_X'], ['CHARIZARDITE_Y', 'CHARIZARD_MEGA_Y'],
