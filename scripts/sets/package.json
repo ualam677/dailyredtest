@@ -1,0 +1,12 @@
+{
+  "name": "dailyred-sets",
+  "private": true,
+  "type": "module",
+  "description": "Generates Daily Red's set table (expansion/src/dailyred_sets.c) from Pokémon Showdown's Gen 7 Random Battle generator",
+  "scripts": {
+    "generate": "node generate.mjs"
+  },
+  "dependencies": {
+    "pokemon-showdown": "0.11.11"
+  }
+}

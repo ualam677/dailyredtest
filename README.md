@@ -6,8 +6,10 @@ A daily Pokémon battle in the browser, like Wordle: once a day you press
 mountain. You get one battle per day. Your wins, losses, win streak and daily
 play streak are kept in your browser.
 
-Every battle runs on the original Pokémon FireRed engine: the game is the
-[pret/pokefirered](https://github.com/pret/pokefirered) decompilation with a
+Every battle runs on a real Game Boy Advance game: the FireRed build of
+[pokeemerald-expansion](https://github.com/rh-hideout/pokeemerald-expansion)
+(the pret decompilations with an up-to-date battle engine: Fairy type,
+physical/special split, abilities, items and moves up to Generation 9) with a
 small set of source changes, built into a GBA ROM and played in the browser
 through the mGBA emulator compiled to WebAssembly. Nothing about battles is
 reimplemented in JavaScript.
@@ -30,20 +32,22 @@ whole game from source.
 
 ```sh
 scripts/setup-macos.sh      # ARM cross-compiler + libpng into .toolchain/ (~1 GB, one time)
-scripts/get-pokefirered.sh  # pret/pokefirered at a pinned commit + patches/
+scripts/get-expansion.sh    # pokeemerald-expansion at a pinned release + patches/
 scripts/fetch-vendor.sh     # emulator, emulator core and font into web/vendor/
 scripts/build-rom.sh        # builds the ROM, writes web/game/dailyred.gba.gz
 node scripts/serve.mjs      # open http://localhost:8080
 ```
 
-`setup-macos.sh` picks the right compiler for Intel or Apple Silicon Macs.
+`setup-macos.sh` picks the right compiler for Intel or Apple Silicon Macs. The
+first ROM build takes a few minutes (the expansion builds its own tools and
+all of its graphics); later builds only redo what changed.
 
 ## How it works
 
 ```
-pret/pokefirered @ 037335f + patches/  ──make modern──▶  pokefirered_modern.gba
-                                                              │ gzip (16 MB → 5.5 MB)
-web/ (static files)                                           ▼
+pokeemerald-expansion 1.17.1 + patches/  ──make firered──▶  pokefirered.gba
+                                                                │ gzip (32 MB → 17.5 MB)
+web/ (static files)                                             ▼
   index.html + app.js ── fetch ──▶ game/dailyred.gba.gz, vendor/mgba_libretro.wasm
         │  writes the day's seed + your record into the ROM bytes (rom-config.js)
         ▼
@@ -100,41 +104,49 @@ file server works without special headers. Everything loads from `web/vendor/`.
 
 | Step | Code |
 |---|---|
-| Copyright screen → straight in (seed set) | `src/intro.c` → `CB2_DailyRed_StartFromCopyright` (`src/dailyred.c`) |
-| Title screen → straight in (no seed) | `src/title_screen.c` → `CB2_DailyRed_StartFromTitle` |
+| Copyright screen → straight in (seed set) | `src/intro_frlg.c` → `CB2_DailyRed_StartFromCopyright` (`src/dailyred.c`) |
+| Title screen → straight in (no seed) | `src/title_screen_frlg.c` → `CB2_DailyRed_StartFromTitle` |
 | New game data: LEAF (FireRed's female player), fast text | `StartNewGame` in `src/dailyred.c`, then vanilla `CB2_NewGame` |
 | Team + warp to the summit instead of the bedroom | `src/new_game.c` → `DailyRed_InitNewGame` |
 | The summit: an open peak with no exits; stairs up to RED, who faces the drop | `data/maps/DailyRed_Summit/`, `data/layouts/DailyRed_Summit/` |
-| Snow on the summit (fixes FireRed's unused snow weather, whose flakes never came back) | `src/field_weather_effects.c` |
-| Talking to RED → battle → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc` and `text.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
-| Mountain battle background on the summit | `BattleSetup_GetTerrainId` in `src/battle_setup.c` |
+| Snow on the summit, as scenery only: it doesn't start Snow in RED's battle | `data/maps/DailyRed_Summit/map.json`; the battle check in `src/battle_util.c` |
+| Talking to RED → battle → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
+| Mountain battle background on the summit | `BattleSetup_GetEnvironmentId` in `src/battle_setup.c` |
 | No free switch when RED's Pokémon faints: Battle Style starts on SET and is locked in Options | `StartNewGame` in `src/dailyred.c`, `src/option_menu.c` |
-| RED as a trainer | `TRAINER_DAILYRED_RED` in `include/constants/opponents.h`, `src/data/trainers.h`, `src/dailyred_boss.c` |
-| Menus: POKéMON / OPTION / EXIT; party: SUMMARY / SWITCH / CANCEL | `src/start_menu.c`, `src/party_menu.c`; window height for short menus in `src/new_menu_helpers.c` |
-| RED's overworld sprite, in its own palette slot so it doesn't clash with LEAF's | `OBJ_EVENT_GFX_DAILYRED_RED` in `include/constants/event_objects.h`, `src/data/object_events/` |
+| RED as a trainer, with his team | `TRAINER_DAILYRED_RED` in `include/constants/opponents_frlg.h` and `src/data/trainers_frlg.party` |
+| Win / battle counters | `VAR_DAILYRED_WINS` and `VAR_DAILYRED_BATTLES` in `include/constants/vars_frlg.h` |
+| Menus: POKéMON / OPTION / EXIT; party: SUMMARY / SWITCH / CANCEL | `src/start_menu.c`, `src/party_menu.c` |
+| No debug menus | `include/config/debug.h` |
 
-The battle itself is a standard FireRed trainer battle. The map script uses
-`trainerbattle_earlyrival` with `RIVAL_BATTLE_HEAL_AFTER`, the mode FireRed
-uses for the rival fight in Oak's lab, so losing doesn't white out. The script
-then reads `VAR_RESULT`, updates a win/battle counter, calls the
+The battle itself is a standard trainer battle. The map script starts it as an
+"early rival" battle with `RIVAL_BATTLE_HEAL_AFTER`, the mode FireRed uses for
+the rival fight in Oak's lab, so losing doesn't white out, and skips the
+trainer flag check, so RED can be fought again after a win. The script then
+reads `VAR_RESULT`, updates a win/battle counter, calls the
 `DailyRed_StartNextRun` special (new team) and warps back to the start tile,
 which also resets RED.
 
 Every vanilla file that was changed has a `Daily Red:` comment at the change:
 
 ```sh
-grep -rn "Daily Red" pokefirered/src pokefirered/include pokefirered/data
+grep -rn "Daily Red" expansion/src expansion/include expansion/data
 ```
 
 The summit layout is a copy of Navel Rock's summit (the peak where Ho-Oh
 appears) with the arrival ladder removed. RED stands on the tip at (9, 11)
-facing north, out over the drop, and turns around when you talk to him. The project uses pokefirered's `modern` target (GCC 14),
-not the byte-matching `agbcc` build, so it doesn't reproduce the retail ROM.
+facing north, out over the drop, and turns around when you talk to him. RED and
+LEAF use FireRed's own player sprites.
+
+The status block in RAM is `volatile`: nothing in the game reads it, and the
+expansion builds with link-time optimization, which would otherwise drop every
+write to it. The win and battle counters use script variables 0x409B and
+0x409D, which neither FireRed nor the shared Emerald code touches (the
+expansion's step counter code writes to some of FireRed's "unused" ones).
 
 ## Team generation
 
-`pokefirered/src/dailyred_team.c` builds each team with the decomp's own data
-(`gLevelUpLearnsets`, `CanMonLearnTMHM`, the TM/HM move table,
+`expansion/src/dailyred_team.c` builds each team with the game's own data
+(`GetSpeciesLevelUpLearnset`, `GetTMHMMoveId` and `CanLearnTeachableMove`,
 `CreateMon`, `CalculateMonStats`):
 
 - **Species:** 6 different Pokémon from all 386 of Generations 1–3 whose
@@ -145,35 +157,20 @@ not the byte-matching `agbcc` build, so it doesn't reproduce the retail ROM.
   meets the minimum, so every qualifying team is equally likely. Per-species
   rules live in `IsEligibleSpecies`, e.g. add "fully evolved only" there.
 
-  Why a minimum: RED's team totals 2954 (see below). A fully random team
-  averages about 2430, and two thirds of them include a Pokémon under 300,
-  which made most runs hopeless. A team can still include one weak Pokémon if
-  the rest make up for it.
+  Why a minimum: RED's team totals 2974 (see below). A fully random team
+  averages about 2440, and most include a very weak Pokémon, which made most
+  runs hopeless. A team can still include one weak Pokémon if the rest make up
+  for it. About 1 random draw in 12 meets 2700, and about 1 qualifying team in
+  24 out-totals RED's (base stats from the expansion, which uses the latest
+  games' values).
 
-  Why legendaries are a separate roll: they average 613 against 393 for
+  Why legendaries are a separate roll: they average 613 against 394 for
   everything else, so a stat minimum on its own mostly gets met by drawing
-  one. With a 2750 minimum alone, 70% of teams had a legendary and 20% had two
-  or more.
-
-  How the minimum sets the difficulty: with the IVs and EVs below, a team's
-  actual in-battle stat total is almost exactly 2 × its base stat total +
-  2580, and RED's is 8555. So each minimum gives:
-
-  | Minimum | Typical team vs RED | Weakest possible | Teams stronger than RED |
-  |---|---|---|---|
-  | 2600 | 94% | 91% | about 1 in 45 |
-  | 2650 | 95% | 92% | about 1 in 34 |
-  | **2700** | **96%** | **93%** | **about 1 in 25** |
-  | 2750 | 97% | 94% | about 1 in 17 |
-
-  (Odds from simulating 80,000 teams.) Measured in the real ROM at 2700 over
-  80 runs: typical team 95% of RED's stats, range 93–101%, 1 team stronger
-  than RED. RED also has hand-picked moves, chosen held items (his Pikachu's
-  Light Ball doubles its Sp. Atk) and the strongest trainer AI, so he stays
-  the favourite.
+  one: at 2700, 64% of qualifying teams would have one.
 
 - **Moves:** up to 4 different moves picked uniformly from everything the
-  species can learn **by level-up (any level) or TM/HM**. One rule on top: if
+  species can learn **by level-up (any level) or TM/HM**. Level-up learnsets
+  are the expansion's (the latest games'); the TMs and HMs are FireRed's 58. One rule on top: if
   none of the four can deal damage and the species has any damaging move, one
   pick is swapped for a damaging move. Species with fewer than 4 learnable moves
   (Ditto, Unown, Magikarp, Smeargle…) get all of them.
@@ -183,20 +180,22 @@ not the byte-matching `agbcc` build, so it doesn't reproduce the retail ROM.
   - **EVs** 252 into each of its two highest base stats and the last 6 into
     HP, or into its third-best stat if HP is one of the two
     (`AssignFocusedEVs`). Attack and Sp. Atk only count if one of its attacks
-    uses them (in Gen 3 a move's type decides which), so a Gyarados with only
-    Surf and Ice Beam doesn't waste points on Attack. Fast Pokémon end up as
-    fast as RED's; slow walls put their points into bulk instead.
+    uses them (each move's physical/special category decides which, and
+    fixed-damage moves like Seismic Toss count for neither), so a Gyarados with
+    only Surf and Ice Beam doesn't waste points on Attack. Fast Pokémon end up
+    as fast as RED's; slow walls put their points into bulk instead.
 
   The player is the original trainer, so everything obeys, and Pokémon are
   marked as event Pokémon so Mew and Deoxys obey too.
 - **Held items:** each Pokémon holds one, picked uniformly from a pool of
   generally useful battle items (`sBattleItems`: Leftovers, Choice Band,
-  Quick Claw, Lum Berry, pinch berries…) plus the 10% type booster for each
-  type it actually attacks with (Charcoal only if it has a Fire attack, and
-  so on). There are still no bag items.
+  Quick Claw, Lum Berry, pinch berries…) plus the type booster for each type
+  it actually attacks with (Charcoal only if it has a Fire attack, Fairy
+  Feather for Fairy, and so on; moves whose type is decided in battle, like
+  Hidden Power, don't count). There are still no bag items.
 - **Safety:** each Pokémon is validated (level, HP, at least one move, no
   duplicate moves, PP). If a Pokémon somehow failed 10 times, the game would
-  use FireRed's own default level-100 moveset for it rather than hand over
+  use its own default level-100 moveset for it rather than hand over
   something broken.
 
 Trade-offs in this first version: the move picker ignores move tutors and egg
@@ -210,53 +209,48 @@ teams depend only on the seed.
 
 ## RED's team
 
-Edit **`pokefirered/src/dailyred_boss.c`**: species, level, IVs, held item and
-moves use FireRed's normal `TrainerMonItemCustomMoves` format, plus an EV
-table next to it. It's Red's Mt. Silver team from HeartGold/SoulSilver
+Edit **`[TRAINER_DAILYRED_RED]` in `expansion/src/data/trainers_frlg.party`**:
+the expansion's trainer format (like a Showdown team export: species @ item,
+level, IVs, EVs, moves). It's Red's Mt. Silver team from HeartGold/SoulSilver
 (Pikachu, Espeon, Snorlax, Venusaur, Charizard, Blastoise) at level 100 with
 perfect IVs, held items and full EV spreads. HGSS used several Gen 4 moves, so
 the movesets are adapted to Gen 3 ones.
 
 | Pokémon | HP | Atk | Def | Spe | SpA | SpD | Total |
 |---|---|---|---|---|---|---|---|
-| Pikachu (Light Ball doubles its Sp. Atk) | 35 | 55 | 30 | 90 | 50 | 40 | 300 |
+| Pikachu (Light Ball doubles its Attack and Sp. Atk) | 35 | 55 | 40 | 90 | 50 | 50 | 320 |
 | Espeon | 65 | 65 | 60 | 110 | 130 | 95 | 525 |
 | Snorlax | 160 | 110 | 65 | 30 | 65 | 110 | 540 |
 | Venusaur | 80 | 82 | 83 | 80 | 100 | 100 | 525 |
 | Charizard | 78 | 84 | 78 | 100 | 109 | 85 | 534 |
 | Blastoise | 79 | 83 | 100 | 78 | 85 | 105 | 530 |
-| **Team** | | | | | | | **2954** |
+| **Team** | | | | | | | **2974** |
 
-These are Gen 3 base stats from `src/data/pokemon/species_info.h`. With your
+These are the expansion's base stats (the latest games' values). With your
 team's IVs (25–31) and focused EVs, both sides get about the same out of their
-base stats. Measured from game RAM, a 525-total Pokémon reaches about 1520
-actual stat points for RED and about 1533 for you; his natures come from
-FireRed's fixed formula and sometimes cut a stat he needs. (With fully random
-IVs and EVs it was about 1445 for you, which made him much stronger point for
-point.)
+base stats. RED's natures are neutral (Hardy), the expansion's default when a
+trainer Pokémon doesn't name one.
 
 RED's name, trainer class ("PKMN TRAINER"), sprite and AI flags (the same as
-FireRed's Champion) are in `[TRAINER_DAILYRED_RED]` in
-`pokefirered/src/data/trainers.h`. He gets the Champion battle music
-(`src/pokemon.c`). FireRed trainers have no EVs, so a 3-line hook in
-`CreateNPCTrainerParty` (`src/battle_main.c`) applies the EV table. Natures
-come from FireRed's usual name-based formula and aren't configurable.
+FireRed's Champion) are in the same entry. He gets the Champion battle music
+(`GetBattleBGM` in `src/pokemon.c`).
 
 ## Development workflow
 
-1. Edit files in `pokefirered/` (a git checkout of pret's repo).
-2. `scripts/build-rom.sh` (incremental builds take a few seconds).
+1. Edit files in `expansion/` (a git checkout of pokeemerald-expansion).
+2. `scripts/build-rom.sh` (incremental builds take a minute or so: the
+   expansion links with link-time optimization).
 3. Reload the page. `scripts/serve.mjs` sends `Cache-Control: no-cache`.
 4. When you're happy, run `scripts/save-patch.sh` and commit
-   `patches/pokefirered-dailyred.patch`.
+   `patches/expansion-dailyred.patch`.
 
-`pokefirered/`, `.toolchain/`, `web/vendor/` and `web/game/` are not tracked
+`expansion/`, `.toolchain/`, `web/vendor/` and `web/game/` are not tracked
 (see `.gitignore`); a clean checkout recreates them with the scripts above.
-`git -C pokefirered diff` shows all game changes against upstream.
+`git -C expansion diff` shows all game changes against upstream.
 
-To play the ROM outside the browser, open
-`pokefirered/pokefirered_modern.gba` in mGBA or any GBA emulator. Without an
-injected seed it boots to the title screen; press Start.
+To play the ROM outside the browser, open `expansion/pokefirered.gba` in mGBA
+or any GBA emulator. Without an injected seed it boots to the title screen;
+press Start.
 
 The website has no build step: plain HTML, CSS and ES modules in `web/`.
 
@@ -264,7 +258,11 @@ The website has no build step: plain HTML, CSS and ES modules in `web/`.
 
 The tests boot the real ROM in headless Chrome through the same emulator the
 website uses, press buttons, and read game RAM out of emulator save states
-(mGBA's state contains a raw copy of RAM).
+(mGBA's state contains a raw copy of RAM). They get everything else from the
+build itself (`tests/game.mjs`): constants and struct layouts by compiling a
+small generated C file against `expansion/include` with the project
+toolchain, and species, move and item data (base stats, learnsets, names) from
+the ROM's own tables, so nothing about the game is copied into the tests.
 
 ```sh
 cd tests
@@ -279,10 +277,10 @@ npm run teams -- --random 40      # 40 random seeds
 - each seed's team is valid: 6 different real Gen 1–3 species with a combined
   base stat total of at least 2700 and at most one legendary, level 100, full
   HP, IVs 25–31, EVs exactly as `AssignFocusedEVs` would place them (checked
-  by an independent JavaScript copy of the rule), an item from the pool (type boosters only with a
-  matching attack), and every move learnable by the species. The
-  learnable-move check parses the decomp's data files in JavaScript, so it's
-  independent of the C generator.
+  by an independent JavaScript copy of the rule), an item from the pool (type
+  boosters only with a matching attack), at least one damaging move, and every
+  move learnable by the species. The learnable-move check reads the ROM's
+  learnset tables, so it's independent of the C generator.
 - the same seed gives the same team, and different seeds give different ones.
 - the player starts at the foot of the stairs, RED faces away from them (and
   again after every run), and talking to RED starts a trainer battle on the
@@ -290,7 +288,8 @@ npm run teams -- --random 40      # 40 random seeds
 - battle style is SET from the start, the Options menu can't change it, and
   when one of RED's Pokémon is knocked out he sends the next one with no
   "Will LEAF change POKéMON?" prompt.
-- RED's in-battle party is the configured team with IVs, items and EVs.
+- RED's in-battle party is the configured team with IVs, items and EVs, and
+  the summit's snow doesn't start any battle weather.
 - a win and a loss are each handled: no white-out, counters updated, and a new
   valid team afterwards.
 - the daily game starts from the website's record, reports the battle start,
@@ -326,7 +325,7 @@ it at http://localhost:8080:
 ```
 web/index.html  app.js  daily.js  game-link.js  game-files.js  rom-config.js  style.css  favicon.svg  licenses.txt
 web/vendor/     emulator (3.4 MB) + font
-web/game/       dailyred.gba.gz (5.5 MB), built on your machine
+web/game/       dailyred.gba.gz (17.5 MB), built on your machine
 ```
 
 To use another port, pass it: `node scripts/serve.mjs 3000`. Your stats are
@@ -342,8 +341,8 @@ Pokémon and all related names, characters and game content are © Nintendo,
 Creatures Inc. and GAME FREAK inc.
 
 This repository contains Daily Red's own work: the changes in `patches/`, the
-website and the tests. It doesn't include pret/pokefirered or a built ROM; the
-scripts fetch the decompilation from pret's repository and build locally.
+website and the tests. It doesn't include pokeemerald-expansion or a built ROM;
+the scripts fetch the expansion from its repository and build locally.
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page
@@ -364,26 +363,27 @@ footer links to it.
 - **Audio** can't be checked by the headless tests. Browsers start audio
   suspended unless it begins during a click, so the game resumes it on the
   next key press or tap.
-- **Tested environment:** macOS with Google Chrome (headless, desktop and
-  phone emulation). Not yet tried on Safari, Firefox or real phones.
-- The L/R buttons still open FireRed's built-in help, which describes the
-  normal game.
+- **Tested environment:** headless Chrome/Chromium (desktop and phone
+  emulation). Not yet tried on Safari, Firefox or real phones.
+- **Download size:** the expansion's ROM carries every Pokémon up to Gen 9, so
+  the gzipped game is about 17.5 MB (V1's was 5.5 MB).
 
 ## Project layout
 
 ```
-patches/pokefirered-dailyred.patch   all changes to pret/pokefirered
+patches/expansion-dailyred.patch     all changes to pokeemerald-expansion
 scripts/setup-macos.sh               toolchain (xPack arm-none-eabi-gcc 14.2.1 + libpng)
-scripts/get-pokefirered.sh           pinned upstream checkout + patch
-scripts/save-patch.sh                pokefirered/ changes → patches/
-scripts/build-rom.sh                 make modern → web/game/dailyred.gba.gz
+scripts/get-expansion.sh             pinned upstream checkout (1.17.1) + patch
+scripts/save-patch.sh                expansion/ changes → patches/
+scripts/build-rom.sh                 make firered → web/game/dailyred.gba.gz
 scripts/fetch-vendor.sh              Nostalgist, mGBA core, font (pinned, checksummed)
 scripts/serve.mjs                    local static server
 web/                                 the website
 tests/                               headless browser tests and the teams tool
 ```
 
-Inside `pokefirered/`, the Daily Red code is `include/dailyred.h`,
+Inside `expansion/`, the Daily Red code is `include/dailyred.h`,
 `include/constants/dailyred.h`, `src/dailyred.c` (game flow and seed),
-`src/dailyred_team.c` (team generator), `src/dailyred_boss.c` (RED's team), and
-`data/maps/DailyRed_Summit/` plus `data/layouts/DailyRed_Summit/` (the map).
+`src/dailyred_team.c` (team generator), RED's entry at the end of
+`src/data/trainers_frlg.party`, and `data/maps/DailyRed_Summit/` plus
+`data/layouts/DailyRed_Summit/` (the map).

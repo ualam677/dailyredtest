@@ -3,10 +3,10 @@
 # ./.toolchain (no sudo, no Homebrew, nothing written outside this project):
 #
 #   - xPack GNU Arm Embedded GCC (arm-none-eabi-gcc + binutils + newlib),
-#     used by pokefirered's `modern` build target via TOOLCHAIN=...
+#     used by the expansion's FireRed build (scripts/build-rom.sh puts it on PATH)
 #     (Arm's own macOS x86_64 tarballs link cc1 against Homebrew's zstd and
 #     crash without it; the xPack builds are self-contained.)
-#   - libpng (static), needed by pokefirered/tools/gbagfx
+#   - libpng (static), needed by expansion/tools/gbagfx
 #
 # Re-running is safe: finished steps are skipped.
 set -euo pipefail

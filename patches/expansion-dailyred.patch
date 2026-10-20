@@ -1,31 +1,23 @@
 diff --git a/data/event_scripts.s b/data/event_scripts.s
-index 88d7594..9b6bbdc 100644
+index bc9688b6..9a07413b 100644
 --- a/data/event_scripts.s
 +++ b/data/event_scripts.s
-@@ -24,6 +24,7 @@
- #include "constants/coins.h"
- #include "constants/menu.h"
- #include "constants/battle_setup.h"
-+#include "constants/dailyred.h"
- #include "constants/map_scripts.h"
- #include "constants/cable_club.h"
+@@ -33,6 +33,7 @@
+ #include "constants/field_specials.h"
  #include "constants/field_tasks.h"
-@@ -213,6 +214,7 @@ gStdScriptsEnd::
- 	.include "data/maps/SixIsland_DottedHole_B3F/scripts.inc"
- 	.include "data/maps/SixIsland_DottedHole_B4F/scripts.inc"
- 	.include "data/maps/SixIsland_DottedHole_SapphireRoom/scripts.inc"
-+	.include "data/maps/DailyRed_Summit/scripts.inc"
- 	.include "data/maps/SixIsland_PatternBush/scripts.inc"
- 	.include "data/maps/SixIsland_AlteringCave/scripts.inc"
- 	.include "data/maps/NavelRock_Exterior/scripts.inc"
-@@ -600,6 +602,7 @@ gStdScriptsEnd::
- 	.include "data/maps/FourIsland_IcefallCave_Back/text.inc"
- 	.include "data/maps/FiveIsland_RocketWarehouse/text.inc"
- 	.include "data/maps/SixIsland_DottedHole_SapphireRoom/text.inc"
-+	.include "data/maps/DailyRed_Summit/text.inc"
- 	.include "data/maps/SixIsland_PatternBush/text.inc"
- 	.include "data/maps/TrainerTower_Lobby/text.inc"
- 	.include "data/maps/FiveIsland_LostCave_Room1/text.inc"
+ #include "constants/field_weather.h"
++#include "constants/dailyred.h" // Daily Red
+ #include "constants/flags.h"
+ #include "constants/follower_npc.h"
+ #include "constants/frontier_util.h"
+@@ -769,6 +770,7 @@ gStdScripts_End::
+ 	.include "data/maps/SevenIsland_SevaultCanyon_TanobyKey_Frlg/scripts.inc"
+ 	.include "data/maps/NavelRock_1F_Frlg/scripts.inc"
+ 	.include "data/maps/NavelRock_Summit_Frlg/scripts.inc"
++	.include "data/maps/DailyRed_Summit/scripts.inc" @ Daily Red
+ 	.include "data/maps/NavelRock_Base_Frlg/scripts.inc"
+ 	.include "data/maps/NavelRock_SummitPath_2F_Frlg/scripts.inc"
+ 	.include "data/maps/NavelRock_SummitPath_3F_Frlg/scripts.inc"
 diff --git a/data/layouts/DailyRed_Summit/border.bin b/data/layouts/DailyRed_Summit/border.bin
 new file mode 100644
 index 0000000000000000000000000000000000000000..4ecad6cd2b6dcd351a11e736dd8e523cbf25b6fc
@@ -51,13 +43,13 @@ literal 0
 HcmV?d00001
 
 diff --git a/data/layouts/layouts.json b/data/layouts/layouts.json
-index 41d0eb1..00b884c 100644
+index 2b25587a..2ded0620 100644
 --- a/data/layouts/layouts.json
 +++ b/data/layouts/layouts.json
-@@ -4398,6 +4398,18 @@
-       "secondary_tileset": "gTileset_MtEmber",
-       "border_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa/border.bin",
-       "blockdata_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa/map.bin"
+@@ -9323,6 +9323,19 @@
+       "border_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/border.bin",
+       "blockdata_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/map.bin",
+       "layout_version": "frlg"
 +    },
 +    {
 +      "id": "LAYOUT_DAILY_RED_SUMMIT",
@@ -66,25 +58,27 @@ index 41d0eb1..00b884c 100644
 +      "height": 25,
 +      "border_width": 2,
 +      "border_height": 2,
-+      "primary_tileset": "gTileset_General",
-+      "secondary_tileset": "gTileset_NavelRock",
++      "primary_tileset": "gTileset_General_Frlg",
++      "secondary_tileset": "gTileset_NavelRock_Frlg",
 +      "border_filepath": "data/layouts/DailyRed_Summit/border.bin",
-+      "blockdata_filepath": "data/layouts/DailyRed_Summit/map.bin"
++      "blockdata_filepath": "data/layouts/DailyRed_Summit/map.bin",
++      "layout_version": "frlg"
      }
    ]
  }
 diff --git a/data/maps/DailyRed_Summit/map.json b/data/maps/DailyRed_Summit/map.json
 new file mode 100644
-index 0000000..6317762
+index 00000000..f8099229
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/map.json
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,38 @@
 +{
 +  "id": "MAP_DAILY_RED_SUMMIT",
 +  "name": "DailyRed_Summit",
 +  "layout": "LAYOUT_DAILY_RED_SUMMIT",
-+  "music": "MUS_VICTORY_ROAD",
-+  "region_map_section": "MAPSEC_NAVEL_ROCK",
++  "music": "MUS_RG_VICTORY_ROAD",
++  "region": "REGION_KANTO",
++  "region_map_section": "MAPSEC_NAVEL_ROCK_FRLG",
 +  "requires_flash": false,
 +  "weather": "WEATHER_SNOW",
 +  "map_type": "MAP_TYPE_ROUTE",
@@ -99,7 +93,7 @@ index 0000000..6317762
 +    {
 +      "local_id": "LOCALID_DAILYRED_RED",
 +      "type": "object",
-+      "graphics_id": "OBJ_EVENT_GFX_DAILYRED_RED",
++      "graphics_id": "OBJ_EVENT_GFX_RED_NORMAL",
 +      "x": 9,
 +      "y": 11,
 +      "elevation": 3,
@@ -118,24 +112,28 @@ index 0000000..6317762
 +}
 diff --git a/data/maps/DailyRed_Summit/scripts.inc b/data/maps/DailyRed_Summit/scripts.inc
 new file mode 100644
-index 0000000..033ded0
+index 00000000..b436f4c7
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/scripts.inc
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,115 @@
 +DailyRed_Summit_MapScripts::
 +	.byte 0
 +
-+@ Talking to RED starts the battle. TRAINER_BATTLE_EARLY_RIVAL with
-+@ RIVAL_BATTLE_HEAL_AFTER lets the player lose without whiting out, and sets
-+@ VAR_RESULT to TRUE if they lost. The DailyRed_On* specials tell the website
-+@ how the battle is going (see src/dailyred.c).
++@ Talking to RED starts the battle. It's trainerbattle_earlyrival (an early
++@ rival battle with RIVAL_BATTLE_HEAL_AFTER: the player can lose without
++@ whiting out, and VAR_RESULT is TRUE if they lost) with the trainer flag check
++@ skipped, so RED can be battled again after a win. The DailyRed_On* specials
++@ tell the website how the battle is going (see src/dailyred.c).
 +DailyRed_Summit_EventScript_Red::
 +	lock
 +	faceplayer
 +	textcolor NPC_TEXT_COLOR_MALE
 +	msgbox DailyRed_Summit_Text_RedIntro
 +	special DailyRed_OnBattleStart
-+	trainerbattle_earlyrival TRAINER_DAILYRED_RED, RIVAL_BATTLE_HEAL_AFTER, DailyRed_Summit_Text_RedDefeat, DailyRed_Summit_Text_RedVictory
++	@ trainerbattle args: localIdA, trainer, intro, lose text, script, localIdB, trainer B, intro B, lose B, script B,
++	@ victory text, cannot-battle text, isDouble, playMusicA, playMusicB, isRematch, continueScript, facePlayer,
++	@ earlyRival, skipFlagCheck, rival battle flags
++	trainerbattle OBJ_ID_NONE, TRAINER_DAILYRED_RED, NULL, DailyRed_Summit_Text_RedDefeat, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, DailyRed_Summit_Text_RedVictory, NULL, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, RIVAL_BATTLE_HEAL_AFTER
 +	special DailyRed_OnBattleEnd
 +	addvar VAR_DAILYRED_BATTLES, 1
 +	textcolor NPC_TEXT_COLOR_NEUTRAL
@@ -199,76 +197,95 @@ index 0000000..033ded0
 +	waitstate
 +	release
 +	end
-diff --git a/data/maps/DailyRed_Summit/text.inc b/data/maps/DailyRed_Summit/text.inc
-new file mode 100644
-index 0000000..1a0b48b
---- /dev/null
-+++ b/data/maps/DailyRed_Summit/text.inc
-@@ -0,0 +1,33 @@
++
 +DailyRed_Summit_Text_RedIntro::
-+    .string "…\p"
-+    .string "…………$"
++	.string "…\p"
++	.string "…………$"
 +
 +@ Shown in battle when RED loses.
 +DailyRed_Summit_Text_RedDefeat::
-+    .string "…$"
++	.string "…$"
 +
 +@ Shown in battle when RED wins.
 +DailyRed_Summit_Text_RedVictory::
-+    .string "…$"
++	.string "…$"
 +
 +DailyRed_Summit_Text_PlayerWon::
-+    .string "You defeated RED!$"
++	.string "You defeated RED!$"
 +
 +DailyRed_Summit_Text_PlayerLost::
-+    .string "Your team was wiped out…$"
++	.string "Your team was wiped out…$"
 +
 +DailyRed_Summit_Text_RecordWin::
-+    .string "Record: {STR_VAR_1} win(s) in\n"
-+    .string "{STR_VAR_2} battle(s).\p"
-+    .string "Play again tomorrow!$"
++	.string "Record: {STR_VAR_1} win(s) in\n"
++	.string "{STR_VAR_2} battle(s).\p"
++	.string "Play again tomorrow!$"
 +
 +DailyRed_Summit_Text_RecordLoss::
-+    .string "Record: {STR_VAR_1} win(s) in\n"
-+    .string "{STR_VAR_2} battle(s).\p"
-+    .string "Try again tomorrow.$"
++	.string "Record: {STR_VAR_1} win(s) in\n"
++	.string "{STR_VAR_2} battle(s).\p"
++	.string "Try again tomorrow.$"
 +
 +DailyRed_Summit_Text_NextRun::
-+    .string "Record: {STR_VAR_1} win(s) in\n"
-+    .string "{STR_VAR_2} battle(s).\p"
-+    .string "A new team of six is ready.\n"
-+    .string "Climb back up and face RED!$"
++	.string "Record: {STR_VAR_1} win(s) in\n"
++	.string "{STR_VAR_2} battle(s).\p"
++	.string "A new team of six is ready.\n"
++	.string "Climb back up and face RED!$"
 diff --git a/data/maps/map_groups.json b/data/maps/map_groups.json
-index 8c382f5..cae2f25 100644
+index d6320f48..911af6c6 100644
 --- a/data/maps/map_groups.json
 +++ b/data/maps/map_groups.json
-@@ -174,7 +174,8 @@
-     "SixIsland_DottedHole_B4F",
-     "SixIsland_DottedHole_SapphireRoom",
-     "SixIsland_PatternBush",
--    "SixIsland_AlteringCave"
-+    "SixIsland_AlteringCave",
+@@ -854,7 +854,8 @@
+     "BirthIsland_Exterior_Frlg",
+     "OneIsland_KindleRoad_EmberSpa_Frlg",
+     "BirthIsland_Harbor_Frlg",
+-    "NavelRock_Harbor_Frlg"
++    "NavelRock_Harbor_Frlg",
 +    "DailyRed_Summit"
    ],
-   "gMapGroup_SpecialArea": [
-     "NavelRock_Exterior",
+   "gMapGroup_TownsAndRoutes_Frlg": [
+     "PalletTown_Frlg",
 diff --git a/data/specials.inc b/data/specials.inc
-index d880bf6..485a37e 100644
+index 3492bf3b..c5abfb81 100644
 --- a/data/specials.inc
 +++ b/data/specials.inc
-@@ -452,4 +452,9 @@ gSpecials::
- 	def_special UpdateLoreleiDollCollection
- 	def_special LoopWingFlapSound
- 	def_special CreateEnemyEventMon
+@@ -638,3 +638,9 @@ gSpecials::
+ 	def_special UpdateTrainerCardPhotoIcons
+ 	def_special StickerManGetBragFlags
+ 	def_special CheckAddCoins
++	@ Daily Red (src/dailyred.c)
 +	def_special DailyRed_StartNextRun
 +	def_special DailyRed_OnBattleStart
 +	def_special DailyRed_OnBattleEnd
 +	def_special DailyRed_OnDailyGameOver
 +	def_special DailyRed_IsDailyGame
- gSpecialsEnd::
+diff --git a/include/config/debug.h b/include/config/debug.h
+index 334d0ab5..bf0c16f2 100644
+--- a/include/config/debug.h
++++ b/include/config/debug.h
+@@ -2,16 +2,16 @@
+ #define GUARD_CONFIG_DEBUG_H
+ 
+ // Overworld Debug
+-#define DEBUG_OVERWORLD_MENU            DISABLED_ON_RELEASE // Enables an overworld debug menu to change flags, variables, giving Pokémon and more, accessed by holding R and pressing START while in the overworld by default.
++#define DEBUG_OVERWORLD_MENU            FALSE // Daily Red: off (was DISABLED_ON_RELEASE), everyone plays the same game // Enables an overworld debug menu to change flags, variables, giving Pokémon and more, accessed by holding R and pressing START while in the overworld by default.
+ #define DEBUG_OVERWORLD_HELD_KEYS       (R_BUTTON)          // The keys required to be held to open the debug menu.
+ #define DEBUG_OVERWORLD_TRIGGER_EVENT   pressedStartButton  // The event that opens the menu when holding the key(s) defined in DEBUG_OVERWORLD_HELD_KEYS.
+ #define DEBUG_OVERWORLD_IN_MENU         FALSE               // Replaces the overworld debug menu button combination with a start menu entry (above Pokédex).
+ 
+ // Battle Debug Menu
+-#define DEBUG_BATTLE_MENU               DISABLED_ON_RELEASE // If set to TRUE, enables a debug menu to use in battles by pressing the Select button.
++#define DEBUG_BATTLE_MENU               FALSE // Daily Red: off (was DISABLED_ON_RELEASE) // If set to TRUE, enables a debug menu to use in battles by pressing the Select button.
+ #define DEBUG_AI_DELAY_TIMER            FALSE // If set to TRUE, displays the number of frames it takes for the AI to choose a move. Replaces the "What will PKMN do" text. Useful for devs or anyone who modifies the AI code and wants to see if it doesn't take too long to run.
+ 
+ // Pokémon Debug
+-#define DEBUG_POKEMON_SPRITE_VISUALIZER DISABLED_ON_RELEASE // Enables a debug menu for Pokémon sprites and icons, accessed by pressing Select in the summary screen.
++#define DEBUG_POKEMON_SPRITE_VISUALIZER FALSE // Daily Red: off (was DISABLED_ON_RELEASE) // Enables a debug menu for Pokémon sprites and icons, accessed by pressing Select in the summary screen.
+ 
+ #endif // GUARD_CONFIG_DEBUG_H
 diff --git a/include/constants/dailyred.h b/include/constants/dailyred.h
 new file mode 100644
-index 0000000..27c41b2
+index 00000000..27c41b21
 --- /dev/null
 +++ b/include/constants/dailyred.h
 @@ -0,0 +1,13 @@
@@ -285,88 +302,66 @@ index 0000000..27c41b2
 +#define DAILYRED_START_Y 18
 +
 +#endif // GUARD_CONSTANTS_DAILYRED_H
-diff --git a/include/constants/event_objects.h b/include/constants/event_objects.h
-index 9d8c514..2bddf55 100644
---- a/include/constants/event_objects.h
-+++ b/include/constants/event_objects.h
-@@ -155,8 +155,10 @@
- #define OBJ_EVENT_GFX_DEOXYS_A 149
- #define OBJ_EVENT_GFX_DEOXYS_N 150
- #define OBJ_EVENT_GFX_SS_ANNE 151
-+// Daily Red: RED standing on the summit (see gObjectEventGraphicsInfo_DailyRedRed).
-+#define OBJ_EVENT_GFX_DAILYRED_RED 152
+diff --git a/include/constants/opponents_frlg.h b/include/constants/opponents_frlg.h
+index f21e27af..83ed756d 100644
+--- a/include/constants/opponents_frlg.h
++++ b/include/constants/opponents_frlg.h
+@@ -627,12 +627,14 @@
+ #define TRAINER_CHAMPION_REMATCH_BULBASAUR         621
+ #define TRAINER_CHAMPION_REMATCH_CHARMANDER        622
+ #define TRAINER_CUE_BALL_PAXTON                    623
++// Daily Red: the boss (his team is in src/data/trainers_frlg.party).
++#define TRAINER_DAILYRED_RED                       624
  
--#define NUM_OBJ_EVENT_GFX     152
-+#define NUM_OBJ_EVENT_GFX     153
- 
- // These are dynamic object gfx ids.
- // They correspond with the values of the VAR_OBJ_GFX_ID_X vars.
-diff --git a/include/constants/opponents.h b/include/constants/opponents.h
-index 3b893f2..22aae86 100644
---- a/include/constants/opponents.h
-+++ b/include/constants/opponents.h
-@@ -746,12 +746,14 @@
- #define TRAINER_CHAMPION_REMATCH_BULBASAUR       740
- #define TRAINER_CHAMPION_REMATCH_CHARMANDER      741
- #define TRAINER_CUE_BALL_PAXTON                  742
-+// Daily Red: the boss (see src/dailyred_boss.c).
-+#define TRAINER_DAILYRED_RED                     743
- 
- // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is 
+ // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is
  //       only space for 25 additional trainers before trainer flag space overflows.
- //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
+ //       MAX_TRAINERS_COUNT_FRLG can be increased but will take up additional saveblock space
  
--#define NUM_TRAINERS                             743
-+#define NUM_TRAINERS                             744
- #define MAX_TRAINERS_COUNT                       768
+-#define TRAINERS_COUNT_FRLG                      624
++#define TRAINERS_COUNT_FRLG                      625
+ #define MAX_TRAINERS_COUNT_FRLG                  768
  
- #endif  // GUARD_CONSTANTS_OPPONENTS_H
-diff --git a/include/constants/vars.h b/include/constants/vars.h
-index 5c7bbf8..e477fa9 100644
---- a/include/constants/vars.h
-+++ b/include/constants/vars.h
-@@ -85,8 +85,8 @@
- // Used by Quest Log.
- #define VAR_QUEST_LOG_MON_COUNTS           0x4027
- #define VAR_WONDER_NEWS_STEP_COUNTER       0x4028
--#define VAR_0x4029                         0x4029
--#define VAR_0x402A                         0x402A
-+#define VAR_DAILYRED_BATTLES               0x4029 // Daily Red: battles fought since boot
-+#define VAR_DAILYRED_WINS                  0x402A // Daily Red: wins since boot
- #define VAR_0x402B                         0x402B
- #define VAR_0x402C                         0x402C
- #define VAR_0x402D                         0x402D
+ #endif  // GUARD_CONSTANTS_OPPONENTS_FRLG_H
+diff --git a/include/constants/vars_frlg.h b/include/constants/vars_frlg.h
+index 370f0e12..2581d755 100644
+--- a/include/constants/vars_frlg.h
++++ b/include/constants/vars_frlg.h
+@@ -168,9 +168,11 @@
+ #define VAR_0x4098                 0x4098
+ #define VAR_0x4099                 0x4099
+ #define VAR_0x409A                 0x409A
+-#define VAR_0x409B                 0x409B
++// Daily Red: battles fought since boot. Unused in both FRLG and Emerald
++// (VAR_UNUSED_0x409B), unlike 0x4029-0x402A, which the shared step code uses.
++#define VAR_DAILYRED_BATTLES       0x409B
+ #define VAR_0x409C                 0x409C
+-#define VAR_0x409D                 0x409D
++#define VAR_DAILYRED_WINS          0x409D // Daily Red: wins since boot (VAR_UNUSED_0x409D)
+ #define VAR_0x409E                 0x409E
+ #define VAR_0x409F                 0x409F
+ #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 0000000..47b058b
+index 00000000..ec40cee1
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,33 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
-+// Daily Red: a one-battle challenge mode built on FireRed.
++// Daily Red: a one-battle challenge mode built on FireRed
++// (pokeemerald-expansion's FRLG build).
 +//
 +// The player boots straight onto a snowy mountain peak (MAP_DAILY_RED_SUMMIT)
 +// as LEAF with six random level 100 Pokemon, climbs to RED and talks to him
-+// to start a normal
-+// FireRed trainer battle. Win or lose, a new team is generated and the next
-+// run starts in the same room.
++// to start the battle. Win or lose, a new team is generated and the next run
++// starts in the same room.
 +//
 +// Every vanilla file touched for this mode has a "Daily Red:" comment at the
 +// change, so `grep -rn "Daily Red" src include data` lists them all.
 +
 +#include "global.h"
-+#include "battle.h"
 +#include "constants/dailyred.h"
-+#include "constants/pokemon.h"
-+
-+#define DAILYRED_BOSS_PARTY_SIZE 6
-+
-+// The boss team (species, IVs, items, moves) and its EV spreads.
-+// Edit src/dailyred_boss.c to change it.
-+extern const struct TrainerMonItemCustomMoves gDailyRedBossParty[DAILYRED_BOSS_PARTY_SIZE];
-+extern const u8 gDailyRedBossEVs[DAILYRED_BOSS_PARTY_SIZE][NUM_STATS];
 +
 +// src/dailyred.c
 +bool8 DailyRed_HasInjectedSeed(void);
@@ -378,85 +373,103 @@ index 0000000..47b058b
 +void DailyRed_OnBattleEnd(void);
 +void DailyRed_OnDailyGameOver(void);
 +u16 DailyRed_IsDailyGame(void);
-+void DailyRed_ApplyBossEVs(struct Pokemon *party, u8 partySize);
++bool32 DailyRed_IsOnSummit(void);
 +
 +// src/dailyred_team.c
 +void DailyRed_GenerateTeam(struct Pokemon *party, u32 *rngState);
 +
 +#endif // GUARD_DAILYRED_H
-diff --git a/src/battle_main.c b/src/battle_main.c
-index 64c9e59..9ade275 100644
---- a/src/battle_main.c
-+++ b/src/battle_main.c
-@@ -42,6 +42,7 @@
- #include "constants/pokemon.h"
- #include "constants/songs.h"
- #include "constants/trainers.h"
-+#include "dailyred.h"
+diff --git a/include/main.h b/include/main.h
+index 56cf13f0..f685a6ed 100644
+--- a/include/main.h
++++ b/include/main.h
+@@ -70,6 +70,7 @@ void ClearPokemonCrySongs(void);
+ void RestoreSerialTimer3IntrHandlers(void);
+ void StartTimer1(void);
+ void SeedRngAndSetTrainerId(void);
++void SeedRngAndSetTrainerIdFromSeed(u32 seed); // Daily Red
+ u16 GetGeneratedTrainerIdLower(void);
  
- static void SpriteCB_UnusedDebugSprite(struct Sprite *sprite);
- static void HandleAction_UseMove(void);
-@@ -1632,6 +1633,10 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
-         }
- 
-         gBattleTypeFlags |= gTrainers[trainerNum].doubleBattle;
-+
-+        // Daily Red: vanilla trainer parties have no EVs, but RED gets his.
-+        if (trainerNum == TRAINER_DAILYRED_RED)
-+            DailyRed_ApplyBossEVs(party, gTrainers[trainerNum].partySize);
-     }
- 
-     return gTrainers[trainerNum].partySize;
+ #endif // GUARD_MAIN_H
 diff --git a/src/battle_setup.c b/src/battle_setup.c
-index 6d62084..44f97e4 100644
+index 6024da3c..5e52b905 100644
 --- a/src/battle_setup.c
 +++ b/src/battle_setup.c
-@@ -468,6 +468,11 @@ u8 BattleSetup_GetTerrainId(void)
-     u16 tileBehavior;
-     s16 x, y;
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "data.h"
+ #include "main.h"
+ #include "battle.h"
+@@ -767,6 +768,10 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
+ 
+     tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
  
 +    // Daily Red: the summit is an open mountain peak.
-+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_DAILY_RED_SUMMIT)
-+     && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_DAILY_RED_SUMMIT))
-+        return BATTLE_TERRAIN_MOUNTAIN;
++    if (DailyRed_IsOnSummit())
++        return BATTLE_ENVIRONMENT_MOUNTAIN;
 +
-     PlayerGetDestCoords(&x, &y);
-     tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
      if (MetatileBehavior_IsTallGrass(tileBehavior))
-@@ -896,7 +901,9 @@ void ClearTrainerFlag(u16 trainerId)
- void StartTrainerBattle(void)
- {
-     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
--    if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL && GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL)
+         return BATTLE_ENVIRONMENT_GRASS;
+     if (MetatileBehavior_IsLongGrass(tileBehavior))
+@@ -1463,7 +1468,9 @@ void BattleSetup_StartTrainerBattle(void)
+         }
+     }
+ 
+-    if (TRAINER_BATTLE_PARAM.earlyRival && GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL)
 +    // Daily Red: RIVAL_BATTLE_TUTORIAL (3) includes the RIVAL_BATTLE_HEAL_AFTER bit (1),
 +    // so test for all of its bits. Vanilla only ever passes 0 or 3, which behave as before.
-+    if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL && (GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL) == RIVAL_BATTLE_TUTORIAL)
++    if (TRAINER_BATTLE_PARAM.earlyRival && (GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL) == RIVAL_BATTLE_TUTORIAL)
          gBattleTypeFlags |= BATTLE_TYPE_FIRST_BATTLE;
-     gMain.savedCallback = CB2_EndTrainerBattle;
-     DoTrainerBattle();
+ 
+     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
+diff --git a/src/battle_util.c b/src/battle_util.c
+index 85523e06..79fe93ec 100644
+--- a/src/battle_util.c
++++ b/src/battle_util.c
+@@ -55,6 +55,7 @@
+ #include "constants/weather.h"
+ #include "constants/pokemon.h"
+ #include "test/battle.h"
++#include "dailyred.h" // Daily Red
+ 
+ static bool32 TryRemoveScreens(enum BattlerId battler);
+ static bool32 IsUnnerveAbilityOnOpposingSide(enum BattlerId battler);
+@@ -2941,6 +2942,10 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
+                 }
+                 break;
+             case WEATHER_SNOW:
++                // Daily Red: the summit's snow is only scenery; RED's battle
++                // starts without weather, as it always has.
++                if (DailyRed_IsOnSummit())
++                    break;
+                 if (!(gBattleWeather & B_WEATHER_ICY_ANY))
+                 {
+                     if (B_OVERWORLD_SNOW >= GEN_9)
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 0000000..1ec6e68
+index 00000000..983819ab
 --- /dev/null
 +++ b/src/dailyred.c
-@@ -0,0 +1,221 @@
+@@ -0,0 +1,219 @@
 +#include "global.h"
-+#include "gflib.h"
 +#include "dailyred.h"
 +#include "event_data.h"
 +#include "load_save.h"
-+#include "m4a.h"
 +#include "main.h"
++#include "malloc.h"
 +#include "new_game.h"
 +#include "overworld.h"
 +#include "pokemon.h"
 +#include "random.h"
 +#include "save.h"
-+#include "constants/flags.h"
++#include "string_util.h"
++#include "gba/m4a_internal.h"
 +#include "constants/maps.h"
 +
 +// Game flow for Daily Red: boot, starting a run and how a run ends.
-+// The team rules live in dailyred_team.c and RED's team in dailyred_boss.c.
++// The team rules live in dailyred_team.c, RED's team in
++// src/data/trainers_frlg.party (TRAINER_DAILYRED_RED).
 +
 +// The website fills in this struct in the ROM image before booting it,
 +// finding it by its magic bytes (web/rom-config.js), so no emulator API is
@@ -464,7 +477,7 @@ index 0000000..1ec6e68
 +//
 +// A seed of 0 means the ROM wasn't patched (for example, it's running in a
 +// desktop emulator). The game then shows the normal title screen and seeds
-+// itself from the frame the player presses Start, like vanilla FireRed.
++// itself from the frame the player presses Start.
 +struct DailyRedRomConfig
 +{
 +    u8 magic[16];
@@ -483,7 +496,8 @@ index 0000000..1ec6e68
 +// The website reads this from the emulator's memory (web/game-link.js) to
 +// learn when RED's battle starts and how it ended. It finds the struct by the
 +// magic bytes followed by the seed it injected, which only this live copy in
-+// RAM has.
++// RAM has. Nothing in the game reads it, so it's volatile: otherwise the
++// compiler (with link-time optimization) drops every write to it.
 +struct DailyRedStatus
 +{
 +    u8 magic[16];
@@ -509,13 +523,11 @@ index 0000000..1ec6e68
 +};
 +
 +static const u8 sStatusMagic[16] = {'D', 'A', 'I', 'L', 'Y', 'R', 'E', 'D', '-', 'S', 'T', 'A', 'T', 'U', 'S', '1'};
-+static EWRAM_DATA struct DailyRedStatus sStatus = {0};
++static EWRAM_DATA volatile struct DailyRedStatus sStatus __attribute__((used)) = {0};
 +
 +// Team generator RNG. Seeded once per boot; each new run continues from where
 +// the previous one stopped, so a seed fixes the whole sequence of teams.
 +static EWRAM_DATA u32 sTeamRngState = 0;
-+
-+extern u16 gTrainerId; // main.c: low half of the player's trainer ID
 +
 +static const u8 sText_PlayerName[] = _("LEAF");
 +static const u8 sText_RivalName[] = _("RED");
@@ -534,7 +546,10 @@ index 0000000..1ec6e68
 +
 +static void InitStatus(u32 seed)
 +{
-+    memcpy(sStatus.magic, sStatusMagic, sizeof(sStatus.magic));
++    u32 i;
++
++    for (i = 0; i < sizeof(sStatus.magic); i++)
++        sStatus.magic[i] = sStatusMagic[i];
 +    sStatus.seed = seed;
 +    sStatus.phase = DAILYRED_PHASE_EXPLORING;
 +    sStatus.result = DAILYRED_RESULT_NONE;
@@ -543,6 +558,12 @@ index 0000000..1ec6e68
 +bool8 DailyRed_HasInjectedSeed(void)
 +{
 +    return GetInjectedSeed() != 0;
++}
++
++bool32 DailyRed_IsOnSummit(void)
++{
++    return gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_DAILY_RED_SUMMIT)
++        && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_DAILY_RED_SUMMIT);
 +}
 +
 +// Fresh, unsaved game data every boot: LEAF, female, fast text, SET battle
@@ -563,22 +584,20 @@ index 0000000..1ec6e68
 +}
 +
 +// Used instead of the intro and title screen when the website supplied a
-+// seed. Does the same setup as the title screen does after Start is pressed
-+// (see SetTitleScreenScene_Cry in title_screen.c).
++// seed (from the copyright screen, see intro_frlg.c).
 +void CB2_DailyRed_StartFromCopyright(void)
 +{
 +    u32 seed = GetInjectedSeed();
 +
 +    // What SeedRngAndSetTrainerId does with the timer, but from the seed.
-+    gRngValue = seed;
-+    gTrainerId = Random();
++    SeedRngAndSetTrainerIdFromSeed(seed);
 +    sTeamRngState = seed;
 +    InitStatus(seed);
 +    // No resetting out of a losing battle in the daily game. Only saving,
 +    // link play and trading turn it back on, and none of those exist here.
 +    if (IsDailyGame())
 +        gSoftResetDisabled = TRUE;
-+    SetSaveBlocksPointers();
++    SetSaveBlocksPointers(GetSaveBlocksPointersBaseOffset());
 +    ResetMenuAndMonGlobals();
 +    Save_ResetSaveCounters();
 +    LoadGameSave(SAVE_NORMAL);
@@ -586,10 +605,11 @@ index 0000000..1ec6e68
 +    StartNewGame();
 +}
 +
-+// Used instead of the main menu when there's no injected seed. The title
-+// screen has just seeded Random() from the frame Start was pressed.
++// Used instead of the main menu when there's no injected seed: seeds the game
++// from the frame the player pressed Start on the title screen.
 +void CB2_DailyRed_StartFromTitle(void)
 +{
++    SeedRngAndSetTrainerId();
 +    sTeamRngState = Random32();
 +    InitStatus(0);
 +    StartNewGame();
@@ -597,7 +617,7 @@ index 0000000..1ec6e68
 +
 +static void GenerateTeam(void)
 +{
-+    DailyRed_GenerateTeam(gPlayerParty, &sTeamRngState);
++    DailyRed_GenerateTeam(gParties[B_TRAINER_PLAYER], &sTeamRngState);
 +    CalculatePlayerPartyCount();
 +}
 +
@@ -605,7 +625,11 @@ index 0000000..1ec6e68
 +void DailyRed_InitNewGame(void)
 +{
 +    FlagSet(FLAG_SYS_POKEMON_GET); // shows POKeMON in the start menu
-+    EnableNationalPokedex();       // so Gen 2/3 Pokemon show national dex numbers
++    // Obedience: with the expansion's Gen 8+ rules even your own Pokemon
++    // check badges (against the level they were met at). The Earth Badge
++    // makes every level obey, as Daily Red has always had them.
++    FlagSet(FLAG_BADGE08_GET);
++    EnableNationalPokedex();       // so Pokemon show national dex numbers
 +    // Start the record from the website's saved stats (0 outside the website).
 +    VarSet(VAR_DAILYRED_WINS, *(const vu16 *)&gDailyRedRomConfig.wins);
 +    VarSet(VAR_DAILYRED_BATTLES, *(const vu16 *)&gDailyRedRomConfig.battles);
@@ -647,111 +671,16 @@ index 0000000..1ec6e68
 +{
 +    return IsDailyGame();
 +}
-+
-+// Vanilla trainer parties have no EVs; give RED his spreads from
-+// gDailyRedBossEVs. Called from CreateNPCTrainerParty.
-+void DailyRed_ApplyBossEVs(struct Pokemon *party, u8 partySize)
-+{
-+    u8 i, stat;
-+
-+    for (i = 0; i < partySize && i < DAILYRED_BOSS_PARTY_SIZE; i++)
-+    {
-+        for (stat = 0; stat < NUM_STATS; stat++)
-+            SetMonData(&party[i], MON_DATA_HP_EV + stat, &gDailyRedBossEVs[i][stat]);
-+        CalculateMonStats(&party[i]);
-+    }
-+}
-diff --git a/src/dailyred_boss.c b/src/dailyred_boss.c
-new file mode 100644
-index 0000000..37ee62e
---- /dev/null
-+++ b/src/dailyred_boss.c
-@@ -0,0 +1,77 @@
-+#include "global.h"
-+#include "dailyred.h"
-+#include "constants/items.h"
-+#include "constants/moves.h"
-+#include "constants/species.h"
-+
-+// RED's team for Daily Red. This file is the one place to edit it.
-+//
-+// Species and order follow Red's Mt. Silver team from HeartGold/SoulSilver.
-+// Movesets are adapted to moves that exist in Gen 3 (HGSS used several Gen 4
-+// moves), and every Pokemon is level 100 with perfect IVs and a full EV
-+// spread.
-+//
-+// The battle itself is a normal FireRed trainer battle: the trainer entry
-+// (name, class, sprite, AI flags) is TRAINER_DAILYRED_RED in
-+// src/data/trainers.h.
-+//
-+// iv: 0-255, scaled to 0-31 by the game (255 = 31 in every stat).
-+
-+const struct TrainerMonItemCustomMoves gDailyRedBossParty[DAILYRED_BOSS_PARTY_SIZE] =
-+{
-+    {
-+        .iv = 255,
-+        .lvl = 100,
-+        .species = SPECIES_PIKACHU,
-+        .heldItem = ITEM_LIGHT_BALL,
-+        .moves = {MOVE_VOLT_TACKLE, MOVE_THUNDERBOLT, MOVE_IRON_TAIL, MOVE_QUICK_ATTACK},
-+    },
-+    {
-+        .iv = 255,
-+        .lvl = 100,
-+        .species = SPECIES_ESPEON,
-+        .heldItem = ITEM_TWISTED_SPOON,
-+        .moves = {MOVE_PSYCHIC, MOVE_SHADOW_BALL, MOVE_CALM_MIND, MOVE_MORNING_SUN},
-+    },
-+    {
-+        .iv = 255,
-+        .lvl = 100,
-+        .species = SPECIES_SNORLAX,
-+        .heldItem = ITEM_LEFTOVERS,
-+        .moves = {MOVE_BODY_SLAM, MOVE_EARTHQUAKE, MOVE_SHADOW_BALL, MOVE_REST},
-+    },
-+    {
-+        .iv = 255,
-+        .lvl = 100,
-+        .species = SPECIES_VENUSAUR,
-+        .heldItem = ITEM_MIRACLE_SEED,
-+        .moves = {MOVE_GIGA_DRAIN, MOVE_SLUDGE_BOMB, MOVE_SLEEP_POWDER, MOVE_LEECH_SEED},
-+    },
-+    {
-+        .iv = 255,
-+        .lvl = 100,
-+        .species = SPECIES_CHARIZARD,
-+        .heldItem = ITEM_CHARCOAL,
-+        .moves = {MOVE_FLAMETHROWER, MOVE_DRAGON_CLAW, MOVE_EARTHQUAKE, MOVE_AERIAL_ACE},
-+    },
-+    {
-+        .iv = 255,
-+        .lvl = 100,
-+        .species = SPECIES_BLASTOISE,
-+        .heldItem = ITEM_MYSTIC_WATER,
-+        .moves = {MOVE_SURF, MOVE_ICE_BEAM, MOVE_EARTHQUAKE, MOVE_HYDRO_CANNON},
-+    },
-+};
-+
-+// EVs for each Pokemon above, in the same order.
-+// Stat order: HP, Attack, Defense, Speed, Sp. Atk, Sp. Def (max 255 each, 510 total).
-+// Vanilla FireRed trainers have no EVs; DailyRed_ApplyBossEVs adds these.
-+const u8 gDailyRedBossEVs[DAILYRED_BOSS_PARTY_SIZE][NUM_STATS] =
-+{
-+    {  0, 124,   0, 252, 132,   0}, // Pikachu
-+    {  4,   0,   0, 252, 252,   0}, // Espeon
-+    {252, 252,   4,   0,   0,   0}, // Snorlax
-+    {252,   0,   0,   4, 252,   0}, // Venusaur
-+    {  0,   4,   0, 252, 252,   0}, // Charizard
-+    {252,   0,   0,   4, 252,   0}, // Blastoise
-+};
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 0000000..4b9a87f
+index 00000000..1a2c228c
 --- /dev/null
 +++ b/src/dailyred_team.c
-@@ -0,0 +1,493 @@
+@@ -0,0 +1,544 @@
 +#include "global.h"
 +#include "dailyred.h"
++#include "item.h"
++#include "move.h"
 +#include "party_menu.h"
 +#include "pokemon.h"
 +#include "random.h"
@@ -762,14 +691,14 @@ index 0000000..4b9a87f
 +
 +// Random team generator for Daily Red.
 +//
-+// Rules (first version; see "Team generation" in the project README):
-+//   - 6 different species out of the 386 Gen 1-3 Pokemon, whose base stat
-+//     totals add up to at least MIN_TEAM_BASE_STAT_TOTAL. 1 team in
++// Rules (see "Team generation" in the project README):
++//   - 6 different species out of the eligible ones (IsEligibleSpecies), whose
++//     base stat totals add up to at least MIN_TEAM_BASE_STAT_TOTAL. 1 team in
 +//     LEGENDARY_TEAM_ODDS includes exactly one legendary; the rest have none.
 +//   - Level 100 with a random personality (so random nature, gender, ability
-+//     and the normal 1/8192 shiny chance), random IVs from MIN_TEAM_IV to 31,
-+//     and EVs focused on its two best stats (see AssignFocusedEVs), close to
-+//     RED's perfect IVs and hand-picked EV spreads.
++//     and the normal shiny chance), random IVs from MIN_TEAM_IV to 31, and
++//     EVs focused on its two best stats (see AssignFocusedEVs), close to RED's
++//     perfect IVs and hand-picked EV spreads.
 +//   - Up to 4 different moves picked uniformly from everything the species can
 +//     learn by level-up (at any level) or by TM/HM. If the species has any
 +//     damaging move, at least one of the 4 is damaging.
@@ -781,26 +710,25 @@ index 0000000..4b9a87f
 +// seed always produces the same sequence of teams regardless of what else in
 +// the game consumed random numbers in between.
 +
-+#define MAX_CANDIDATE_MOVES  128 // Mew, the largest pool, has under 100
-+#define MAX_TOTAL_EVS        510
-+#define MAX_STAT_EVS         252
++#define MAX_CANDIDATE_MOVES  160 // Mew, the largest pool, has about 110
++#define MAX_TOTAL_EV_POINTS  510
++#define MAX_STAT_EV_POINTS   252
 +#define MIN_TEAM_IV          25  // IVs are random from this to 31 (RED's are all 31)
-+#define MAX_SPECIES_ATTEMPTS 1000
++#define MAX_SPECIES_ATTEMPTS 4000
 +#define MAX_MON_ATTEMPTS     10
 +#define MAX_TEAM_ATTEMPTS    1000
 +
 +// Minimum combined base stat total (HP + Atk + Def + Speed + Sp. Atk +
-+// Sp. Def) for the player's six. RED's team adds up to 2954 (Pikachu 300,
++// Sp. Def) for the player's six. RED's team adds up to 2974 (Pikachu 320,
 +// Espeon 525, Snorlax 540, Venusaur 525, Charizard 534, Blastoise 530), while
-+// a fully random team averages about 2430. At 2700, a typical team's actual
-+// in-battle stats come to about 96% of RED's and roughly 1 team in 25 is
-+// stronger than his. Raise it to make the game easier, lower it for harder.
-+// Set to 0 to turn the rule off.
++// a fully random team averages about 2440. About 1 random draw in 12 meets
++// the minimum, and roughly 1 qualifying team in 24 out-totals RED's. Raise it
++// to make the game easier, lower it for harder. Set to 0 to turn the rule off.
 +#define MIN_TEAM_BASE_STAT_TOTAL 2700
 +
 +// Legendary and mythical Pokemon average a base stat total of 613, against
-+// 393 for everything else, so the minimum above would put one in most teams
-+// (70% of them). Instead, 1 in LEGENDARY_TEAM_ODDS teams gets exactly one and
++// 394 for everything else, so the minimum above would put one in most teams
++// (64% of them). Instead, 1 in LEGENDARY_TEAM_ODDS teams gets exactly one and
 +// the others get none.
 +#define LEGENDARY_TEAM_ODDS 8
 +
@@ -833,7 +761,7 @@ index 0000000..4b9a87f
 +    ITEM_PETAYA_BERRY,
 +};
 +
-+// The item that boosts moves of each type by 10%.
++// The item that boosts moves of each type (types without one stay ITEM_NONE).
 +static const u16 sTypeBoostItems[NUMBER_OF_MON_TYPES] =
 +{
 +    [TYPE_NORMAL]   = ITEM_SILK_SCARF,
@@ -845,7 +773,6 @@ index 0000000..4b9a87f
 +    [TYPE_BUG]      = ITEM_SILVER_POWDER,
 +    [TYPE_GHOST]    = ITEM_SPELL_TAG,
 +    [TYPE_STEEL]    = ITEM_METAL_COAT,
-+    [TYPE_MYSTERY]  = ITEM_NONE,
 +    [TYPE_FIRE]     = ITEM_CHARCOAL,
 +    [TYPE_WATER]    = ITEM_MYSTIC_WATER,
 +    [TYPE_GRASS]    = ITEM_MIRACLE_SEED,
@@ -854,6 +781,7 @@ index 0000000..4b9a87f
 +    [TYPE_ICE]      = ITEM_NEVER_MELT_ICE,
 +    [TYPE_DRAGON]   = ITEM_DRAGON_FANG,
 +    [TYPE_DARK]     = ITEM_BLACK_GLASSES,
++    [TYPE_FAIRY]    = ITEM_FAIRY_FEATHER,
 +};
 +
 +static u16 TeamRandom(u32 *rng)
@@ -868,29 +796,25 @@ index 0000000..4b9a87f
 +    return lo | ((u32)TeamRandom(rng) << 16);
 +}
 +
-+// Which species may appear on the player's team. Add rules here, e.g.
-+// "fully evolved only" or "no legendaries".
-+static bool8 IsEligibleSpecies(u16 species)
++// Which species may appear on the player's team: the 386 Pokemon of
++// Generations 1-3, in their base forms. Add rules here, e.g. "fully evolved
++// only" or "no legendaries".
++static bool32 IsEligibleSpecies(u16 species)
 +{
-+    if (species == SPECIES_NONE || species >= NUM_SPECIES)
++    if (species == SPECIES_NONE || species > SPECIES_DEOXYS)
 +        return FALSE;
-+    // Unused placeholder slots between Celebi and Treecko.
-+    if (species >= SPECIES_OLD_UNOWN_B && species <= SPECIES_OLD_UNOWN_Z)
-+        return FALSE;
-+    return TRUE;
++    return IsSpeciesEnabled(species);
 +}
 +
-+static u16 GetBaseStatTotal(u16 species)
++static u32 GetBaseStatTotal(u16 species)
 +{
-+    const struct SpeciesInfo *info = &gSpeciesInfo[species];
-+
-+    return info->baseHP + info->baseAttack + info->baseDefense
-+         + info->baseSpeed + info->baseSpAttack + info->baseSpDefense;
++    return GetSpeciesBaseHP(species) + GetSpeciesBaseAttack(species) + GetSpeciesBaseDefense(species)
++         + GetSpeciesBaseSpeed(species) + GetSpeciesBaseSpAttack(species) + GetSpeciesBaseSpDefense(species);
 +}
 +
-+static bool8 IsLegendary(u16 species)
++static bool32 IsLegendary(u16 species)
 +{
-+    u8 i;
++    u32 i;
 +
 +    for (i = 0; i < ARRAY_COUNT(sLegendaries); i++)
 +    {
@@ -900,9 +824,9 @@ index 0000000..4b9a87f
 +    return FALSE;
 +}
 +
-+static bool8 IsSpeciesTaken(u16 species, const u16 *taken, u8 takenCount)
++static bool32 IsSpeciesTaken(u16 species, const u16 *taken, u8 takenCount)
 +{
-+    u8 i;
++    u32 i;
 +
 +    for (i = 0; i < takenCount; i++)
 +    {
@@ -935,7 +859,7 @@ index 0000000..4b9a87f
 +}
 +
 +// Decides whether this team gets a legendary, then draws the other Pokemon
-+// until the team meets MIN_TEAM_BASE_STAT_TOTAL (about 1 in 20 draws do), so
++// until the team meets MIN_TEAM_BASE_STAT_TOTAL (about 1 in 12 draws do), so
 +// every qualifying team is equally likely. In the practically impossible case
 +// that none does, the strongest team drawn is used.
 +static void PickTeamSpecies(u16 *species, u32 *rng)
@@ -978,7 +902,7 @@ index 0000000..4b9a87f
 +
 +static void AddCandidateMove(u16 *moves, u8 *count, u16 move)
 +{
-+    u8 i;
++    u32 i;
 +
 +    if (move == MOVE_NONE || move >= MOVES_COUNT || *count >= MAX_CANDIDATE_MOVES)
 +        return;
@@ -995,25 +919,79 @@ index 0000000..4b9a87f
 +static u8 GetLearnableMoves(struct Pokemon *mon, u16 *moves)
 +{
 +    u16 species = GetMonData(mon, MON_DATA_SPECIES);
-+    const u16 *learnset = gLevelUpLearnsets[species];
++    const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
 +    u8 count = 0;
-+    u8 i;
++    u32 i;
++    u16 move;
 +
-+    for (i = 0; learnset[i] != LEVEL_UP_END; i++)
-+        AddCandidateMove(moves, &count, learnset[i] & LEVEL_UP_MOVE_ID);
++    for (i = 0; learnset[i].move != LEVEL_UP_MOVE_END; i++)
++        AddCandidateMove(moves, &count, learnset[i].move);
 +
-+    for (i = 0; i < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; i++)
++    // TM/HM indices start at 1 (0 is ITEM_NONE / MOVE_NONE).
++    for (i = 1; i <= NUM_ALL_MACHINES; i++)
 +    {
-+        if (CanMonLearnTMHM(mon, i))
-+            AddCandidateMove(moves, &count, ItemIdToBattleMoveId(ITEM_TM01_FOCUS_PUNCH + i));
++        move = GetTMHMMoveId(i);
++        if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
++            AddCandidateMove(moves, &count, move);
 +    }
 +    return count;
 +}
 +
-+static bool8 IsDamagingMove(u16 move)
++static bool32 IsDamagingMove(u16 move)
 +{
-+    // Fixed-damage moves (Seismic Toss, Dragon Rage, ...) have power 1.
-+    return gBattleMoves[move].power != 0;
++    return GetMoveCategory(move) != DAMAGE_CATEGORY_STATUS;
++}
++
++// Damage that doesn't come from the user's Attack or Sp. Atk, so neither EVs
++// nor type-boosting items change it (Seismic Toss, Super Fang, Counter, OHKO
++// moves, ...). Variable-power moves like Return or Low Kick do use them.
++static bool32 IsFixedDamageMove(u16 move)
++{
++    switch (GetMoveEffect(move))
++    {
++    case EFFECT_BIDE:
++    case EFFECT_OHKO:
++    case EFFECT_FIXED_PERCENT_DAMAGE:
++    case EFFECT_FIXED_HP_DAMAGE:
++    case EFFECT_LEVEL_DAMAGE:
++    case EFFECT_PSYWAVE:
++    case EFFECT_REFLECT_DAMAGE:
++    case EFFECT_ENDEAVOR:
++    case EFFECT_FINAL_GAMBIT:
++        return TRUE;
++    default:
++        return FALSE;
++    }
++}
++
++// Moves whose type is decided in battle (Hidden Power by the IVs, Weather
++// Ball by the weather, ...), so their listed type says nothing about which
++// type-boosting item would help.
++static bool32 HasVariableType(u16 move)
++{
++    switch (GetMoveEffect(move))
++    {
++    case EFFECT_HIDDEN_POWER:
++    case EFFECT_WEATHER_BALL:
++    case EFFECT_NATURAL_GIFT:
++    case EFFECT_CHANGE_TYPE_ON_ITEM:
++    case EFFECT_REVELATION_DANCE:
++    case EFFECT_AURA_WHEEL:
++    case EFFECT_TERRAIN_PULSE:
++    case EFFECT_RAGING_BULL:
++    case EFFECT_IVY_CUDGEL:
++    case EFFECT_TERA_BLAST:
++    case EFFECT_TERA_STARSTORM:
++        return TRUE;
++    default:
++        return FALSE;
++    }
++}
++
++// Attacks whose damage scales with the user's Attack or Sp. Atk.
++static bool32 UsesAttackingStat(u16 move)
++{
++    return move != MOVE_NONE && IsDamagingMove(move) && !IsFixedDamageMove(move);
 +}
 +
 +static void AssignRandomMoves(struct Pokemon *mon, u32 *rng)
@@ -1072,14 +1050,13 @@ index 0000000..4b9a87f
 +    for (i = 0; i < ARRAY_COUNT(sBattleItems); i++)
 +        items[count++] = sBattleItems[i];
 +
-+    // Type boosters only for types the Pokemon attacks with. Fixed-damage moves
-+    // (power 1, e.g. Seismic Toss or Hidden Power) aren't boosted, so skip them.
++    // Type boosters only for types the Pokemon attacks with.
 +    for (i = 0; i < MAX_MON_MOVES; i++)
 +    {
 +        move = GetMonData(mon, MON_DATA_MOVE1 + i);
-+        if (gBattleMoves[move].power <= 1)
++        if (!UsesAttackingStat(move) || HasVariableType(move))
 +            continue;
-+        item = sTypeBoostItems[gBattleMoves[move].type];
++        item = sTypeBoostItems[GetMoveType(move)];
 +        for (j = 0; j < count && items[j] != item; j++)
 +            ;
 +        if (item != ITEM_NONE && j == count)
@@ -1095,11 +1072,11 @@ index 0000000..4b9a87f
 +
 +// Trains the Pokemon like RED's: 252 EVs into each of its two highest base
 +// stats and the last 6 into HP (or its third-best stat if HP is one of the
-+// two). Attack and Sp. Atk only count if one of its attacks uses them; in
-+// Gen 3 a move's type decides which (IS_TYPE_PHYSICAL). Needs the moves set.
++// two). Attack and Sp. Atk only count if one of its attacks uses them, which
++// each move's physical/special category decides. Needs the moves set.
 +static void AssignFocusedEVs(struct Pokemon *mon)
 +{
-+    const struct SpeciesInfo *info = &gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)];
++    u16 species = GetMonData(mon, MON_DATA_SPECIES);
 +    u8 base[NUM_STATS];
 +    bool8 usable[NUM_STATS] = {TRUE, FALSE, TRUE, TRUE, FALSE, TRUE};
 +    u8 order[NUM_STATS];
@@ -1108,20 +1085,20 @@ index 0000000..4b9a87f
 +    u8 i, j, stat;
 +    u16 move;
 +
-+    base[STAT_HP] = info->baseHP;
-+    base[STAT_ATK] = info->baseAttack;
-+    base[STAT_DEF] = info->baseDefense;
-+    base[STAT_SPEED] = info->baseSpeed;
-+    base[STAT_SPATK] = info->baseSpAttack;
-+    base[STAT_SPDEF] = info->baseSpDefense;
++    base[STAT_HP] = GetSpeciesBaseHP(species);
++    base[STAT_ATK] = GetSpeciesBaseAttack(species);
++    base[STAT_DEF] = GetSpeciesBaseDefense(species);
++    base[STAT_SPEED] = GetSpeciesBaseSpeed(species);
++    base[STAT_SPATK] = GetSpeciesBaseSpAttack(species);
++    base[STAT_SPDEF] = GetSpeciesBaseSpDefense(species);
 +
-+    // Status moves and fixed-damage moves (power 1) don't use either stat.
++    // Status moves and fixed-damage moves don't use either stat.
 +    for (i = 0; i < MAX_MON_MOVES; i++)
 +    {
 +        move = GetMonData(mon, MON_DATA_MOVE1 + i);
-+        if (gBattleMoves[move].power <= 1)
++        if (!UsesAttackingStat(move))
 +            continue;
-+        if (IS_TYPE_PHYSICAL(gBattleMoves[move].type))
++        if (GetMoveCategory(move) == DAMAGE_CATEGORY_PHYSICAL)
 +            usable[STAT_ATK] = TRUE;
 +        else
 +            usable[STAT_SPATK] = TRUE;
@@ -1140,20 +1117,20 @@ index 0000000..4b9a87f
 +        count++;
 +    }
 +
-+    evs[order[0]] = MAX_STAT_EVS;
-+    evs[order[1]] = MAX_STAT_EVS;
++    evs[order[0]] = MAX_STAT_EV_POINTS;
++    evs[order[1]] = MAX_STAT_EV_POINTS;
 +    stat = (order[0] != STAT_HP && order[1] != STAT_HP) ? STAT_HP : order[2];
-+    evs[stat] = MAX_TOTAL_EVS - 2 * MAX_STAT_EVS;
++    evs[stat] = MAX_TOTAL_EV_POINTS - 2 * MAX_STAT_EV_POINTS;
 +
 +    for (stat = 0; stat < NUM_STATS; stat++)
 +        SetMonData(mon, MON_DATA_HP_EV + stat, &evs[stat]);
 +}
 +
 +// A level 100 Pokemon with a random personality, owned by the player
-+// (OT_ID_PLAYER_ID), so it obeys without badges.
++// (OTID_STRUCT_PLAYER_ID). It has no moves until they're assigned.
 +static void CreateTeamMon(struct Pokemon *mon, u16 species, u32 *rng)
 +{
-+    CreateMon(mon, species, MAX_LEVEL, 0, TRUE, TeamRandom32(rng), OT_ID_PLAYER_ID, 0);
++    CreateMon(mon, species, MAX_LEVEL, TeamRandom32(rng), OTID_STRUCT_PLAYER_ID);
 +}
 +
 +// IVs, EVs, held item and final stats, once the moves are set.
@@ -1170,7 +1147,7 @@ index 0000000..4b9a87f
 +    }
 +    AssignFocusedEVs(mon);
 +
-+    // Mew and Deoxys disobey unless marked as event Pokemon.
++    // Event Pokemon like Mew and Deoxys, as Daily Red's have always been.
 +    SetMonData(mon, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &fateful);
 +    SetMonData(mon, MON_DATA_MET_LOCATION, &metLocation);
 +
@@ -1178,17 +1155,17 @@ index 0000000..4b9a87f
 +    AssignRandomItem(mon, rng);
 +}
 +
-+static void CreateRandomMon(struct Pokemon *mon, u16 species, u32 *rng)
++static void CreateRandomTeamMon(struct Pokemon *mon, u16 species, u32 *rng)
 +{
 +    CreateTeamMon(mon, species, rng);
 +    AssignRandomMoves(mon, rng);
 +    FinishTeamMon(mon, rng);
 +}
 +
-+static bool8 IsValidTeamMon(struct Pokemon *mon)
++static bool32 IsValidTeamMon(struct Pokemon *mon)
 +{
 +    u16 moves[MAX_MON_MOVES];
-+    u8 i, j;
++    u32 i, j;
 +
 +    if (!IsEligibleSpecies(GetMonData(mon, MON_DATA_SPECIES)))
 +        return FALSE;
@@ -1229,7 +1206,7 @@ index 0000000..4b9a87f
 +    {
 +        for (attempt = 0; attempt < MAX_MON_ATTEMPTS; attempt++)
 +        {
-+            CreateRandomMon(&party[i], species[i], rngState);
++            CreateRandomTeamMon(&party[i], species[i], rngState);
 +            if (IsValidTeamMon(&party[i]))
 +                break;
 +        }
@@ -1239,118 +1216,99 @@ index 0000000..4b9a87f
 +        if (attempt == MAX_MON_ATTEMPTS)
 +        {
 +            CreateTeamMon(&party[i], species[i], rngState);
++            GiveMonInitialMoveset(&party[i]);
 +            FinishTeamMon(&party[i], rngState);
 +        }
 +    }
 +}
-diff --git a/src/data.c b/src/data.c
-index 498f281..4ee8eb3 100644
---- a/src/data.c
-+++ b/src/data.c
-@@ -2,6 +2,7 @@
- #include "gflib.h"
- #include "battle.h"
- #include "data.h"
-+#include "dailyred.h" // Daily Red: boss party used in data/trainers.h
- #include "graphics.h"
- #include "constants/items.h"
- #include "constants/moves.h"
-diff --git a/src/data/object_events/object_event_graphics_info.h b/src/data/object_events/object_event_graphics_info.h
-index 78ee95a..43b368e 100644
---- a/src/data/object_events/object_event_graphics_info.h
-+++ b/src/data/object_events/object_event_graphics_info.h
-@@ -2923,3 +2923,25 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SSAnne = {
-     .images = sPicTable_SSAnne,
-     .affineAnims = gDummySpriteAffineAnimTable,
- };
+diff --git a/src/data/trainers_frlg.party b/src/data/trainers_frlg.party
+index 20fdc713..454684ed 100644
+--- a/src/data/trainers_frlg.party
++++ b/src/data/trainers_frlg.party
+@@ -13787,3 +13787,72 @@ IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+ Muk
+ Level: 39
+ IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
 +
-+// Daily Red: RED as an NPC. Same sprite as the male player's, but in the
-+// special NPC palette slot: the player (LEAF) uses the player slot, and two
-+// different palettes in one slot would recolor one of them.
-+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DailyRedRed = {
-+    .tileTag = TAG_NONE,
-+    .paletteTag = OBJ_EVENT_PAL_TAG_PLAYER_RED,
-+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
-+    .size = 512,
-+    .width = 16,
-+    .height = 32,
-+    .paletteSlot = PALSLOT_NPC_SPECIAL,
-+    .shadowSize = SHADOW_SIZE_M,
-+    .inanimate = FALSE,
-+    .disableReflectionPaletteLoad = FALSE,
-+    .tracks = TRACKS_FOOT,
-+    .oam = &gObjectEventBaseOam_16x32,
-+    .subspriteTables = gObjectEventSpriteOamTables_16x32,
-+    .anims = sAnimTable_RedGreenNormal,
-+    .images = sPicTable_RedNormal,
-+    .affineAnims = gDummySpriteAffineAnimTable,
-+};
-diff --git a/src/data/object_events/object_event_graphics_info_pointers.h b/src/data/object_events/object_event_graphics_info_pointers.h
-index af2f8af..888c366 100644
---- a/src/data/object_events/object_event_graphics_info_pointers.h
-+++ b/src/data/object_events/object_event_graphics_info_pointers.h
-@@ -150,6 +150,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DeoxysD;
- const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DeoxysA;
- const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DeoxysN;
- const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SSAnne;
-+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_DailyRedRed;
- 
- 
- const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
-@@ -305,4 +306,5 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
-     [OBJ_EVENT_GFX_DEOXYS_A]                 = &gObjectEventGraphicsInfo_DeoxysA,
-     [OBJ_EVENT_GFX_DEOXYS_N]                 = &gObjectEventGraphicsInfo_DeoxysN,
-     [OBJ_EVENT_GFX_SS_ANNE]                  = &gObjectEventGraphicsInfo_SSAnne,
-+    [OBJ_EVENT_GFX_DAILYRED_RED]             = &gObjectEventGraphicsInfo_DailyRedRed, // Daily Red
- };
-diff --git a/src/data/trainers.h b/src/data/trainers.h
-index 02afbfd..58db371 100644
---- a/src/data/trainers.h
-+++ b/src/data/trainers.h
-@@ -7422,4 +7422,15 @@ const struct Trainer gTrainers[] = {
-         .aiFlags = AI_SCRIPT_CHECK_BAD_MOVE,
-         .party = NO_ITEM_DEFAULT_MOVES(sParty_CueBallPaxton),
-     },
-+    // Daily Red: the boss. His team and EVs are in src/dailyred_boss.c.
-+    [TRAINER_DAILYRED_RED] = {
-+        .trainerClass = TRAINER_CLASS_PKMN_TRAINER,
-+        .encounterMusic_gender = TRAINER_ENCOUNTER_MUSIC_MALE,
-+        .trainerPic = TRAINER_PIC_RED,
-+        .trainerName = _("RED"),
-+        .items = {},
-+        .doubleBattle = FALSE,
-+        .aiFlags = AI_SCRIPT_CHECK_BAD_MOVE | AI_SCRIPT_TRY_TO_FAINT | AI_SCRIPT_CHECK_VIABILITY,
-+        .party = ITEM_CUSTOM_MOVES(gDailyRedBossParty),
-+    },
- };
-diff --git a/src/field_weather_effects.c b/src/field_weather_effects.c
-index 6d69e35..1add29c 100644
---- a/src/field_weather_effects.c
-+++ b/src/field_weather_effects.c
-@@ -760,6 +760,10 @@ void Snow_Main(void)
-         gWeatherPtr->weatherGfxLoaded = TRUE;
-         gWeatherPtr->initStep++;
-     }
-+    // Daily Red: vanilla never advances this timer (see WaitSnowflakeSprite),
-+    // so every snowflake vanishes after its first fall. Snow is unused in
-+    // FireRed itself; the summit uses it.
-+    gWeatherPtr->snowflakeTimer++;
- }
- 
- bool8 Snow_Finish(void)
-diff --git a/src/intro.c b/src/intro.c
-index bec0f31..9e870d4 100644
---- a/src/intro.c
-+++ b/src/intro.c
-@@ -9,6 +9,7 @@
- #include "menu.h"
- #include "random.h"
- #include "save.h"
-+#include "dailyred.h"
- #include "new_game.h"
- #include "title_screen.h"
++/*
++Daily Red: the boss, RED, on the summit (MAP_DAILY_RED_SUMMIT).
++Species and order follow Red's Mt. Silver team from HeartGold/SoulSilver,
++with movesets adapted to Gen 3 moves. Every Pokemon is level 100 with perfect
++IVs and a full EV spread.
++*/
++=== TRAINER_DAILYRED_RED ===
++Name: RED
++Class: Pkmn Trainer 1
++Pic: Red
++Gender: Male
++Music: Male
++Double Battle: No
++AI: Check Bad Move / Try To Faint / Check Viability
++
++Pikachu @ Light Ball
++Level: 100
++IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
++EVs: 124 Atk / 132 SpA / 252 Spe
++- Volt Tackle
++- Thunderbolt
++- Iron Tail
++- Quick Attack
++
++Espeon @ Twisted Spoon
++Level: 100
++IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
++EVs: 4 HP / 252 SpA / 252 Spe
++- Psychic
++- Shadow Ball
++- Calm Mind
++- Morning Sun
++
++Snorlax @ Leftovers
++Level: 100
++IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
++EVs: 252 HP / 252 Atk / 4 Def
++- Body Slam
++- Earthquake
++- Shadow Ball
++- Rest
++
++Venusaur @ Miracle Seed
++Level: 100
++IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
++EVs: 252 HP / 252 SpA / 4 Spe
++- Giga Drain
++- Sludge Bomb
++- Sleep Powder
++- Leech Seed
++
++Charizard @ Charcoal
++Level: 100
++IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
++EVs: 4 Atk / 252 SpA / 252 Spe
++- Flamethrower
++- Dragon Claw
++- Earthquake
++- Aerial Ace
++
++Blastoise @ Mystic Water
++Level: 100
++IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
++EVs: 252 HP / 252 SpA / 4 Spe
++- Surf
++- Ice Beam
++- Earthquake
++- Hydro Cannon
+diff --git a/src/intro_frlg.c b/src/intro_frlg.c
+index 96c46ec9..abb27499 100644
+--- a/src/intro_frlg.c
++++ b/src/intro_frlg.c
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "bg.h"
  #include "decompress.h"
-@@ -991,7 +992,12 @@ static bool8 SetUpCopyrightScreen(void)
+ #include "expansion_intro.h"
+@@ -992,7 +993,12 @@ bool8 SetUpCopyrightScreenFrlg(void)
          break;
      case 142:
          ResetSerial();
@@ -1364,159 +1322,189 @@ index bec0f31..9e870d4 100644
          break;
      }
      return TRUE;
+diff --git a/src/main.c b/src/main.c
+index 7ec4e57b..aa5bb550 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -225,6 +225,13 @@ void SeedRngAndSetTrainerId(void)
+     sTrainerId = Random();
+ }
+ 
++// Daily Red: SeedRngAndSetTrainerId, but from the website's seed instead of the timers.
++void SeedRngAndSetTrainerIdFromSeed(u32 seed)
++{
++    SeedRng(seed);
++    sTrainerId = Random();
++}
++
+ u16 GetGeneratedTrainerIdLower(void)
+ {
+     return sTrainerId;
 diff --git a/src/new_game.c b/src/new_game.c
-index 3768b3c..d465701 100644
+index 89a2bf4c..2cf3f058 100644
 --- a/src/new_game.c
 +++ b/src/new_game.c
-@@ -29,6 +29,7 @@
- #include "berry_powder.h"
- #include "pokemon_jump.h"
- #include "event_scripts.h"
-+#include "dailyred.h"
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "clock.h"
+ #include "new_game.h"
+ #include "random.h"
+@@ -57,7 +58,7 @@ extern const u8 EventScript_ResetAllMapFlags[];
+ extern const u8 EventScript_ResetAllMapFlagsFrlg[];
  
- // this file's functions
- static void ResetMiniGamesResults(void);
-@@ -145,7 +146,8 @@ void NewGameInitData(void)
-     ResetMiniGamesResults();
-     ClearMysteryGift();
-     SetAllRenewableItemFlags();
--    WarpToPlayersRoom();
-+    // Daily Red: generate the team and start in the summit cave instead of the bedroom.
+ static void ClearFrontierRecord(void);
+-static void WarpToTruck(void);
++static void UNUSED WarpToTruck(void); // Daily Red: no longer called (see NewGameInitData)
+ static void ResetMiniGamesRecords(void);
+ static void ResetItemFlags(void);
+ static void ResetDexNav(void);
+@@ -211,7 +212,8 @@ void NewGameInitData(void)
+     ResetFanClub();
+     ResetLotteryCorner();
+     UpdateDailySeed();
+-    WarpToTruck();
++    // Daily Red: generate the team and start on the summit instead of the bedroom.
 +    DailyRed_InitNewGame();
-     RunScriptImmediately(EventScript_ResetAllMapFlags);
-     StringCopy(gSaveBlock1Ptr->rivalName, rivalName);
-     ResetTrainerTowerResults();
-diff --git a/src/new_menu_helpers.c b/src/new_menu_helpers.c
-index 08c0320..49a183f 100644
---- a/src/new_menu_helpers.c
-+++ b/src/new_menu_helpers.c
-@@ -667,7 +667,10 @@ u8 CreateStartMenuWindow(u8 height)
- {
-     if (sStartMenuWindowId == 0xFF)
-     {
--        struct WindowTemplate template = SetWindowTemplateFields(0, 0x16, 1, 7, height * 2 - 1, DLG_WINDOW_PALETTE_NUM, 0x13D);
-+        // Daily Red: rows are 15 px apart, so vanilla's (height * 2 - 1) tiles
-+        // only fit 7 items; with fewer, the last row's bottom gets cut off.
-+        // Size the window to the rows instead (the same 13 tiles for 7 items).
-+        struct WindowTemplate template = SetWindowTemplateFields(0, 0x16, 1, 7, (height * 15 + 6) / 8, DLG_WINDOW_PALETTE_NUM, 0x13D);
-         sStartMenuWindowId = AddWindow(&template);
-         PutWindowTilemap(sStartMenuWindowId);
-     }
+     if (IS_FRLG)
+         RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
+     else
 diff --git a/src/option_menu.c b/src/option_menu.c
-index 0b55a34..c1eed9d 100644
+index a10b727b..8a0c2f1c 100644
 --- a/src/option_menu.c
 +++ b/src/option_menu.c
-@@ -412,6 +412,10 @@ static u8 OptionMenu_ProcessInput(void)
- { 
-     u16 current;
-     u16 *curr;
+@@ -482,12 +482,8 @@ static void BattleScene_DrawChoices(u8 selection)
+ 
+ static u8 BattleStyle_ProcessInput(u8 selection)
+ {
+-    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
+-    {
+-        selection ^= 1;
+-        sArrowPressed = TRUE;
+-    }
+-
 +    // Daily Red: Battle Style is locked to SET, so there's no free switch
 +    // when one of RED's Pokemon faints.
-+    if (sOptionMenuPtr->cursorPos == MENUITEM_BATTLESTYLE && JOY_REPT(DPAD_LEFT | DPAD_RIGHT))
-+        return 0;
-     if (JOY_REPT(DPAD_RIGHT))
-     {
-         current = sOptionMenuPtr->option[(sOptionMenuPtr->cursorPos)];
+     return selection;
+ }
+ 
 diff --git a/src/overworld.c b/src/overworld.c
-index 339014d..372a951 100644
+index 4d01b45e..1e282b5f 100644
 --- a/src/overworld.c
 +++ b/src/overworld.c
-@@ -1530,7 +1530,8 @@ void CB2_NewGame(void)
-     StopMapMusic();
+@@ -1935,6 +1935,8 @@ void CB2_NewGame(void)
      ResetSafariZoneFlag_();
      NewGameInitData();
--    ResetInitialPlayerAvatarState();
-+    // Daily Red: start facing RED, who stands to the north.
-+    SetInitialPlayerAvatarStateWithDirection(DIR_NORTH);
+     ResetInitialPlayerAvatarState();
++    // Daily Red: start facing up the mountain, toward RED.
++    sInitialPlayerAvatarState.direction = DIR_NORTH;
      PlayTimeCounter_Start();
      ScriptContext_Init();
      UnlockPlayerFieldControls();
 diff --git a/src/party_menu.c b/src/party_menu.c
-index 7f3a881..d072abe 100644
+index 7c6393d6..48a7dba7 100644
 --- a/src/party_menu.c
 +++ b/src/party_menu.c
-@@ -2962,28 +2962,12 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
+@@ -2949,36 +2949,13 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
  
  static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
  {
 -    u8 i, j;
 -
      sPartyMenuInternal->numActions = 0;
-     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_SUMMARY);
+     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUMMARY);
+ 
 -    // Add field moves to action list
--    for (i = 0; i < MAX_MON_MOVES; ++i)
+-    for (i = 0; i < MAX_MON_MOVES; i++)
 -    {
--        for (j = 0; sFieldMoves[j] != FIELD_MOVE_END; ++j)
+-        for (j = 0; j != FIELD_MOVES_COUNT; j++)
 -        {
--            if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == sFieldMoves[j])
+-            if (!FieldMove_IsVisible(j))
+-                continue;
+-
+-            if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == FieldMove_GetMoveId(j))
 -            {
--                AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + CURSOR_OPTION_FIELD_MOVES);
+-                AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES);
 -                break;
 -            }
 -        }
 -    }
+-
+-    if (!InBattlePike())
+-    {
+-        if (GetMonData(&mons[1], MON_DATA_SPECIES) != SPECIES_NONE)
+-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SWITCH);
+-        if (ItemIsMail(GetMonData(&mons[slotId], MON_DATA_HELD_ITEM)))
+-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_MAIL);
+-        else
+-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_ITEM);
+-    }
 +    // Daily Red: no field moves (Teleport, Dig, Fly... would leave the summit)
-+    // and no ITEM option, since there are no items. Only view and reorder.
-     if (GetMonData(&mons[1], MON_DATA_SPECIES) != SPECIES_NONE)
-         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_SWITCH);
--    if (ItemIsMail(GetMonData(&mons[slotId], MON_DATA_HELD_ITEM)))
--        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_MAIL);
--    else
--        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_ITEM);
-     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_CANCEL1);
++    // and no ITEM option (no swapping held items). Only view and reorder.
++    if (GetMonData(&mons[1], MON_DATA_SPECIES) != SPECIES_NONE)
++        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SWITCH);
+     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_CANCEL1);
  }
  
 diff --git a/src/pokemon.c b/src/pokemon.c
-index 66a5c3d..2ff1925 100644
+index 82017777..f3c7e5af 100644
 --- a/src/pokemon.c
 +++ b/src/pokemon.c
-@@ -5857,6 +5857,9 @@ static u16 GetBattleBGM(void)
-         return MUS_RS_VS_TRAINER;
-     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-     {
+@@ -5109,6 +5109,10 @@ u16 GetBattleBGM(void)
+         else
+             trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
+ 
 +        // Daily Red: RED keeps his "PKMN TRAINER" class but gets the champion theme.
-+        if (gTrainerBattleOpponent_A == TRAINER_DAILYRED_RED)
-+            return MUS_VS_CHAMPION;
-         switch (gTrainers[gTrainerBattleOpponent_A].trainerClass)
++        if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_DAILYRED_RED)
++            return MUS_RG_VS_CHAMPION;
++
+         switch (trainerClass)
          {
-         case TRAINER_CLASS_CHAMPION:
+         case TRAINER_CLASS_AQUA_LEADER:
 diff --git a/src/start_menu.c b/src/start_menu.c
-index 88cc377..e76d185 100644
+index 648fa837..b9a8447c 100644
 --- a/src/start_menu.c
 +++ b/src/start_menu.c
-@@ -212,13 +212,9 @@ static void AppendToStartMenuItems(u8 newEntry)
+@@ -324,22 +324,9 @@ static void AddStartMenuAction(u8 action)
  
- static void SetUpStartMenu_NormalField(void)
+ static void BuildNormalStartMenu(void)
  {
 -    if (FlagGet(FLAG_SYS_POKEDEX_GET) == TRUE)
--        AppendToStartMenuItems(STARTMENU_POKEDEX);
+-        AddStartMenuAction(MENU_ACTION_POKEDEX);
+-
+-    if (DN_FLAG_DEXNAV_GET != 0 && FlagGet(DN_FLAG_DEXNAV_GET))
+-        AddStartMenuAction(MENU_ACTION_DEXNAV);
+-
 -    if (FlagGet(FLAG_SYS_POKEMON_GET) == TRUE)
--        AppendToStartMenuItems(STARTMENU_POKEMON);
--    AppendToStartMenuItems(STARTMENU_BAG);
--    AppendToStartMenuItems(STARTMENU_PLAYER);
--    AppendToStartMenuItems(STARTMENU_SAVE);
-+    // Daily Red: only the team, options and exit. There are no items, no
-+    // Pokedex, and nothing to save.
-+    AppendToStartMenuItems(STARTMENU_POKEMON);
-     AppendToStartMenuItems(STARTMENU_OPTION);
-     AppendToStartMenuItems(STARTMENU_EXIT);
+-        AddStartMenuAction(MENU_ACTION_POKEMON);
+-
+-    AddStartMenuAction(MENU_ACTION_BAG);
+-
+-    if (FlagGet(FLAG_SYS_POKENAV_GET) == TRUE)
+-        AddStartMenuAction(MENU_ACTION_POKENAV);
+-
+-    AddStartMenuAction(MENU_ACTION_PLAYER);
+-    AddStartMenuAction(MENU_ACTION_SAVE);
++    // Daily Red: only the team, options and exit. There's nothing to use from
++    // the bag, no Pokedex, and nothing to save.
++    AddStartMenuAction(MENU_ACTION_POKEMON);
+     AddStartMenuAction(MENU_ACTION_OPTION);
+     AddStartMenuAction(MENU_ACTION_EXIT);
  }
-diff --git a/src/title_screen.c b/src/title_screen.c
-index 75f0e67..7ddf419 100644
---- a/src/title_screen.c
-+++ b/src/title_screen.c
-@@ -12,6 +12,7 @@
- #include "random.h"
- #include "save.h"
- #include "main_menu.h"
-+#include "dailyred.h"
- #include "clear_save_data_screen.h"
+diff --git a/src/title_screen_frlg.c b/src/title_screen_frlg.c
+index 57e9da2e..a3a86bc3 100644
+--- a/src/title_screen_frlg.c
++++ b/src/title_screen_frlg.c
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
  #include "berry_fix_program.h"
- #include "decompress.h"
-@@ -741,7 +742,8 @@ static void SetTitleScreenScene_Cry(s16 *data)
-                 Sav2_ClearSetDefault();
-             SetPokemonCryStereo(gSaveBlock2Ptr->optionsSound);
-             InitHeap(gHeap, HEAP_SIZE);
+ #include "bg.h"
+ #include "clear_save_data_menu.h"
+@@ -786,7 +787,8 @@ static void SetTitleScreenScene_Cry(s16 *data)
+     case 2:
+         if (!gPaletteFade.active)
+         {
 -            SetMainCallback2(CB2_InitMainMenu);
 +            // Daily Red: no main menu or saves; every boot is a new run.
 +            SetMainCallback2(CB2_DailyRed_StartFromTitle);

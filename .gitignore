@@ -2,8 +2,8 @@
 
 # scripts/setup-macos.sh
 /.toolchain/
-# scripts/get-pokefirered.sh (pret/pokefirered + patches/)
-/pokefirered/
+# scripts/get-expansion.sh (pokeemerald-expansion + patches/)
+/expansion/
 # scripts/fetch-vendor.sh
 /web/vendor/
 # scripts/build-rom.sh. Build output; don't commit it.
@@ -13,5 +13,6 @@
 /.wrangler/
 
 /tests/node_modules/
+/scripts/sets/node_modules/
 /tests/output/
 .DS_Store

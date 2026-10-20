@@ -4,52 +4,33 @@
 //   cd tests && npm install && npm test
 //
 // Screenshots are written to tests/output/ for a visual check.
-import { mkdirSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync } from 'node:fs';
 import {
-  GAME_DIR, startServer, launchBrowser, bootGame, sleep, press, screenshot,
-  getStatus, waitFor, walkTo, face, patchMemory, readVar, symbol, u16,
-  startRedBattle, forceWin, readGameStatus,
+  startServer, launchBrowser, bootGame, sleep, press, screenshot,
+  getStatus, waitFor, walkTo, face, patchMemory, readVar, symbol, value, u16,
+  startRedBattle, waitForActionMenu, forceWin, readGameStatus, memField, objectFacing,
+  battleMonField, readBattleMon, activePartySlot, faintWrites, unkillableWrites,
 } from './lib.mjs';
+import { id, readBits, layout, species } from './game.mjs';
 import { readParty, formatMon, validateTeam } from './party.mjs';
 
 const OUT = new URL('./output/', import.meta.url).pathname;
 mkdirSync(OUT, { recursive: true });
 
-function define(file, name) {
-  const m = readFileSync(join(GAME_DIR, file), 'utf8').match(new RegExp(`#define ${name}\\s+(\\w+)`));
-  if (!m) throw new Error(`${name} not found in ${file}`);
-  return Number(m[1]);
-}
-const VAR_BATTLES = define('include/constants/vars.h', 'VAR_DAILYRED_BATTLES');
-const VAR_WINS = define('include/constants/vars.h', 'VAR_DAILYRED_WINS');
-const TERRAIN_MOUNTAIN = define('include/constants/battle.h', 'BATTLE_TERRAIN_MOUNTAIN');
-const STYLE_SET = define('include/constants/global.h', 'OPTIONS_BATTLE_STYLE_SET');
-const LOCALID_RED = define('include/constants/map_event_ids.h', 'LOCALID_DAILYRED_RED');
-const DIR_NORTH = define('include/constants/global.h', 'DIR_NORTH');
-const SPECIES_PIKACHU = define('include/constants/species.h', 'SPECIES_PIKACHU');
-const MOVE_SEISMIC_TOSS = define('include/constants/moves.h', 'MOVE_SEISMIC_TOSS');
-const START = [define('include/constants/dailyred.h', 'DAILYRED_START_X'), define('include/constants/dailyred.h', 'DAILYRED_START_Y')];
+const VAR_BATTLES = value('VAR_DAILYRED_BATTLES');
+const VAR_WINS = value('VAR_DAILYRED_WINS');
+const STYLE_SET = value('OPTIONS_BATTLE_STYLE_SET');
+const START = [value('DAILYRED_START_X'), value('DAILYRED_START_Y')];
 const RED_FRONT = [9, 12]; // the tile below RED, at the top of the stairs
+const SPECIES_PIKACHU = id('SPECIES', 'PIKACHU');
 
-const MON_SIZE = 100, MON_HP = 86;          // struct Pokemon
-const BMON_SIZE = 0x58, BMON_MOVES = 0x0C, BMON_PP = 0x24, BMON_HP = 0x28, BMON_MAXHP = 0x2C; // struct BattlePokemon
-const BATTLE_STYLE_OFFSET = 29; // gBattleScripting.battleStyle
+// Direction RED's overworld object faces.
+const redFacing = (mem) => objectFacing(mem, value('LOCALID_DAILYRED_RED'));
 
-// Direction RED's overworld object faces (struct ObjectEvent: localId at 0x08,
-// facingDirection in the low 4 bits of 0x18).
-function redFacing(mem) {
-  for (let i = 0; i < 16; i++) {
-    const obj = mem.read(symbol('gObjectEvents') + i * 0x24, 0x24);
-    if ((obj[0] & 1) && obj[8] === LOCALID_RED) return obj[0x18] & 0xF;
-  }
-  return -1;
-}
-
-// Options are bitfields in the u16 at SaveBlock2 + 0x14; battle style is bit 9.
+// The Options menu's battle style (a bitfield in SaveBlock2).
 function optionsBattleStyle(mem) {
   const saveBlock2 = mem.read(symbol('gSaveBlock2Ptr'), 4).readUInt32LE(0);
-  return (mem.read(saveBlock2 + 0x14, 2).readUInt16LE(0) >> 9) & 1;
+  return readBits(mem.read(saveBlock2, layout('SaveBlock2').size), 0, layout('SaveBlock2').optionsBattleStyle);
 }
 
 let failures = 0;
@@ -65,9 +46,10 @@ function checkTeam(label, team) {
   check(problems.length === 0, `${label}: valid team (6 different Gen 1-3 species, level 100, learnable moves, legal stats, held items)${problems.length ? ': ' + problems.join('; ') : ''}`);
 }
 
-async function talkToRed(page) {
+async function talkToRed(page, shot) {
   await walkTo(page, [RED_FRONT]);
   await face(page, 'up');
+  if (shot) { await sleep(500); await screenshot(page, shot); }
   await press(page, 'a');
   for (let i = 0; i < 20; i++) {
     const s = await getStatus(page);
@@ -88,13 +70,6 @@ async function finishBattle(page, battlesBefore) {
     if (s.inOverworld && s.x === START[0] && s.y === START[1] && readVar(s.mem, VAR_BATTLES) === battlesBefore + 1) return s;
   }
   throw new Error('battle did not finish');
-}
-
-async function waitForActionMenu(page) {
-  // Battle intro takes a few seconds; press A until the turn menu is up.
-  for (let i = 0; i < 12; i++) { await sleep(700); await press(page, 'a'); }
-  await press(page, 'b'); // back out of FIGHT if we entered it
-  await sleep(500);
 }
 
 const server = await startServer();
@@ -124,7 +99,7 @@ try {
   await bootGame(page, server.url, { seed: 424242 });
   let s = await waitFor(page, (st) => st.inOverworld, { what: 'overworld' });
   check(s.x === START[0] && s.y === START[1], `player starts at ${START} (got ${s.x},${s.y})`);
-  check(redFacing(s.mem) === DIR_NORTH, 'RED faces away from the player, out over the drop');
+  check(redFacing(s.mem) === value('DIR_NORTH'), 'RED faces away from the player, out over the drop');
   check(optionsBattleStyle(s.mem) === STYLE_SET, 'battle style starts as SET');
   await sleep(1500);
   await screenshot(page, `${OUT}/01-start.png`);
@@ -160,63 +135,60 @@ try {
   check(optionsBattleStyle(s.mem) === STYLE_SET, "the Options menu can't switch battle style away from SET");
 
   // 3. Climb to RED -> trainer battle on the peak. Force a win.
-  s = await talkToRed(page);
+  s = await talkToRed(page, `${OUT}/08b-red.png`);
   check(s.inBattle, 'talking to RED starts a battle');
-  check(s.mem.read(symbol('gBattleTerrain'), 1)[0] === TERRAIN_MOUNTAIN, 'battle uses the mountain background');
-  check(s.mem.read(symbol('gBattleScripting') + BATTLE_STYLE_OFFSET, 1)[0] === STYLE_SET, 'the battle runs in SET style');
-  check(s.mem.read(symbol('gTrainerBattleOpponent_A'), 2).readUInt16LE(0) === define('include/constants/opponents.h', 'TRAINER_DAILYRED_RED'), 'opponent is TRAINER_DAILYRED_RED');
+  check(s.mem.read(symbol('gBattleEnvironment'), 1)[0] === value('BATTLE_ENVIRONMENT_MOUNTAIN'), 'battle uses the mountain background');
+  check(memField(s.mem, symbol('gBattleScripting'), 'BattleScripting', 'battleStyle') === STYLE_SET, 'the battle runs in SET style');
+  check(memField(s.mem, symbol('gTrainerBattleParameter'), 'TrainerBattleParameter', 'params_opponentA') === value('TRAINER_DAILYRED_RED'), 'opponent is TRAINER_DAILYRED_RED');
   const red = readParty(s.mem, 'Enemy');
   console.log(red.party.map((m) => '      ' + formatMon(m)).join('\n'));
-  check(red.party.map((m) => m?.speciesName).join(',') === 'PIKACHU,ESPEON,SNORLAX,VENUSAUR,CHARIZARD,BLASTOISE', "RED's team is Pikachu, Espeon, Snorlax, Venusaur, Charizard, Blastoise");
+  check(red.party.map((m) => m?.constName).join(',') === 'PIKACHU,ESPEON,SNORLAX,VENUSAUR,CHARIZARD,BLASTOISE', "RED's team is Pikachu, Espeon, Snorlax, Venusaur, Charizard, Blastoise");
   check(red.party.every((m) => m.level === 100 && m.ivs.every((iv) => iv === 31) && m.heldItem !== 0), "RED's Pokemon are level 100 with perfect IVs and held items");
   check(red.party.every((m) => m.evs.reduce((a, b) => a + b, 0) >= 508), "RED's Pokemon have their EV spreads");
   await waitForActionMenu(page);
+  check((await getStatus(page)).mem.read(symbol('gBattleWeather'), 2).readUInt16LE(0) === 0, "the summit's snow doesn't start any battle weather");
   await screenshot(page, `${OUT}/09-battle.png`);
-  const enemyParty = symbol('gEnemyParty'), battleMons = symbol('gBattleMons');
 
   // KO RED's lead while the rest of his team is healthy. In SHIFT style the
   // game would now ask "Will LEAF change POKeMON?" and A would open the party
   // menu (leaving the battle screen); in SET style RED just sends the next one.
   await patchMemory(page, [
-    { addr: battleMons + BMON_SIZE + BMON_HP, bytes: u16(1) },               // RED's active mon: 1 HP
-    { addr: battleMons + BMON_HP, bytes: u16(999) },                         // ours: can't be KO'd
-    { addr: battleMons + BMON_MAXHP, bytes: u16(999) },
-    { addr: battleMons + BMON_MOVES, bytes: u16(MOVE_SEISMIC_TOSS) },        // a move that always hits for 100
-    { addr: battleMons + BMON_PP, bytes: [20] },
+    ...unkillableWrites(),                                 // ours: can't be KO'd, Seismic Toss for 100
+    { addr: battleMonField(1, 'hp'), bytes: u16(1) },      // RED's active mon: 1 HP
   ]);
   let stayedInBattle = true, nextMonOut = false;
   for (let i = 0; i < 60 && !nextMonOut; i++) {
     await press(page, 'a'); await sleep(250);
     const st = await getStatus(page);
     if (!st.inBattle) { stayedInBattle = false; break; }
-    nextMonOut = st.mem.read(battleMons + BMON_SIZE, 2).readUInt16LE(0) !== SPECIES_PIKACHU;
+    nextMonOut = readBattleMon(st.mem, 1, 'species') !== SPECIES_PIKACHU;
   }
   check(nextMonOut && stayedInBattle, 'after RED\'s Pokemon faints he sends the next one with no switch prompt');
   await screenshot(page, `${OUT}/10-next-mon.png`);
 
   // Now finish: only RED's active Pokemon is left, at 1 HP.
   s = await getStatus(page);
-  const activeSlot = s.mem.read(symbol('gBattlerPartyIndexes') + 2, 2).readUInt16LE(0); // battler 1 = RED
+  const activeSlot = activePartySlot(s.mem, 1); // battler 1 = RED
   await patchMemory(page, [
-    ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activeSlot).map((i) => ({ addr: enemyParty + i * MON_SIZE + MON_HP, bytes: u16(0) })),
-    { addr: battleMons + BMON_SIZE + BMON_HP, bytes: u16(1) },
+    ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activeSlot).flatMap((i) => faintWrites('Enemy', i, s.mem)),
+    { addr: battleMonField(1, 'hp'), bytes: u16(1) },
   ]);
   s = await finishBattle(page, 0);
   check(readVar(s.mem, VAR_WINS) === 1 && readVar(s.mem, VAR_BATTLES) === 1, 'win is recorded (1 win / 1 battle)');
   const team2 = readParty(s.mem);
   checkTeam('team after a win', team2);
   check(teamKey(team2.party) !== teamKey(team1.party), 'a new team is generated after the win');
-  check(redFacing(s.mem) === DIR_NORTH, 'RED faces the drop again for the next run');
+  check(redFacing(s.mem) === value('DIR_NORTH'), 'RED faces the drop again for the next run');
   await screenshot(page, `${OUT}/11-after-win.png`);
 
   // 4. Battle again and force a loss.
   s = await talkToRed(page);
   check(s.inBattle, 'RED can be battled again');
   await waitForActionMenu(page);
-  const playerParty = symbol('gPlayerParty');
+  s = await getStatus(page);
   await patchMemory(page, [
-    ...[1, 2, 3, 4, 5].map((i) => ({ addr: playerParty + i * MON_SIZE + MON_HP, bytes: u16(0) })),
-    { addr: battleMons + BMON_HP, bytes: u16(1) },
+    ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activePartySlot(s.mem, 0)).flatMap((i) => faintWrites('Player', i, s.mem)),
+    { addr: battleMonField(0, 'hp'), bytes: u16(1) },
   ]);
   s = await finishBattle(page, 1);
   check(readVar(s.mem, VAR_WINS) === 1 && readVar(s.mem, VAR_BATTLES) === 2, 'loss is recorded (1 win / 2 battles), no white-out');
