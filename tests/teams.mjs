@@ -6,7 +6,8 @@
 //
 // Exits non-zero if any team breaks the rules (see validateTeam in party.mjs).
 import { startServer, launchBrowser, bootGame, waitFor } from './lib.mjs';
-import { readParty, formatMon, validateTeam, teamBaseStatTotal, MIN_TEAM_BST, baseStatTotal, SPECIES, isLegendary } from './party.mjs';
+import { readParty, formatMon, validateTeam, teamBaseStatTotal, MIN_TEAM_BST, isLegendary } from './party.mjs';
+import { id, species as speciesInfo } from './game.mjs';
 
 const args = process.argv.slice(2);
 let seeds;
@@ -57,8 +58,7 @@ for (const seed of seeds) {
 const unique = new Set(seeds.map((s) => results.get(s).party.map((m) => m?.species).join(','))).size;
 console.log(`\n${seeds.length} seeds, ${unique} different teams, ${species.size} different species, ${invalid} invalid team(s).`);
 
-const speciesId = (name) => [...SPECIES].find(([, n]) => n === name)[0];
-const redTotal = ['PIKACHU', 'ESPEON', 'SNORLAX', 'VENUSAUR', 'CHARIZARD', 'BLASTOISE'].reduce((sum, n) => sum + baseStatTotal(speciesId(n)), 0);
+const redTotal = ['PIKACHU', 'ESPEON', 'SNORLAX', 'VENUSAUR', 'CHARIZARD', 'BLASTOISE'].reduce((sum, n) => sum + speciesInfo(id('SPECIES', n)).bst, 0);
 const totals = seeds.map((s) => teamBaseStatTotal(results.get(s).party));
 console.log(`Team base stat totals: min ${Math.min(...totals)}, average ${Math.round(totals.reduce((a, b) => a + b, 0) / totals.length)}, max ${Math.max(...totals)} `
   + `(minimum ${MIN_TEAM_BST}; RED ${redTotal}; ${totals.filter((t) => t > redTotal).length} of ${totals.length} teams out-total RED).`);

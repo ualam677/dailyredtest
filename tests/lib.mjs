@@ -1,15 +1,15 @@
 // Shared helpers for the headless browser tests: a static server, Chrome via
 // playwright-core, booting the real ROM through the same emulator the website
-// uses, pressing buttons, and reading game RAM out of a save state.
+// uses, pressing buttons, and reading game RAM out of a save state. Struct
+// layouts and constants come from the build (game.mjs).
 import { chromium } from 'playwright-core';
-import { spawn, execFileSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { ROOT, symbol, layout, value, field, id } from './game.mjs';
+import { partyAddress } from './party.mjs';
 
-export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-export const GAME_DIR = join(ROOT, 'pokefirered');
-export const ELF = join(GAME_DIR, 'pokefirered_modern.elf');
+export { ROOT, GAME_DIR, symbol, value, layout } from './game.mjs';
 
 const CHROME_PATHS = [
   process.env.CHROME_PATH,
@@ -125,42 +125,45 @@ export async function readMemory(page) {
   };
 }
 
-// Symbol addresses from the built ELF (needs the toolchain from setup-macos.sh).
-let symbolCache;
-export function symbols() {
-  if (symbolCache) return symbolCache;
-  const nm = join(ROOT, '.toolchain/arm-none-eabi/bin/arm-none-eabi-nm');
-  const out = execFileSync(existsSync(nm) ? nm : 'arm-none-eabi-nm', [ELF], { encoding: 'utf8', maxBuffer: 64 << 20 });
-  symbolCache = new Map();
-  for (const line of out.split('\n')) {
-    const [addr, , name] = line.trim().split(/\s+/);
-    if (name) symbolCache.set(name, parseInt(addr, 16));
-  }
-  return symbolCache;
-}
-
-export function symbol(name) {
-  const addr = symbols().get(name);
-  if (addr === undefined) throw new Error(`symbol ${name} not found in ${ELF}`);
-  return addr;
+// A struct member read from RAM: memField(mem, addr, 'BattlePokemon', 'hp').
+export function memField(mem, addr, struct, name) {
+  return field(mem.read(addr, layout(struct).size), 0, struct, name);
 }
 
 // --- Game status ----------------------------------------------------------------
-const MAP_OFFSET = 7;        // object coordinates are stored with this offset
-const OBJECT_EVENT_SIZE = 0x24;
+
+// The player's object event, and RED's (by local id).
+function objectEventAddress(index) {
+  return symbol('gObjectEvents') + index * layout('ObjectEvent').size;
+}
+
+export function objectCoords(mem, index) {
+  const at = objectEventAddress(index) + layout('ObjectEvent').currentCoords.off;
+  const coords = mem.read(at, 4);
+  return { x: coords.readInt16LE(0) - value('MAP_OFFSET'), y: coords.readInt16LE(2) - value('MAP_OFFSET') };
+}
+
+// Direction an overworld object with the given local id faces (-1 if absent).
+export function objectFacing(mem, localId) {
+  for (let i = 0; i < value('OBJECT_EVENTS_COUNT'); i++) {
+    const addr = objectEventAddress(i);
+    if (memField(mem, addr, 'ObjectEvent', 'active') && memField(mem, addr, 'ObjectEvent', 'localId') === localId) {
+      return memField(mem, addr, 'ObjectEvent', 'facingDirection');
+    }
+  }
+  return -1;
+}
 
 // What the game is doing right now, read from RAM.
 export async function getStatus(page) {
   const mem = await readMemory(page);
-  const callback2 = mem.read(symbol('gMain') + 4, 4).readUInt32LE(0) & ~1; // strip the Thumb bit
-  const objectEventId = mem.read(symbol('gPlayerAvatar') + 5, 1)[0];
-  const coords = mem.read(symbol('gObjectEvents') + objectEventId * OBJECT_EVENT_SIZE + 0x10, 4);
+  const callback2 = memField(mem, symbol('gMain'), 'Main', 'callback2') & ~1; // strip the Thumb bit
+  const objectEventId = memField(mem, symbol('gPlayerAvatar'), 'PlayerAvatar', 'objectEventId');
   return {
     mem,
     inBattle: callback2 === symbol('BattleMainCB2'),
     inOverworld: callback2 === symbol('CB2_Overworld'),
-    x: coords.readInt16LE(0) - MAP_OFFSET,
-    y: coords.readInt16LE(2) - MAP_OFFSET,
+    ...objectCoords(mem, objectEventId),
   };
 }
 
@@ -226,7 +229,32 @@ export const u16 = (n) => [n & 0xFF, (n >> 8) & 0xFF];
 // Reads a script variable (VAR_xxxx) from SaveBlock1.
 export function readVar(mem, varId) {
   const saveBlock1 = mem.read(symbol('gSaveBlock1Ptr'), 4).readUInt32LE(0);
-  return mem.read(saveBlock1 + 0x1000 + (varId - 0x4000) * 2, 2).readUInt16LE(0);
+  const vars = layout('SaveBlock1').vars;
+  return mem.read(saveBlock1 + vars.off + (varId - value('VARS_START')) * vars.elemSize, 2).readUInt16LE(0);
+}
+
+// --- Battle state -----------------------------------------------------------------
+
+// gBattleMons[battler] (battler 0 = the player's, 1 = RED's).
+export const battleMonAddress = (battler) => symbol('gBattleMons') + battler * layout('BattlePokemon').size;
+export const battleMonField = (battler, name) => battleMonAddress(battler) + layout('BattlePokemon')[name].off;
+export const readBattleMon = (mem, battler, name) => memField(mem, battleMonAddress(battler), 'BattlePokemon', name);
+export const activePartySlot = (mem, battler) => mem.read(symbol('gBattlerPartyIndexes') + battler * 2, 2).readUInt16LE(0);
+
+// Writes that make a party Pokemon fainted (HP 0), keeping the box's
+// hpLost in step with it.
+export function faintWrites(side, slot, mem) {
+  const P = layout('Pokemon'), B = layout('BoxPokemon');
+  const addr = partyAddress(side) + slot * P.size;
+  const maxHp = memField(mem, addr, 'Pokemon', 'maxHP');
+  const hpLostByte = addr + (B.hpLost.bit >> 3);
+  const word = mem.read(hpLostByte, 2).readUInt16LE(0);
+  const shift = B.hpLost.bit & 7, mask = ((1 << B.hpLost.width) - 1) << shift;
+  const newWord = (word & ~mask) | ((maxHp << shift) & mask);
+  return [
+    { addr: addr + P.hp.off, bytes: u16(0) },
+    { addr: hpLostByte, bytes: u16(newWord) },
+  ];
 }
 
 // --- Forcing battle results (tests only) ------------------------------------------
@@ -234,32 +262,35 @@ export function readVar(mem, varId) {
 // exchange ends the battle: a win (RED's active Pokemon at 1 HP and the rest of
 // his team fainted, ours unkillable with a move that always does 100) or a
 // loss (our active Pokemon at 1 HP and the rest of our team fainted).
-const MON_SIZE = 100, MON_HP = 86;                                    // struct Pokemon
-const BMON_SIZE = 0x58, BMON_MOVES = 0x0C, BMON_PP = 0x24, BMON_HP = 0x28, BMON_MAXHP = 0x2C; // struct BattlePokemon
-const MOVE_SEISMIC_TOSS = 69;
-
 export async function forceWin(page) {
   const { mem } = await getStatus(page);
-  const activeSlot = mem.read(symbol('gBattlerPartyIndexes') + 2, 2).readUInt16LE(0); // battler 1 = RED
-  const enemy = symbol('gEnemyParty'), mons = symbol('gBattleMons');
+  const activeSlot = activePartySlot(mem, 1); // battler 1 = RED
   await patchMemory(page, [
-    ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activeSlot).map((i) => ({ addr: enemy + i * MON_SIZE + MON_HP, bytes: u16(0) })),
-    { addr: mons + BMON_SIZE + BMON_HP, bytes: u16(1) },
-    { addr: mons + BMON_HP, bytes: u16(999) },
-    { addr: mons + BMON_MAXHP, bytes: u16(999) },
-    { addr: mons + BMON_MOVES, bytes: u16(MOVE_SEISMIC_TOSS) },
-    { addr: mons + BMON_PP, bytes: [20] },
+    ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activeSlot).flatMap((i) => faintWrites('Enemy', i, mem)),
+    ...unkillableWrites(),
+    { addr: battleMonField(1, 'hp'), bytes: u16(1) },
   ]);
 }
 
 export async function forceLoss(page) {
   const { mem } = await getStatus(page);
-  const activeSlot = mem.read(symbol('gBattlerPartyIndexes'), 2).readUInt16LE(0); // battler 0 = us
-  const party = symbol('gPlayerParty'), mons = symbol('gBattleMons');
+  const activeSlot = activePartySlot(mem, 0); // battler 0 = us
   await patchMemory(page, [
-    ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activeSlot).map((i) => ({ addr: party + i * MON_SIZE + MON_HP, bytes: u16(0) })),
-    { addr: mons + BMON_HP, bytes: u16(1) },
+    ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activeSlot).flatMap((i) => faintWrites('Player', i, mem)),
+    { addr: battleMonField(0, 'hp'), bytes: u16(1) },
   ]);
+}
+
+// Our active Pokemon: 999 HP and Seismic Toss (always 100 damage at level 100)
+// in its first slot, with PP.
+export function unkillableWrites() {
+  const seismicToss = id('MOVE', 'SEISMIC_TOSS');
+  return [
+    { addr: battleMonField(0, 'hp'), bytes: u16(999) },
+    { addr: battleMonField(0, 'maxHP'), bytes: u16(999) },
+    { addr: battleMonField(0, 'moves'), bytes: u16(seismicToss) },
+    { addr: battleMonField(0, 'pp'), bytes: [20] },
+  ];
 }
 
 // From the start tile: climb to RED, talk, and wait for the battle's turn menu.
@@ -272,6 +303,11 @@ export async function startRedBattle(page) {
     await press(page, 'a');
   }
   if (!(await getStatus(page)).inBattle) throw new Error('battle did not start');
+  await waitForActionMenu(page);
+}
+
+// The battle intro takes a few seconds; press A until the turn menu is up.
+export async function waitForActionMenu(page) {
   for (let i = 0; i < 12; i++) { await sleep(700); await press(page, 'a'); }
   await press(page, 'b'); // back out of FIGHT if we entered it
   await sleep(500);
