@@ -316,6 +316,13 @@ game's files; run it again after changing the art:
   whole). The first frame is his trainer picture (the VS transition); in
   battle his sprite uses both frames, uncompressed in the ROM, and tips his
   cap once he has slid in (`DailyRed_AnimateTrainerSprite`).
+- The battle interface (healthboxes, HP/EXP bars, textbox, status icons,
+  gimmick buttons, text colours) and the window frames and message box in
+  `graphics/text_window/` are the HGSS-style ones from
+  [Eemeliri/soulgold](https://github.com/Eemeliri/soulgold), copied over
+  FireRed's files of the same names and sizes. Like soulgold, the message
+  window and the "What will X do?" prompt get their own palettes, and the HP
+  bars use soulgold's bar palette (`src/battle_bg.c`, `src/graphics.c`).
 - `art/leaf-hgss.png`: an HGSS-style LEAF for the VS transition (her battle
   back sprite is still FireRed's). She's 70 pixels tall and 21 colours, so 6
   rows go from her legs and 6 colours are merged: her bag's highlight first,

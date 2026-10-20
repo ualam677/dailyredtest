@@ -1128,6 +1128,112 @@ index 00000000..3ce4089b
 +0 0 0
 +0 0 0
 +0 0 0
+diff --git a/graphics/text_window/1.png b/graphics/text_window/1.png
+index 5d8020eff5ac26935dca94e946ad345c28ef53fd..f02a63ab01e57e4ba39e69847216196012757c84 100644
+GIT binary patch
+literal 231
+zcmeAS@N?(olHy`uVBq!ia0vp^5+KaM3?#3wJbMaAF%}28J29*~C-V}>F$nMpaRt&|
+zUS0_W2j<M#I$^<$|Laa(yLRrxg%|(-{|8DT1E7ePV^EG*(_x^fKuM5aFauBs85{`c
+zb_U9Mdb&7<XiR)N$xw(vk%Kw*QO5KC^Q&2%6J?}d-=4(FyKt-c1jn<}C$j0@_c$Ej
+zGJonkTPI~!y&p$iIm#F-V>z8ePdJ8FeE6a$uM);po-aI~59AC_S3j3^P6<r_-8NRh
+
+delta 165
+zcmV;W09ya&0mlK57%T(>0000ISs=>*001yhOjJc;#bPNjF-l5mb83TPVw7`ptc#1y
+zti7z>)!va&6>i&aBxwKu08&XrK~xx(V_-l5f^fjVz$lsq1%Uz#jLybTU;^YQ!#GA@
+zPDKY0v_m-N@4%oK%&~xQng@=9;v8g$s=&P91mvhfeP<E`<OnH2fuaCvfFJ_^tPW=0
+T_mrv|00000NkvXXu0mjf+loJ6
+
+diff --git a/graphics/text_window/2.png b/graphics/text_window/2.png
+index 5e89b4116b0fd30a30c812c7142ececfa836f7ac..d509bc7200627b75a7ad54858be4ccd3f0ca65f7 100644
+GIT binary patch
+literal 231
+zcmeAS@N?(olHy`uVBq!ia0vp^5+KaM3?#3wJbMaAF%}28J29*~C-V}>F$nMpaRt&|
+zUS2m65}tHTnloqX|8*y?T|4*V#EJj^|2uj)0%hR<DB|T9<hIuS98gH0B*-tA0VsqF
+z4g_>N1LZtDT^vI+Ccd3yD8!)1!5n)g<N5#j)vV5mGSaVaPvYfWxK(_D<JsvG*>vxF
+z91d`qKXsn1lQOH`kE5;}WsH@voX(*q978KUd{LAS|IamZ7PI~}kQ+Q*{an^LB{Ts5
+DiD+3U
+
+literal 183
+zcmeAS@N?(olHy`uVBq!ia0vp^5+KaN3?zjj6;1;wg8-ip*C|tyGz|@bJc8i=|NmZ&
+zK_TWdO@K<BJY5_^B&H@;w6jQDuxJWkcx2Pkd79C(h+k2th~H6Wh7kw*qF0JDl+7Q=
+vtSDB<b1vJeaK^q#;rzip3hnQ5V-_+qoS%FmF65FME68F`S3j3^P6<r_Bk?TL
+
+diff --git a/graphics/text_window/4.png b/graphics/text_window/4.png
+index c33ed48afe78e028b1b962de48c55f9bc69adaf4..3db6b486301418c079f291144aebac1d907fc625 100644
+GIT binary patch
+delta 233
+zcmeyw_>*yhL_G&H0|UeLm1j=@DaPU;cPEB*=VV?2IR*hfA+A8$%gbv)K){ZGfEx)3
+zPr7rb&)l$L#fn#pTmG**dGOGM|NsAQ*}LW5)q6mOmt)Z5t?On0^$3&%`2{log^<C4
+zfNp1?T(qZ)V~EDYx0f9G4k&OWu{eke@Us8=e`i_N6sg<dCHcFHTc+$=)D`MrQeNJ2
+z#jChnL|*g6PVOA$i7|z26U`sUpIfkvIhftF`+yH`-o*+>sp`q<XZRT&86PP+!FuKx
+W@6@U(pDTg(FnGH9xvX<aXaWG@<!f62
+
+delta 226
+zcmey#_=$0XL_G^L0|SFlq{3++Wf0&K;yPtY5|D`rEWNz4s;lR$S#$Q@y)ApU+`D@3
+z|NsA9jzJyLqH#dgwVp1HAre!!PT0-cV8Fw=moa<x{0vT^MXDPZyu=b%G$I%SC!N~E
+zq9|CkZsYuz8|g}diUMAXUPbfu?g){6vSy~v3HRF*jd#gAT<ftj&_2*p@G6P>jBl&w
+zPIfV$miY&qIy2vInDzL)fNt-(pEAFKJ`~;iGOc-=Iq$8D&iB^uVrcQbvQ^~nl>;Dm
+Nd%F6$taD0e0s#5%SMvY>
+
+diff --git a/graphics/text_window/6.png b/graphics/text_window/6.png
+index a0be4e49d774135919462ce42809724263add93a..5e89b4116b0fd30a30c812c7142ececfa836f7ac 100644
+GIT binary patch
+delta 150
+zcmeBS+RivZvwq5yBuzs@1|q=!|Np%lgF?(_ngA6$dAc};NK8$xXlIeQV9^x7@W`g6
+z^E9Jn5x=5P5x=9%3?mNqMXwZRD4Rc!Sy8Nz=Ulc`;f#Hg!uf-H6x!eA#w=uJI6wJB
+UTnPUqH&&3{p00i_>zopr00pQikpKVy
+
+delta 235
+zcmdna*uykIvwqE%cR|I)Q})hb&}4`z&MKbLoaCjs_w3Q)C`(5#M+PMD|Nnn4#~_vM
+zbF+bh(>+}rLnNjqCmi6N)!VDid@&`NTj99QmQVwekPsyk$rFYr3j|9F1x0hX*$Qv5
+zG&+PBFdx|{;1jN|A096JhUFy3wY|(u&ljdB%<OEcQaGpV=&5i#KtxHI!;Ilnp-N+O
+z(yUAky=ono$z7*Tcb{^ZrO3z2!^_)ZaYe=1K;TK<2Jtg7Qp~O~GRg<$Wt(l=Vq(Uo
+c#BGzv%wV)4^rGapNU*y-UHx3vIVCg!0CP4`Hvj+t
+
+diff --git a/graphics/text_window/8.png b/graphics/text_window/8.png
+index 480751a02b2e1ab03fb4e292c35936c25e19fb07..b278130ea41849d50267473a66b2426bfee7c6c5 100644
+GIT binary patch
+delta 236
+zcmey!_=j<VL_G&H0|UeLm1j=@DaPU;cPEB*=VV?2IR*hfA+A8$%ggIVLPD8ecUs!+
+z^6pDhHaxg@?cD$W|Gy<Q|DUtv|2Kv$d$-)XdJib#<rtJ-`BNXLN1!CgFPH%+gbWS@
+zbUOp(;yhg(Lo_CCopg||L4haLdHdB{v;Y6!>2{>SLSN$k#{9;BG_z)X=D6Z@%wJ|r
+z&Uvij|5){USfF7&w}N<wgPMR~qmM_B8jGgwtG}Q0`E|~gJ<8b8X??x@$<CSfGj2_g
+YovFkfyhi`f7ob%Pp00i_>zopr0J?c@cmMzZ
+
+delta 208
+zcmeyv_>pmfgboWc0|SFlq{3++Wf0&K;yPtYlBS^{kOu@odl|aFY0fFuY)+C`)9pAh
+zP_&-y;&lU{OpT|DV~E7mWPubBffNQN16{4H7X*(8PK=T`aX`Z|kl_g9<)F>wdLk@L
+z0=&<rlrNduZ0V3`IKfBBL(=1MtOA3y$_x$dAAB4v`dy4`1*X@svx##{Ua$}{@Kd&O
+z=Q-x-^8A4b@6n(M#SStXiW~T*vhIAV#QD#WQ&Ql`0w#v*uS-}=)|VavxzW?r&t;uc
+GLK6Ub5kc_)
+
+diff --git a/graphics/text_window/message_box.png b/graphics/text_window/message_box.png
+index edc2d3d3afae87bc2df422f23096a3add38c92bd..11a8dabd2c0a57ee7d4468d13401554578bddca6 100644
+GIT binary patch
+delta 139
+zcmey!xQ%gwggOT^0|P_Ja-VV_#aJBV?!>U}oXkrg#~{Eb#I@kWf*(JANJvOb^p}hD
+zaEK_#Xz(al5cks94yeM!)5S4FV`6fGL{oz}(}f*77)nh(ef;>b@bHd1I~Y7f?Rsr)
+pFe;0hJi5@3X_S`HmnCB&#kkg4h<7F1w1+_b44$rjF6*2UngIJ8F+TtR
+
+delta 199
+zcmdnS_>pmfggFZ{0|Udx@P%bSim^Dz-HBn{IhmJ04okYDuOm>ZpZiZDE0Avx;1l9n
+zaALuaA3qWj5+>Tq)ieB<!Ej=SN5O*hB~tf+DmV)~B8wRq_zr_G<MI3zDL_FlPZ!4!
+zjq}M1ba!y8O<<fPvrHvs+V^+X0$<;K%hR~=``z8U+y=ex4@_Er{=h-I1v;yq$hADl
+v+@SJ)Z~1yhA%Um)`U@<IcX${XFfddtnlP#Vdz(GbR0dC1KUSA@P6<r_oy<(n
+
+diff --git a/graphics/text_window/name_box.png b/graphics/text_window/name_box.png
+index 735f39247ebe79756f3c41e8da938607ffc402d0..21c4a6d43bc25422b8b2eab6bb1574145c48f9c9 100644
+GIT binary patch
+delta 104
+zcmV-u0GI#O0nP!CZDCAFL_t&-m4(nj4!|G?1yQ;tlivTf4HT`Q)mi=*7AkUxUfu5~
+z%eQAC1IvT)gbEyh8Q20Vpg+0n@DFM+ehEIwWjRHvKD}Vnis1p_Rt`7G?u3{C0000<
+KMNUMnLSTX#%`5Ey
+
+delta 111
+zcmV-#0FeLA0o4JJZD><TL_t&-m4(nd4!|%715i98)BE4Hw25e-`FM%&6GIR=gpt}`
+zJz2g!3o~%KFs`ry55PZg3!DMt%cXZ&f*Dmgp2TO5m;!jIN1p<a_CO<T#trD~4q(r-
+R<Rbt8002ovPDHLkV1i=IF3|u0
+
 diff --git a/graphics/trainers/front_pics/dailyred_leaf.png b/graphics/trainers/front_pics/dailyred_leaf.png
 new file mode 100644
 index 0000000000000000000000000000000000000000..87e3fc2b5b660aee8a307558f58e930b8659f030
@@ -1841,6 +1947,71 @@ index 00000000..3bcdb60e
 +	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 +	voice_noise_alt 60, 0, 0, 0, 2, 6, 0  @ 126: noise
 +	voice_noise_alt 60, 0, 0, 0, 1, 8, 1  @ 127: noise, hi-hat
+diff --git a/src/battle_bg.c b/src/battle_bg.c
+index 49d91ce4..eaa15e65 100644
+--- a/src/battle_bg.c
++++ b/src/battle_bg.c
+@@ -32,6 +32,32 @@
+ 
+ // .rodata
+ 
++// Daily Red: the HGSS-style battle interface (from Eemeliri/soulgold) draws the
++// message window and the "What will X do?" prompt on their own palettes, so
++// their text sits on the textbox's white like the rest of its boxes.
++#define DAILYRED_BATTLE_MESSAGE_PAL_NUM 12
++#define DAILYRED_BATTLE_COMMAND_PAL_NUM 13
++
++static const u16 sDailyRedBattleMessageTextPalette[] =
++{
++    [0]  = RGB(0, 0, 0),
++    [1]  = RGB(3, 3, 3),     // Default text foreground
++    [2]  = RGB(14, 0, 0),    // Attack shadow
++    [3]  = RGB(31, 12, 12),  // Attack
++    [4]  = RGB(2, 6, 16),    // Defense shadow
++    [5]  = RGB(11, 18, 31),  // Defense
++    [6]  = RGB(26, 26, 25),  // Default text shadow
++    [7]  = RGB(15, 0, 10),   // Sp. Atk shadow
++    [8]  = RGB(31, 12, 23),  // Sp. Atk
++    [9]  = RGB(0, 10, 16),   // Sp. Def shadow
++    [10] = RGB(10, 25, 31),  // Sp. Def
++    [11] = RGB(0, 12, 0),    // Speed shadow
++    [12] = RGB(13, 28, 11),  // Speed
++    [13] = RGB(31, 24, 8),   // Accuracy / all stats
++    [14] = RGB(20, 14, 31),  // Evasiveness
++    [15] = RGB(31, 31, 31),  // Textbox background
++};
++
+ static const struct OamData sVsLetter_V_OamData =
+ {
+     .y = 0,
+@@ -159,7 +185,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 15,
+         .width = 26,
+         .height = 4,
+-        .paletteNum = 0,
++        .paletteNum = DAILYRED_BATTLE_MESSAGE_PAL_NUM, // Daily Red: HGSS-style (was 0)
+         .baseBlock = 0x0090,
+     },
+     [B_WIN_ACTION_PROMPT] = {
+@@ -168,7 +194,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 35,
+         .width = 14,
+         .height = 4,
+-        .paletteNum = 0,
++        .paletteNum = DAILYRED_BATTLE_COMMAND_PAL_NUM, // Daily Red: HGSS-style (was 0)
+         .baseBlock = 0x01c0,
+     },
+     [B_WIN_ACTION_MENU] = {
+@@ -973,6 +999,9 @@ void LoadBattleMenuWindowGfx(void)
+     LoadUserWindowBorderGfx(2, 0x12, BG_PLTT_ID(1));
+     LoadUserWindowBorderGfx(2, 0x22, BG_PLTT_ID(1));
+     LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
++    // Daily Red: the HGSS-style message and prompt palettes (see above).
++    LoadPalette(sDailyRedBattleMessageTextPalette, BG_PLTT_ID(DAILYRED_BATTLE_MESSAGE_PAL_NUM), PLTT_SIZE_4BPP);
++    LoadPalette(gBattleTextboxPalette, BG_PLTT_ID(DAILYRED_BATTLE_COMMAND_PAL_NUM), PLTT_SIZE_4BPP);
+ 
+     if ((gBattleTypeFlags & (BATTLE_TYPE_ARENA | BATTLE_TYPE_POKEDUDE))
+     || (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)))
 diff --git a/src/battle_controllers.c b/src/battle_controllers.c
 index 63c899bc..569f0510 100644
 --- a/src/battle_controllers.c

@@ -22,6 +22,8 @@ Graphics in the ROM
   Mt. Silver's battle background: from Gold-Ruki's HGSS-style battle
   backgrounds for GBA (credit to Gold-Ruki). RED's battle sprite: Pokémon
   HeartGold/SoulSilver's, ripped by ChrisX698. LEAF's HGSS-style sprite.
+  The HGSS-style battle interface and window frames: from Eemeliri/soulgold
+  (https://github.com/Eemeliri/soulgold).
 
 Nostalgist.js (vendor/nostalgist.js)
   MIT License, see vendor/nostalgist.LICENSE.txt
