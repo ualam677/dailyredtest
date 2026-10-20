@@ -127,6 +127,22 @@ reads `VAR_RESULT`, updates a win/battle counter, calls the
 `DailyRed_StartNextRun` special (new team) and warps back to the start tile,
 which also resets RED.
 
+### Battle rules
+
+The battle engine is the expansion's (Gen 9 mechanics by default), with these
+changes:
+
+- **No affection or friendship boosts** (`B_AFFECTION_MECHANICS` off in
+  `include/config/battle.h`; `B_FRIENDSHIP_BOOST` was already off): a
+  Pokémon's friendship never lets it hang on to a knockout blow, dodge,
+  land extra critical hits or shake off a status. The smoke test checks this
+  with a max-friendship team (see Testing).
+- **Mega Evolution and Z-Moves:** the player starts with a Mega Ring and a
+  Z-Power Ring (`DailyRed_InitNewGame`), so a Pokémon holding its Mega Stone or
+  a Z-Crystal can use them. Each side can Mega Evolve once and use one Z-Move
+  per battle; the engine enforces that for every trainer, RED included (he
+  needs no ring).
+
 Every vanilla file that was changed has a `Daily Red:` comment at the change:
 
 ```sh
@@ -150,8 +166,8 @@ expansion's step counter code writes to some of FireRed's "unused" ones).
 (`GetSpeciesLevelUpLearnset`, `GetTMHMMoveId` and `CanLearnTeachableMove`,
 `CreateMon`, `CalculateMonStats`):
 
-- **Species:** 6 different Pokémon from all 386 of Generations 1–3 whose
-  **base stat totals add up to at least 2700** (`MIN_TEAM_BASE_STAT_TOTAL`).
+- **Species:** 6 different Pokémon from Daily Red's species scope (below)
+  whose **base stat totals add up to at least 2700** (`MIN_TEAM_BASE_STAT_TOTAL`).
   **Legendaries are a 1-in-8 roll** (`LEGENDARY_TEAM_ODDS`): 1 team in 8 gets
   exactly one legendary or mythical Pokémon, in a random party slot, and the
   other 7 get none. The generator then redraws the rest of the team until it
@@ -159,15 +175,26 @@ expansion's step counter code writes to some of FireRed's "unused" ones).
   rules live in `IsEligibleSpecies`, e.g. add "fully evolved only" there.
 
   Why a minimum: RED's team totals 2974 (see below). A fully random team
-  averages about 2440, and most include a very weak Pokémon, which made most
+  averages about 2490, and most include a very weak Pokémon, which made most
   runs hopeless. A team can still include one weak Pokémon if the rest make up
-  for it. About 1 random draw in 12 meets 2700, and about 1 qualifying team in
-  24 out-totals RED's (base stats from the expansion, which uses the latest
+  for it. About 1 random draw in 8 meets 2700, and about 1 qualifying team in
+  16 out-totals RED's (base stats from the expansion, which uses the latest
   games' values).
 
-  Why legendaries are a separate roll: they average 613 against 394 for
+  Why legendaries are a separate roll: they average 613 against 404 for
   everything else, so a stat minimum on its own mostly gets met by drawing
-  one: at 2700, 64% of qualifying teams would have one.
+  one: at 2700, 55% of qualifying teams would have one.
+
+  **Species scope ("Generations 1–3"):** the 386 Pokémon of Generations 1–3,
+  their evolutions from later games (`sLaterEvolutions`: Magnezone, Leafeon,
+  Glaceon, Sylveon, Gallade, Togekiss, Kleavor, Annihilape and the rest, 29 in
+  all), and the Mega Evolutions of any of those (`DailyRed_IsSpeciesInScope`).
+  Teams are drawn from the regular forms; a Mega only appears in battle, from a
+  held Mega Stone. Regional forms (Alolan Raichu, Galarian Ponyta…) count as
+  later-generation Pokémon, so they and their evolutions (Sirfetch'd,
+  Obstagoon, Sneasler, Clodsire…) are out. The tests rebuild the
+  later-evolution list from the ROM's own evolution tables and check it
+  against `sLaterEvolutions`.
 
 - **Moves:** up to 4 different moves picked uniformly from everything the
   species can learn **by level-up (any level) or TM/HM**. Level-up learnsets
@@ -313,7 +340,7 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
 ```
 
 `npm run smoke` checks that:
-- each seed's team is valid: 6 different real Gen 1–3 species with a combined
+- each seed's team is valid: 6 different in-scope species with a combined
   base stat total of at least 2700 and at most one legendary, level 100, full
   HP, IVs 25–31, EVs exactly as `AssignFocusedEVs` would place them (checked
   by an independent JavaScript copy of the rule), an item from the pool (type
@@ -329,6 +356,13 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
   "Will LEAF change POKéMON?" prompt.
 - RED's in-battle party is the configured team with IVs, items and EVs, and
   the summit's snow doesn't start any battle weather.
+- the player starts with a Mega Ring and a Z-Power Ring; affection and
+  friendship boosts are off in the build, and a team at max friendship (five
+  hearts in battle) never hangs on to a knockout blow: 20 tries at 1 HP with
+  nothing else that could save it, each from a different RNG state, all faint
+  (with affection on, about 4 would survive).
+- the later-evolution list in `dailyred_team.c` matches what the ROM's
+  evolution tables lead to from Generations 1–3, and every team is in scope.
 - RED's lines are "…", "…" and "…!", the record and come-back-tomorrow
   messages are still there, and his battle plays the vs Red theme: the song
   playing in RAM, its song table entry and voicegroup, and a loop on every

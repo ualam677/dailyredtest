@@ -79,6 +79,28 @@ export function readParty(memory, side = 'Player') {
   return { count, party };
 }
 
+// Writes that set a party Pokemon's friendship: its data re-encrypted and the
+// checksum fixed, the way the game stores them.
+export function friendshipWrites(memory, side, slot, value) {
+  const P = layout('Pokemon'), B = layout('BoxPokemon');
+  const addr = partyAddress(side) + slot * P.size;
+  const buf = Buffer.from(memory.read(addr, P.size));
+  const personality = buf.readUInt32LE(B.personality.off), otId = buf.readUInt32LE(B.otId.off);
+  const key = (personality ^ otId) >>> 0;
+  const secure = Buffer.alloc(B.secure.size);
+  for (let i = 0; i < secure.length; i += 4) secure.writeUInt32LE((buf.readUInt32LE(B.secure.off + i) ^ key) >>> 0, i);
+  const subSize = secure.length / 4;
+  secure[ORDERS[personality % 24].indexOf('0') * subSize + layout('PokemonSubstruct0').friendship.off] = value;
+  let checksum = 0;
+  for (let i = 0; i < secure.length; i += 2) checksum = (checksum + secure.readUInt16LE(i)) & 0xFFFF;
+  const encrypted = Buffer.alloc(secure.length);
+  for (let i = 0; i < secure.length; i += 4) encrypted.writeUInt32LE((secure.readUInt32LE(i) ^ key) >>> 0, i);
+  return [
+    { addr: addr + B.secure.off, bytes: [...encrypted] },
+    { addr: addr + B.checksum.off, bytes: [checksum & 0xFF, checksum >> 8] },
+  ];
+}
+
 export const itemName = (it) => (it ? item(it).name : 'no item');
 
 export function formatMon(mon) {
@@ -129,8 +151,34 @@ export const LEGENDARY_LIST = listIn(/sLegendaries\[\] =\s*\{([^}]*)\}/, 'SPECIE
 export const isLegendary = (mon) => species(mon.species).legendary;
 export const teamBaseStatTotal = (party) => party.filter(Boolean).reduce((sum, m) => sum + species(m.species).bst, 0);
 
-// The player's species pool: Generations 1-3, base forms (national dex 1-386).
-export const isEligibleSpecies = (sp) => sp >= id('SPECIES', 'BULBASAUR') && sp <= id('SPECIES', 'DEOXYS');
+// Daily Red's species scope, rebuilt from the ROM's evolution tables
+// (independently of sLaterEvolutions in dailyred_team.c): the 386 Pokemon of
+// Generations 1-3 and everything they evolve into in later generations, in
+// regular form (not regional forms, alternate forms or battle-only forms).
+let laterEvolutionCache;
+export function laterEvolutions() {
+  if (laterEvolutionCache) return laterEvolutionCache;
+  const last = id('SPECIES', 'DEOXYS');
+  const isRegularForm = (sp) => {
+    const info = species(sp);
+    return !info.regional && !info.battleOnly && (info.forms.length === 0 || info.forms[0] === sp);
+  };
+  const found = new Set();
+  const queue = Array.from({ length: last }, (_, i) => i + 1);
+  while (queue.length) {
+    for (const evo of species(queue.shift()).evolutions) {
+      if (evo.target > last && !found.has(evo.target) && isRegularForm(evo.target)) {
+        found.add(evo.target);
+        queue.push(evo.target);
+      }
+    }
+  }
+  return (laterEvolutionCache = found);
+}
+
+// The player's species pool: the scope above, in regular form.
+export const isEligibleSpecies = (sp) => (sp >= 1 && sp <= id('SPECIES', 'DEOXYS')) || laterEvolutions().has(sp);
+export const LATER_EVOLUTION_LIST = listIn(/sLaterEvolutions\[\] =\s*\{([^}]*)\}/, 'SPECIES').map((n) => id('SPECIES', n));
 
 // The EV rule, written independently of the C code: 252 into each of the two
 // highest base stats (Attack / Sp. Atk only if an attack of that category uses

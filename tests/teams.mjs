@@ -6,7 +6,7 @@
 //
 // Exits non-zero if any team breaks the rules (see validateTeam in party.mjs).
 import { startServer, launchBrowser, bootGame, waitFor } from './lib.mjs';
-import { readParty, formatMon, validateTeam, teamBaseStatTotal, MIN_TEAM_BST, isLegendary } from './party.mjs';
+import { readParty, formatMon, validateTeam, teamBaseStatTotal, MIN_TEAM_BST, isLegendary, laterEvolutions } from './party.mjs';
 import { id, species as speciesInfo } from './game.mjs';
 
 const args = process.argv.slice(2);
@@ -64,4 +64,6 @@ console.log(`Team base stat totals: min ${Math.min(...totals)}, average ${Math.r
   + `(minimum ${MIN_TEAM_BST}; RED ${redTotal}; ${totals.filter((t) => t > redTotal).length} of ${totals.length} teams out-total RED).`);
 const legendaryTeams = seeds.filter((s) => results.get(s).party.some((m) => m && isLegendary(m))).length;
 console.log(`Teams with a legendary: ${legendaryTeams} of ${seeds.length}.`);
+const later = seeds.flatMap((s) => results.get(s).party).filter((m) => m && laterEvolutions().has(m.species));
+console.log(`Later-generation evolutions drawn: ${later.length} (${[...new Set(later.map((m) => m.speciesName))].join(', ') || 'none'}).`);
 process.exit(invalid ? 1 : 0);

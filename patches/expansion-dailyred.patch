@@ -262,6 +262,19 @@ index 3492bf3b..c5abfb81 100644
 +	def_special DailyRed_OnBattleEnd
 +	def_special DailyRed_OnDailyGameOver
 +	def_special DailyRed_IsDailyGame
+diff --git a/include/config/battle.h b/include/config/battle.h
+index b29ee42a..eabc1f50 100644
+--- a/include/config/battle.h
++++ b/include/config/battle.h
+@@ -386,7 +386,7 @@
+ // Other settings
+ #define B_MULTI_BATTLE_WHITEOUT         GEN_LATEST // In Gen4+, Multi Battles end when the player as well as their partner don't have any Pokémon left.
+ #define B_EVOLUTION_AFTER_WHITEOUT      GEN_LATEST // In Gen6+, Pokémon that qualify for evolution after battle will evolve even if the player loses.
+-#define B_AFFECTION_MECHANICS           TRUE       // In Gen6+, there's a stat called affection that can trigger different effects in battle. From LGPE onwards, these effects use friendship instead.
++#define B_AFFECTION_MECHANICS           FALSE      // Daily Red: off (was TRUE): friendship gives no endures, dodges, crits or status cures // In Gen6+, there's a stat called affection that can trigger different effects in battle. From LGPE onwards, these effects use friendship instead.
+ #define B_TRAINER_CLASS_POKE_BALLS      GEN_LATEST // In Gen7+, Trainers will use certain kinds of Poké Balls depending on their Trainer class.
+ #define B_TRAINER_MON_RANDOM_ABILITY    0          // If this is set to 0, trainers mons with no set ability only use the first ability of a mon. If set to 1 it will roll a random non-hidden ability. If set to 2, it will roll any ability (including hidden ability) with equal chance
+ #define B_OBEDIENCE_MECHANICS           GEN_LATEST // In PLA onwards (GEN_8 here), obedience restrictions also apply to non-outsider Pokémon, albeit based on their met level rather than their current level.
 diff --git a/include/config/debug.h b/include/config/debug.h
 index 334d0ab5..bf0c16f2 100644
 --- a/include/config/debug.h
@@ -373,10 +386,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..ec40cee1
+index 00000000..d048c6cd
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,33 @@
+@@ -0,0 +1,34 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -408,6 +421,7 @@ index 00000000..ec40cee1
 +
 +// src/dailyred_team.c
 +void DailyRed_GenerateTeam(struct Pokemon *party, u32 *rngState);
++bool32 DailyRed_IsSpeciesInScope(u16 species);
 +
 +#endif // GUARD_DAILYRED_H
 diff --git a/include/main.h b/include/main.h
@@ -833,13 +847,14 @@ index 85523e06..79fe93ec 100644
                      if (B_OVERWORLD_SNOW >= GEN_9)
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 00000000..983819ab
+index 00000000..4f954a6d
 --- /dev/null
 +++ b/src/dailyred.c
-@@ -0,0 +1,219 @@
+@@ -0,0 +1,224 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "event_data.h"
++#include "item.h"
 +#include "load_save.h"
 +#include "main.h"
 +#include "malloc.h"
@@ -1015,6 +1030,10 @@ index 00000000..983819ab
 +    // makes every level obey, as Daily Red has always had them.
 +    FlagSet(FLAG_BADGE08_GET);
 +    EnableNationalPokedex();       // so Pokemon show national dex numbers
++    // Key items that let the player Mega Evolve and use Z-Moves (one of each
++    // per battle; the battle engine enforces that for both sides).
++    AddBagItem(ITEM_MEGA_RING, 1);
++    AddBagItem(ITEM_Z_POWER_RING, 1);
 +    // Start the record from the website's saved stats (0 outside the website).
 +    VarSet(VAR_DAILYRED_WINS, *(const vu16 *)&gDailyRedRomConfig.wins);
 +    VarSet(VAR_DAILYRED_BATTLES, *(const vu16 *)&gDailyRedRomConfig.battles);
@@ -1058,10 +1077,10 @@ index 00000000..983819ab
 +}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..1a2c228c
+index 00000000..9be40a5a
 --- /dev/null
 +++ b/src/dailyred_team.c
-@@ -0,0 +1,544 @@
+@@ -0,0 +1,596 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "item.h"
@@ -1077,7 +1096,8 @@ index 00000000..1a2c228c
 +// Random team generator for Daily Red.
 +//
 +// Rules (see "Team generation" in the project README):
-+//   - 6 different species out of the eligible ones (IsEligibleSpecies), whose
++//   - 6 different species out of the eligible ones (IsEligibleSpecies: Gens
++//     1-3 and their later evolutions, see DailyRed_IsSpeciesInScope), whose
 +//     base stat totals add up to at least MIN_TEAM_BASE_STAT_TOTAL. 1 team in
 +//     LEGENDARY_TEAM_ODDS includes exactly one legendary; the rest have none.
 +//   - Level 100 with a random personality (so random nature, gender, ability
@@ -1106,14 +1126,14 @@ index 00000000..1a2c228c
 +// Minimum combined base stat total (HP + Atk + Def + Speed + Sp. Atk +
 +// Sp. Def) for the player's six. RED's team adds up to 2974 (Pikachu 320,
 +// Espeon 525, Snorlax 540, Venusaur 525, Charizard 534, Blastoise 530), while
-+// a fully random team averages about 2440. About 1 random draw in 12 meets
-+// the minimum, and roughly 1 qualifying team in 24 out-totals RED's. Raise it
-+// to make the game easier, lower it for harder. Set to 0 to turn the rule off.
++// a fully random team averages about 2490. About 1 random draw in 8 meets the
++// minimum, and roughly 1 qualifying team in 16 out-totals RED's. Raise it to
++// make the game easier, lower it for harder. Set to 0 to turn the rule off.
 +#define MIN_TEAM_BASE_STAT_TOTAL 2700
 +
 +// Legendary and mythical Pokemon average a base stat total of 613, against
-+// 394 for everything else, so the minimum above would put one in most teams
-+// (64% of them). Instead, 1 in LEGENDARY_TEAM_ODDS teams gets exactly one and
++// 404 for everything else, so the minimum above would put one in most teams
++// (55% of them). Instead, 1 in LEGENDARY_TEAM_ODDS teams gets exactly one and
 +// the others get none.
 +#define LEGENDARY_TEAM_ODDS 8
 +
@@ -1181,14 +1201,65 @@ index 00000000..1a2c228c
 +    return lo | ((u32)TeamRandom(rng) << 16);
 +}
 +
-+// Which species may appear on the player's team: the 386 Pokemon of
-+// Generations 1-3, in their base forms. Add rules here, e.g. "fully evolved
-+// only" or "no legendaries".
++// Daily Red's species scope ("Generations 1-3"):
++//   - the 386 Pokemon of Generations 1-3 (national dex 1-386),
++//   - their evolutions from later generations (sLaterEvolutions),
++//   - and the Mega Evolutions of any of those.
++// Regional forms (Alolan Raichu, Galarian Ponyta, ...) are later-generation
++// Pokemon in their own right, so they and their evolutions (Sirfetch'd,
++// Obstagoon, Sneasler, Clodsire, ...) are out. tests/party.mjs rebuilds this
++// list from the ROM's evolution tables and checks it against this one.
++static const u16 sLaterEvolutions[] =
++{
++    // Generation 4
++    SPECIES_AMBIPOM, SPECIES_MISMAGIUS, SPECIES_HONCHKROW, SPECIES_WEAVILE, SPECIES_MAGNEZONE,
++    SPECIES_LICKILICKY, SPECIES_RHYPERIOR, SPECIES_TANGROWTH, SPECIES_ELECTIVIRE, SPECIES_MAGMORTAR,
++    SPECIES_TOGEKISS, SPECIES_YANMEGA, SPECIES_LEAFEON, SPECIES_GLACEON, SPECIES_GLISCOR,
++    SPECIES_MAMOSWINE, SPECIES_PORYGON_Z, SPECIES_GALLADE, SPECIES_PROBOPASS, SPECIES_DUSKNOIR,
++    SPECIES_FROSLASS, SPECIES_ROSERADE,
++    // Generation 6
++    SPECIES_SYLVEON,
++    // Generation 8 (Legends: Arceus)
++    SPECIES_KLEAVOR, SPECIES_URSALUNA, SPECIES_WYRDEER,
++    // Generation 9
++    SPECIES_ANNIHILAPE, SPECIES_FARIGIRAF, SPECIES_DUDUNSPARCE,
++};
++
++static bool32 IsLaterEvolution(u16 species)
++{
++    u32 i;
++
++    for (i = 0; i < ARRAY_COUNT(sLaterEvolutions); i++)
++    {
++        if (sLaterEvolutions[i] == species)
++            return TRUE;
++    }
++    return FALSE;
++}
++
++// A Pokemon in its regular form that's in scope (see above).
++static bool32 IsScopeBaseSpecies(u16 species)
++{
++    if (species == SPECIES_NONE || species >= NUM_SPECIES || !IsSpeciesEnabled(species))
++        return FALSE;
++    return species <= SPECIES_DEOXYS || IsLaterEvolution(species);
++}
++
++bool32 DailyRed_IsSpeciesInScope(u16 species)
++{
++    if (species == SPECIES_NONE || species >= NUM_SPECIES)
++        return FALSE;
++    if (gSpeciesInfo[species].isMegaEvolution)
++        return IsScopeBaseSpecies(GET_BASE_SPECIES_ID(species));
++    return IsScopeBaseSpecies(species);
++}
++
++// Which species may be drawn for the player's team: everything in scope in
++// its regular form (Megas only exist in battle; the team's Mega comes from a
++// held Mega Stone). Add rules here, e.g. "fully evolved only".
 +static bool32 IsEligibleSpecies(u16 species)
 +{
-+    if (species == SPECIES_NONE || species > SPECIES_DEOXYS)
-+        return FALSE;
-+    return IsSpeciesEnabled(species);
++    return IsScopeBaseSpecies(species);
 +}
 +
 +static u32 GetBaseStatTotal(u16 species)
@@ -1244,7 +1315,7 @@ index 00000000..1a2c228c
 +}
 +
 +// Decides whether this team gets a legendary, then draws the other Pokemon
-+// until the team meets MIN_TEAM_BASE_STAT_TOTAL (about 1 in 12 draws do), so
++// until the team meets MIN_TEAM_BASE_STAT_TOTAL (about 1 in 8 draws do), so
 +// every qualifying team is equally likely. In the practically impossible case
 +// that none does, the strongest team drawn is used.
 +static void PickTeamSpecies(u16 *species, u32 *rng)

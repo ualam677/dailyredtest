@@ -11,9 +11,10 @@ import {
   getStatus, waitFor, walkTo, face, patchMemory, readVar, symbol, value, u16,
   startRedBattle, waitForActionMenu, forceWin, readGameStatus, memField, objectFacing,
   battleMonField, readBattleMon, activePartySlot, faintWrites, unkillableWrites,
+  bitsWrite, saveSnapshot, loadSnapshot, u32, battleInput,
 } from './lib.mjs';
-import { GAME_DIR, id, readBits, layout, field, rom, romOffset, textAt } from './game.mjs';
-import { readParty, formatMon, validateTeam } from './party.mjs';
+import { GAME_DIR, id, readBits, layout, field, rom, romOffset, textAt, species } from './game.mjs';
+import { readParty, formatMon, validateTeam, friendshipWrites, laterEvolutions, LATER_EVOLUTION_LIST } from './party.mjs';
 
 const OUT = new URL('./output/', import.meta.url).pathname;
 mkdirSync(OUT, { recursive: true });
@@ -44,7 +45,7 @@ const teamKey = (party) => party.map((m) => m && `${m.species}:${m.moves.join(',
 
 function checkTeam(label, team) {
   const problems = validateTeam(team);
-  check(problems.length === 0, `${label}: valid team (6 different Gen 1-3 species, level 100, learnable moves, legal stats, held items)${problems.length ? ': ' + problems.join('; ') : ''}`);
+  check(problems.length === 0, `${label}: valid team (6 different in-scope species, level 100, learnable moves, legal stats, held items)${problems.length ? ': ' + problems.join('; ') : ''}`);
 }
 
 async function talkToRed(page, shot) {
@@ -90,6 +91,16 @@ check(rom().readUInt32LE(songHeader + 4) === symbol('voicegroup_dailyred_vs_red'
 const songAsm = readFileSync(join(GAME_DIR, 'sound/songs/midi/mus_dailyred_vs_red.s'), 'utf8');
 check(rom()[songHeader] === 10 && (songAsm.match(/\bGOTO\b/g) ?? []).length === 10, `all ${rom()[songHeader]} tracks of the song loop`);
 
+// Mechanics: no friendship/affection battle effects.
+check(value('B_AFFECTION_MECHANICS') === 0 && value('B_FRIENDSHIP_BOOST') === 0, 'affection and friendship battle boosts are off (B_AFFECTION_MECHANICS, B_FRIENDSHIP_BOOST)');
+
+// Species scope: the later-generation evolutions in dailyred_team.c are
+// exactly the ones the ROM's evolution tables lead to from Gens 1-3.
+const scopeTable = new Set(LATER_EVOLUTION_LIST), scopeRom = laterEvolutions();
+const missing = [...scopeRom].filter((sp) => !scopeTable.has(sp)), extra = [...scopeTable].filter((sp) => !scopeRom.has(sp));
+check(!missing.length && !extra.length, `the later-evolution list matches the game's evolutions (${scopeRom.size} species)`
+  + `${missing.length ? '; missing ' + missing.map((sp) => species(sp).name).join(', ') : ''}${extra.length ? '; not evolutions: ' + extra.map((sp) => species(sp).name).join(', ') : ''}`);
+
 const server = await startServer();
 const browser = await launchBrowser();
 let page;
@@ -119,6 +130,10 @@ try {
   check(s.x === START[0] && s.y === START[1], `player starts at ${START} (got ${s.x},${s.y})`);
   check(redFacing(s.mem) === value('DIR_NORTH'), 'RED faces away from the player, out over the drop');
   check(optionsBattleStyle(s.mem) === STYLE_SET, 'battle style starts as SET');
+  const saveBlock1 = s.mem.read(symbol('gSaveBlock1Ptr'), 4).readUInt32LE(0);
+  const keyItems = layout('SaveBlock1').bag_keyItems;
+  const keyItemIds = Array.from({ length: keyItems.count }, (_, i) => memField(s.mem, saveBlock1 + keyItems.off + i * keyItems.elemSize, 'ItemSlot', 'itemId'));
+  check(keyItemIds.includes(id('ITEM', 'MEGA_RING')) && keyItemIds.includes(id('ITEM', 'Z_POWER_RING')), 'the player starts with a Mega Ring and a Z-Power Ring');
   await sleep(1500);
   await screenshot(page, `${OUT}/01-start.png`);
   await press(page, 'start'); await sleep(800);
@@ -200,10 +215,62 @@ try {
   check(redFacing(s.mem) === value('DIR_NORTH'), 'RED faces the drop again for the next run');
   await screenshot(page, `${OUT}/11-after-win.png`);
 
-  // 4. Battle again and force a loss.
+  // 4. Battle again, with the whole team at max friendship (and battle
+  //    animations off to keep it quick), then force a loss.
+  s = await getStatus(page);
+  const saveBlock2 = s.mem.read(symbol('gSaveBlock2Ptr'), 4).readUInt32LE(0);
+  await patchMemory(page, [
+    ...[0, 1, 2, 3, 4, 5].flatMap((i) => friendshipWrites(s.mem, 'Player', i, value('MAX_FRIENDSHIP'))),
+    bitsWrite(s.mem, saveBlock2, layout('SaveBlock2').optionsBattleSceneOff, 1),
+  ]);
+  s = await getStatus(page);
+  const maxFriends = readParty(s.mem);
+  check(maxFriends.party.every((m) => m.friendship === value('MAX_FRIENDSHIP')) && validateTeam(maxFriends).length === 0, 'the team is at max friendship (and its data still checks out)');
   s = await talkToRed(page);
   check(s.inBattle, 'RED can be battled again');
   await waitForActionMenu(page);
+  s = await getStatus(page);
+  check(readBattleMon(s.mem, 0, 'affectionHearts') === value('AFFECTION_FIVE_HEARTS'), 'in battle, our Pokemon has full affection (five hearts)');
+
+  // With affection on, a five-heart Pokemon hangs on to a knockout blow 20%
+  // of the time. Here it never should. Each try: ours at 1 HP with nothing
+  // else that could save it (no item or ability, Normal type) uses Splash,
+  // RED's Pokemon only has Tackle, and the RNG starts somewhere new.
+  await saveSnapshot(page);
+  const TRIES = 20, splash = id('MOVE', 'SPLASH'), tackle = id('MOVE', 'TACKLE'), normal = id('TYPE', 'NORMAL');
+  let fainted = 0, survived = 0, noTurn = 0;
+  for (let t = 0; t < TRIES; t++) {
+    await loadSnapshot(page, [
+      { addr: battleMonField(0, 'hp'), bytes: u16(1) },
+      { addr: battleMonField(0, 'item'), bytes: u16(0) },
+      { addr: battleMonField(0, 'ability'), bytes: u16(0) },
+      { addr: battleMonField(0, 'types'), bytes: [normal, normal] },
+      { addr: battleMonField(0, 'moves'), bytes: [0, 1, 2, 3].flatMap(() => u16(splash)) },
+      { addr: battleMonField(0, 'pp'), bytes: [20, 20, 20, 20] },
+      { addr: battleMonField(1, 'moves'), bytes: [0, 1, 2, 3].flatMap(() => u16(tackle)) },
+      { addr: battleMonField(1, 'pp'), bytes: [35, 35, 35, 35] },
+      { addr: symbol('gRngValue'), bytes: [0, 1, 2, 3].flatMap(() => u32((Math.random() * 2 ** 32) >>> 0)) },
+    ]);
+    // FIGHT, then Splash (A in the turn menu, then in the move list), until
+    // RED has used Tackle (its PP drops); then look once the hit has landed.
+    let attacked = false;
+    for (let i = 0; i < 40 && !attacked; i++) {
+      const st = await getStatus(page);
+      attacked = readBattleMon(st.mem, 1, 'pp')[0] < 35;
+      if (!attacked && battleInput(st.mem) !== 'busy') await press(page, 'a');
+      await sleep(300);
+    }
+    await sleep(2500);
+    const hp = readBattleMon((await getStatus(page)).mem, 0, 'hp');
+    if (!attacked) noTurn++;
+    else if (hp === 0) fainted++;
+    else survived++;
+  }
+  check(fainted === TRIES, `at max friendship our Pokemon never hangs on: of ${TRIES} knockout blows it survived ${survived}`
+    + `${noTurn ? ` (${noTurn} tries never got to RED's attack)` : ''} (with affection on, about 4 would)`);
+  await screenshot(page, `${OUT}/11b-max-friendship.png`);
+  await loadSnapshot(page);
+
   s = await getStatus(page);
   await patchMemory(page, [
     ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activePartySlot(s.mem, 0)).flatMap((i) => faintWrites('Player', i, s.mem)),

@@ -54,6 +54,7 @@ const NAMED = [
   'BATTLE_ENVIRONMENT_MOUNTAIN', 'OPTIONS_BATTLE_STYLE_SET', 'LOCALID_DAILYRED_RED', 'DIR_NORTH',
   'DAILYRED_START_X', 'DAILYRED_START_Y', 'TRAINER_DAILYRED_RED', 'METLOC_FATEFUL_ENCOUNTER', 'SHINY_ODDS',
   'MAP_OFFSET', 'OBJECT_EVENTS_COUNT', 'MAX_BATTLERS_COUNT', 'MUS_DAILYRED_VS_RED', 'MUS_RG_VS_CHAMPION', 'TRAINER_CLASS_DAILYRED',
+  'B_AFFECTION_MECHANICS', 'B_FRIENDSHIP_BOOST', 'MAX_FRIENDSHIP', 'AFFECTION_FIVE_HEARTS', 'POCKET_KEY_ITEMS',
 ];
 
 // Struct members to measure: plain members get an offset and a size,
@@ -78,7 +79,7 @@ const STRUCTS = {
   BattlePokemon: {
     type: 'struct BattlePokemon',
     fields: ['species', 'attack', 'defense', 'speed', 'spAttack', 'spDefense', 'moves[]', 'statStages[]', 'ability', 'types[]', 'pp[]', 'hp',
-      'level', 'friendship', 'maxHP', 'item', 'personality', 'status1', 'otId'],
+      'level', 'friendship', 'maxHP', 'item', 'personality', 'status1', 'otId', 'affectionHearts'],
   },
   SpeciesInfo: {
     type: 'struct SpeciesInfo',
@@ -97,8 +98,9 @@ const STRUCTS = {
   Main: { type: 'struct Main', fields: ['callback1', 'callback2'] },
   PlayerAvatar: { type: 'struct PlayerAvatar', fields: ['objectEventId'] },
   ObjectEvent: { type: 'struct ObjectEvent', fields: ['localId', 'currentCoords'], bits: ['active', 'facingDirection'] },
-  SaveBlock1: { type: 'struct SaveBlock1', fields: ['vars[]', 'location'] },
-  SaveBlock2: { type: 'struct SaveBlock2', bits: ['optionsBattleStyle', 'optionsTextSpeed'] },
+  SaveBlock1: { type: 'struct SaveBlock1', fields: ['vars[]', 'location', 'bag.keyItems[]'] },
+  SaveBlock2: { type: 'struct SaveBlock2', bits: ['optionsBattleStyle', 'optionsTextSpeed', 'optionsBattleSceneOff'] },
+  ItemSlot: { type: 'struct ItemSlot', fields: ['itemId', 'quantity'] },
   BattleScripting: { type: 'struct BattleScripting', fields: ['battleStyle'] },
   TrainerBattleParameter: { type: 'TrainerBattleParameter', fields: ['params.opponentA'] },
   MusicPlayerInfo: { type: 'struct MusicPlayerInfo', fields: ['songHeader', 'status'] },
@@ -283,16 +285,27 @@ export const enumNames = (key) => [...enumMap(key).byName.keys()];
 
 // --- Symbols ----------------------------------------------------------------------
 
-let symbolCache;
+let symbolCache, allSymbols;
 export function symbols() {
   if (symbolCache) return symbolCache;
   const out = execFileSync(tool('nm'), [ELF], { encoding: 'utf8', maxBuffer: 64 << 20 });
   symbolCache = new Map();
+  allSymbols = new Map();
   for (const line of out.split('\n')) {
     const [addr, , name] = line.trim().split(/\s+/);
-    if (name) symbolCache.set(name, parseInt(addr, 16));
+    if (!name) continue;
+    symbolCache.set(name, parseInt(addr, 16));
+    if (!allSymbols.has(name)) allSymbols.set(name, []);
+    allSymbols.get(name).push(parseInt(addr, 16));
   }
   return symbolCache;
+}
+
+// Every address with this name (static functions can share one, e.g. each
+// battle controller has its own HandleInputChooseAction).
+export function symbolsNamed(name) {
+  symbols();
+  return allSymbols.get(name) ?? [];
 }
 
 export function symbol(name) {
