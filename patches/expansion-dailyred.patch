@@ -112,18 +112,20 @@ index 00000000..f8099229
 +}
 diff --git a/data/maps/DailyRed_Summit/scripts.inc b/data/maps/DailyRed_Summit/scripts.inc
 new file mode 100644
-index 00000000..b436f4c7
+index 00000000..69980b74
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/scripts.inc
-@@ -0,0 +1,115 @@
+@@ -0,0 +1,118 @@
 +DailyRed_Summit_MapScripts::
 +	.byte 0
 +
 +@ Talking to RED starts the battle. It's trainerbattle_earlyrival (an early
 +@ rival battle with RIVAL_BATTLE_HEAL_AFTER: the player can lose without
 +@ whiting out, and VAR_RESULT is TRUE if they lost) with the trainer flag check
-+@ skipped, so RED can be battled again after a win. The DailyRed_On* specials
-+@ tell the website how the battle is going (see src/dailyred.c).
++@ skipped, so RED can be battled again after a win, and without the trainer
++@ encounter jingle, so his battle theme is the first thing that plays. The
++@ DailyRed_On* specials tell the website how the battle is going (see
++@ src/dailyred.c).
 +DailyRed_Summit_EventScript_Red::
 +	lock
 +	faceplayer
@@ -133,7 +135,7 @@ index 00000000..b436f4c7
 +	@ trainerbattle args: localIdA, trainer, intro, lose text, script, localIdB, trainer B, intro B, lose B, script B,
 +	@ victory text, cannot-battle text, isDouble, playMusicA, playMusicB, isRematch, continueScript, facePlayer,
 +	@ earlyRival, skipFlagCheck, rival battle flags
-+	trainerbattle OBJ_ID_NONE, TRAINER_DAILYRED_RED, NULL, DailyRed_Summit_Text_RedDefeat, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, DailyRed_Summit_Text_RedVictory, NULL, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, RIVAL_BATTLE_HEAL_AFTER
++	trainerbattle OBJ_ID_NONE, TRAINER_DAILYRED_RED, NULL, DailyRed_Summit_Text_RedDefeat, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, DailyRed_Summit_Text_RedVictory, NULL, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, RIVAL_BATTLE_HEAL_AFTER
 +	special DailyRed_OnBattleEnd
 +	addvar VAR_DAILYRED_BATTLES, 1
 +	textcolor NPC_TEXT_COLOR_NEUTRAL
@@ -198,13 +200,14 @@ index 00000000..b436f4c7
 +	release
 +	end
 +
++@ RED's lines: "…" when you talk to him, "…" when he wins and "…!" when he
++@ loses.
 +DailyRed_Summit_Text_RedIntro::
-+	.string "…\p"
-+	.string "…………$"
++	.string "…$"
 +
 +@ Shown in battle when RED loses.
 +DailyRed_Summit_Text_RedDefeat::
-+	.string "…$"
++	.string "…!$"
 +
 +@ Shown in battle when RED wins.
 +DailyRed_Summit_Text_RedVictory::
@@ -322,6 +325,34 @@ index f21e27af..83ed756d 100644
  #define MAX_TRAINERS_COUNT_FRLG                  768
  
  #endif  // GUARD_CONSTANTS_OPPONENTS_FRLG_H
+diff --git a/include/constants/songs.h b/include/constants/songs.h
+index 0bb20e41..d9fe44b8 100644
+--- a/include/constants/songs.h
++++ b/include/constants/songs.h
+@@ -547,6 +547,11 @@
+ #define PH_NURSE_HELD               608
+ #define PH_NURSE_SOLO               609
+ 
++// Daily Red: RED's battle theme, after the phonemes so that no other song id
++// moves. It's only ever battle music, never map music, so it doesn't need to
++// be between START_MUS and END_MUS.
++#define MUS_DAILYRED_VS_RED         610
++
+ #define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
+ 
+ #define MUS_NONE                    0xFFFF
+diff --git a/include/constants/trainers.h b/include/constants/trainers.h
+index 106cc06d..f5e6d99d 100644
+--- a/include/constants/trainers.h
++++ b/include/constants/trainers.h
+@@ -521,6 +521,7 @@ enum TrainerClassID
+     TRAINER_CLASS_RUIN_MANIAC_FRLG,
+     TRAINER_CLASS_LADY_FRLG,
+     TRAINER_CLASS_PAINTER_FRLG,
++    TRAINER_CLASS_DAILYRED, // Daily Red: RED ("PKMN TRAINER"), who gets the vs Red theme
+ 
+     TRAINER_CLASS_COUNT,
+ };
 diff --git a/include/constants/vars_frlg.h b/include/constants/vars_frlg.h
 index 370f0e12..2581d755 100644
 --- a/include/constants/vars_frlg.h
@@ -391,6 +422,360 @@ index 56cf13f0..f685a6ed 100644
  u16 GetGeneratedTrainerIdLower(void);
  
  #endif // GUARD_MAIN_H
+diff --git a/sound/song_table.inc b/sound/song_table.inc
+index 6e4237b9..9e2e0d6c 100644
+--- a/sound/song_table.inc
++++ b/sound/song_table.inc
+@@ -616,6 +616,7 @@ gSongTable::
+ 	song ph_nurse_blend, MUSIC_PLAYER_SE2, 2
+ 	song ph_nurse_held, MUSIC_PLAYER_SE2, 2
+ 	song ph_nurse_solo, MUSIC_PLAYER_SE2, 2
++	song mus_dailyred_vs_red, MUSIC_PLAYER_BGM, 0 @ Daily Red: RED's battle theme (MUS_DAILYRED_VS_RED)
+ 
+ 	.align 2
+ dummy_song_header:
+diff --git a/sound/songs/midi/midi.cfg b/sound/songs/midi/midi.cfg
+index 2f17c8d2..4bcbc4c8 100644
+--- a/sound/songs/midi/midi.cfg
++++ b/sound/songs/midi/midi.cfg
+@@ -528,3 +528,4 @@ se_wall_hit.mid:               -E -R50 -G_rs_sfx_1 -P2
+ se_warp_in.mid:                -E -R50 -G_rs_sfx_1 -V090 -P4
+ se_warp_out.mid:               -E -R50 -G_rs_sfx_1 -V090 -P4
+ se_win_open.mid:               -E -R50 -G_rs_sfx_1 -P5
++mus_dailyred_vs_red.mid:        -E -R50 -G_dailyred_vs_red -V110
+diff --git a/sound/songs/midi/mus_dailyred_vs_red.mid b/sound/songs/midi/mus_dailyred_vs_red.mid
+new file mode 100644
+index 0000000000000000000000000000000000000000..04aacd4d6bba3a68f9a7733dd2f5039b6cea2b4a
+GIT binary patch
+literal 31351
+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
+QOTFG7fU*v`<_X~c2N$x~zW@LL
+
+literal 0
+HcmV?d00001
+
+diff --git a/sound/voice_groups.inc b/sound/voice_groups.inc
+index eabcc5c7..06b4551c 100644
+--- a/sound/voice_groups.inc
++++ b/sound/voice_groups.inc
+@@ -201,3 +201,4 @@
+ .include "sound/voicegroups/rg_sevii_45.inc"
+ .include "sound/voicegroups/rg_sevii_67.inc"
+ .include "sound/voicegroups/drumsets/rg_credits.inc"
++.include "sound/voicegroups/dailyred_vs_red.inc" @ Daily Red: RED's battle theme
+diff --git a/sound/voicegroups/dailyred_vs_red.inc b/sound/voicegroups/dailyred_vs_red.inc
+new file mode 100644
+index 00000000..3bcdb60e
+--- /dev/null
++++ b/sound/voicegroups/dailyred_vs_red.inc
+@@ -0,0 +1,137 @@
++@ Daily Red: the voicegroup for RED's battle theme (mus_dailyred_vs_red).
++@ FireRed's champion battle voicegroup (rg_vs_champion.inc), whose layout the
++@ song was arranged for: the same instruments at the same program numbers.
++@ The slots the song uses that rg_vs_champion leaves empty, or that would make
++@ two of its parts fight over a GBA sound channel, get FireRed's usual voice
++@ for that program instead; they are marked "changed" below. The song's
++@ synth parts each get a channel of their own: square 1 (80), square 2
++@ (81, 82, 84), the wave channel (3, 83, 87, 89) and noise (126, 127).
++voice_group dailyred_vs_red
++	voice_keysplit_all voicegroup_frlg_drumset  @ 0: drum kit
++	voice_keysplit voicegroup_piano_keysplit, keysplit_piano
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_programmable_wave_alt 60, 0, ProgrammableWaveData_5, 0, 7, 15, 0  @ 3: wave, changed
++	voice_directsound 60, 0, DirectSoundWaveData_sd90_classical_detuned_ep1_low, 255, 249, 0, 165
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_ethnic_flavours_atarigane, 255, 0, 255, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sc88pro_tubular_bell, 255, 165, 90, 216
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sc88pro_organ2, 128, 146, 108, 137
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sc88pro_nylon_str_guitar, 128, 204, 103, 226  @ 24: nylon guitar
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sd90_classical_overdrive_guitar, 255, 0, 255, 127  @ 29: overdrive guitar
++	voice_directsound 60, 0, DirectSoundWaveData_sd90_classical_distortion_guitar_high, 255, 0, 255, 127  @ 30: distortion guitar
++	voice_directsound 60, 0, DirectSoundWaveData_sd90_special_scream_drive, 255, 0, 255, 165  @ 31: scream drive
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sc88pro_fretless_bass, 255, 253, 0, 188
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sc88pro_synth_bass, 255, 252, 0, 115
++	voice_directsound 60, 0, DirectSoundWaveData_sc88pro_square_wave, 255, 0, 255, 127
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sc88pro_harp, 255, 246, 0, 235  @ 46: harp, changed
++	voice_directsound 60, 0, DirectSoundWaveData_sc88pro_timpani, 255, 0, 193, 153  @ 47: timpani
++	voice_keysplit voicegroup_strings_keysplit, keysplit_strings  @ 48: strings
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_classical_choir_voice_ahhs, 255, 0, 255, 0  @ 52: choir, changed
++	voice_directsound 60, 0, DirectSoundWaveData_classical_choir_voice_ahhs, 255, 0, 255, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_keysplit voicegroup_trumpet_keysplit, keysplit_trumpet
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_keysplit voicegroup_french_horn_keysplit, keysplit_french_horn  @ 60: french horn
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sd90_classical_distortion_guitar_low, 255, 0, 236, 188  @ 62: distortion guitar (low)
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sc88pro_flute, 255, 127, 231, 127  @ 73: flute, changed
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_directsound 60, 0, DirectSoundWaveData_sd90_classical_whistle, 255, 0, 255, 127
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1_alt 60, 0, 0, 1, 0, 1, 9, 0  @ 80: square 1, bass line
++	voice_square_2_alt 60, 0, 3, 0, 1, 10, 1  @ 81: square 2
++	voice_square_2_alt 60, 0, 0, 0, 2, 6, 5  @ 82: square 2, changed
++	voice_programmable_wave_alt 60, 0, ProgrammableWaveData_6, 0, 7, 15, 0  @ 83: wave, lead, changed
++	voice_square_2_alt 60, 0, 2, 0, 1, 9, 1  @ 84: square 2, changed
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_programmable_wave_alt 60, 0, ProgrammableWaveData_5, 0, 7, 15, 0  @ 87: wave, lead
++	voice_programmable_wave_alt 60, 0, ProgrammableWaveData_1, 0, 7, 15, 0  @ 88: wave, changed
++	voice_programmable_wave_alt 60, 0, ProgrammableWaveData_2, 0, 7, 15, 0  @ 89: wave, changed
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_programmable_wave_alt 60, 0, ProgrammableWaveData_1, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
++	voice_noise_alt 60, 0, 0, 0, 2, 6, 0  @ 126: noise
++	voice_noise_alt 60, 0, 0, 0, 1, 8, 1  @ 127: noise, hi-hat
+diff --git a/src/battle_main.c b/src/battle_main.c
+index 46af80f3..72617a03 100644
+--- a/src/battle_main.c
++++ b/src/battle_main.c
+@@ -299,6 +299,7 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
+ {
+     [TRAINER_CLASS_PKMN_TRAINER_1] = { _("{PKMN} TRAINER") },
+     [TRAINER_CLASS_PKMN_TRAINER_2] = { _("{PKMN} TRAINER") },
++    [TRAINER_CLASS_DAILYRED] = { _("{PKMN} TRAINER") }, // Daily Red: RED
+     [TRAINER_CLASS_HIKER] = { _("HIKER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
+     [TRAINER_CLASS_TEAM_AQUA] = { _("TEAM AQUA") },
+     [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} BREEDER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
 diff --git a/src/battle_setup.c b/src/battle_setup.c
 index 6024da3c..5e52b905 100644
 --- a/src/battle_setup.c
@@ -1222,10 +1607,10 @@ index 00000000..1a2c228c
 +    }
 +}
 diff --git a/src/data/trainers_frlg.party b/src/data/trainers_frlg.party
-index 20fdc713..454684ed 100644
+index 20fdc713..c42f8c9f 100644
 --- a/src/data/trainers_frlg.party
 +++ b/src/data/trainers_frlg.party
-@@ -13787,3 +13787,72 @@ IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+@@ -13787,3 +13787,73 @@ IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
  Muk
  Level: 39
  IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
@@ -1234,11 +1619,12 @@ index 20fdc713..454684ed 100644
 +Daily Red: the boss, RED, on the summit (MAP_DAILY_RED_SUMMIT).
 +Species and order follow Red's Mt. Silver team from HeartGold/SoulSilver,
 +with movesets adapted to Gen 3 moves. Every Pokemon is level 100 with perfect
-+IVs and a full EV spread.
++IVs and a full EV spread. His class (TRAINER_CLASS_DAILYRED, "PKMN TRAINER")
++is his alone and gives him the vs Red battle theme (GetBattleBGM in pokemon.c).
 +*/
 +=== TRAINER_DAILYRED_RED ===
 +Name: RED
-+Class: Pkmn Trainer 1
++Class: Dailyred
 +Pic: Red
 +Gender: Male
 +Music: Male
@@ -1447,20 +1833,18 @@ index 7c6393d6..48a7dba7 100644
  }
  
 diff --git a/src/pokemon.c b/src/pokemon.c
-index 82017777..f3c7e5af 100644
+index 82017777..ab204db6 100644
 --- a/src/pokemon.c
 +++ b/src/pokemon.c
-@@ -5109,6 +5109,10 @@ u16 GetBattleBGM(void)
-         else
-             trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
+@@ -5111,6 +5111,8 @@ u16 GetBattleBGM(void)
  
-+        // Daily Red: RED keeps his "PKMN TRAINER" class but gets the champion theme.
-+        if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_DAILYRED_RED)
-+            return MUS_RG_VS_CHAMPION;
-+
          switch (trainerClass)
          {
++        case TRAINER_CLASS_DAILYRED: // Daily Red: RED's own class and theme
++            return MUS_DAILYRED_VS_RED;
          case TRAINER_CLASS_AQUA_LEADER:
+         case TRAINER_CLASS_MAGMA_LEADER:
+             return MUS_VS_AQUA_MAGMA_LEADER;
 diff --git a/src/start_menu.c b/src/start_menu.c
 index 648fa837..b9a8447c 100644
 --- a/src/start_menu.c

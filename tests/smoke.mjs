@@ -4,14 +4,15 @@
 //   cd tests && npm install && npm test
 //
 // Screenshots are written to tests/output/ for a visual check.
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
   startServer, launchBrowser, bootGame, sleep, press, screenshot,
   getStatus, waitFor, walkTo, face, patchMemory, readVar, symbol, value, u16,
   startRedBattle, waitForActionMenu, forceWin, readGameStatus, memField, objectFacing,
   battleMonField, readBattleMon, activePartySlot, faintWrites, unkillableWrites,
 } from './lib.mjs';
-import { id, readBits, layout, species } from './game.mjs';
+import { GAME_DIR, id, readBits, layout, field, rom, romOffset, textAt } from './game.mjs';
 import { readParty, formatMon, validateTeam } from './party.mjs';
 
 const OUT = new URL('./output/', import.meta.url).pathname;
@@ -71,6 +72,23 @@ async function finishBattle(page, battlesBefore) {
   }
   throw new Error('battle did not finish');
 }
+
+// RED's lines and the record messages, read from the ROM.
+check(textAt('DailyRed_Summit_Text_RedIntro') === '…', `RED's intro is "…" (got "${textAt('DailyRed_Summit_Text_RedIntro')}")`);
+check(textAt('DailyRed_Summit_Text_RedVictory') === '…', `RED's win line is "…" (got "${textAt('DailyRed_Summit_Text_RedVictory')}")`);
+check(textAt('DailyRed_Summit_Text_RedDefeat') === '…!', `RED's loss line is "…!" (got "${textAt('DailyRed_Summit_Text_RedDefeat')}")`);
+check(textAt('DailyRed_Summit_Text_RecordWin').endsWith('Play again tomorrow!') && textAt('DailyRed_Summit_Text_RecordLoss').endsWith('Try again tomorrow.')
+  && textAt('DailyRed_Summit_Text_NextRun').includes('Climb back up and face RED!'), 'the record and come-back-tomorrow messages are kept');
+
+// The vs Red theme: in the song table under MUS_DAILYRED_VS_RED, with its own
+// voicegroup, and every track loops back (mid2agb turned the MIDI's loop
+// markers into a GOTO at the end of each of its 10 tracks).
+const songEntry = romOffset(symbol('gSongTable')) + value('MUS_DAILYRED_VS_RED') * layout('Song').size;
+check(field(rom(), songEntry, 'Song', 'header') === symbol('mus_dailyred_vs_red'), 'MUS_DAILYRED_VS_RED is the vs Red theme');
+const songHeader = romOffset(symbol('mus_dailyred_vs_red'));
+check(rom().readUInt32LE(songHeader + 4) === symbol('voicegroup_dailyred_vs_red'), 'the song uses its own voicegroup (voicegroup_dailyred_vs_red)');
+const songAsm = readFileSync(join(GAME_DIR, 'sound/songs/midi/mus_dailyred_vs_red.s'), 'utf8');
+check(rom()[songHeader] === 10 && (songAsm.match(/\bGOTO\b/g) ?? []).length === 10, `all ${rom()[songHeader]} tracks of the song loop`);
 
 const server = await startServer();
 const browser = await launchBrowser();
@@ -140,6 +158,7 @@ try {
   check(s.mem.read(symbol('gBattleEnvironment'), 1)[0] === value('BATTLE_ENVIRONMENT_MOUNTAIN'), 'battle uses the mountain background');
   check(memField(s.mem, symbol('gBattleScripting'), 'BattleScripting', 'battleStyle') === STYLE_SET, 'the battle runs in SET style');
   check(memField(s.mem, symbol('gTrainerBattleParameter'), 'TrainerBattleParameter', 'params_opponentA') === value('TRAINER_DAILYRED_RED'), 'opponent is TRAINER_DAILYRED_RED');
+  check(memField(s.mem, symbol('gMPlayInfo_BGM'), 'MusicPlayerInfo', 'songHeader') === symbol('mus_dailyred_vs_red'), "RED's battle plays the vs Red theme");
   const red = readParty(s.mem, 'Enemy');
   console.log(red.party.map((m) => '      ' + formatMon(m)).join('\n'));
   check(red.party.map((m) => m?.constName).join(',') === 'PIKACHU,ESPEON,SNORLAX,VENUSAUR,CHARIZARD,BLASTOISE', "RED's team is Pikachu, Espeon, Snorlax, Venusaur, Charizard, Blastoise");

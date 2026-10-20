@@ -110,7 +110,8 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Team + warp to the summit instead of the bedroom | `src/new_game.c` → `DailyRed_InitNewGame` |
 | The summit: an open peak with no exits; stairs up to RED, who faces the drop | `data/maps/DailyRed_Summit/`, `data/layouts/DailyRed_Summit/` |
 | Snow on the summit, as scenery only: it doesn't start Snow in RED's battle | `data/maps/DailyRed_Summit/map.json`; the battle check in `src/battle_util.c` |
-| Talking to RED → battle → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
+| Talking to RED → "…" → battle (he says "…!" if he loses, "…" if he wins) → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
+| RED's battle theme | `MUS_DAILYRED_VS_RED`, picked by his trainer class in `GetBattleBGM` (`src/pokemon.c`); see [RED's battle theme](#reds-battle-theme) |
 | Mountain battle background on the summit | `BattleSetup_GetEnvironmentId` in `src/battle_setup.c` |
 | No free switch when RED's Pokémon faints: Battle Style starts on SET and is locked in Options | `StartNewGame` in `src/dailyred.c`, `src/option_menu.c` |
 | RED as a trainer, with his team | `TRAINER_DAILYRED_RED` in `include/constants/opponents_frlg.h` and `src/data/trainers_frlg.party` |
@@ -231,9 +232,46 @@ team's IVs (25–31) and focused EVs, both sides get about the same out of their
 base stats. RED's natures are neutral (Hardy), the expansion's default when a
 trainer Pokémon doesn't name one.
 
-RED's name, trainer class ("PKMN TRAINER"), sprite and AI flags (the same as
-FireRed's Champion) are in the same entry. He gets the Champion battle music
-(`GetBattleBGM` in `src/pokemon.c`).
+RED's name, trainer class, sprite and AI flags (the same as FireRed's
+Champion) are in the same entry. His class, `TRAINER_CLASS_DAILYRED`, is his
+alone: it shows as "PKMN TRAINER" and gives him his own battle theme.
+
+### RED's battle theme
+
+RED's battle plays a "vs Red" track (`MUS_DAILYRED_VS_RED`) instead of
+FireRed's Champion theme. It's built from a MIDI, `music/vs-red.mid`, a Sappy
+dump of a GBA song supplied for the project, through the expansion's own
+`mid2agb`, like every other song in the game:
+
+1. `node scripts/prepare-midi.mjs music/vs-red.mid expansion/sound/songs/midi/mus_dailyred_vs_red.mid`
+   makes the dump readable by mid2agb: Sappy stores each track's pitch-bend
+   range (12 semitones here) as an RPN and puts the loop markers in the first
+   instrument track, while mid2agb only reads a bend range from CC 20 and loop
+   markers from the first track, so without this the bends are a sixth of
+   their size and the song plays once and stops. Expression (CC 11), which
+   mid2agb ignores, is folded into volume. Notes, instruments, bends and tempo
+   are untouched.
+2. `sound/songs/midi/midi.cfg` converts it with `-E -R50 -G_dailyred_vs_red -V110`:
+   FireRed's battle theme settings, with the master volume raised from 90 to
+   110 so it's as loud as the Champion theme it replaces (both average about
+   −18 to −19 dBFS in RED's battle, peaking under −2.5 dBFS).
+3. Its voicegroup, `sound/voicegroups/dailyred_vs_red.inc`, is FireRed's
+   Champion battle voicegroup. The song was arranged for that layout (the same
+   instruments at the same program numbers: guitars, strings, horns, timpani,
+   drum kit, square and wave leads, noise hi-hat), with the few slots it uses
+   that the Champion's leaves empty, or that would make two parts fight over a
+   GBA sound channel, filled with FireRed's usual voice for that program. Each
+   synth part gets a channel of its own: square 1, square 2, the wave channel
+   and noise.
+4. The song is entry 610 in `sound/song_table.inc`, after the last existing
+   one, so no other song ID moves.
+
+To use another track, replace `music/vs-red.mid`, rerun step 1 and rebuild;
+if it was arranged for a different voicegroup, adjust
+`dailyred_vs_red.inc` (the comments list what each used slot plays). The battle
+starts without the trainer "eyes meet" jingle, so the theme is the first thing
+you hear. `npm run music` (in `tests/`) records the battle's audio to
+`tests/output/vs-red.wav` to listen to.
 
 ## Development workflow
 
@@ -271,6 +309,7 @@ npm run smoke      # the game loop (~3 min)
 npm run site       # the website on desktop and phone (~1 min)
 npm run teams -- 1 2 3            # print + validate the teams for these seeds
 npm run teams -- --random 40      # 40 random seeds
+npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 min)
 ```
 
 `npm run smoke` checks that:
@@ -290,6 +329,10 @@ npm run teams -- --random 40      # 40 random seeds
   "Will LEAF change POKéMON?" prompt.
 - RED's in-battle party is the configured team with IVs, items and EVs, and
   the summit's snow doesn't start any battle weather.
+- RED's lines are "…", "…" and "…!", the record and come-back-tomorrow
+  messages are still there, and his battle plays the vs Red theme: the song
+  playing in RAM, its song table entry and voicegroup, and a loop on every
+  track.
 - a win and a loss are each handled: no white-out, counters updated, and a new
   valid team afterwards.
 - the daily game starts from the website's record, reports the battle start,
@@ -300,6 +343,12 @@ npm run teams -- --random 40      # 40 random seeds
 The win and loss are forced by editing HP values in a save state, which makes
 them quick and deterministic. Screenshots of every step are saved in
 `tests/output/`.
+
+`npm run music` starts RED's battle and records the emulator's audio output
+(the sound the website plays) for 75 seconds, past the song's loop point, to
+`tests/output/vs-red.wav`. It checks that the theme is the song playing, that
+there's music the whole time (no silent second), that nothing clips, and that
+it's still the theme after the loop.
 
 `npm run site` plays the daily game over five faked days (Playwright's clock):
 a fresh visitor, a win (stats, locked until tomorrow, countdown, survives a
@@ -342,7 +391,9 @@ Creatures Inc. and GAME FREAK inc.
 
 This repository contains Daily Red's own work: the changes in `patches/`, the
 website and the tests. It doesn't include pokeemerald-expansion or a built ROM;
-the scripts fetch the expansion from its repository and build locally.
+the scripts fetch the expansion from its repository and build locally. The
+one exception is RED's battle theme: `music/vs-red.mid` (and its prepared copy
+in the patch) is a MIDI of a GBA song, supplied by the project's owner.
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page
@@ -360,9 +411,9 @@ footer links to it.
 - **Soft reset** (A+B+Start+Select) is turned off in the daily game, so a
   losing battle can't be restarted. (If the game ever restarts mid-battle
   anyway, the site counts it as a loss.)
-- **Audio** can't be checked by the headless tests. Browsers start audio
-  suspended unless it begins during a click, so the game resumes it on the
-  next key press or tap.
+- **Audio:** the tests can record and measure it (`npm run music`) but not
+  judge how it sounds. Browsers start audio suspended unless it begins during
+  a click, so the game resumes it on the next key press or tap.
 - **Tested environment:** headless Chrome/Chromium (desktop and phone
   emulation). Not yet tried on Safari, Firefox or real phones.
 - **Download size:** the expansion's ROM carries every Pokémon up to Gen 9, so
@@ -378,12 +429,16 @@ scripts/save-patch.sh                expansion/ changes → patches/
 scripts/build-rom.sh                 make firered → web/game/dailyred.gba.gz
 scripts/fetch-vendor.sh              Nostalgist, mGBA core, font (pinned, checksummed)
 scripts/serve.mjs                    local static server
+scripts/prepare-midi.mjs             Sappy MIDI dump → MIDI that mid2agb reads
+music/vs-red.mid                     RED's battle theme (source MIDI)
 web/                                 the website
-tests/                               headless browser tests and the teams tool
+tests/                               headless browser tests, the teams tool and the music recorder
 ```
 
 Inside `expansion/`, the Daily Red code is `include/dailyred.h`,
 `include/constants/dailyred.h`, `src/dailyred.c` (game flow and seed),
 `src/dailyred_team.c` (team generator), RED's entry at the end of
-`src/data/trainers_frlg.party`, and `data/maps/DailyRed_Summit/` plus
-`data/layouts/DailyRed_Summit/` (the map).
+`src/data/trainers_frlg.party`, `data/maps/DailyRed_Summit/` plus
+`data/layouts/DailyRed_Summit/` (the map), and his battle theme:
+`sound/songs/midi/mus_dailyred_vs_red.mid` (with its line in `midi.cfg`, which
+can't hold comments) and `sound/voicegroups/dailyred_vs_red.inc`.

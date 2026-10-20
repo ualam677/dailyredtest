@@ -7,7 +7,8 @@
     "test": "node smoke.mjs && node site.mjs",
     "smoke": "node smoke.mjs",
     "site": "node site.mjs",
-    "teams": "node teams.mjs"
+    "teams": "node teams.mjs",
+    "music": "node music.mjs"
   },
   "devDependencies": {
     "playwright-core": "1.56.1"

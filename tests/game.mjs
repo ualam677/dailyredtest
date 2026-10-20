@@ -53,7 +53,7 @@ const NAMED = [
   'VARS_START', 'VAR_DAILYRED_BATTLES', 'VAR_DAILYRED_WINS',
   'BATTLE_ENVIRONMENT_MOUNTAIN', 'OPTIONS_BATTLE_STYLE_SET', 'LOCALID_DAILYRED_RED', 'DIR_NORTH',
   'DAILYRED_START_X', 'DAILYRED_START_Y', 'TRAINER_DAILYRED_RED', 'METLOC_FATEFUL_ENCOUNTER', 'SHINY_ODDS',
-  'MAP_OFFSET', 'OBJECT_EVENTS_COUNT', 'MAX_BATTLERS_COUNT',
+  'MAP_OFFSET', 'OBJECT_EVENTS_COUNT', 'MAX_BATTLERS_COUNT', 'MUS_DAILYRED_VS_RED', 'MUS_RG_VS_CHAMPION', 'TRAINER_CLASS_DAILYRED',
 ];
 
 // Struct members to measure: plain members get an offset and a size,
@@ -101,14 +101,16 @@ const STRUCTS = {
   SaveBlock2: { type: 'struct SaveBlock2', bits: ['optionsBattleStyle', 'optionsTextSpeed'] },
   BattleScripting: { type: 'struct BattleScripting', fields: ['battleStyle'] },
   TrainerBattleParameter: { type: 'TrainerBattleParameter', fields: ['params.opponentA'] },
+  MusicPlayerInfo: { type: 'struct MusicPlayerInfo', fields: ['songHeader', 'status'] },
+  Song: { type: 'struct Song', fields: ['header', 'ms', 'me'] },
 };
 
 const HEADERS = [
-  'global.h', 'main.h', 'battle.h', 'battle_setup.h', 'event_object_movement.h', 'fieldmap.h', 'item.h', 'move.h', 'pokemon.h',
+  'global.h', 'gba/m4a_internal.h', 'main.h', 'battle.h', 'battle_setup.h', 'event_object_movement.h', 'fieldmap.h', 'item.h', 'move.h', 'pokemon.h',
   'constants/abilities.h', 'constants/battle.h', 'constants/battle_move_effects.h', 'constants/dailyred.h', 'constants/event_objects.h',
   'constants/form_change_types.h', 'constants/global.h', 'constants/hold_effects.h', 'constants/items.h', 'constants/map_event_ids.h',
   'constants/moves.h', 'constants/opponents.h', 'constants/pokemon.h', 'constants/region_map_sections.h', 'constants/species.h',
-  'constants/trainers.h', 'constants/vars.h',
+  'constants/songs.h', 'constants/trainers.h', 'constants/vars.h',
 ];
 
 // --- Building the info ----------------------------------------------------------
@@ -332,7 +334,7 @@ let romBuf;
 export function rom() {
   return (romBuf ??= readFileSync(ROM));
 }
-const romOffset = (ptr) => ptr - 0x08000000;
+export const romOffset = (ptr) => ptr - 0x08000000;
 
 // The game's character set (charmap.txt), for names stored in the ROM.
 let charmap;
@@ -353,6 +355,10 @@ export function decodeText(buf, at, maxLen = 64) {
   return s;
 }
 const romText = (ptr) => (ptr ? decodeText(rom(), romOffset(ptr)) : '');
+
+// A string in the ROM by its symbol (e.g. a map script's text), decoded.
+// Control codes (line breaks, placeholders) come out as "?".
+export const textAt = (name) => decodeText(rom(), romOffset(symbol(name)), 256);
 
 function romArray(ptr, struct, isEnd) {
   const out = [];
