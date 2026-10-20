@@ -6,7 +6,7 @@ import { chromium } from 'playwright-core';
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT, symbol, layout, value, field, id } from './game.mjs';
+import { ROOT, symbol, symbolsNamed, layout, value, field, id } from './game.mjs';
 import { partyAddress } from './party.mjs';
 
 export { ROOT, GAME_DIR, symbol, value, layout } from './game.mjs';
@@ -225,6 +225,50 @@ export async function patchMemory(page, writes) {
 }
 
 export const u16 = (n) => [n & 0xFF, (n >> 8) & 0xFF];
+export const u32 = (n) => [n & 0xFF, (n >>> 8) & 0xFF, (n >>> 16) & 0xFF, (n >>> 24) & 0xFF];
+
+// A write that sets one bitfield ({ bit, width } from game.mjs's layout) of
+// the struct at `addr`, keeping the bits around it.
+export function bitsWrite(mem, addr, { bit, width }, v) {
+  const at = addr + (bit >> 3), shift = bit & 7;
+  const bytes = Math.ceil((shift + width) / 8);
+  let word = 0;
+  for (let i = 0; i < bytes; i++) word += mem.read(at + i, 1)[0] * 2 ** (8 * i);
+  const old = Math.floor(word / 2 ** shift) % 2 ** width;
+  word += ((v % 2 ** width) - old) * 2 ** shift;
+  return { addr: at, bytes: Array.from({ length: bytes }, (_, i) => Math.floor(word / 2 ** (8 * i)) % 256) };
+}
+
+// A snapshot of the emulator to come back to: saveSnapshot keeps the current
+// state in the page, loadSnapshot restores it with some bytes changed.
+export async function saveSnapshot(page) {
+  await page.evaluate(async () => {
+    const { state } = await window.emu.saveState();
+    window.__snapshot = new Uint8Array(await state.arrayBuffer());
+  });
+  await sleep(300);
+}
+
+export async function loadSnapshot(page, writes = []) {
+  await page.evaluate(async (writes) => {
+    const buf = window.__snapshot.slice();
+    let mem = 0;
+    if (String.fromCharCode(...buf.subarray(0, 7)) === 'RASTATE') {
+      for (let pos = 8; pos + 8 <= buf.length;) {
+        const id = String.fromCharCode(...buf.subarray(pos, pos + 4));
+        const size = new DataView(buf.buffer).getUint32(pos + 4, true);
+        if (id === 'MEM ') { mem = pos + 8; break; }
+        pos += 8 + size + ((8 - (size % 8)) % 8);
+      }
+    }
+    for (const { addr, bytes } of writes) {
+      const off = addr >= 0x03000000 ? 0x19000 + addr - 0x03000000 : 0x21000 + addr - 0x02000000;
+      buf.set(bytes, mem + off);
+    }
+    await window.emu.loadState(new Blob([buf]));
+  }, writes);
+  await sleep(500);
+}
 
 // Reads a script variable (VAR_xxxx) from SaveBlock1.
 export function readVar(mem, varId) {
@@ -268,8 +312,23 @@ export async function forceWin(page) {
   await patchMemory(page, [
     ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activeSlot).flatMap((i) => faintWrites('Enemy', i, mem)),
     ...unkillableWrites(),
+    ...helplessWrites(1),
     { addr: battleMonField(1, 'hp'), bytes: u16(1) },
   ]);
+}
+
+// A battler that can't heal, protect itself or hold on (RED's smart AI would
+// otherwise Recover or Roost out of a forced knockout every turn): Splash
+// only, no item or ability, plain Normal type.
+export function helplessWrites(battler) {
+  const splash = id('MOVE', 'SPLASH'), normal = id('TYPE', 'NORMAL');
+  return [
+    { addr: battleMonField(battler, 'moves'), bytes: [0, 1, 2, 3].flatMap(() => u16(splash)) },
+    { addr: battleMonField(battler, 'pp'), bytes: [20, 20, 20, 20] },
+    { addr: battleMonField(battler, 'item'), bytes: u16(0) },
+    { addr: battleMonField(battler, 'ability'), bytes: u16(0) },
+    { addr: battleMonField(battler, 'types'), bytes: [normal, normal] },
+  ];
 }
 
 export async function forceLoss(page) {
@@ -306,11 +365,36 @@ export async function startRedBattle(page) {
   await waitForActionMenu(page);
 }
 
-// The battle intro takes a few seconds; press A until the turn menu is up.
-export async function waitForActionMenu(page) {
-  for (let i = 0; i < 12; i++) { await sleep(700); await press(page, 'a'); }
-  await press(page, 'b'); // back out of FIGHT if we entered it
-  await sleep(500);
+// What the player's side of the battle is waiting for, from the battle
+// controller function battler 0 is running: 'action' (the "What will X do?"
+// menu), 'move' (the move list) or 'busy' (anything else: intro, messages,
+// the turn playing out).
+export function battleInput(mem) {
+  const fn = mem.read(symbol('gBattlerControllerFuncs'), 4).readUInt32LE(0) & ~1;
+  if (symbolsNamed('HandleInputChooseAction').includes(fn)) return 'action';
+  if (fn === symbol('HandleInputChooseMove')) return 'move';
+  return 'busy';
+}
+
+// Presses A through the battle intro (or anything else) until the turn menu
+// is up, backing out of the move list if a press opened it.
+export async function waitForActionMenu(page, timeoutMs = 40000) {
+  const end = Date.now() + timeoutMs;
+  while (Date.now() < end) {
+    const state = battleInput((await getStatus(page)).mem);
+    if (state === 'action') { await sleep(300); return; }
+    await press(page, state === 'move' ? 'b' : 'a');
+    await sleep(600);
+  }
+  throw new Error('the battle turn menu did not come up');
+}
+
+// The gimmicks a battler has used this battle (gBattleStruct->gimmick.activated).
+export function gimmicksUsed(mem, battler) {
+  const battleStruct = mem.read(symbol('gBattleStruct'), 4).readUInt32LE(0);
+  const f = layout('BattleStruct').gimmick_activated;
+  const row = mem.read(battleStruct + f.off + battler * f.elemSize, f.elemSize);
+  return Object.fromEntries(['MEGA', 'Z_MOVE', 'DYNAMAX', 'TERA'].map((g) => [g, row[value(`GIMMICK_${g}`)] === 1]));
 }
 
 // The game's status block for the website (sStatus in src/dailyred.c), found

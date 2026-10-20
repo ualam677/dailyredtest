@@ -53,8 +53,16 @@ const NAMED = [
   'VARS_START', 'VAR_DAILYRED_BATTLES', 'VAR_DAILYRED_WINS',
   'BATTLE_ENVIRONMENT_MOUNTAIN', 'OPTIONS_BATTLE_STYLE_SET', 'LOCALID_DAILYRED_RED', 'DIR_NORTH',
   'DAILYRED_START_X', 'DAILYRED_START_Y', 'TRAINER_DAILYRED_RED', 'METLOC_FATEFUL_ENCOUNTER', 'SHINY_ODDS',
-  'MAP_OFFSET', 'OBJECT_EVENTS_COUNT', 'MAX_BATTLERS_COUNT',
+  'MAP_OFFSET', 'OBJECT_EVENTS_COUNT', 'MAX_BATTLERS_COUNT', 'MUS_DAILYRED_VS_RED', 'MUS_RG_VS_CHAMPION', 'TRAINER_CLASS_DAILYRED',
+  'B_AFFECTION_MECHANICS', 'B_FRIENDSHIP_BOOST', 'MAX_FRIENDSHIP', 'AFFECTION_FIVE_HEARTS', 'POCKET_KEY_ITEMS',
+  'TYPE_NONE', 'TYPE_MYSTERY', 'MON_MALE', 'MON_FEMALE', 'MON_GENDERLESS',
+  'DAILYRED_SETS_NORMAL', 'DAILYRED_SETS_MEGA', 'DAILYRED_SETS_ZMOVE', 'DAILYRED_SETS_TERA',
+  'TRAINERS_COUNT', 'DIFFICULTY_NORMAL', 'MUGSHOT_COLOR_YELLOW', 'B_TRANSITION_MUGSHOT',
+  'GIMMICKS_COUNT', 'GIMMICK_MEGA', 'GIMMICK_Z_MOVE', 'GIMMICK_DYNAMAX', 'GIMMICK_TERA',
 ];
+
+// 64-bit values (AI flags), read as BigInt with wideValue().
+const WIDE = ['AI_FLAG_SMART_TRAINER', 'AI_FLAG_PREDICTION', 'AI_FLAG_SMART_TERA'];
 
 // Struct members to measure: plain members get an offset and a size,
 // bitfields (bits) a bit position and width.
@@ -78,7 +86,7 @@ const STRUCTS = {
   BattlePokemon: {
     type: 'struct BattlePokemon',
     fields: ['species', 'attack', 'defense', 'speed', 'spAttack', 'spDefense', 'moves[]', 'statStages[]', 'ability', 'types[]', 'pp[]', 'hp',
-      'level', 'friendship', 'maxHP', 'item', 'personality', 'status1', 'otId'],
+      'level', 'friendship', 'maxHP', 'item', 'personality', 'status1', 'otId', 'affectionHearts'],
   },
   SpeciesInfo: {
     type: 'struct SpeciesInfo',
@@ -97,18 +105,30 @@ const STRUCTS = {
   Main: { type: 'struct Main', fields: ['callback1', 'callback2'] },
   PlayerAvatar: { type: 'struct PlayerAvatar', fields: ['objectEventId'] },
   ObjectEvent: { type: 'struct ObjectEvent', fields: ['localId', 'currentCoords'], bits: ['active', 'facingDirection'] },
-  SaveBlock1: { type: 'struct SaveBlock1', fields: ['vars[]', 'location'] },
-  SaveBlock2: { type: 'struct SaveBlock2', bits: ['optionsBattleStyle', 'optionsTextSpeed'] },
+  SaveBlock1: { type: 'struct SaveBlock1', fields: ['vars[]', 'location', 'bag.keyItems[]'] },
+  SaveBlock2: { type: 'struct SaveBlock2', bits: ['optionsBattleStyle', 'optionsTextSpeed', 'optionsBattleSceneOff'] },
+  ItemSlot: { type: 'struct ItemSlot', fields: ['itemId', 'quantity'] },
   BattleScripting: { type: 'struct BattleScripting', fields: ['battleStyle'] },
   TrainerBattleParameter: { type: 'TrainerBattleParameter', fields: ['params.opponentA'] },
+  MusicPlayerInfo: { type: 'struct MusicPlayerInfo', fields: ['songHeader', 'status'] },
+  Song: { type: 'struct Song', fields: ['header', 'ms', 'me'] },
+  DailyRedSet: {
+    type: 'struct DailyRedSet',
+    fields: ['ivs', 'species', 'item', 'ability', 'moves[]', 'evs[]', 'nature', 'teraType', 'friendship', 'weight'],
+  },
+  DailyRedSetList: { type: 'struct DailyRedSetList', fields: ['species', 'firstSet', 'numSets', 'kind', 'level'] },
+  DailyRedPickGroup: { type: 'struct DailyRedPickGroup', fields: ['first', 'count'] },
+  BattleStruct: { type: 'struct BattleStruct', fields: ['gimmick.activated[]'] },
+  AiThinkingStruct: { type: 'struct AiThinkingStruct', fields: ['aiFlags[]'] },
+  Trainer: { type: 'struct Trainer', fields: ['aiFlags', 'party', 'trainerClass'], bits: ['partySize', 'mugshotColor'] },
 };
 
 const HEADERS = [
-  'global.h', 'main.h', 'battle.h', 'battle_setup.h', 'event_object_movement.h', 'fieldmap.h', 'item.h', 'move.h', 'pokemon.h',
+  'global.h', 'gba/m4a_internal.h', 'main.h', 'battle.h', 'battle_setup.h', 'dailyred.h', 'data.h', 'battle_gimmick.h', 'battle_transition.h', 'constants/battle_ai.h', 'event_object_movement.h', 'fieldmap.h', 'item.h', 'move.h', 'pokemon.h',
   'constants/abilities.h', 'constants/battle.h', 'constants/battle_move_effects.h', 'constants/dailyred.h', 'constants/event_objects.h',
   'constants/form_change_types.h', 'constants/global.h', 'constants/hold_effects.h', 'constants/items.h', 'constants/map_event_ids.h',
   'constants/moves.h', 'constants/opponents.h', 'constants/pokemon.h', 'constants/region_map_sections.h', 'constants/species.h',
-  'constants/trainers.h', 'constants/vars.h',
+  'constants/songs.h', 'constants/trainers.h', 'constants/vars.h',
 ];
 
 // --- Building the info ----------------------------------------------------------
@@ -143,6 +163,7 @@ function generateSource(enumNames) {
   const lines = HEADERS.map((h) => `#include "${h}"`);
   lines.push('#define DRT_VALUE(name, expr) const s32 DRT_v_##name __attribute__((used)) = (expr);');
   for (const name of NAMED) lines.push(`DRT_VALUE(${name}, ${name})`);
+  for (const name of WIDE) lines.push(`const u64 DRT_w_${name} __attribute__((used)) = (${name});`);
   for (const [key, spec] of Object.entries(STRUCTS)) {
     lines.push(`DRT_VALUE(${key}__size, sizeof(${spec.type}))`);
     for (const spelled of spec.fields ?? []) {
@@ -208,6 +229,8 @@ function build() {
 
   const values = {};
   for (const name of NAMED) values[name] = section(`DRT_v_${name}`).readInt32LE(0);
+  const wide = {};
+  for (const name of WIDE) wide[name] = section(`DRT_w_${name}`).readBigUInt64LE(0).toString();
   const layout = {};
   for (const [key, spec] of Object.entries(STRUCTS)) {
     const s = { size: section(`DRT_v_${key}__size`).readInt32LE(0) };
@@ -225,7 +248,7 @@ function build() {
     const data = section(`DRT_e_${key}`);
     enums[key] = Object.fromEntries(names.map((n, i) => [n, data.readInt32LE(i * 4)]));
   }
-  return { values, layout, enums };
+  return { values, wide, layout, enums };
 }
 
 let infoCache;
@@ -248,6 +271,11 @@ export const value = (name) => {
   const v = info().values[name];
   if (v === undefined) throw new Error(`no value ${name} (add it to NAMED in game.mjs)`);
   return v;
+};
+export const wideValue = (name) => {
+  const v = info().wide[name];
+  if (v === undefined) throw new Error(`no wide value ${name} (add it to WIDE in game.mjs)`);
+  return BigInt(v);
 };
 export const layout = (struct) => info().layout[struct];
 
@@ -281,16 +309,27 @@ export const enumNames = (key) => [...enumMap(key).byName.keys()];
 
 // --- Symbols ----------------------------------------------------------------------
 
-let symbolCache;
+let symbolCache, allSymbols;
 export function symbols() {
   if (symbolCache) return symbolCache;
   const out = execFileSync(tool('nm'), [ELF], { encoding: 'utf8', maxBuffer: 64 << 20 });
   symbolCache = new Map();
+  allSymbols = new Map();
   for (const line of out.split('\n')) {
     const [addr, , name] = line.trim().split(/\s+/);
-    if (name) symbolCache.set(name, parseInt(addr, 16));
+    if (!name) continue;
+    symbolCache.set(name, parseInt(addr, 16));
+    if (!allSymbols.has(name)) allSymbols.set(name, []);
+    allSymbols.get(name).push(parseInt(addr, 16));
   }
   return symbolCache;
+}
+
+// Every address with this name (static functions can share one, e.g. each
+// battle controller has its own HandleInputChooseAction).
+export function symbolsNamed(name) {
+  symbols();
+  return allSymbols.get(name) ?? [];
 }
 
 export function symbol(name) {
@@ -332,7 +371,7 @@ let romBuf;
 export function rom() {
   return (romBuf ??= readFileSync(ROM));
 }
-const romOffset = (ptr) => ptr - 0x08000000;
+export const romOffset = (ptr) => ptr - 0x08000000;
 
 // The game's character set (charmap.txt), for names stored in the ROM.
 let charmap;
@@ -353,6 +392,10 @@ export function decodeText(buf, at, maxLen = 64) {
   return s;
 }
 const romText = (ptr) => (ptr ? decodeText(rom(), romOffset(ptr)) : '');
+
+// A string in the ROM by its symbol (e.g. a map script's text), decoded.
+// Control codes (line breaks, placeholders) come out as "?".
+export const textAt = (name) => decodeText(rom(), romOffset(symbol(name)), 256);
 
 function romArray(ptr, struct, isEnd) {
   const out = [];
@@ -400,6 +443,8 @@ export function species(sp) {
     friendship: r('friendship'),
     natDexNum: r('natDexNum'),
     legendary: flag('isRestrictedLegendary') || flag('isSubLegendary') || flag('isMythical'),
+    ultraBeast: flag('isUltraBeast'),
+    paradox: flag('isParadox'),
     mega: flag('isMegaEvolution'),
     battleOnly: flag('isMegaEvolution') || flag('isPrimalReversion') || flag('isUltraBurst') || flag('isGigantamax') || flag('isTeraForm'),
     regional: flag('isAlolanForm') || flag('isGalarianForm') || flag('isHisuianForm') || flag('isPaldeanForm'),
