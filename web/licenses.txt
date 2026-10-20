@@ -19,8 +19,8 @@ mGBA libretro core (vendor/mgba_libretro.js, vendor/mgba_libretro.wasm)
   above.
 
 Graphics in the ROM
-  Mt. Silver's battle background: from Gold-Ruki's HGSS-style battle
-  backgrounds for GBA (credit to Gold-Ruki). RED's battle sprite: Pokémon
+  Mt. Silver's battle background (day, evening and night): by REKKA. RED's
+  battle sprite: Pokémon
   HeartGold/SoulSilver's, ripped by ChrisX698. LEAF's HGSS-style sprite.
   The HGSS-style battle interface and window frames: from Eemeliri/soulgold
   (https://github.com/Eemeliri/soulgold).

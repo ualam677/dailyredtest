@@ -3,10 +3,9 @@
 
     python3 scripts/graphics/make-graphics.py      (needs Pillow: pip install pillow)
 
-- art/mt-silver-battle-bg.png (240x112, the HGSS-style Mt. Silver battle
-  background by Gold-Ruki) -> expansion/graphics/battle_environment/
-  dailyred_mt_silver/: tiles.png, map.bin and palette.pal in the layout of the
-  game's own battle backgrounds, plus an empty entry layer (anim_*).
+- art/mt-silver-battle-bg/ (Mt. Silver's HGSS-style battle background, with
+  day, evening and night palettes, already in the game's format) ->
+  expansion/graphics/battle_environment/dailyred_mt_silver/.
 - art/red-hgss.png (RED's HeartGold/SoulSilver battle sprite: two 37x69
   frames side by side, holding his cap up and tipping it down) and art/leaf-hgss.png (an
   HGSS-style LEAF, 33x70) -> 64x64 trainer front pics in
@@ -21,6 +20,7 @@ whole, and colours that are too many are merged pairwise, closest first. The
 output is deterministic; run it again after changing the art.
 """
 import os
+import shutil
 import struct
 from PIL import Image
 
@@ -47,94 +47,136 @@ def to_gba(c):
 # --- Battle background -------------------------------------------------------------
 
 def battle_background():
-    src = Image.open(os.path.join(ART, 'mt-silver-battle-bg.png')).convert('RGB')
-    assert src.size == (240, 112), src.size
-    colours = sorted(set(to_gba(c) for c in src.get_flattened_data()))
-    assert len(colours) <= 15, '%d colours: the background must fit one 16-colour palette' % len(colours)
-    index = {c: i + 1 for i, c in enumerate(colours)}  # 0 stays transparent
-
-    # Each pixel row's backdrop colour (the stripe the platforms sit on): its
-    # most common colour.
-    def stripe(y):
-        row = [to_gba(src.getpixel((x, y))) for x in range(240)]
-        return max(set(row), key=row.count)
-    stripes = [stripe(y) for y in range(112)]
-
-    # 256x512 like the game's own backgrounds: the scene at the top, with the
-    # 16 columns past the screen edge (seen while the intro slides the halves
-    # in) continuing each row's stripe; a copy without the platforms further
-    # down for battle animations that shake the background; the rest empty.
-    W, H = 256, 512
-    canvas = [[0] * W for _ in range(H)]
-    for y in range(112):
-        for x in range(W):
-            c = to_gba(src.getpixel((x, y))) if x < 240 else stripes[y]
-            canvas[y][x] = index[c]
-    plain = [[index[stripes[y]]] * W for y in range(112)]
-    # Rows 30-45 (pixels 240-367): the top stripe for 2 tile rows, then the
-    # gradient; rows 62-63: the top stripe (as in the game's own maps).
-    for y in range(240, 256):
-        canvas[y] = list(plain[0])
-    for y in range(256, 368):
-        canvas[y] = list(plain[min(y - 256 + 8, 111)] if y - 256 + 8 < 112 else plain[111])
-    for y in range(496, 512):
-        canvas[y] = list(plain[0])
-
-    # Tiles, deduplicated with flips.
-    tiles, lookup, entries = [], {}, []
-    blank = tuple([0] * 64)
-    tiles.append(blank)
-    lookup[blank] = (0, 0, 0)
-
-    def flips(t):
-        rows = [t[i * 8:(i + 1) * 8] for i in range(8)]
-        yield t, 0, 0
-        yield tuple(v for r in rows for v in r[::-1]), 1, 0
-        yield tuple(v for r in rows[::-1] for v in r), 0, 1
-        yield tuple(v for r in rows[::-1] for v in r[::-1]), 1, 1
-
-    for ty in range(H // 8):
-        for tx in range(W // 8):
-            t = tuple(canvas[ty * 8 + y][tx * 8 + x] for y in range(8) for x in range(8))
-            if t == blank:
-                entries.append(0)
-                continue
-            found = None
-            for variant, hf, vf in flips(t):
-                if variant in lookup:
-                    n, h0, v0 = lookup[variant]
-                    found = (n, hf ^ h0, vf ^ v0)
-                    break
-            if found is None:
-                tiles.append(t)
-                lookup[t] = (len(tiles) - 1, 0, 0)
-                found = (len(tiles) - 1, 0, 0)
-            n, hf, vf = found
-            entries.append(n | (hf << 10) | (vf << 11) | (2 << 12))  # palette 2: where the game loads it
-    assert len(tiles) <= 512, '%d tiles' % len(tiles)
-
+    """Mt. Silver's battle background, already in the game's format: its
+    tiles, tilemap (the scene, and a copy without the platforms further down
+    for animations that shake the background), entry layer (the peaks that
+    scroll past during the intro) and a palette per time of day."""
+    src = os.path.join(ART, 'mt-silver-battle-bg')
     out = os.path.join(GAME, 'graphics', 'battle_environment', 'dailyred_mt_silver')
     os.makedirs(out, exist_ok=True)
-    palette = [TRANSPARENT] + colours
-    cols = 16
-    rows = (len(tiles) + cols - 1) // cols
-    sheet = Image.new('P', (cols * 8, rows * 8), 0)
-    sheet.putpalette([v for c in palette + [(0, 0, 0)] * (256 - len(palette)) for v in c])
-    for i, t in enumerate(tiles):
-        for p, v in enumerate(t):
-            sheet.putpixel(((i % cols) * 8 + p % 8, (i // cols) * 8 + p // 8), v)
-    sheet.save(os.path.join(out, 'tiles.png'))
-    with open(os.path.join(out, 'map.bin'), 'wb') as f:
-        f.write(b''.join(struct.pack('<H', e) for e in entries))
-    write_jasc(os.path.join(out, 'palette.pal'), palette, 48)
-
-    # The entry layer (the scenery that scrolls past during the intro): empty.
-    empty = Image.new('P', (8, 8), 0)
-    empty.putpalette([v for c in palette + [(0, 0, 0)] * (256 - len(palette)) for v in c])
-    empty.save(os.path.join(out, 'anim_tiles.png'))
+    for name in os.listdir(out):
+        os.remove(os.path.join(out, name))
+    copies = {
+        'terrain.png': 'tiles.png',
+        'terrain.bin': 'map.bin',
+        'terrain.pal': 'palette.pal',
+        'terrain_evening.pal': 'palette_evening.pal',
+        'terrain_night.pal': 'palette_night.pal',
+        'anim.png': 'anim_tiles.png',
+    }
+    for a, b in copies.items():
+        shutil.copyfile(os.path.join(src, a), os.path.join(out, b))
+    # The entry layer's map covers the top 14 rows; the game loads a whole
+    # 32x32 screen, so the rest is padded with empty tiles.
+    with open(os.path.join(src, 'anim.bin'), 'rb') as f:
+        anim = f.read()
+    assert len(anim) <= 2048 and len(anim) % 64 == 0
     with open(os.path.join(out, 'anim_map.bin'), 'wb') as f:
-        f.write(b'\0\0' * 1024)
-    print('battle background: %d colours, %d tiles -> %s' % (len(colours), len(tiles), os.path.relpath(out, ROOT)))
+        f.write(anim + b'\0' * (2048 - len(anim)))
+    tiles = Image.open(os.path.join(out, 'tiles.png'))
+    print('battle background: %s tiles, palettes for day, evening and night -> %s'
+          % (tiles.size, os.path.relpath(out, ROOT)))
+
+
+# --- Battle text boxes -------------------------------------------------------------
+
+# The boxes at the bottom of the battle screen (messages, "What will X do?",
+# the action menu, the move list and PP/type) all share one HGSS-style frame,
+# drawn here as 9 tiles (corners, edges, fill) and laid out on the battle
+# textbox tilemap. Each box's frame is one tile wide, so the game's text
+# windows (graphics-independent, see sStandardBattleWindowTemplates) sit
+# inside. Colours are in RED_UI below.
+# Tiles 3-11: the HGSS sheet's own message box was there. (In battle, 18-26
+# and 34-42 of the textbox's VRAM get the player's window frames.)
+BOX_FIRST_TILE = 3
+# Rings from the box's edge inwards, as textbox palette indices: a margin the
+# battle background shows through, outline, frame light/mid/mid/dark, an
+# accent line, then the white fill (15, the text windows' background).
+BOX_RINGS = [0, 2, 3, 4, 4, 5, 8]
+BOX_FILL = 15
+BOX_RADIUS = 7
+# Textbox palette 0, after RED's cap and jacket. 1, 6 and 15 are the "What
+# will X do?" text (it prints with a copy of this palette); 2-5 and 8 are the
+# frame (BOX_RINGS). The fill is the HGSS healthboxes' light grey; it and the
+# text shadow match DAILYRED_BATTLE_BOX_FILL / _TEXT_SHADOW in dailyred.h.
+RED_UI = {
+    1: (24, 24, 24),     # text
+    2: (40, 24, 32),     # outline
+    3: (248, 112, 104),  # frame light
+    4: (216, 40, 48),    # frame
+    5: (144, 16, 32),    # frame dark
+    6: (184, 184, 192),  # text shadow
+    8: (248, 248, 248),  # inner highlight
+    15: (230, 230, 230), # fill
+}
+# The battle cursor (tiles 1 and 2): its shadow becomes the text shadow.
+CURSOR_TILES = (1, 2)
+CURSOR_RECOLOUR = {8: 6}
+# Boxes on the textbox tilemap (32 tiles wide): (top row, height, [(left
+# column, width), ...]). Rows 14-19: messages; 34-39: the prompt and the
+# action menu (whose cursor the game draws in columns 16 and 23); 54-59: the
+# move list and PP/type.
+BOXES = [
+    (14, 6, [(0, 30)]),
+    (34, 6, [(0, 15), (15, 15)]),
+    (54, 6, [(0, 20), (20, 10)]),
+]
+
+
+def box_ring(x, y, size):
+    """Which ring (0 = outermost) a pixel of a box size x size pixels is on:
+    its distance from the edge, rounded at the corners."""
+    def corner(cx, cy):
+        dx, dy = max(0, BOX_RADIUS - cx - 0.5), max(0, BOX_RADIUS - cy - 0.5)
+        return max(0, int(BOX_RADIUS - (dx * dx + dy * dy) ** 0.5 + 0.5)) if dx and dy else None
+    d = min(x, y, size - 1 - x, size - 1 - y)
+    cx, cy = min(x, size - 1 - x), min(y, size - 1 - y)
+    rounded = corner(cx, cy)
+    return min(d, rounded) if rounded is not None else d
+
+
+def battle_boxes():
+    path = os.path.join(GAME, 'graphics', 'battle_interface')
+    sheet = Image.open(os.path.join(path, 'textbox.png'))
+    # The 9 tiles, cut from a 3x3-tile box.
+    size = 24
+    for i in range(9):
+        tx, ty = (i % 3) * 8, (i // 3) * 8
+        tile = BOX_FIRST_TILE + i
+        sx, sy = (tile % 16) * 8, (tile // 16) * 8
+        for y in range(8):
+            for x in range(8):
+                ring = box_ring(tx + x, ty + y, size)
+                sheet.putpixel((sx + x, sy + y), BOX_RINGS[ring] if ring < len(BOX_RINGS) else BOX_FILL)
+    for tile in CURSOR_TILES:
+        sx, sy = (tile % 16) * 8, (tile // 16) * 8
+        for y in range(8):
+            for x in range(8):
+                v = sheet.getpixel((sx + x, sy + y))
+                sheet.putpixel((sx + x, sy + y), CURSOR_RECOLOUR.get(v, v))
+    pal = [(0, 0, 0)] * 16
+    with open(os.path.join(path, 'textbox_0.pal')) as f:
+        for i, line in enumerate(f.read().split('\n')[3:19]):
+            pal[i] = tuple(int(v) for v in line.split())
+    for i, c in RED_UI.items():
+        pal[i] = c
+    sheet.putpalette([v for c in pal for v in c] + [0] * (768 - 48))
+    sheet.save(os.path.join(path, 'textbox.png'))
+    write_jasc(os.path.join(path, 'textbox_0.pal'), pal, 16)
+
+    with open(os.path.join(path, 'textbox_map.bin'), 'rb') as f:
+        tilemap = bytearray(f.read())
+    for top, height, boxes in BOXES:
+        for left, width in boxes:
+            for r in range(height):
+                for c in range(width):
+                    col = 0 if c == 0 else 2 if c == width - 1 else 1
+                    row = 0 if r == 0 else 2 if r == height - 1 else 1
+                    entry = BOX_FIRST_TILE + row * 3 + col  # palette 0, no flips
+                    struct.pack_into('<H', tilemap, ((top + r) * 32 + left + c) * 2, entry)
+    with open(os.path.join(path, 'textbox_map.bin'), 'wb') as f:
+        f.write(tilemap)
+    print('battle boxes: tiles %d-%d, %d boxes' % (BOX_FIRST_TILE, BOX_FIRST_TILE + 8, sum(len(b[2]) for b in BOXES)))
 
 
 # --- Trainer front pics --------------------------------------------------------------
@@ -278,6 +320,7 @@ def trainer_pic(name, band, keep=(), first=(), frames=1):
 
 if __name__ == '__main__':
     battle_background()
+    battle_boxes()
     # Bands: RED's jeans (thighs to shins) and LEAF's legs.
     trainer_pic('red', (44, 62), frames=2)
     # LEAF has 21 colours: her blouse keeps all three of its blues, and her

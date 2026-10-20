@@ -191,6 +191,9 @@ right after RED's (his starter decides yours), from the seed:
 - **5% of days mirror RED's team** (`MIRROR_RED_ODDS`): the starter, a
   **shiny Pikachu** (level 100, Light Ball and Volt Tackle, like his), a
   legendary for sure, and three more.
+- **At most one starter and one Eeveelution:** the counter-starter is the
+  only one of the nine final Gen 1–3 starters, and the five can't add a
+  second (or a second Eeveelution).
 - **No species twice, no type on more than two** of the six (a Mega's types
   count with its base form's), and the six's **base stats add up to at least
   2700** (`MIN_TEAM_BASE_STAT_TOTAL`; RED's original team totals 2974). The
@@ -303,12 +306,15 @@ is still FireRed's). The source art is in `art/`, and
 `scripts/graphics/make-graphics.py` (Python 3 with Pillow) turns it into the
 game's files; run it again after changing the art:
 
-- `art/mt-silver-battle-bg.png`: Mt. Silver's battle background, from Gold-Ruki's
-  HGSS-style battle backgrounds for GBA. It becomes a 15-colour tileset and
-  tilemap in `graphics/battle_environment/dailyred_mt_silver/`, laid out like
-  the game's own backgrounds (with an empty entry layer), for
+- `art/mt-silver-battle-bg/`: Mt. Silver's HGSS-style battle background by
+  REKKA, already in the game's format (tiles, tilemap, the peaks that scroll
+  past in the intro) with a palette for each time of day. It's copied to
+  `graphics/battle_environment/dailyred_mt_silver/` for
   `BATTLE_ENVIRONMENT_SNOW`, which also makes Nature Power, Secret Power and
-  Camouflage icy on the summit.
+  Camouflage icy on the summit. The palette follows the player's clock
+  (`DailyRed_GetMtSilverBattlePalette`): day until 5 pm (and the morning),
+  evening 5–8 pm, night 8 pm–6 am (the evening hours in
+  `include/constants/rtc.h` are Daily Red's; they were 7–8 pm).
 - `art/red-hgss.png`: RED's HGSS battle sprite (ripped by ChrisX698), two
   frames: holding his cap up, looking at you, then tipping it down. GBA trainer
   pictures are 64×64 and 15 colours, and he's 69 pixels tall, so the script
@@ -323,6 +329,16 @@ game's files; run it again after changing the art:
   FireRed's files of the same names and sizes. Like soulgold, the message
   window and the "What will X do?" prompt get their own palettes, and the HP
   bars use soulgold's bar palette (`src/battle_bg.c`, `src/graphics.c`).
+  The ability/item pop-up prints in soulgold's dark text colour.
+- The boxes at the bottom of the screen (messages, "What will X do?", the
+  action menu, the moves and PP/type) share one rounded frame after RED's cap
+  and jacket: red with a charcoal outline and a white inner line, filled with
+  the healthboxes' light grey.
+  `battle_boxes()` in the script draws the frame's 9 tiles into the textbox
+  sheet and lays the boxes out on its tilemap, one tile of frame around the
+  game's text windows. The action menu and move list print on their own copy
+  of the text palette with the grey behind them, and the cursor is erased
+  with the box's inside (`DAILYRED_BATTLE_*` in `include/dailyred.h`).
 - `art/leaf-hgss.png`: an HGSS-style LEAF for the VS transition (her battle
   back sprite is still FireRed's). She's 70 pixels tall and 21 colours, so 6
   rows go from her legs and 6 colours are merged: her bag's highlight first,
@@ -551,8 +567,7 @@ the scripts fetch the expansion from its repository and build locally. The
 exceptions are RED's battle theme, `music/vs-red.mid` (and its prepared copy
 in the patch), a MIDI of a GBA song supplied by the project's owner, and the
 art in `art/` (and the graphics made from it in the patch): Mt. Silver's
-battle background is from Gold-Ruki's HGSS-style battle backgrounds for GBA
-(credit to Gold-Ruki, as they ask), RED's battle sprite is HeartGold/SoulSilver's
+battle background is REKKA's, RED's battle sprite is HeartGold/SoulSilver's
 (ripped by ChrisX698), and LEAF's HGSS-style sprite was supplied by the
 project's owner.
 

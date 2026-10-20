@@ -264,92 +264,224 @@ index 3492bf3b..c5abfb81 100644
 +	def_special DailyRed_IsDailyGame
 diff --git a/graphics/battle_environment/dailyred_mt_silver/anim_map.bin b/graphics/battle_environment/dailyred_mt_silver/anim_map.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..e9784eb4c8849062d374dd2058af8814b024f3bd
+index 0000000000000000000000000000000000000000..57c72d09f09bafde4b628b6eedc87fff326e0a2f
 GIT binary patch
 literal 2048
-ccmZQz7zLvtFd71*Aut*OqaiRF0wXO100;m80RR91
+zcmeIuw++BR3<SZK_ukuDw*RUGr~^iy92sqP7>CnKz@tDwNJLCR`meBcMovLVMNLDC
+gwL5wSMkZz!R;<0Tb8vET^YCJAr;~sLB;ZNl14~(VMF0Q*
 
 literal 0
 HcmV?d00001
 
 diff --git a/graphics/battle_environment/dailyred_mt_silver/anim_tiles.png b/graphics/battle_environment/dailyred_mt_silver/anim_tiles.png
 new file mode 100644
-index 0000000000000000000000000000000000000000..edc748111c430c55b95030fa2c4a573e2a6e6924
+index 0000000000000000000000000000000000000000..a6574c4d46db2790111fcdb91857bfd34cb67ac0
 GIT binary patch
-literal 849
-zcmeAS@N?(olHy`uVBq!ia0vp^93afW3?x5a^xMh6z|0Wf6XN=x;eUifM8Sp^9T$E~
-zSTSJ+5L~#iV#bOUFFu^uapJ;>3pXy@0D>0}UI4+5A3uQFN5N<a44V*`cr0`W&@()q
-hE{-7;bCMGl@Bw)q42*g^Z0bOs^mO%eS?83{1ON*GHFN*~
+literal 521
+zcmeAS@N?(olHy`uVBq!ia0vp^4nS<c!VDyXQxkPSoB*E?S0Mf4$Bzduew?`RVa1Lc
+z4h|6s84V2`3s!76prPRaltlxcIcjwb42)AeT^vIy=DeM-H}AHANUMENn?UaLo0l{T
+z<sE#M^;L?9v00U8?LGQRCAY|IyZ&VN57)NNwQ_S{Y;s86&|Igp%Xgkay5hToM}MAE
+zJrlZR&ziSKR|cybJ~!iXN3PL~r&H&!%t*1=AL-Y#?_8NBf5g7p?@zN*a`YP>{c-!A
+z%pKzNGPBKU_64WhPj!jcw}`043*K)RTM#FmsiCDQepE7j{^8m0=hwyk`zcoEn0O_1
+z`_A7SSH4T`3KN>8#e5<(L-X3PCw@{5UOKysyqY#LT=WdS;-#^dOE<yj0^9O41$)C6
+zuJhTa^i43y@$@O{sf_jtRyQS1@$KQVKEW`z^rAI)!~tz(?FM)C*J9im-aY$|@9*;4
+zl(*pG7KW;CQ~4hhTd$jSq2%wO!#fJNH_EX0w<taodyv`k<@~%KjwfX{N+|Btv9V%(
+zQ~Jn1k*PvGq4be@;zi~c%vtZ=KksEMnfA+!(|VfE-<2O3#XfBD`1_jk(^h{Ey%6=@
+z{`kN9y_dBfw*N4BQsgW3#9xy2O)u`%%Nb3n;rz5JT=uKDXmZ`xcl+OlgQCpS)z4*}
+HQ$iB}^UUH4
 
 literal 0
 HcmV?d00001
 
 diff --git a/graphics/battle_environment/dailyred_mt_silver/map.bin b/graphics/battle_environment/dailyred_mt_silver/map.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..b52f0b159f9f3ea3ca9ca8fb654821d8f294095b
+index 0000000000000000000000000000000000000000..81b1e276d9408b1d8d8f0a465c8811ced1067382
 GIT binary patch
 literal 4096
-zcmeH|S5E>#6h`UxF4*;;V?)H=3rZ7gU;~8z|375c<#8sP+y@?*dy>g!zubrUHrW#-
-zC?bT6Fft;@h$16~i~&pxGQ=<=j55YJ6HGG2G&9T+_x2L#nPZ*>7FlAM6;@f}f0C@T
-zfpRxD(X+)iJM5BTk2L#aIN*>Yjyd6!Gk5bG6Bk@^#WgqFdfahOmIofay&N*~$S6>t
-zNQo!PRCwlv*Uni{W%b58Mdjoss?_-4v(t?;Uwrf9KGkW^<d>SND%}@q(IQ~SHeeg*
-z+XmY77MZ<6LVJgW_Kpbc9TnO;X0*4-?A=V~2EXt1_V$;U?CmF$**hn+ci!k`lefE>
-Z<6sG{>;*^P{`l<0Z3DJ}KyU5e<_|V{8u9=D
+zcmeHJWpET>45d)4xU@Jtpru&L3mj0~-HN-rySux)yA*e~;_gmycX!S1A=eh>_`?jt
+z+`dURd0(>G$<9vVgpddYXM{!=m9Pkh@Cp}1P#sYv5+WlCq9PiiBZf*$6<4?+mY&5{
+ziDM!z;vv2wfvFQB5v*5YBr%z!rgk^Ahw5Z1o=C2_DgFQ{kqW65UhobUod$#;ts)&P
+zNRJH22p?oZW@JHDWJ7l3Ku+XBZsb8;<U@WGKtU8jVH8187DI8Cpf5_I6iUMvWl$F7
+zP#zUnk(E$cnJTD?YN(DHsEJyrjXJ1{dZ>>EXvjuv%qD2cW^9fYXo*&6jW%e@c5KfM
+z=*Uj&j4tSkZtTt;?1^6JjXvnhe(cWy9LPZ!j3FGtp&Z8H9Kn%_Q5?-N9LsSW&k3B!
+zNu10noXTmO&KaD^S)9!|oXdHfuUJ4oF61KBeq3zoC0xp7rsc=wT)~xG#noKHwOq&b
+z+`x_8#LdcV;Z|<rcKR!JaHr~B+--UW<Ig?Z%YEF>13bt>JggZ<c$CL@oF{mar+AuY
+z%(&Hha+c?KUhlTJz>De!@DeZc3a|1Suk!|P@|JqHd53p-FHpQS_dXx|U>~aWh>w5x
+z)`%y3%4b11+q%#B!shfPU#a(+Z}`@RwZ^}*sr8;8_>rIZnO_(}oFt@JV?v4ZH_Nt0
+zU^}#gk+2d@!i$SUkcbjVB5O_*i7L^8<VKg^ZxKUcimSM3<XWFt5?kV^6<6Y!nein-
+zkS7GLY<LMJkw6kl5=koV;-T@$#8Z+>3P~xcB(>dq;~8G!EotNmZ&|MDm!eviEtf0-
+zmf+PKjH3gN4*X9YaB|H5e|Y|j7&}2)NhcQhxgVq#WA@vh|Hf9}#|)BDtd@^tlFZ+1
+zgRwXNt(!n_okg-rHnH-?zwrC{|NB2ByZlS@|21<+PIFe~5@Tcdjz5|I-(&6He>MN@
+RXE`Dq9dLBO(Sg6yfv;7DJgoo#
 
 literal 0
 HcmV?d00001
 
 diff --git a/graphics/battle_environment/dailyred_mt_silver/palette.pal b/graphics/battle_environment/dailyred_mt_silver/palette.pal
 new file mode 100644
-index 00000000..3b92d5b0
+index 00000000..2f156bd1
 --- /dev/null
 +++ b/graphics/battle_environment/dailyred_mt_silver/palette.pal
 @@ -0,0 +1,51 @@
 +JASC-PAL
 +0100
 +48
-+255 0 255
-+88 64 88
-+112 176 232
-+136 208 248
-+144 168 144
-+152 152 152
-+152 208 216
-+168 152 168
-+168 232 240
-+200 184 200
-+208 200 208
-+216 208 216
-+216 216 216
-+232 224 232
-+232 232 232
++0 0 0
++112 168 224
++136 184 232
++160 200 240
++184 216 240
++208 224 248
 +248 248 248
++232 240 248
++208 216 232
++176 192 216
++64 64 88
++96 104 128
++128 136 160
++168 176 192
++112 168 224
++136 184 232
++0 0 0
++248 248 248
++240 240 248
++224 232 248
++200 216 240
++168 184 216
++128 144 184
++64 64 88
++96 104 128
++128 136 160
++168 176 192
++232 240 248
++208 216 232
++176 192 216
++184 216 240
++208 224 248
++0 0 0
++248 248 248
++224 232 248
++200 216 240
++168 184 216
++64 64 88
++96 104 128
++128 136 160
++168 176 192
++40 40 64
 +0 0 0
 +0 0 0
 +0 0 0
 +0 0 0
 +0 0 0
 +0 0 0
+diff --git a/graphics/battle_environment/dailyred_mt_silver/palette_evening.pal b/graphics/battle_environment/dailyred_mt_silver/palette_evening.pal
+new file mode 100644
+index 00000000..f6cd7ed6
+--- /dev/null
++++ b/graphics/battle_environment/dailyred_mt_silver/palette_evening.pal
+@@ -0,0 +1,51 @@
++JASC-PAL
++0100
++48
++0 0 0
++88 72 152
++144 96 168
++208 120 144
++240 152 112
++248 192 128
++248 240 216
++248 216 192
++232 176 168
++184 136 152
++56 40 64
++96 72 96
++136 104 120
++184 144 152
++88 72 152
++144 96 168
++0 0 0
++248 240 216
++248 232 216
++240 216 200
++224 184 184
++192 152 168
++144 112 144
++56 40 64
++96 72 96
++136 104 120
++184 144 152
++248 216 192
++232 176 168
++184 136 152
++240 152 112
++248 192 128
++0 0 0
++248 240 216
++240 216 200
++224 184 184
++192 152 168
++56 40 64
++96 72 96
++136 104 120
++184 144 152
++40 24 48
 +0 0 0
 +0 0 0
 +0 0 0
 +0 0 0
 +0 0 0
 +0 0 0
+diff --git a/graphics/battle_environment/dailyred_mt_silver/palette_night.pal b/graphics/battle_environment/dailyred_mt_silver/palette_night.pal
+new file mode 100644
+index 00000000..01fdc60a
+--- /dev/null
++++ b/graphics/battle_environment/dailyred_mt_silver/palette_night.pal
+@@ -0,0 +1,51 @@
++JASC-PAL
++0100
++48
 +0 0 0
++16 24 56
++24 40 80
++32 56 104
++48 72 128
++64 96 152
++200 216 240
++152 168 208
++112 128 176
++80 96 144
++16 16 32
++40 48 72
++64 72 104
++96 104 136
++248 248 224
++192 200 232
 +0 0 0
++200 216 240
++176 192 232
++152 168 216
++128 144 200
++96 112 168
++64 80 136
++16 16 32
++40 48 72
++64 72 104
++96 104 136
++152 168 208
++112 128 176
++80 96 144
++48 72 128
++64 96 152
 +0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
++200 216 240
++152 168 216
++128 144 200
++96 112 168
++16 16 32
++40 48 72
++64 72 104
++96 104 136
++8 8 24
 +0 0 0
 +0 0 0
 +0 0 0
@@ -358,27 +490,66 @@ index 00000000..3b92d5b0
 +0 0 0
 diff --git a/graphics/battle_environment/dailyred_mt_silver/tiles.png b/graphics/battle_environment/dailyred_mt_silver/tiles.png
 new file mode 100644
-index 0000000000000000000000000000000000000000..310b9bc40c075f7f90e2b10e18a5c9a108c78718
+index 0000000000000000000000000000000000000000..9f942b4e64761da9204737075b985a78e602d797
 GIT binary patch
-literal 1594
-zcmeAS@N?(olHy`uVBq!ia0vp^4M1$b!3-qdX*KmQFfcO&_=LFrXZRoC5K*w<MaP97
-z6IM)^0R$IrteCN4#fuLocAU6y;=+v!H-O;9gBL*X<Hrx6_E9hz0>dT*CLRmj!N9=u
-z)zif>q+-t58E?yOEAX@x?(W^$_4xPx+etkwc82FX%a_T=o)Wot+{vRTIP2T?o9>&>
-zr|sz5|3CBFZ{KPEq8W7mEPRuFYuduU5)RW(RLV*)*08lTNmRw`50X3mkH=vNPjrr<
-z!<3pG?>f9+D(%+3eM6|Oj=MpGU0LR|c*E}N&l1<H;C`DMe7^6YnD_793?6bnuEqF%
-zp3}{;;QiC9Uq3x%{LZ|1L-nt}|1ZztKP>UArd8?d=79U#*WFL8WpMG>S+{Nav;dI<
-zlOwOPmw(P>wwi39sqOH4&Uu^0j>GI4eE;6H+byVja*0tQ|Neobj0R<fe?P^(mPsnt
-z?h-r6?|<LR$)jOY)yLBK`SITT3s#Hyp4q<g#O$|MXB~d*zF<eA(}kVp6U<!Ir|~n)
-zQZ8VbTQlu|{oBTE+zaMBbh*Ir>eu%CeG2=XKmBQSSFP|0{;EGkqWk)xRK}j*z)KAN
-zSqzKSWxCCU84gZet7!07zI*xGeTSDwGk4g&=-DeUMM38uhr*<PY7LByyA;K~aw#o7
-zP|cC!_CKi3deVi}QkOUl1b%6};gINco>%tQDT|pUd*!aalE05tN~*uHKM-usF)m@*
-zTe)jtHtRvAno4F(bw%U3VGMKBWo2cq9hp>Jrk1n#VsAO)mc{#3s|pI#yY=p$3S_vT
-znP!o3tI~#pp@xAgChzkB4u_%$A+rw?i?b@({BC_nOgQLez?k5<=G|j)CJl!wr+k*#
-z8$RepSlgL6NLR!$C0ITD*v}YnS8{)POZudE_l3+G8jIx;%<k?L5n=Eant9M^ef|8^
-z)|(~XW}J5OOn)cw!05rl`%Gc~xXR*I?Yb)4;8C-RaqZ5kz!wE8X0m;_(yqHa{Hs-T
-zN=*K4ozp+_nGJSd-f_L2X*Tb#=ns0;K5hknoZWV9TBY~&W^<-3%LDx*3cv2uGR(YW
-zwCZoJbU<%%h<HP3dg^bp183sPzwHR$q*i8hhi%5`6$`?zF>u&x?JQ?p_axoj_S0^5
-nfpbdhZ_6_LD+zcj&s4)K6!Y6cIM>e$l$$+W{an^LB{Ts5SYw%~
+literal 2950
+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
 
 literal 0
 HcmV?d00001
@@ -1017,21 +1188,22 @@ index 8c2a2741..bdf98cbb 100644
  0 0 0
  0 0 0
 diff --git a/graphics/battle_interface/textbox.png b/graphics/battle_interface/textbox.png
-index 96f6b8b15f3bb58830eb7a4cd1d1e716b7a9ea49..0100259d886d4fceb557bdcaff7ce15d77b52ca6 100644
+index 96f6b8b15f3bb58830eb7a4cd1d1e716b7a9ea49..fe8583c99c029e63e68af3093a63e577f1241066 100644
 GIT binary patch
-delta 421
-zcmdnPyqS4|L_G&H0|UdC2NQn+DaPU;cPEB*=VV?2IR*hfA+A8$!^6YNG3fnL%dGCb
-z|NsBLaN$H&RPoibSA&A0fa1x?*-=r+bLOo5e=i#-8^_-B4rq>{r;B4q#hkZSZWlEx
-zh&TkMrLa}+ne+euZLcF7jgM6?oAKX$ebmQfgXx0$;?6vkSJw}Ve%^3_`Qsm*OTFE{
-z*8JYxu>NR?;evj~&#dLlubR>h80|l0!?*m{&pd}zeu0}zkN)i9t9h2r9CR@GUp$Az
-zd1jU0kz6aneU0w&PFS~+=LFZa#<M?z56*4aR{JsY&hohy-TaDQejcdhc=h)E?AyC{
-z=w15Tr1?+T(4n^8)t{-W@#)@%<9`et{tCn$ZCc!*@b|LOe#wA8rkV?4CVM+1|2ypd
-z_Vwwt3~QOTh$iq<C_8*^`1^NJXv03Xo@j^16QdYkZGB|Qzv7*Z{jQ?$t{L5@V%{EG
-zWO`5k_T2oKt@`)x<W2kb>O9jtdAn8yCXOE!z%WGsIS8|%{=M`iuCR5=;cZeN5l>e?
-Jmvv4FO#sd5!Q}t|
+literal 1178
+zcmeAS@N?(olHy`uVBq!ia0vp^4Is?H3?#oinD~={ftew|C&U%Vm5`9okWlzhka0u9
+zV1j_cjvWWGqKbd~_z@Ho<>eTZoSYpMl{{z8+W+^mpFMj9R6hzvLtxm1K=RIhaRvs)
+zP)`@fkcv5PuiPzaG7xY`WLvaxb=m#@xw9KQ>dGAVeq8i?cjobfPdKF89y*3knp^sz
+zCzxaT>CZ)b=Qz!9`(AuC`;)fOU7@!;)r`rHTN|9DKTN(8&tvhtp>U2=@u572qZ}`|
+z&ope=ucv)&*<yyr+`bO!+yarzpZ>kleZgjN@I8wS*R#J@cQ3VOe5S13_QAs8RQh9{
+zsqzW@Z;c&p?QxY=h;1-`o7RxZy&?DT@}G139<38e>N&bE^SOlSkNLBY@7|?%`E65m
+zosy-)?}wM08?q9A>LlE=XV2JiEKKhPcgLn)uUq$dFTDEg?O;1u^T3Vz?_ur#iu4_J
+zGi+s=!+M|Nf>A>C{tWR2xd(E24f0lsFL1PWJl*ha`t<ttUm;yPoS*vbHr{gXck17#
+zs~1{NmzOjDZkym&FZkil^Jor*hKBX*Sdzn!@BbM1a$FT;S>0BFq&;2zT-G@yGywob
+CO~-fu
 
 delta 430
-zcmV;f0a5<51H1!}7=Hu<0000n5PbLm001yhOjJbx00960|Nj60QevEHi@pE<|7u!u
+zcmV;f0a5;%3A_W47=Hu<0000n5PbLm001yhOjJbx00960|Nj60QevEHi@pE<|7u!u
 z)y>sGN_$E{QiF?&YC&48YGTz&Ih;yjYNVvBSuFPe00BoyL_t(&f$h>UO2j}E#_?I$
 z1MGuswihoTSnq<By$7&~Sf+9C7-<ZHXk!-?Ya0(BcmTy`FMr|%Z1l}cCiAjxaNSbA
 zA1ox<;h)LO7$Zo`oGaZ57tGIJ$_?|=CG$(VH=6{`nfdl-pk6!RKJr5qu;ko5_q-1T
@@ -1039,10 +1211,10 @@ z<Qw>*2|{32NuVxC|Iswpa`U!2pk5RMPNraq^wi?m*MUIR1}gs*q!&kg%I)2n0T%*#
 zd%Q>ahF=3|pnp-uyGIAX$>CgIt1S;NBx_5PrfQ~pt;JH{I9{I(2f|{F_IFxalYXG6
 ztvD@opvr-?UE`~w)t|Nmy5~7SDL^J27(K8T*iO%B-kq5$1xhk$HT6_=V6<ol({$3E
 z8H(q||5P9^R&V9i;_5Tw-|nfv@YZQ+2V%gFTORZ$2q*lD0000000000000000Kf*m
-Y0Tl@ZW14Mnw*UYD07*qoM6N<$f&&7;HUIzs
+Y0Tl@ZW14Mnw*UYD07*qoM6N<$g5v|gBLDyZ
 
 diff --git a/graphics/battle_interface/textbox_0.pal b/graphics/battle_interface/textbox_0.pal
-index 67e1af89..abc6701d 100644
+index 67e1af89..9766a412 100644
 --- a/graphics/battle_interface/textbox_0.pal
 +++ b/graphics/battle_interface/textbox_0.pal
 @@ -2,18 +2,18 @@ JASC-PAL
@@ -1052,15 +1224,18 @@ index 67e1af89..abc6701d 100644
 -255 255 255
 -255 0 0
 -82 98 156
+-106 139 189
+-255 255 255
 +24 24 24
-+74 65 82
-+239 165 57
- 106 139 189
- 255 255 255
-+208 208 200
++40 24 32
++248 112 104
++216 40 48
++144 16 32
++184 184 192
  106 90 115
- 213 205 213
+-213 205 213
 -65 74 123
++248 248 248
 +82 82 90
  74 65 82
 -131 139 139
@@ -1073,7 +1248,21 @@ index 67e1af89..abc6701d 100644
 +90 90 99
 +156 156 173
 +255 222 107
-+255 255 255
++230 230 230
+diff --git a/graphics/battle_interface/textbox_map.bin b/graphics/battle_interface/textbox_map.bin
+index 8a7b3f1f00b122f246f4b6a985185c287350a64d..0e2852472b5c8f9f93808a9343fe4079b1817da7 100644
+GIT binary patch
+literal 4096
+zcmeH}OAde_3`8eU6lLQHy#Fy3Hr<eE#07qaE}KGlke30pL_h?35g0HwR=|GNgt@We
+zC*~Kdjg`v%d%e5P6@i}+*w{Up{{nc|^IxQP^!@jSdFH<a-p%~9L_h>?5ukqac4mgN
+eWLPudmHbyTneRVKmd~AMhO=Z?GokWd{+kCri4z?F
+
+literal 4096
+zcmeH{%?^Sv5QHc32L-`V5rl*9|ClNq_Rw^j^a8=@T$*+#&CWI-prr(qz)}h9u*V@o
+zM-+H}b;22ChALb(;jhu)njzvg^}p2I^{x{5lLYAX>GSW-M^r7-{Cl#Cs^5g)=iiG%
+zRO8gYHyhn40VR-3z~x)Y?Get{*D|b|`R5VN*w-_xoB0=>o6C0V^?QUf_Kghd#J}I)
+F`~bYWHs=5U
+
 diff --git a/graphics/battle_interface/z_move_trigger.png b/graphics/battle_interface/z_move_trigger.png
 index 907a4cf20cb07342256db7bab6a22d0083eea591..a25b98f319c71069944c042395c3e5dff8684b17 100644
 GIT binary patch
@@ -1401,6 +1590,24 @@ index f21e27af..83ed756d 100644
  #define MAX_TRAINERS_COUNT_FRLG                  768
  
  #endif  // GUARD_CONSTANTS_OPPONENTS_FRLG_H
+diff --git a/include/constants/rtc.h b/include/constants/rtc.h
+index 379730c0..b63517e7 100644
+--- a/include/constants/rtc.h
++++ b/include/constants/rtc.h
+@@ -84,10 +84,11 @@
+     #define MORNING_HOUR_BEGIN 6
+     #define MORNING_HOUR_END   10
+ 
++    // Daily Red: evening is 5-8 pm (was 7-8 pm), for Mt. Silver's evening sky.
+     #define DAY_HOUR_BEGIN     10
+-    #define DAY_HOUR_END       19
++    #define DAY_HOUR_END       17
+ 
+-    #define EVENING_HOUR_BEGIN 19
++    #define EVENING_HOUR_BEGIN 17
+     #define EVENING_HOUR_END   20
+ 
+     #define NIGHT_HOUR_BEGIN   20
 diff --git a/include/constants/songs.h b/include/constants/songs.h
 index 0bb20e41..d9fe44b8 100644
 --- a/include/constants/songs.h
@@ -1460,10 +1667,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..63757cc5
+index 00000000..0e7ff87b
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,96 @@
+@@ -0,0 +1,106 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -1492,6 +1699,16 @@ index 00000000..63757cc5
 +void DailyRed_OnDailyGameOver(void);
 +u16 DailyRed_IsDailyGame(void);
 +bool32 DailyRed_IsOnSummit(void);
++const u16 *DailyRed_GetMtSilverBattlePalette(void);
++
++// The battle boxes' look (src/battle_bg.c; the tiles and frame colours come
++// from scripts/graphics/make-graphics.py): the inside of every box is the
++// HGSS healthboxes' light grey, and the action menu and move list print on
++// their own copy of the battle text palette with that background.
++#define DAILYRED_BATTLE_MENU_PAL_NUM 14
++#define DAILYRED_BATTLE_BOX_FILL_TILE 7 // a box's inside, in the textbox tiles (palette 0)
++#define DAILYRED_BATTLE_BOX_FILL RGB(28, 28, 28)
++#define DAILYRED_BATTLE_TEXT_SHADOW RGB(23, 23, 24)
 +
 +// src/dailyred_team.c
 +void DailyRed_GenerateTeam(struct Pokemon *party, u32 *rngState, u16 redStarter);
@@ -1561,23 +1778,25 @@ index 00000000..63757cc5
 +
 +#endif // GUARD_DAILYRED_H
 diff --git a/include/graphics.h b/include/graphics.h
-index e72ab7db..3a3cfbd4 100644
+index e72ab7db..3998cc36 100644
 --- a/include/graphics.h
 +++ b/include/graphics.h
-@@ -245,6 +245,12 @@ extern const u32 gBattleEnvironmentTilemap_PondWater[];
+@@ -245,6 +245,14 @@ extern const u32 gBattleEnvironmentTilemap_PondWater[];
  extern const u32 gBattleEnvironmentAnimTiles_PondWater[];
  extern const u32 gBattleEnvironmentAnimTilemap_PondWater[];
  extern const u16 gBattleEnvironmentPalette_PondWater[];
 +// Daily Red: Mt. Silver's battle background (src/data/graphics/battle_environment.h).
 +extern const u32 gBattleEnvironmentTiles_DailyRedMtSilver[];
 +extern const u16 gBattleEnvironmentPalette_DailyRedMtSilver[];
++extern const u16 gBattleEnvironmentPalette_DailyRedMtSilverEvening[];
++extern const u16 gBattleEnvironmentPalette_DailyRedMtSilverNight[];
 +extern const u32 gBattleEnvironmentTilemap_DailyRedMtSilver[];
 +extern const u32 gBattleEnvironmentAnimTiles_DailyRedMtSilver[];
 +extern const u32 gBattleEnvironmentAnimTilemap_DailyRedMtSilver[];
  extern const u32 gBattleEnvironmentTiles_Rock[];
  extern const u32 gBattleEnvironmentTilemap_Rock[];
  extern const u32 gBattleEnvironmentAnimTiles_Rock[];
-@@ -2032,6 +2038,7 @@ extern const u32 gBattleInterface_BallStatusBarGfx[];
+@@ -2032,6 +2040,7 @@ extern const u32 gBattleInterface_BallStatusBarGfx[];
  extern const u8 gBattleInterface_BallDisplayGfx[];
  extern const u16 gBattleInterface_BallStatusBarPal[];
  extern const u16 gBattleInterface_BallDisplayPal[];
@@ -1585,7 +1804,7 @@ index e72ab7db..3a3cfbd4 100644
  extern const u8 gHealthboxElementsGfxTable[][32];
  
  extern const u16 gNamingScreenMenu_Pal[6][16];
-@@ -2071,6 +2078,7 @@ extern const u32 gHealthboxSafariGfx[];
+@@ -2071,6 +2080,7 @@ extern const u32 gHealthboxSafariGfx[];
  extern const u32 gBlankGfxCompressed[];
  extern const u16 gBattleInterface_BallStatusBarPal[];
  extern const u16 gBattleInterface_BallDisplayPal[];
@@ -1948,16 +2167,23 @@ index 00000000..3bcdb60e
 +	voice_noise_alt 60, 0, 0, 0, 2, 6, 0  @ 126: noise
 +	voice_noise_alt 60, 0, 0, 0, 1, 8, 1  @ 127: noise, hi-hat
 diff --git a/src/battle_bg.c b/src/battle_bg.c
-index 49d91ce4..eaa15e65 100644
+index 49d91ce4..2d021cee 100644
 --- a/src/battle_bg.c
 +++ b/src/battle_bg.c
-@@ -32,6 +32,32 @@
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "battle.h"
+ #include "battle_anim.h"
+ #include "battle_bg.h"
+@@ -32,6 +33,37 @@
  
  // .rodata
  
 +// Daily Red: the HGSS-style battle interface (from Eemeliri/soulgold) draws the
 +// message window and the "What will X do?" prompt on their own palettes, so
-+// their text sits on the textbox's white like the rest of its boxes.
++// their text sits on the boxes' light grey (DAILYRED_BATTLE_BOX_FILL); so do
++// the action menu and the move list (DAILYRED_BATTLE_MENU_PAL_NUM).
 +#define DAILYRED_BATTLE_MESSAGE_PAL_NUM 12
 +#define DAILYRED_BATTLE_COMMAND_PAL_NUM 13
 +
@@ -1969,7 +2195,7 @@ index 49d91ce4..eaa15e65 100644
 +    [3]  = RGB(31, 12, 12),  // Attack
 +    [4]  = RGB(2, 6, 16),    // Defense shadow
 +    [5]  = RGB(11, 18, 31),  // Defense
-+    [6]  = RGB(26, 26, 25),  // Default text shadow
++    [6]  = DAILYRED_BATTLE_TEXT_SHADOW, // Default text shadow
 +    [7]  = RGB(15, 0, 10),   // Sp. Atk shadow
 +    [8]  = RGB(31, 12, 23),  // Sp. Atk
 +    [9]  = RGB(0, 10, 16),   // Sp. Def shadow
@@ -1978,13 +2204,17 @@ index 49d91ce4..eaa15e65 100644
 +    [12] = RGB(13, 28, 11),  // Speed
 +    [13] = RGB(31, 24, 8),   // Accuracy / all stats
 +    [14] = RGB(20, 14, 31),  // Evasiveness
-+    [15] = RGB(31, 31, 31),  // Textbox background
++    [15] = DAILYRED_BATTLE_BOX_FILL, // Textbox background
 +};
++
++// The action menu and move list's text background and shadow (colours 14 and
++// 15 of the battle text palette, white and light grey).
++static const u16 sDailyRedBattleMenuBackground[] = {DAILYRED_BATTLE_BOX_FILL, DAILYRED_BATTLE_TEXT_SHADOW};
 +
  static const struct OamData sVsLetter_V_OamData =
  {
      .y = 0,
-@@ -159,7 +185,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+@@ -159,16 +191,16 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
          .tilemapTop = 15,
          .width = 26,
          .height = 4,
@@ -1993,25 +2223,189 @@ index 49d91ce4..eaa15e65 100644
          .baseBlock = 0x0090,
      },
      [B_WIN_ACTION_PROMPT] = {
-@@ -168,7 +194,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .bg = 0,
+         .tilemapLeft = 1,
          .tilemapTop = 35,
-         .width = 14,
+-        .width = 14,
++        .width = 13, // Daily Red: inside its box (was 14)
          .height = 4,
 -        .paletteNum = 0,
 +        .paletteNum = DAILYRED_BATTLE_COMMAND_PAL_NUM, // Daily Red: HGSS-style (was 0)
          .baseBlock = 0x01c0,
      },
      [B_WIN_ACTION_MENU] = {
-@@ -973,6 +999,9 @@ void LoadBattleMenuWindowGfx(void)
+@@ -177,7 +209,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 35,
+         .width = 12,
+         .height = 4,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x0190,
+     },
+     [B_WIN_MOVE_NAME_1] = {
+@@ -186,7 +218,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 55,
+         .width = 16,    //for z move names
+         .height = 2,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x0300,
+     },
+     [B_WIN_MOVE_NAME_2] = {
+@@ -195,7 +227,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 55,
+         .width = 8,
+         .height = 2,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x0318,
+     },
+     [B_WIN_MOVE_NAME_3] = {
+@@ -204,7 +236,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 57,
+         .width = 16,    //for z effect descriptions
+         .height = 2,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x0328,
+     },
+     [B_WIN_MOVE_NAME_4] = {
+@@ -213,7 +245,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 57,
+         .width = 8,
+         .height = 2,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x0340,
+     },
+     [B_WIN_PP] = {
+@@ -222,7 +254,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 55,
+         .width = 4,
+         .height = 2,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x0290,
+     },
+     [B_WIN_DUMMY] = {
+@@ -231,7 +263,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 57,
+         .width = 0,
+         .height = 0,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x0298,
+     },
+     [B_WIN_PP_REMAINING] = {
+@@ -240,7 +272,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 55,
+         .width = 4,
+         .height = 2,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x0298,
+     },
+     [B_WIN_MOVE_TYPE] = {
+@@ -249,7 +281,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 57,
+         .width = 8,
+         .height = 2,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x02a0,
+     },
+     [B_WIN_SWITCH_PROMPT] = {
+@@ -258,7 +290,7 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
+         .tilemapTop = 55,
+         .width = 8,
+         .height = 4,
+-        .paletteNum = 5,
++        .paletteNum = DAILYRED_BATTLE_MENU_PAL_NUM, // Daily Red (was 5)
+         .baseBlock = 0x02b0,
+     },
+     [B_WIN_YESNO] = {
+@@ -871,6 +903,15 @@ static u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene)
+ }
+ 
+ // Loads the initial battle environment.
++// Daily Red: Mt. Silver's background (the snow environment) changes palette
++// with the time of day; everything else has the one palette.
++static const void *GetBattleEnvironmentPalette(u16 environment)
++{
++    if (environment == BATTLE_ENVIRONMENT_SNOW)
++        return DailyRed_GetMtSilverBattlePalette();
++    return gBattleEnvironmentInfo[environment].palette;
++}
++
+ static void LoadBattleEnvironmentGfx(u16 environment)
+ {
+     if (environment >= NELEMS(gBattleEnvironmentInfo))
+@@ -878,7 +919,7 @@ static void LoadBattleEnvironmentGfx(u16 environment)
+     // Copy to bg3
+     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.tileset, (void *)(BG_CHAR_ADDR(2)));
+     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
+-    LoadPalette(gBattleEnvironmentInfo[environment].palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
++    LoadPalette(GetBattleEnvironmentPalette(environment), BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+ }
+ 
+ // Loads the entry associated with the battle environment.
+@@ -973,6 +1014,11 @@ void LoadBattleMenuWindowGfx(void)
      LoadUserWindowBorderGfx(2, 0x12, BG_PLTT_ID(1));
      LoadUserWindowBorderGfx(2, 0x22, BG_PLTT_ID(1));
      LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
 +    // Daily Red: the HGSS-style message and prompt palettes (see above).
 +    LoadPalette(sDailyRedBattleMessageTextPalette, BG_PLTT_ID(DAILYRED_BATTLE_MESSAGE_PAL_NUM), PLTT_SIZE_4BPP);
 +    LoadPalette(gBattleTextboxPalette, BG_PLTT_ID(DAILYRED_BATTLE_COMMAND_PAL_NUM), PLTT_SIZE_4BPP);
++    LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM), PLTT_SIZE_4BPP);
++    LoadPalette(sDailyRedBattleMenuBackground, BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM) + 14, sizeof(sDailyRedBattleMenuBackground));
  
      if ((gBattleTypeFlags & (BATTLE_TYPE_ARENA | BATTLE_TYPE_POKEDUDE))
      || (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)))
+@@ -1344,7 +1390,7 @@ bool8 LoadChosenBattleElement(u8 caseId)
+         DecompressDataWithHeaderVram(gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
+         break;
+     case 5:
+-        LoadPalette(gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
++        LoadPalette(GetBattleEnvironmentPalette(GetBattleEnvironmentOverride()), BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+         break;
+     case 6:
+         LoadBattleMenuWindowGfx();
+diff --git a/src/battle_controller_player.c b/src/battle_controller_player.c
+index 7553ca61..85513d22 100644
+--- a/src/battle_controller_player.c
++++ b/src/battle_controller_player.c
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "battle.h"
+ #include "battle_anim.h"
+ #include "battle_arena.h"
+@@ -1813,8 +1814,10 @@ void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
+ void MoveSelectionDestroyCursorAt(u8 cursorPosition)
+ {
+     u16 src[2];
+-    src[0] = 0x1016;
+-    src[1] = 0x1016;
++    // Daily Red: the inside of the HGSS-style box (was 0x1016, the window
++    // frame's middle on palette 1).
++    src[0] = DAILYRED_BATTLE_BOX_FILL_TILE;
++    src[1] = DAILYRED_BATTLE_BOX_FILL_TILE;
+ 
+     CopyToBgTilemapBufferRect_ChangePalette(0, src, 9 * (cursorPosition & 1) + 1, 55 + (cursorPosition & 2), 1, 2, 0x11);
+     CopyBgTilemapBufferToVram(0);
+@@ -1833,8 +1836,10 @@ void ActionSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
+ void ActionSelectionDestroyCursorAt(u8 cursorPosition)
+ {
+     u16 src[2];
+-    src[0] = 0x1016;
+-    src[1] = 0x1016;
++    // Daily Red: the inside of the HGSS-style box (was 0x1016, the window
++    // frame's middle on palette 1).
++    src[0] = DAILYRED_BATTLE_BOX_FILL_TILE;
++    src[1] = DAILYRED_BATTLE_BOX_FILL_TILE;
+ 
+     CopyToBgTilemapBufferRect_ChangePalette(0, src, 7 * (cursorPosition & 1) + 16, 35 + (cursorPosition & 2), 1, 2, 0x11);
+     CopyBgTilemapBufferToVram(0);
 diff --git a/src/battle_controllers.c b/src/battle_controllers.c
 index 63c899bc..569f0510 100644
 --- a/src/battle_controllers.c
@@ -2044,6 +2438,79 @@ index 1873a02a..d40347d3 100644
  };
  
  const struct CompressedSpriteSheet gSpriteSheet_EnemyShadow =
+diff --git a/src/battle_interface.c b/src/battle_interface.c
+index 69099bc4..24d55cf3 100644
+--- a/src/battle_interface.c
++++ b/src/battle_interface.c
+@@ -36,6 +36,9 @@
+ #include "caps.h"
+ 
+ #define HEALTHBOX_BG_INDEX 2
++// Daily Red: the HGSS-style healthboxes (graphics/battle_interface, from
++// Eemeliri/soulgold) put the HP numbers on colour 3, not 2.
++#define HEALTHBOX_HP_TEXT_BG_INDEX 3
+ 
+ enum
+ {   // Corresponds to gHealthboxElementsGfxTable (and the tables after it) in graphics.c
+@@ -1089,7 +1092,7 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp
+     {
+         if (IsOnPlayerSide(battler)) // Player
+         {
+-            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 16);
++            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_HP_TEXT_BG_INDEX, 0, 16); // Daily Red: was HEALTHBOX_BG_INDEX
+         }
+         else // Opponent
+         {
+@@ -1123,7 +1126,7 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, u32 maxOrCur
+     {
+         if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
+         {
+-            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 8);
++            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_HP_TEXT_BG_INDEX, 0, 8); // Daily Red: was HEALTHBOX_BG_INDEX
+             // Clears the end of the healthbar gfx.
+             CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_PLAYER_FRAME_END),
+                           (void *)(OBJ_VRAM0 + 0x680) + (gSprites[healthboxSpriteId].oam.tileNum * TILE_SIZE_4BPP),
+@@ -1926,7 +1929,12 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
+     }
+     else
+     {
+-        statusGfxPtr = GetHealthboxElementGfxPtr(HEALTHBOX_GFX_39);
++        // Daily Red: the HGSS-style healthboxes (from Eemeliri/soulgold) have
++        // a blank status area of their own on the opponent's side.
++        if (IsOnPlayerSide(battler))
++            statusGfxPtr = GetHealthboxElementGfxPtr(HEALTHBOX_GFX_39);
++        else
++            statusGfxPtr = GetHealthboxElementGfxPtr(HEALTHBOX_GFX_40);
+ 
+         for (i = 0; i < 3; i++)
+             CpuCopy32(statusGfxPtr, (void *)(OBJ_VRAM0 + (gSprites[healthboxSpriteId].oam.tileNum + tileNumAdder + i) * TILE_SIZE_4BPP), 32);
+@@ -2468,10 +2476,14 @@ static void FillHealthboxObject(void *dest, u32 valMult, u32 numTiles)
+ #define sBattlerId      data[4]
+ #define sIsMain         data[5]
+ 
++// Daily Red: dark text for the HGSS-style pop-up (graphics/battle_interface,
++// from Eemeliri/soulgold), whose name line is light grey (colour 9) and whose
++// ability/item line is mid grey (colour 8). Was foreground 7 / 9 (white / light
++// grey), unreadable on those.
+ static const union TextColor sBattlerTextColor =
+ {
+     .background = 0,
+-    .foreground = 7,
++    .foreground = 11,
+     .shadow = 1,
+     .accent = 0,
+ };
+@@ -2479,8 +2491,8 @@ static const union TextColor sBattlerTextColor =
+ static const union TextColor sAbilityTextColor =
+ {
+     .background = 0,
+-    .foreground = 9,
+-    .shadow = 1,
++    .foreground = 11,
++    .shadow = 2,
+     .accent = 0,
+ };
+ 
 diff --git a/src/battle_main.c b/src/battle_main.c
 index 46af80f3..72617a03 100644
 --- a/src/battle_main.c
@@ -2056,6 +2523,33 @@ index 46af80f3..72617a03 100644
      [TRAINER_CLASS_HIKER] = { _("HIKER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
      [TRAINER_CLASS_TEAM_AQUA] = { _("TEAM AQUA") },
      [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} BREEDER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
+diff --git a/src/battle_message.c b/src/battle_message.c
+index 680ea2d1..9e879c3c 100644
+--- a/src/battle_message.c
++++ b/src/battle_message.c
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "battle.h"
+ #include "battle_anim.h"
+ #include "battle_ai_record.h"
+@@ -3940,11 +3941,12 @@ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
+     else
+         var = 3;
+ 
+-    gPlttBufferUnfaded[BG_PLTT_ID(5) + 12] = palPtr[(var * 2) + 0];
+-    gPlttBufferUnfaded[BG_PLTT_ID(5) + 11] = palPtr[(var * 2) + 1];
++    // Daily Red: the PP window prints on DAILYRED_BATTLE_MENU_PAL_NUM (was 5).
++    gPlttBufferUnfaded[BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM) + 12] = palPtr[(var * 2) + 0];
++    gPlttBufferUnfaded[BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM) + 11] = palPtr[(var * 2) + 1];
+ 
+-    CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(5) + 12], &gPlttBufferFaded[BG_PLTT_ID(5) + 12], PLTT_SIZEOF(1));
+-    CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(5) + 11], &gPlttBufferFaded[BG_PLTT_ID(5) + 11], PLTT_SIZEOF(1));
++    CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM) + 12], &gPlttBufferFaded[BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM) + 12], PLTT_SIZEOF(1));
++    CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM) + 11], &gPlttBufferFaded[BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM) + 11], PLTT_SIZEOF(1));
+ }
+ 
+ u8 GetCurrentPPToMaxPPState(u8 currentPP, u8 maxPP)
 diff --git a/src/battle_setup.c b/src/battle_setup.c
 index 6024da3c..d786bd71 100644
 --- a/src/battle_setup.c
@@ -2177,12 +2671,14 @@ index 85523e06..79fe93ec 100644
                      if (B_OVERWORLD_SNOW >= GEN_9)
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 00000000..b037201e
+index 00000000..fbe7fb99
 --- /dev/null
 +++ b/src/dailyred.c
-@@ -0,0 +1,233 @@
+@@ -0,0 +1,250 @@
 +#include "global.h"
 +#include "dailyred.h"
++#include "graphics.h"
++#include "rtc.h"
 +#include "event_data.h"
 +#include "item.h"
 +#include "load_save.h"
@@ -2413,6 +2909,21 @@ index 00000000..b037201e
 +u16 DailyRed_IsDailyGame(void)
 +{
 +    return IsDailyGame();
++}
++
++// Mt. Silver's battle background by time of day (the expansion's own clock,
++// GetTimeOfDay: morning and day share the day palette).
++const u16 *DailyRed_GetMtSilverBattlePalette(void)
++{
++    switch (GetTimeOfDay())
++    {
++    case TIME_EVENING:
++        return gBattleEnvironmentPalette_DailyRedMtSilverEvening;
++    case TIME_NIGHT:
++        return gBattleEnvironmentPalette_DailyRedMtSilverNight;
++    default:
++        return gBattleEnvironmentPalette_DailyRedMtSilver;
++    }
 +}
 diff --git a/src/dailyred_mon.c b/src/dailyred_mon.c
 new file mode 100644
@@ -8779,10 +9290,10 @@ index 00000000..b8f949bc
 +};
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..691d5667
+index 00000000..6952feb4
 --- /dev/null
 +++ b/src/dailyred_team.c
-@@ -0,0 +1,419 @@
+@@ -0,0 +1,442 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "data.h"
@@ -8807,9 +9318,10 @@ index 00000000..691d5667
 +//   - On MIRROR_RED_ODDS% of days the team mirrors RED's instead: the starter,
 +//     a shiny Pikachu (level 100, Light Ball and Volt Tackle, like his), a
 +//     legendary for sure, and three more.
-+//   - No species twice and no type on more than 2 of the six (a Mega's types
-+//     count with its base form's), and the six add up to at least
-+//     MIN_TEAM_BASE_STAT_TOTAL in base stats.
++//   - No species twice, no type on more than 2 of the six (a Mega's types
++//     count with its base form's), at most one starter (sStarters: so the
++//     five never add a second one) and at most one Eeveelution, and the six
++//     add up to at least MIN_TEAM_BASE_STAT_TOTAL in base stats.
 +//   - Every Pokemon gets one of its Pokemon Showdown Random Battle sets (the
 +//     table in dailyred_sets.c) with perfect stats, like RED's. The starter
 +//     (and the mirror Pikachu) are level 100; the others are 95 to 98 by their
@@ -8875,6 +9387,20 @@ index 00000000..691d5667
 +    {SPECIES_SCEPTILE,   {SPECIES_SCEPTILE_MEGA,    SPECIES_SCEPTILE_MEGA}},
 +    {SPECIES_BLAZIKEN,   {SPECIES_BLAZIKEN_MEGA,    SPECIES_BLAZIKEN_MEGA}},
 +    {SPECIES_SWAMPERT,   {SPECIES_SWAMPERT_MEGA,    SPECIES_SWAMPERT_MEGA}},
++};
++
++// The starters in the species scope (their final forms): a team has one.
++static const u16 sStarters[] =
++{
++    SPECIES_VENUSAUR, SPECIES_CHARIZARD, SPECIES_BLASTOISE,
++    SPECIES_MEGANIUM, SPECIES_TYPHLOSION, SPECIES_FERALIGATR,
++    SPECIES_SCEPTILE, SPECIES_BLAZIKEN, SPECIES_SWAMPERT,
++};
++
++static const u16 sEeveelutions[] =
++{
++    SPECIES_VAPOREON, SPECIES_JOLTEON, SPECIES_FLAREON, SPECIES_ESPEON,
++    SPECIES_UMBREON, SPECIES_LEAFEON, SPECIES_GLACEON, SPECIES_SYLVEON,
 +};
 +
 +#define TeamRandom   DailyRed_Random
@@ -8989,9 +9515,17 @@ index 00000000..691d5667
 +    u32 i, type;
 +    u16 baseSpecies = GET_BASE_SPECIES_ID(species);
 +
++    bool32 isStarter = IsInList(baseSpecies, sStarters, ARRAY_COUNT(sStarters));
++    bool32 isEeveelution = IsInList(baseSpecies, sEeveelutions, ARRAY_COUNT(sEeveelutions));
++
 +    for (i = 0; i < team->count; i++)
 +    {
-+        if (team->members[i].baseSpecies == baseSpecies)
++        u16 member = team->members[i].baseSpecies;
++        if (member == baseSpecies)
++            return FALSE;
++        if (isStarter && IsInList(member, sStarters, ARRAY_COUNT(sStarters)))
++            return FALSE;
++        if (isEeveelution && IsInList(member, sEeveelutions, ARRAY_COUNT(sEeveelutions)))
 +            return FALSE;
 +    }
 +    for (type = 0; type < NUMBER_OF_MON_TYPES; type++)
@@ -9220,18 +9754,22 @@ index 5e2ab161..33940885 100644
  
      [BATTLE_ENVIRONMENT_ICE] =
 diff --git a/src/data/graphics/battle_environment.h b/src/data/graphics/battle_environment.h
-index 4e05930b..46649d25 100644
+index 4e05930b..8ff748f8 100644
 --- a/src/data/graphics/battle_environment.h
 +++ b/src/data/graphics/battle_environment.h
-@@ -86,3 +86,11 @@ const u32 gBattleEnvironmentAnimTilemap_Building[] = INCGFX_U32("graphics/battle
+@@ -86,3 +86,15 @@ const u32 gBattleEnvironmentAnimTilemap_Building[] = INCGFX_U32("graphics/battle
  
  const u32 gBattleEnvironmentAnimTiles_Rayquaza[] = INCGFX_U32("graphics/battle_environment/sky/anim_tiles.png", ".4bpp.smol");
  const u32 gBattleEnvironmentAnimTilemap_Rayquaza[] = INCGFX_U32("graphics/battle_environment/sky/anim_map.bin", ".smolTM");
 +
-+// Daily Red: Mt. Silver's summit (BATTLE_ENVIRONMENT_SNOW), the HGSS-style
-+// background by Gold-Ruki, made from art/ by scripts/graphics/make-graphics.py.
++// Daily Red: Mt. Silver's summit (BATTLE_ENVIRONMENT_SNOW), its HGSS-style
++// background with a palette for the day, the evening and the night
++// (DailyRed_GetMtSilverBattlePalette), from art/ by
++// scripts/graphics/make-graphics.py.
 +const u32 gBattleEnvironmentTiles_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/tiles.png", ".4bpp.smol");
 +const u16 gBattleEnvironmentPalette_DailyRedMtSilver[] = INCGFX_U16("graphics/battle_environment/dailyred_mt_silver/palette.pal", ".gbapal");
++const u16 gBattleEnvironmentPalette_DailyRedMtSilverEvening[] = INCGFX_U16("graphics/battle_environment/dailyred_mt_silver/palette_evening.pal", ".gbapal");
++const u16 gBattleEnvironmentPalette_DailyRedMtSilverNight[] = INCGFX_U16("graphics/battle_environment/dailyred_mt_silver/palette_night.pal", ".gbapal");
 +const u32 gBattleEnvironmentTilemap_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/map.bin", ".smolTM");
 +const u32 gBattleEnvironmentAnimTiles_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/anim_tiles.png", ".4bpp.smol");
 +const u32 gBattleEnvironmentAnimTilemap_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/anim_map.bin", ".smolTM");
