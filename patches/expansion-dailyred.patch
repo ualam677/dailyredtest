@@ -1188,22 +1188,22 @@ index 8c2a2741..bdf98cbb 100644
  0 0 0
  0 0 0
 diff --git a/graphics/battle_interface/textbox.png b/graphics/battle_interface/textbox.png
-index 96f6b8b15f3bb58830eb7a4cd1d1e716b7a9ea49..fe8583c99c029e63e68af3093a63e577f1241066 100644
+index 96f6b8b15f3bb58830eb7a4cd1d1e716b7a9ea49..4ed25514da70c051df00c4d531e867ba4af58529 100644
 GIT binary patch
-literal 1178
-zcmeAS@N?(olHy`uVBq!ia0vp^4Is?H3?#oinD~={ftew|C&U%Vm5`9okWlzhka0u9
-zV1j_cjvWWGqKbd~_z@Ho<>eTZoSYpMl{{z8+W+^mpFMj9R6hzvLtxm1K=RIhaRvs)
-zP)`@fkcv5PuiPzaG7xY`WLvaxb=m#@xw9KQ>dGAVeq8i?cjobfPdKF89y*3knp^sz
-zCzxaT>CZ)b=Qz!9`(AuC`;)fOU7@!;)r`rHTN|9DKTN(8&tvhtp>U2=@u572qZ}`|
-z&ope=ucv)&*<yyr+`bO!+yarzpZ>kleZgjN@I8wS*R#J@cQ3VOe5S13_QAs8RQh9{
-zsqzW@Z;c&p?QxY=h;1-`o7RxZy&?DT@}G139<38e>N&bE^SOlSkNLBY@7|?%`E65m
-zosy-)?}wM08?q9A>LlE=XV2JiEKKhPcgLn)uUq$dFTDEg?O;1u^T3Vz?_ur#iu4_J
-zGi+s=!+M|Nf>A>C{tWR2xd(E24f0lsFL1PWJl*ha`t<ttUm;yPoS*vbHr{gXck17#
-zs~1{NmzOjDZkym&FZkil^Jor*hKBX*Sdzn!@BbM1a$FT;S>0BFq&;2zT-G@yGywob
-CO~-fu
+literal 1181
+zcmeAS@N?(olHy`uVBq!ia0vp^4Is?H3?#oinD~={ftew|C&U%V{qf_6hJ?b8f{Ys)
+z1``AnA|ev9qKbinK|xVojzP)E*-=r+bLOo5e=l1@!vLs$6pV(zunB>k%U1kiU|@{!
+zba4!+nDh3^>8d6J0f$6|i#Jxx{a$}tO<~e$o)yyKw*TE;x1Z7E;XB;C=GYsZ=G3Bl
+z^YzXjep>YDp6|2gO4py5yOnz{F@D49(<{!zm3zRysNV3w9Oh*wO`o;gZRirZAijbz
+zbDvK7nw^Uoo^ty-q;pFgH&r+<{<<ZtLGX{?fyD{)^slMj<qXJ=+}LuQF}X6oXXz&9
+zFH39Lj+o^KviHO`Y<-*6kj8x>_q6&?%hHQBllc`ziZ4GAIC6Xb_S3fgtNTu;SU;He
+z-h*#K-Oncq3#<zN=p@XW&wM1_SzG)KYs-$cUbFJqJih)_U2yND$bvKX_g>j&e}`*=
+zp2HS~$1V9R9+Df*<vu@cv!8RvTE<hVTbYh{ANQ8L@b~%C*8%oZ4QF|$=I!3N#nqww
+zefR#hcRT-lC^W8Tzw%a}X<q)mRt6@HA5~aVL___1eiu*Y@0rKmbAY5hUHx3vIVCg!
+E0A}gP3IG5A
 
 delta 430
-zcmV;f0a5;%3A_W47=Hu<0000n5PbLm001yhOjJbx00960|Nj60QevEHi@pE<|7u!u
+zcmV;f0a5;)3A_W47=Hu<0000n5PbLm001yhOjJbx00960|Nj60QevEHi@pE<|7u!u
 z)y>sGN_$E{QiF?&YC&48YGTz&Ih;yjYNVvBSuFPe00BoyL_t(&f$h>UO2j}E#_?I$
 z1MGuswihoTSnq<By$7&~Sf+9C7-<ZHXk!-?Ya0(BcmTy`FMr|%Z1l}cCiAjxaNSbA
 zA1ox<;h)LO7$Zo`oGaZ57tGIJ$_?|=CG$(VH=6{`nfdl-pk6!RKJr5qu;ko5_q-1T
@@ -1211,10 +1211,10 @@ z<Qw>*2|{32NuVxC|Iswpa`U!2pk5RMPNraq^wi?m*MUIR1}gs*q!&kg%I)2n0T%*#
 zd%Q>ahF=3|pnp-uyGIAX$>CgIt1S;NBx_5PrfQ~pt;JH{I9{I(2f|{F_IFxalYXG6
 ztvD@opvr-?UE`~w)t|Nmy5~7SDL^J27(K8T*iO%B-kq5$1xhk$HT6_=V6<ol({$3E
 z8H(q||5P9^R&V9i;_5Tw-|nfv@YZQ+2V%gFTORZ$2q*lD0000000000000000Kf*m
-Y0Tl@ZW14Mnw*UYD07*qoM6N<$g5v|gBLDyZ
+Y0Tl@ZW14Mnw*UYD07*qoM6N<$g6IvvCIA2c
 
 diff --git a/graphics/battle_interface/textbox_0.pal b/graphics/battle_interface/textbox_0.pal
-index 67e1af89..9766a412 100644
+index 67e1af89..5530859f 100644
 --- a/graphics/battle_interface/textbox_0.pal
 +++ b/graphics/battle_interface/textbox_0.pal
 @@ -2,18 +2,18 @@ JASC-PAL
@@ -1226,12 +1226,12 @@ index 67e1af89..9766a412 100644
 -82 98 156
 -106 139 189
 -255 255 255
-+24 24 24
++248 248 248
 +40 24 32
 +248 112 104
 +216 40 48
 +144 16 32
-+184 184 192
++88 88 96
  106 90 115
 -213 205 213
 -65 74 123
@@ -1248,7 +1248,7 @@ index 67e1af89..9766a412 100644
 +90 90 99
 +156 156 173
 +255 222 107
-+230 230 230
++40 40 48
 diff --git a/graphics/battle_interface/textbox_map.bin b/graphics/battle_interface/textbox_map.bin
 index 8a7b3f1f00b122f246f4b6a985185c287350a64d..0e2852472b5c8f9f93808a9343fe4079b1817da7 100644
 GIT binary patch
@@ -1667,10 +1667,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..0e7ff87b
+index 00000000..5050cfd7
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,106 @@
+@@ -0,0 +1,107 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -1702,13 +1702,14 @@ index 00000000..0e7ff87b
 +const u16 *DailyRed_GetMtSilverBattlePalette(void);
 +
 +// The battle boxes' look (src/battle_bg.c; the tiles and frame colours come
-+// from scripts/graphics/make-graphics.py): the inside of every box is the
-+// HGSS healthboxes' light grey, and the action menu and move list print on
-+// their own copy of the battle text palette with that background.
++// from scripts/graphics/make-graphics.py): white text on dark grey inside
++// every box, and the action menu and move list print on their own copy of
++// the battle text palette in those colours.
 +#define DAILYRED_BATTLE_MENU_PAL_NUM 14
 +#define DAILYRED_BATTLE_BOX_FILL_TILE 7 // a box's inside, in the textbox tiles (palette 0)
-+#define DAILYRED_BATTLE_BOX_FILL RGB(28, 28, 28)
-+#define DAILYRED_BATTLE_TEXT_SHADOW RGB(23, 23, 24)
++#define DAILYRED_BATTLE_BOX_FILL RGB(5, 5, 6)
++#define DAILYRED_BATTLE_TEXT RGB(31, 31, 31)
++#define DAILYRED_BATTLE_TEXT_SHADOW RGB(11, 11, 12)
 +
 +// src/dailyred_team.c
 +void DailyRed_GenerateTeam(struct Pokemon *party, u32 *rngState, u16 redStarter);
@@ -2167,7 +2168,7 @@ index 00000000..3bcdb60e
 +	voice_noise_alt 60, 0, 0, 0, 2, 6, 0  @ 126: noise
 +	voice_noise_alt 60, 0, 0, 0, 1, 8, 1  @ 127: noise, hi-hat
 diff --git a/src/battle_bg.c b/src/battle_bg.c
-index 49d91ce4..2d021cee 100644
+index 49d91ce4..c25db9e1 100644
 --- a/src/battle_bg.c
 +++ b/src/battle_bg.c
 @@ -1,4 +1,5 @@
@@ -2182,15 +2183,15 @@ index 49d91ce4..2d021cee 100644
  
 +// Daily Red: the HGSS-style battle interface (from Eemeliri/soulgold) draws the
 +// message window and the "What will X do?" prompt on their own palettes, so
-+// their text sits on the boxes' light grey (DAILYRED_BATTLE_BOX_FILL); so do
-+// the action menu and the move list (DAILYRED_BATTLE_MENU_PAL_NUM).
++// their text is white on the boxes' dark grey (DAILYRED_BATTLE_*); so do the
++// action menu and the move list (DAILYRED_BATTLE_MENU_PAL_NUM).
 +#define DAILYRED_BATTLE_MESSAGE_PAL_NUM 12
 +#define DAILYRED_BATTLE_COMMAND_PAL_NUM 13
 +
 +static const u16 sDailyRedBattleMessageTextPalette[] =
 +{
 +    [0]  = RGB(0, 0, 0),
-+    [1]  = RGB(3, 3, 3),     // Default text foreground
++    [1]  = DAILYRED_BATTLE_TEXT, // Default text foreground
 +    [2]  = RGB(14, 0, 0),    // Attack shadow
 +    [3]  = RGB(31, 12, 12),  // Attack
 +    [4]  = RGB(2, 6, 16),    // Defense shadow
@@ -2207,9 +2208,9 @@ index 49d91ce4..2d021cee 100644
 +    [15] = DAILYRED_BATTLE_BOX_FILL, // Textbox background
 +};
 +
-+// The action menu and move list's text background and shadow (colours 14 and
-+// 15 of the battle text palette, white and light grey).
-+static const u16 sDailyRedBattleMenuBackground[] = {DAILYRED_BATTLE_BOX_FILL, DAILYRED_BATTLE_TEXT_SHADOW};
++// The action menu and move list's text, background and shadow (colours 13-15
++// of the battle text palette, which were dark grey on white).
++static const u16 sDailyRedBattleMenuText[] = {DAILYRED_BATTLE_TEXT, DAILYRED_BATTLE_BOX_FILL, DAILYRED_BATTLE_TEXT_SHADOW};
 +
  static const struct OamData sVsLetter_V_OamData =
  {
@@ -2357,7 +2358,7 @@ index 49d91ce4..2d021cee 100644
 +    LoadPalette(sDailyRedBattleMessageTextPalette, BG_PLTT_ID(DAILYRED_BATTLE_MESSAGE_PAL_NUM), PLTT_SIZE_4BPP);
 +    LoadPalette(gBattleTextboxPalette, BG_PLTT_ID(DAILYRED_BATTLE_COMMAND_PAL_NUM), PLTT_SIZE_4BPP);
 +    LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM), PLTT_SIZE_4BPP);
-+    LoadPalette(sDailyRedBattleMenuBackground, BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM) + 14, sizeof(sDailyRedBattleMenuBackground));
++    LoadPalette(sDailyRedBattleMenuText, BG_PLTT_ID(DAILYRED_BATTLE_MENU_PAL_NUM) + 13, sizeof(sDailyRedBattleMenuText));
  
      if ((gBattleTypeFlags & (BATTLE_TYPE_ARENA | BATTLE_TYPE_POKEDUDE))
      || (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)))
@@ -2524,16 +2525,41 @@ index 46af80f3..72617a03 100644
      [TRAINER_CLASS_TEAM_AQUA] = { _("TEAM AQUA") },
      [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} BREEDER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
 diff --git a/src/battle_message.c b/src/battle_message.c
-index 680ea2d1..9e879c3c 100644
+index 680ea2d1..86ca5aaa 100644
 --- a/src/battle_message.c
 +++ b/src/battle_message.c
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,6 @@
  #include "global.h"
 +#include "dailyred.h" // Daily Red
++#include "constants/rgb.h" // Daily Red
  #include "battle.h"
  #include "battle_anim.h"
  #include "battle_ai_record.h"
-@@ -3940,11 +3941,12 @@ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
+@@ -3928,10 +3930,22 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+     }
+ }
+ 
++// Daily Red: the PP number's colours (text, shadow) on the dark battle boxes,
++// for GetCurrentPPToMaxPPState's four states like gPPTextPalette: half or
++// less (yellow), a quarter or less (orange), none left (red), and the rest
++// (which was dark grey).
++static const u16 sDailyRedPPTextPalette[] =
++{
++    RGB(31, 26, 6), RGB(14, 12, 3),
++    RGB(31, 18, 5), RGB(14, 8, 3),
++    RGB(31, 9, 7),  RGB(14, 4, 4),
++    DAILYRED_BATTLE_TEXT, DAILYRED_BATTLE_TEXT_SHADOW,
++};
++
+ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
+ {
+     struct ChooseMoveStruct *chooseMoveStruct = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
+-    const u16 *palPtr = gPPTextPalette;
++    const u16 *palPtr = sDailyRedPPTextPalette; // Daily Red (was gPPTextPalette)
+     u8 var;
+ 
+     if (!gBattleStruct->zmove.viewing)
+@@ -3940,11 +3954,12 @@ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
      else
          var = 3;
  

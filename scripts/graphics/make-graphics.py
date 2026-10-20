@@ -95,23 +95,24 @@ BOX_FIRST_TILE = 3
 BOX_RINGS = [0, 2, 3, 4, 4, 5, 8]
 BOX_FILL = 15
 BOX_RADIUS = 7
-# Textbox palette 0, after RED's cap and jacket. 1, 6 and 15 are the "What
-# will X do?" text (it prints with a copy of this palette); 2-5 and 8 are the
-# frame (BOX_RINGS). The fill is the HGSS healthboxes' light grey; it and the
-# text shadow match DAILYRED_BATTLE_BOX_FILL / _TEXT_SHADOW in dailyred.h.
+# Textbox palette 0, after RED's cap: a red frame with a thin white stripe
+# inside, around dark grey with white text. 1, 6 and 15 are the "What will X
+# do?" text (it prints with a copy of this palette); 2-5 and 8 are the frame
+# (BOX_RINGS). The text, its shadow and the fill match DAILYRED_BATTLE_TEXT,
+# _TEXT_SHADOW and _BOX_FILL in dailyred.h.
 RED_UI = {
-    1: (24, 24, 24),     # text
+    1: (248, 248, 248),  # text
     2: (40, 24, 32),     # outline
     3: (248, 112, 104),  # frame light
     4: (216, 40, 48),    # frame
     5: (144, 16, 32),    # frame dark
-    6: (184, 184, 192),  # text shadow
-    8: (248, 248, 248),  # inner highlight
-    15: (230, 230, 230), # fill
+    6: (88, 88, 96),     # text shadow
+    8: (248, 248, 248),  # inner stripe
+    15: (40, 40, 48),    # fill
 }
-# The battle cursor (tiles 1 and 2): its shadow becomes the text shadow.
+# The battle cursor (tiles 1 and 2) in the text's colours.
 CURSOR_TILES = (1, 2)
-CURSOR_RECOLOUR = {8: 6}
+CURSOR_RECOLOUR = {10: 1, 8: 6}
 # Boxes on the textbox tilemap (32 tiles wide): (top row, height, [(left
 # column, width), ...]). Rows 14-19: messages; 34-39: the prompt and the
 # action menu (whose cursor the game draws in columns 16 and 23); 54-59: the

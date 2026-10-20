@@ -331,13 +331,13 @@ game's files; run it again after changing the art:
   bars use soulgold's bar palette (`src/battle_bg.c`, `src/graphics.c`).
   The ability/item pop-up prints in soulgold's dark text colour.
 - The boxes at the bottom of the screen (messages, "What will X do?", the
-  action menu, the moves and PP/type) share one rounded frame after RED's cap
-  and jacket: red with a charcoal outline and a white inner line, filled with
-  the healthboxes' light grey.
+  action menu, the moves and PP/type) share one rounded frame after RED's
+  cap: red with a charcoal outline and a thin white stripe inside, around
+  white text on dark grey (PP numbers too, yellow to red as they run low).
   `battle_boxes()` in the script draws the frame's 9 tiles into the textbox
   sheet and lays the boxes out on its tilemap, one tile of frame around the
   game's text windows. The action menu and move list print on their own copy
-  of the text palette with the grey behind them, and the cursor is erased
+  of the text palette in those colours, and the cursor is erased
   with the box's inside (`DAILYRED_BATTLE_*` in `include/dailyred.h`).
 - `art/leaf-hgss.png`: an HGSS-style LEAF for the VS transition (her battle
   back sprite is still FireRed's). She's 70 pixels tall and 21 colours, so 6
