@@ -312,8 +312,23 @@ export async function forceWin(page) {
   await patchMemory(page, [
     ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activeSlot).flatMap((i) => faintWrites('Enemy', i, mem)),
     ...unkillableWrites(),
+    ...helplessWrites(1),
     { addr: battleMonField(1, 'hp'), bytes: u16(1) },
   ]);
+}
+
+// A battler that can't heal, protect itself or hold on (RED's smart AI would
+// otherwise Recover or Roost out of a forced knockout every turn): Splash
+// only, no item or ability, plain Normal type.
+export function helplessWrites(battler) {
+  const splash = id('MOVE', 'SPLASH'), normal = id('TYPE', 'NORMAL');
+  return [
+    { addr: battleMonField(battler, 'moves'), bytes: [0, 1, 2, 3].flatMap(() => u16(splash)) },
+    { addr: battleMonField(battler, 'pp'), bytes: [20, 20, 20, 20] },
+    { addr: battleMonField(battler, 'item'), bytes: u16(0) },
+    { addr: battleMonField(battler, 'ability'), bytes: u16(0) },
+    { addr: battleMonField(battler, 'types'), bytes: [normal, normal] },
+  ];
 }
 
 export async function forceLoss(page) {
@@ -372,6 +387,14 @@ export async function waitForActionMenu(page, timeoutMs = 40000) {
     await sleep(600);
   }
   throw new Error('the battle turn menu did not come up');
+}
+
+// The gimmicks a battler has used this battle (gBattleStruct->gimmick.activated).
+export function gimmicksUsed(mem, battler) {
+  const battleStruct = mem.read(symbol('gBattleStruct'), 4).readUInt32LE(0);
+  const f = layout('BattleStruct').gimmick_activated;
+  const row = mem.read(battleStruct + f.off + battler * f.elemSize, f.elemSize);
+  return Object.fromEntries(['MEGA', 'Z_MOVE', 'DYNAMAX', 'TERA'].map((g) => [g, row[value(`GIMMICK_${g}`)] === 1]));
 }
 
 // The game's status block for the website (sStatus in src/dailyred.c), found

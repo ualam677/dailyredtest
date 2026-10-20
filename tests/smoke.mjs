@@ -11,10 +11,11 @@ import {
   getStatus, waitFor, walkTo, face, patchMemory, readVar, symbol, value, u16,
   startRedBattle, waitForActionMenu, forceWin, readGameStatus, memField, objectFacing,
   battleMonField, readBattleMon, activePartySlot, faintWrites, unkillableWrites,
-  bitsWrite, saveSnapshot, loadSnapshot, u32, battleInput,
+  bitsWrite, saveSnapshot, loadSnapshot, u32, battleInput, helplessWrites,
 } from './lib.mjs';
-import { GAME_DIR, id, readBits, layout, field, rom, romOffset, textAt, species } from './game.mjs';
+import { GAME_DIR, id, readBits, layout, field, rom, romOffset, textAt, species, item, wideValue } from './game.mjs';
 import { readParty, formatMon, validateTeam, friendshipWrites, laterEvolutions, LATER_EVOLUTION_LIST } from './party.mjs';
+import { readRedParty, validateRed, predictRolls, formatRedMon, validatePickGroups, setLists } from './red.mjs';
 
 const OUT = new URL('./output/', import.meta.url).pathname;
 mkdirSync(OUT, { recursive: true });
@@ -24,7 +25,6 @@ const VAR_WINS = value('VAR_DAILYRED_WINS');
 const STYLE_SET = value('OPTIONS_BATTLE_STYLE_SET');
 const START = [value('DAILYRED_START_X'), value('DAILYRED_START_Y')];
 const RED_FRONT = [9, 12]; // the tile below RED, at the top of the stairs
-const SPECIES_PIKACHU = id('SPECIES', 'PIKACHU');
 
 // Direction RED's overworld object faces.
 const redFacing = (mem) => objectFacing(mem, value('LOCALID_DAILYRED_RED'));
@@ -47,6 +47,14 @@ function checkTeam(label, team) {
   const problems = validateTeam(team);
   check(problems.length === 0, `${label}: valid team (6 different in-scope species, level 100, learnable moves, legal stats, held items)${problems.length ? ': ' + problems.join('; ') : ''}`);
 }
+
+// RED's team for the run, from RAM (rolls: the seed's predicted rolls, for
+// the first team after boot).
+function checkRed(label, party, rolls = null) {
+  const { kind, problems } = validateRed(party, rolls);
+  check(problems.length === 0, `${label}: RED's team follows his rules (${rolls?.original ? 'original team' : `${kind ?? '?'} day`})${problems.length ? ': ' + problems.join('; ') : ''}`);
+}
+const redKey = (party) => party.map((m) => m && `${m.species}:${m.heldItem}:${m.moves.join(',')}`).join('|');
 
 async function talkToRed(page, shot) {
   await walkTo(page, [RED_FRONT]);
@@ -94,6 +102,22 @@ check(rom()[songHeader] === 10 && (songAsm.match(/\bGOTO\b/g) ?? []).length === 
 // Mechanics: no friendship/affection battle effects.
 check(value('B_AFFECTION_MECHANICS') === 0 && value('B_FRIENDSHIP_BOOST') === 0, 'affection and friendship battle boosts are off (B_AFFECTION_MECHANICS, B_FRIENDSHIP_BOOST)');
 
+// RED: the expansion's strongest AI, and the set table his team comes from.
+{
+  const at = romOffset(symbol('gTrainers')) + (value('DIFFICULTY_NORMAL') * value('TRAINERS_COUNT') + value('TRAINER_DAILYRED_RED')) * layout('Trainer').size;
+  const flags = rom().readBigUInt64LE(at + layout('Trainer').aiFlags.off);
+  const want = wideValue('AI_FLAG_SMART_TRAINER') | wideValue('AI_FLAG_PREDICTION');
+  check((flags & want) === want, `RED's AI is Smart Trainer (smart switching, omniscient...) with Prediction (flags 0x${flags.toString(16)})`);
+  const picks = validatePickGroups();
+  check(picks.problems.length === 0, `RED's any-generation pick has ${picks.count} species (${picks.formes} formes), all fully evolved and none a starter, legendary, Ultra Beast or Paradox${picks.problems.length ? ': ' + picks.problems.join('; ') : ''}`);
+  const lists = setLists();
+  const pikachu = lists.find((l) => l.species === id('SPECIES', 'PIKACHU') && l.kind === 'NORMAL');
+  check(pikachu.sets.every((st) => st.item === id('ITEM', 'LIGHT_BALL') && st.moves.includes(id('MOVE', 'VOLT_TACKLE'))), `every one of Pikachu's ${pikachu.sets.length} sets has a Light Ball and Volt Tackle`);
+  const normal = lists.filter((l) => l.kind === 'NORMAL');
+  const bad = normal.filter((l) => l.sets.some((st) => ['MEGA_STONE', 'Z_CRYSTAL'].includes(st.item ? item(st.item).holdEffect : '')));
+  check(bad.length === 0, `no NORMAL set holds a Mega Stone or Z-Crystal (${normal.length} species)${bad.length ? ': ' + bad.map((l) => species(l.species).name).join(', ') : ''}`);
+}
+
 // Species scope: the later-generation evolutions in dailyred_team.c are
 // exactly the ones the ROM's evolution tables lead to from Gens 1-3.
 const scopeTable = new Set(LATER_EVOLUTION_LIST), scopeRom = laterEvolutions();
@@ -106,21 +130,25 @@ const browser = await launchBrowser();
 let page;
 try {
   // 1. Same seed => same team, different seed => different team.
-  const teams = {};
+  const teams = {}, reds = {};
   for (const seed of [1001, 1001, 2002]) {
     page = await browser.newPage();
     await bootGame(page, server.url, { seed });
     const s = await waitFor(page, (st) => st.inOverworld, { what: 'overworld' });
     const team = readParty(s.mem);
+    const red = readRedParty(s.mem);
     (teams[seed] ??= []).push(teamKey(team.party));
+    (reds[seed] ??= []).push(redKey(red));
     if (teams[seed].length === 1) {
       checkTeam(`seed ${seed}`, team);
       console.log(team.party.map((m) => '      ' + formatMon(m)).join('\n'));
+      checkRed(`seed ${seed}`, red, predictRolls(seed));
+      console.log(red.map((m) => '      ' + formatRedMon(m)).join('\n'));
     }
     await page.close();
   }
-  check(teams[1001][0] === teams[1001][1], 'same seed gives the same team');
-  check(teams[1001][0] !== teams[2002][0], 'different seeds give different teams');
+  check(teams[1001][0] === teams[1001][1] && reds[1001][0] === reds[1001][1], 'same seed gives the same team, and the same RED');
+  check(teams[1001][0] !== teams[2002][0] && reds[1001][0] !== reds[2002][0], 'different seeds give different teams, and a different RED');
 
   // 2. Boot, look around, open the menus.
   page = await browser.newPage();
@@ -175,10 +203,10 @@ try {
   check(memField(s.mem, symbol('gTrainerBattleParameter'), 'TrainerBattleParameter', 'params_opponentA') === value('TRAINER_DAILYRED_RED'), 'opponent is TRAINER_DAILYRED_RED');
   check(memField(s.mem, symbol('gMPlayInfo_BGM'), 'MusicPlayerInfo', 'songHeader') === symbol('mus_dailyred_vs_red'), "RED's battle plays the vs Red theme");
   const red = readParty(s.mem, 'Enemy');
-  console.log(red.party.map((m) => '      ' + formatMon(m)).join('\n'));
-  check(red.party.map((m) => m?.constName).join(',') === 'PIKACHU,ESPEON,SNORLAX,VENUSAUR,CHARIZARD,BLASTOISE', "RED's team is Pikachu, Espeon, Snorlax, Venusaur, Charizard, Blastoise");
-  check(red.party.every((m) => m.level === 100 && m.ivs.every((iv) => iv === 31) && m.heldItem !== 0), "RED's Pokemon are level 100 with perfect IVs and held items");
-  check(red.party.every((m) => m.evs.reduce((a, b) => a + b, 0) >= 508), "RED's Pokemon have their EV spreads");
+  console.log(red.party.map((m) => '      ' + formatRedMon(m)).join('\n'));
+  check(redKey(red.party) === redKey(readRedParty(s.mem)) && red.count === 6, "RED battles with the team built for this run (gDailyRedRedParty)");
+  checkRed('in battle (seed 424242)', red.party, predictRolls(424242));
+  const redLead = red.party[0].species;
   await waitForActionMenu(page);
   check((await getStatus(page)).mem.read(symbol('gBattleWeather'), 2).readUInt16LE(0) === 0, "the summit's snow doesn't start any battle weather");
   await screenshot(page, `${OUT}/09-battle.png`);
@@ -188,14 +216,15 @@ try {
   // menu (leaving the battle screen); in SET style RED just sends the next one.
   await patchMemory(page, [
     ...unkillableWrites(),                                 // ours: can't be KO'd, Seismic Toss for 100
-    { addr: battleMonField(1, 'hp'), bytes: u16(1) },      // RED's active mon: 1 HP
+    ...helplessWrites(1),                                  // RED's active mon: Splash only, nothing to save it
+    { addr: battleMonField(1, 'hp'), bytes: u16(1) },      // and 1 HP
   ]);
   let stayedInBattle = true, nextMonOut = false;
   for (let i = 0; i < 60 && !nextMonOut; i++) {
     await press(page, 'a'); await sleep(250);
     const st = await getStatus(page);
     if (!st.inBattle) { stayedInBattle = false; break; }
-    nextMonOut = readBattleMon(st.mem, 1, 'species') !== SPECIES_PIKACHU;
+    nextMonOut = readBattleMon(st.mem, 1, 'species') !== redLead;
   }
   check(nextMonOut && stayedInBattle, 'after RED\'s Pokemon faints he sends the next one with no switch prompt');
   await screenshot(page, `${OUT}/10-next-mon.png`);
@@ -205,6 +234,8 @@ try {
   const activeSlot = activePartySlot(s.mem, 1); // battler 1 = RED
   await patchMemory(page, [
     ...[0, 1, 2, 3, 4, 5].filter((i) => i !== activeSlot).flatMap((i) => faintWrites('Enemy', i, s.mem)),
+    ...unkillableWrites(),
+    ...helplessWrites(1),
     { addr: battleMonField(1, 'hp'), bytes: u16(1) },
   ]);
   s = await finishBattle(page, 0);
@@ -212,6 +243,9 @@ try {
   const team2 = readParty(s.mem);
   checkTeam('team after a win', team2);
   check(teamKey(team2.party) !== teamKey(team1.party), 'a new team is generated after the win');
+  const red2 = readRedParty(s.mem);
+  checkRed('after a win', red2);
+  check(redKey(red2) !== redKey(red.party), 'RED gets a new team after the win');
   check(redFacing(s.mem) === value('DIR_NORTH'), 'RED faces the drop again for the next run');
   await screenshot(page, `${OUT}/11-after-win.png`);
 
@@ -226,6 +260,10 @@ try {
   s = await getStatus(page);
   const maxFriends = readParty(s.mem);
   check(maxFriends.party.every((m) => m.friendship === value('MAX_FRIENDSHIP')) && validateTeam(maxFriends).length === 0, 'the team is at max friendship (and its data still checks out)');
+  // RED brings only his lead to this battle, so his smart AI has nothing to
+  // switch to instead of using the Tackle the test gives it below.
+  const redPartySize = layout('Pokemon').size;
+  await patchMemory(page, [{ addr: symbol('gDailyRedRedParty') + redPartySize, bytes: new Array(5 * redPartySize).fill(0) }]);
   s = await talkToRed(page);
   check(s.inBattle, 'RED can be battled again');
   await waitForActionMenu(page);
@@ -252,11 +290,12 @@ try {
       { addr: symbol('gRngValue'), bytes: [0, 1, 2, 3].flatMap(() => u32((Math.random() * 2 ** 32) >>> 0)) },
     ]);
     // FIGHT, then Splash (A in the turn menu, then in the move list), until
-    // RED has used Tackle (its PP drops); then look once the hit has landed.
+    // RED has used Tackle (its PP drops, in any of the four slots); then look
+    // once the hit has landed.
     let attacked = false;
     for (let i = 0; i < 40 && !attacked; i++) {
       const st = await getStatus(page);
-      attacked = readBattleMon(st.mem, 1, 'pp')[0] < 35;
+      attacked = readBattleMon(st.mem, 1, 'pp').some((pp) => pp < 35); // whichever slot the AI picked
       if (!attacked && battleInput(st.mem) !== 'busy') await press(page, 'a');
       await sleep(300);
     }

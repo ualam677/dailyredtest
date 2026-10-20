@@ -40,10 +40,12 @@ export function decodeMon(bytes) {
   const nature = (personality % 25) ^ field(buf, 0, 'BoxPokemon', 'hiddenNatureModifier');
   const shinyValue = ((otId >>> 16) ^ (otId & 0xFFFF) ^ (personality >>> 16) ^ (personality & 0xFFFF)) >>> 0;
   return {
+    personality,
     species: speciesId,
     speciesName: species(speciesId).name,
     constName: species(speciesId).constName,
     heldItem: bits(s0, 'PokemonSubstruct0', 'heldItem'),
+    teraType: bits(s0, 'PokemonSubstruct0', 'teraType'),
     friendship: field(s0, 0, 'PokemonSubstruct0', 'friendship'),
     moves,
     moveNames: moves.filter(Boolean).map((m) => move(m).name),
@@ -52,6 +54,7 @@ export function decodeMon(bytes) {
     evs: ['hpEV', 'attackEV', 'defenseEV', 'speedEV', 'spAttackEV', 'spDefenseEV'].map((f) => field(s2, 0, 'PokemonSubstruct2', f)),
     ivs: ['hpIV', 'attackIV', 'defenseIV', 'speedIV', 'spAttackIV', 'spDefenseIV'].map((f) => bits(s3, 'PokemonSubstruct3', f)),
     abilityNum: bits(s3, 'PokemonSubstruct3', 'abilityNum'),
+    ability: species(speciesId).abilities[bits(s3, 'PokemonSubstruct3', 'abilityNum')],
     metLocation: field(s3, 0, 'PokemonSubstruct3', 'metLocation'),
     fateful: bits(s3, 'PokemonSubstruct3', 'modernFatefulEncounter') === 1,
     nature: NATURES[nature] ?? `#${nature}`,

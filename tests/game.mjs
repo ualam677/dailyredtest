@@ -55,7 +55,14 @@ const NAMED = [
   'DAILYRED_START_X', 'DAILYRED_START_Y', 'TRAINER_DAILYRED_RED', 'METLOC_FATEFUL_ENCOUNTER', 'SHINY_ODDS',
   'MAP_OFFSET', 'OBJECT_EVENTS_COUNT', 'MAX_BATTLERS_COUNT', 'MUS_DAILYRED_VS_RED', 'MUS_RG_VS_CHAMPION', 'TRAINER_CLASS_DAILYRED',
   'B_AFFECTION_MECHANICS', 'B_FRIENDSHIP_BOOST', 'MAX_FRIENDSHIP', 'AFFECTION_FIVE_HEARTS', 'POCKET_KEY_ITEMS',
+  'TYPE_NONE', 'TYPE_MYSTERY', 'MON_MALE', 'MON_FEMALE', 'MON_GENDERLESS',
+  'DAILYRED_SETS_NORMAL', 'DAILYRED_SETS_MEGA', 'DAILYRED_SETS_ZMOVE', 'DAILYRED_SETS_TERA',
+  'TRAINERS_COUNT', 'DIFFICULTY_NORMAL',
+  'GIMMICKS_COUNT', 'GIMMICK_MEGA', 'GIMMICK_Z_MOVE', 'GIMMICK_DYNAMAX', 'GIMMICK_TERA',
 ];
+
+// 64-bit values (AI flags), read as BigInt with wideValue().
+const WIDE = ['AI_FLAG_SMART_TRAINER', 'AI_FLAG_PREDICTION', 'AI_FLAG_SMART_TERA'];
 
 // Struct members to measure: plain members get an offset and a size,
 // bitfields (bits) a bit position and width.
@@ -105,10 +112,19 @@ const STRUCTS = {
   TrainerBattleParameter: { type: 'TrainerBattleParameter', fields: ['params.opponentA'] },
   MusicPlayerInfo: { type: 'struct MusicPlayerInfo', fields: ['songHeader', 'status'] },
   Song: { type: 'struct Song', fields: ['header', 'ms', 'me'] },
+  DailyRedSet: {
+    type: 'struct DailyRedSet',
+    fields: ['ivs', 'species', 'item', 'ability', 'moves[]', 'evs[]', 'nature', 'teraType', 'friendship', 'weight'],
+  },
+  DailyRedSetList: { type: 'struct DailyRedSetList', fields: ['species', 'firstSet', 'numSets', 'kind'] },
+  DailyRedPickGroup: { type: 'struct DailyRedPickGroup', fields: ['first', 'count'] },
+  BattleStruct: { type: 'struct BattleStruct', fields: ['gimmick.activated[]'] },
+  AiThinkingStruct: { type: 'struct AiThinkingStruct', fields: ['aiFlags[]'] },
+  Trainer: { type: 'struct Trainer', fields: ['aiFlags', 'party', 'trainerClass'], bits: ['partySize'] },
 };
 
 const HEADERS = [
-  'global.h', 'gba/m4a_internal.h', 'main.h', 'battle.h', 'battle_setup.h', 'event_object_movement.h', 'fieldmap.h', 'item.h', 'move.h', 'pokemon.h',
+  'global.h', 'gba/m4a_internal.h', 'main.h', 'battle.h', 'battle_setup.h', 'dailyred.h', 'data.h', 'battle_gimmick.h', 'constants/battle_ai.h', 'event_object_movement.h', 'fieldmap.h', 'item.h', 'move.h', 'pokemon.h',
   'constants/abilities.h', 'constants/battle.h', 'constants/battle_move_effects.h', 'constants/dailyred.h', 'constants/event_objects.h',
   'constants/form_change_types.h', 'constants/global.h', 'constants/hold_effects.h', 'constants/items.h', 'constants/map_event_ids.h',
   'constants/moves.h', 'constants/opponents.h', 'constants/pokemon.h', 'constants/region_map_sections.h', 'constants/species.h',
@@ -147,6 +163,7 @@ function generateSource(enumNames) {
   const lines = HEADERS.map((h) => `#include "${h}"`);
   lines.push('#define DRT_VALUE(name, expr) const s32 DRT_v_##name __attribute__((used)) = (expr);');
   for (const name of NAMED) lines.push(`DRT_VALUE(${name}, ${name})`);
+  for (const name of WIDE) lines.push(`const u64 DRT_w_${name} __attribute__((used)) = (${name});`);
   for (const [key, spec] of Object.entries(STRUCTS)) {
     lines.push(`DRT_VALUE(${key}__size, sizeof(${spec.type}))`);
     for (const spelled of spec.fields ?? []) {
@@ -212,6 +229,8 @@ function build() {
 
   const values = {};
   for (const name of NAMED) values[name] = section(`DRT_v_${name}`).readInt32LE(0);
+  const wide = {};
+  for (const name of WIDE) wide[name] = section(`DRT_w_${name}`).readBigUInt64LE(0).toString();
   const layout = {};
   for (const [key, spec] of Object.entries(STRUCTS)) {
     const s = { size: section(`DRT_v_${key}__size`).readInt32LE(0) };
@@ -229,7 +248,7 @@ function build() {
     const data = section(`DRT_e_${key}`);
     enums[key] = Object.fromEntries(names.map((n, i) => [n, data.readInt32LE(i * 4)]));
   }
-  return { values, layout, enums };
+  return { values, wide, layout, enums };
 }
 
 let infoCache;
@@ -252,6 +271,11 @@ export const value = (name) => {
   const v = info().values[name];
   if (v === undefined) throw new Error(`no value ${name} (add it to NAMED in game.mjs)`);
   return v;
+};
+export const wideValue = (name) => {
+  const v = info().wide[name];
+  if (v === undefined) throw new Error(`no wide value ${name} (add it to WIDE in game.mjs)`);
+  return BigInt(v);
 };
 export const layout = (struct) => info().layout[struct];
 
@@ -419,6 +443,8 @@ export function species(sp) {
     friendship: r('friendship'),
     natDexNum: r('natDexNum'),
     legendary: flag('isRestrictedLegendary') || flag('isSubLegendary') || flag('isMythical'),
+    ultraBeast: flag('isUltraBeast'),
+    paradox: flag('isParadox'),
     mega: flag('isMegaEvolution'),
     battleOnly: flag('isMegaEvolution') || flag('isPrimalReversion') || flag('isUltraBurst') || flag('isGigantamax') || flag('isTeraForm'),
     regional: flag('isAlolanForm') || flag('isGalarianForm') || flag('isHisuianForm') || flag('isPaldeanForm'),

@@ -18,6 +18,7 @@ reimplemented in JavaScript.
 - [How it works](#how-it-works)
 - [Team generation](#team-generation)
 - [RED's team](#reds-team)
+  - [Sets](#sets)
 - [Development workflow](#development-workflow)
 - [Testing and debugging](#testing-and-debugging)
 - [Running it locally](#running-it-locally)
@@ -114,7 +115,8 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | RED's battle theme | `MUS_DAILYRED_VS_RED`, picked by his trainer class in `GetBattleBGM` (`src/pokemon.c`); see [RED's battle theme](#reds-battle-theme) |
 | Mountain battle background on the summit | `BattleSetup_GetEnvironmentId` in `src/battle_setup.c` |
 | No free switch when RED's Pokémon faints: Battle Style starts on SET and is locked in Options | `StartNewGame` in `src/dailyred.c`, `src/option_menu.c` |
-| RED as a trainer, with his team | `TRAINER_DAILYRED_RED` in `include/constants/opponents_frlg.h` and `src/data/trainers_frlg.party` |
+| RED as a trainer, with his AI | `TRAINER_DAILYRED_RED` in `include/constants/opponents_frlg.h` and `src/data/trainers_frlg.party` |
+| RED's team, built each run | `src/dailyred_red.c` from the sets in `src/dailyred_sets.c` (see [RED's team](#reds-team)); used by `CreateNPCTrainerParty` in `src/battle_setup.c` |
 | Win / battle counters | `VAR_DAILYRED_WINS` and `VAR_DAILYRED_BATTLES` in `include/constants/vars_frlg.h` |
 | Menus: POKéMON / OPTION / EXIT; party: SUMMARY / SWITCH / CANCEL | `src/start_menu.c`, `src/party_menu.c` |
 | No debug menus | `include/config/debug.h` |
@@ -142,6 +144,9 @@ changes:
   a Z-Crystal can use them. Each side can Mega Evolve once and use one Z-Move
   per battle; the engine enforces that for every trainer, RED included (he
   needs no ring).
+- **Terastallization and Dynamax:** the player has neither a Tera Orb nor a
+  Dynamax Band. RED never Dynamaxes, and only Terastallizes on original-team
+  days (see [RED's team](#reds-team)).
 
 Every vanilla file that was changed has a `Daily Red:` comment at the change:
 
@@ -174,7 +179,8 @@ expansion's step counter code writes to some of FireRed's "unused" ones).
   meets the minimum, so every qualifying team is equally likely. Per-species
   rules live in `IsEligibleSpecies`, e.g. add "fully evolved only" there.
 
-  Why a minimum: RED's team totals 2974 (see below). A fully random team
+  Why a minimum: RED's original team totals 2974 (Pikachu, Espeon, Snorlax
+  and the Kanto starters; his usual teams are stronger). A fully random team
   averages about 2490, and most include a very weak Pokémon, which made most
   runs hopeless. A team can still include one weak Pokémon if the rest make up
   for it. About 1 random draw in 8 meets 2700, and about 1 qualifying team in
@@ -237,31 +243,93 @@ teams depend only on the seed.
 
 ## RED's team
 
-Edit **`[TRAINER_DAILYRED_RED]` in `expansion/src/data/trainers_frlg.party`**:
-the expansion's trainer format (like a Showdown team export: species @ item,
-level, IVs, EVs, moves). It's Red's Mt. Silver team from HeartGold/SoulSilver
-(Pikachu, Espeon, Snorlax, Venusaur, Charizard, Blastoise) at level 100 with
-perfect IVs, held items and full EV spreads. HGSS used several Gen 4 moves, so
-the movesets are adapted to Gen 3 ones.
+RED gets a new team at the start of every run, built from the seed (so
+everyone faces the same RED on the same day) by **`expansion/src/dailyred_red.c`**
+into `gDailyRedRedParty`; `CreateNPCTrainerParty` (`src/battle_setup.c`) uses
+it instead of his entry in `src/data/trainers_frlg.party`. Every Pokémon gets
+one of its [Pokémon Showdown](https://pokemonshowdown.com) Random Battle sets
+(moves, item, ability, EVs, nature; see [Sets](#sets)) and perfect stats: all
+IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 
-| Pokémon | HP | Atk | Def | Spe | SpA | SpD | Total |
-|---|---|---|---|---|---|---|---|
-| Pikachu (Light Ball doubles its Attack and Sp. Atk) | 35 | 55 | 40 | 90 | 50 | 50 | 320 |
-| Espeon | 65 | 65 | 60 | 110 | 130 | 95 | 525 |
-| Snorlax | 160 | 110 | 65 | 30 | 65 | 110 | 540 |
-| Venusaur | 80 | 82 | 83 | 80 | 100 | 100 | 525 |
-| Charizard | 78 | 84 | 78 | 100 | 109 | 85 | 534 |
-| Blastoise | 79 | 83 | 100 | 78 | 85 | 105 | 530 |
-| **Team** | | | | | | | **2974** |
+**Most days:**
 
-These are the expansion's base stats (the latest games' values). With your
-team's IVs (25–31) and focused EVs, both sides get about the same out of their
-base stats. RED's natures are neutral (Hardy), the expansion's default when a
-trainer Pokémon doesn't name one.
+| Slot | Pokémon | Level |
+|---|---|---|
+| Kanto starter | Venusaur, Charizard or Blastoise, holding its Mega Stone (Charizard: X or Y) | 99 |
+| Pikachu | always; Light Ball and Volt Tackle in every set | 100 |
+| Legendary | picked by the starter, see below | 99 (Mewtwo 100) |
+| Two from his pool | Poliwrath, Gyarados, Aerodactyl, Lapras, Snorlax, Vaporeon, Jolteon, Flareon, Espeon, Umbreon, Leafeon, Glaceon, Sylveon, Hitmonlee, Kabutops, Victreebel, Machamp, Arcanine, Gengar | 96 |
+| One from any generation | any fully evolved Pokémon except starters (of any generation), Pikachu's family, legendaries, mythicals, Ultra Beasts and Paradox Pokémon (427 species) | 96 |
 
-RED's name, trainer class, sprite and AI flags (the same as FireRed's
-Champion) are in the same entry. His class, `TRAINER_CLASS_DAILYRED`, is his
-alone: it shows as "PKMN TRAINER" and gives him his own battle theme.
+| Legendary roll | Odds | Venusaur | Charizard | Blastoise |
+|---|---|---|---|---|
+| His bird | 43% | Moltres | Zapdos | Articuno |
+| Johto dog | 20% | Entei | Raikou | Suicune |
+| Galarian bird | 15% | Galarian Moltres | Galarian Zapdos | Galarian Articuno |
+| Mewtwo (level 100) | 10% | | | |
+| Deoxys (any forme) | 5% | | | |
+| Mew (1% of days a shiny one) | 5% | | | |
+| Mega Mewtwo X or Y (level 100) | 2% | | | |
+
+- On a Mega Mewtwo day Mewtwo holds the Mega Stone and the starter holds a
+  Z-Crystal instead (its set's, or the one for its strongest STAB move).
+  Otherwise the legendary may hold a Z-Crystal when its set has one (not the
+  Galarian birds: their sets are from Gen 8, which has no Z-Moves). So RED has
+  at most one Mega Evolution and one Z-Move.
+- The pool picks and the any-generation pick never hold a Mega Stone or a
+  Z-Crystal. No two of those three share a type, no type is on more than two
+  of RED's six (a Mega's types count with its base form's), and he has at most
+  one Eeveelution.
+- He leads with Pikachu or one of the three picks: one that sets entry
+  hazards (Stealth Rock, Spikes, Toxic Spikes, Sticky Web, Stone Axe,
+  Ceaseless Edge) if any does, otherwise at random. The starter and the
+  legendary never lead.
+
+**5% of days, his original team** from HeartGold/SoulSilver, all level 100:
+Pikachu, Espeon or Lapras (50/50), Snorlax, Venusaur, Charizard and
+Blastoise. The three starters share out Mega Evolution, a Z-Move and
+Terastallization at random, each with that gimmick's sets (Gen 7 for Mega and
+Z, Gen 9 for Tera, including its Tera type). He leads with Pikachu, Espeon or
+Lapras, or Snorlax. Nothing on his team ever Dynamaxes, and only that Tera
+starter can Terastallize.
+
+All of RED's Pokémon are male, except the Eeveelutions, Lapras and Gyarados
+(female) and species with a fixed gender (or none).
+
+The odds and levels are `#define`s at the top of `dailyred_red.c`
+(`ORIGINAL_TEAM_ODDS`, `JOHTO_DOG_ODDS`, `LEVEL_PICK`...), the pool is
+`sRedPool`, and the tests read them from there.
+
+**His AI** is the expansion's strongest: `AI: Smart Trainer / Prediction` in
+his entry in `trainers_frlg.party` (omniscient, smart switching and switch-in
+choices, PP-stall prevention, Smart Tera, and predicting your switches and
+moves). That entry's party, his HeartGold/SoulSilver team, only stands in for
+the real one where the game reads it outside the battle (the battle transition
+and prize money). His class, `TRAINER_CLASS_DAILYRED`, is his alone: it shows
+as "PKMN TRAINER" and gives him his own battle theme.
+
+### Sets
+
+`expansion/src/dailyred_sets.c` is generated by `scripts/sets/generate.mjs`
+from Pokémon Showdown's own Random Battle generators (pinned in
+`scripts/sets/package.json`):
+
+```sh
+cd scripts/sets && npm install && node generate.mjs
+```
+
+It calls Showdown's `randomSet()` 400 times per species and keeps up to 10 of
+the sets it produced (those that came up at least 2% of the time), with
+Showdown's odds. Sets come from Gen 7 Random Battles (the last generation with
+Mega Evolution and Z-Moves); species Gen 7 doesn't have (Galarian forms, Gen
+8–9 species) come from Gen 8, then Gen 9. Each species has a list per kind:
+`NORMAL` (no Mega Stone or Z-Crystal: Showdown's sets for a team that already
+has its Z-Move user), `MEGA` (a Mega Evolution's sets), `ZMOVE` (Z-Crystals
+allowed, for RED's legendaries and his starters on Mega Mewtwo days) and
+`TERA` (Gen 9 sets with their Tera type, for the starters). The script checks
+every species, move, item and ability against the expansion's constants and
+every ability against what the species can have, and fails on anything
+missing. The player's team will use the same table.
 
 ### RED's battle theme
 
@@ -334,8 +402,10 @@ cd tests
 npm install        # playwright-core only; it drives your installed Google Chrome
 npm run smoke      # the game loop (~3 min)
 npm run site       # the website on desktop and phone (~1 min)
-npm run teams -- 1 2 3            # print + validate the teams for these seeds
+npm run teams -- 1 2 3            # print + validate the teams (yours and RED's) for these seeds
 npm run teams -- --random 40      # 40 random seeds
+npm run teams -- --red-cases      # a seed for each of RED's rolls (25 seeds)
+npm run gimmicks   # RED Mega Evolves, uses Z-Moves and Terastallizes in battle (~3 min)
 npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 min)
 ```
 
@@ -354,8 +424,18 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
 - battle style is SET from the start, the Options menu can't change it, and
   when one of RED's Pokémon is knocked out he sends the next one with no
   "Will LEAF change POKéMON?" prompt.
-- RED's in-battle party is the configured team with IVs, items and EVs, and
-  the summit's snow doesn't start any battle weather.
+- RED's AI flags in the ROM are Smart Trainer and Prediction; every entry
+  of his any-generation pick is fully evolved and not a starter, legendary,
+  Ultra Beast or Paradox Pokémon; all of Pikachu's sets have a Light Ball and
+  Volt Tackle; and no `NORMAL` set holds a Mega Stone or Z-Crystal.
+- RED's team follows his rules (`validateRed` in `tests/red.mjs`, written
+  independently of the C code) for each seed and after each run: the right
+  starter, legendary and original-team day for the seed's rolls (predicted in
+  JavaScript from his RNG), levels, Mega Stone / Z-Crystal / Tera rules, one of
+  each Pokémon's Showdown sets (from the table in the ROM), perfect stats,
+  genders, the type and Eeveelution limits and the lead; the same seed gives
+  the same RED; he battles with that team; and the summit's snow doesn't
+  start any battle weather.
 - the player starts with a Mega Ring and a Z-Power Ring; affection and
   friendship boosts are off in the build, and a team at max friendship (five
   hearts in battle) never hangs on to a knockout blow: 20 tries at 1 HP with
@@ -377,6 +457,15 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
 The win and loss are forced by editing HP values in a save state, which makes
 them quick and deterministic. Screenshots of every step are saved in
 `tests/output/`.
+
+`npm run teams -- --red-cases` finds the first seed for each of RED's rolls
+(the original team, and every legendary for every starter) and validates
+those teams. `npm run gimmicks` moves the Pokémon carrying each gimmick to the
+front of RED's team and plays turns against a Splash-only Pokémon until he
+uses it: Mega Evolution (a starter, and Mega Mewtwo), Z-Moves (the starter on
+a Mega Mewtwo day, and on an original-team day) and Terastallization (with
+Smart Tera turned off for that one, since the AI only Terastallizes when its
+damage calculations say it pays), and checks that he never Dynamaxes.
 
 `npm run music` starts RED's battle and records the emulator's audio output
 (the sound the website plays) for 75 seconds, past the song's loop point, to
@@ -464,6 +553,7 @@ scripts/build-rom.sh                 make firered → web/game/dailyred.gba.gz
 scripts/fetch-vendor.sh              Nostalgist, mGBA core, font (pinned, checksummed)
 scripts/serve.mjs                    local static server
 scripts/prepare-midi.mjs             Sappy MIDI dump → MIDI that mid2agb reads
+scripts/sets/generate.mjs            Showdown Random Battle sets → expansion/src/dailyred_sets.c
 music/vs-red.mid                     RED's battle theme (source MIDI)
 web/                                 the website
 tests/                               headless browser tests, the teams tool and the music recorder
@@ -471,7 +561,8 @@ tests/                               headless browser tests, the teams tool and 
 
 Inside `expansion/`, the Daily Red code is `include/dailyred.h`,
 `include/constants/dailyred.h`, `src/dailyred.c` (game flow and seed),
-`src/dailyred_team.c` (team generator), RED's entry at the end of
+`src/dailyred_team.c` (team generator), `src/dailyred_red.c` (RED's team),
+`src/dailyred_sets.c` (the generated sets), RED's entry at the end of
 `src/data/trainers_frlg.party`, `data/maps/DailyRed_Summit/` plus
 `data/layouts/DailyRed_Summit/` (the map), and his battle theme:
 `sound/songs/midi/mus_dailyred_vs_red.mid` (with its line in `midi.cfg`, which
