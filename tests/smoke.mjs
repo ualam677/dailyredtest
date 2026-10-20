@@ -13,7 +13,7 @@ import {
   battleMonField, readBattleMon, activePartySlot, faintWrites, unkillableWrites,
   bitsWrite, saveSnapshot, loadSnapshot, u32, battleInput, helplessWrites,
 } from './lib.mjs';
-import { GAME_DIR, id, readBits, layout, field, rom, romOffset, textAt, species, item, wideValue } from './game.mjs';
+import { GAME_DIR, id, readBits, layout, field, rom, romOffset, textAt, species, item, move, constName, wideValue } from './game.mjs';
 import { readParty, formatMon, validateTeam, friendshipWrites, laterEvolutions, LATER_EVOLUTION_LIST } from './party.mjs';
 import { readRedParty, validateRed, predictRolls, formatRedMon, validatePickGroups, setLists } from './red.mjs';
 
@@ -113,6 +113,19 @@ check(value('B_AFFECTION_MECHANICS') === 0 && value('B_FRIENDSHIP_BOOST') === 0,
   const lists = setLists();
   const pikachu = lists.find((l) => l.species === id('SPECIES', 'PIKACHU') && l.kind === 'NORMAL');
   check(pikachu.sets.every((st) => st.item === id('ITEM', 'LIGHT_BALL') && st.moves.includes(id('MOVE', 'VOLT_TACKLE'))), `every one of Pikachu's ${pikachu.sets.length} sets has a Light Ball and Volt Tackle`);
+  // No gimmick sets: every Z-Crystal powers up one of the set's attacks (a
+  // type Z-Crystal: an attack of its type), and no gimmick moves.
+  const gimmickMoves = new Set(['HOLD_HANDS', 'CELEBRATE', 'HAPPY_HOUR', 'SPLASH', 'CONVERSION'].map((n) => id('MOVE', n)));
+  const gimmicky = [];
+  for (const l of lists) {
+    for (const st of l.sets) {
+      const info = st.item ? item(st.item) : null;
+      const zType = info?.holdEffect === 'Z_CRYSTAL' && info.secondaryId !== 255 ? constName('TYPE', info.secondaryId) : null;
+      const attacks = st.moves.filter((m) => m && move(m).category !== 'STATUS');
+      if ((zType && !attacks.some((m) => move(m).type === zType)) || st.moves.some((m) => gimmickMoves.has(m))) gimmicky.push(species(l.species).name);
+    }
+  }
+  check(gimmicky.length === 0, `no gimmick sets (status Z-Moves, Hold Hands, Celebrate, Happy Hour, Splash, Conversion) in ${lists.reduce((n, l) => n + l.sets.length, 0)} sets${gimmicky.length ? ': ' + [...new Set(gimmicky)].join(', ') : ''}`);
   const normal = lists.filter((l) => l.kind === 'NORMAL');
   const bad = normal.filter((l) => l.sets.some((st) => ['MEGA_STONE', 'Z_CRYSTAL'].includes(st.item ? item(st.item).holdEffect : '')));
   check(bad.length === 0, `no NORMAL set holds a Mega Stone or Z-Crystal (${normal.length} species)${bad.length ? ': ' + bad.map((l) => species(l.species).name).join(', ') : ''}`);

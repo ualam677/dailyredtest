@@ -326,7 +326,11 @@ Mega Evolution and Z-Moves); species Gen 7 doesn't have (Galarian forms, Gen
 `NORMAL` (no Mega Stone or Z-Crystal: Showdown's sets for a team that already
 has its Z-Move user), `MEGA` (a Mega Evolution's sets), `ZMOVE` (Z-Crystals
 allowed, for RED's legendaries and his starters on Mega Mewtwo days) and
-`TERA` (Gen 9 sets with their Tera type, for the starters). The script checks
+`TERA` (Gen 9 sets with their Tera type, for the starters). Gimmick sets are
+left out: status Z-Moves (a Normalium Z for Hold Hands, Celebrate, Happy Hour
+or Conversion), Splash, Gen 8 sets built for Dynamax (unless a Gen 8 species
+has nothing else) and Tera Blast outside the Tera sets; the remaining sets
+keep Showdown's odds among themselves. The script checks
 every species, move, item and ability against the expansion's constants and
 every ability against what the species can have, and fails on anything
 missing. The player's team will use the same table.
@@ -427,7 +431,8 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
 - RED's AI flags in the ROM are Smart Trainer and Prediction; every entry
   of his any-generation pick is fully evolved and not a starter, legendary,
   Ultra Beast or Paradox Pokémon; all of Pikachu's sets have a Light Ball and
-  Volt Tackle; and no `NORMAL` set holds a Mega Stone or Z-Crystal.
+  Volt Tackle; no `NORMAL` set holds a Mega Stone or Z-Crystal; and there are
+  no gimmick sets (every Z-Crystal powers up one of its set's attacks).
 - RED's team follows his rules (`validateRed` in `tests/red.mjs`, written
   independently of the C code) for each seed and after each run: the right
   starter, legendary and original-team day for the seed's rolls (predicted in

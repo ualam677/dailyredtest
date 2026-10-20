@@ -232,8 +232,13 @@ for (const gen of GENS) {
       continue;
     }
     if (covered.has(species.id)) continue;
+    // Gen 8 species whose only sets are built for Dynamax: Gen 9's sets if it
+    // has the species, otherwise those (as plain sets: their moves are fine
+    // without Dynamax).
+    const onlyDynamax = generators.get(gen).randomSets[id].sets?.every((st) => st.role === 'Dynamax User');
+    if (onlyDynamax && gen < 9 && entriesOf(9).includes(id)) continue;
     covered.add(species.id);
-    lists.push({ id, gen, kind: 'NORMAL', species, details: { zMove: 1 } });
+    lists.push({ id, gen, kind: 'NORMAL', species, details: { zMove: 1 }, allowDynamaxSets: onlyDynamax });
   }
 }
 for (const id of RED_LEGENDARIES) lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {} });
@@ -302,6 +307,25 @@ function forcePikachu(dex, set) {
   return { ...set, item: 'Light Ball', moves };
 }
 
+// Gimmick sets Daily Red leaves out (Showdown plays them, but they're odd in
+// a straight battle). Samples that hit one are dropped, so the remaining sets
+// keep Showdown's odds among themselves.
+const GIMMICK_MOVES = new Set(['holdhands', 'celebrate', 'happyhour', 'splash', 'conversion']);
+function gimmickReason(dex, list, set) {
+  if (set.role === 'Dynamax User' && !list.allowDynamaxSets) return 'built for Dynamax (Max Moves)';
+  if (list.kind !== 'TERA' && set.moves.includes('terablast')) return 'Tera Blast without a Tera type';
+  const item = dex.items.get(set.item);
+  if (item.zMove) {
+    // A Z-Crystal powers up one of the set's attacks, never a status move.
+    const moves = set.moves.map((m) => dex.moves.get(m));
+    const powered = item.zMoveFrom ? moves.filter((m) => m.name === item.zMoveFrom) : moves.filter((m) => m.type === item.zMoveType);
+    if (!powered.some((m) => m.category !== 'Status')) return 'status Z-Move';
+  }
+  if (set.moves.some((m) => GIMMICK_MOVES.has(m))) return 'gimmick move (Hold Hands, Celebrate, Happy Hour, Splash, Conversion)';
+  return null;
+}
+const dropped = new Map(); // reason -> samples
+
 const startTime = Date.now();
 for (const list of lists) {
   const generator = generators.get(list.gen);
@@ -309,7 +333,11 @@ for (const list of lists) {
   const counts = new Map();
   for (let i = 0; i < SAMPLES; i++) {
     let set = generator.randomSet(list.id, { ...list.details }, false);
-    if (list.kind !== 'TERA' && set.moves.includes('terablast')) continue; // only Tera sets can Terastallize
+    const reason = gimmickReason(dex, list, set);
+    if (reason) {
+      dropped.set(reason, (dropped.get(reason) ?? 0) + 1);
+      continue;
+    }
     if (list.forceZ) set = addZCrystal(dex, set);
     set = forcePikachu(dex, set);
     const item = dex.items.get(set.item);
@@ -322,7 +350,14 @@ for (const list of lists) {
   }
   let sets = [...counts.values()];
   const total = sets.reduce((n, s) => n + s.count, 0);
-  if (!total) throw new Error(`${list.id} (Gen ${list.gen}) produced no sets`);
+  if (!total) {
+    // Every set is a gimmick one (Magikarp's Splash...): no list, so no team uses the species.
+    if (list.kind !== 'NORMAL' || RED_LEGENDARIES.includes(list.id) || KANTO_STARTERS.includes(list.id)) {
+      throw new Error(`${list.id} (Gen ${list.gen}, ${list.kind}) has no sets left`);
+    }
+    list.sets = [];
+    continue;
+  }
   sets = sets.filter((s) => s.count / total >= MIN_SHARE);
   if (!sets.length) sets = [...counts.values()]; // every set is rare: keep them all
   sets.sort((a, b) => b.count - a.count || (a.set.moves.join() < b.set.moves.join() ? -1 : 1));
@@ -336,7 +371,8 @@ const sampleSeconds = (Date.now() - startTime) / 1000;
 
 const outLists = [];
 const outSets = [];
-for (const list of lists) {
+const noSets = lists.filter((l) => !l.sets.length).map((l) => l.species.name);
+for (const list of lists.filter((l) => l.sets.length)) {
   const dex = dexes.get(list.gen);
   const key = speciesConst(list.species.name);
   const firstSet = outSets.length;
@@ -395,6 +431,7 @@ lines.push(`//`);
 lines.push(`// Source: Pokémon Showdown ${PS_VERSION} (MIT license), Random Battle sets from`);
 lines.push(`// Gen 7 (Gen 8, then Gen 9, for species Gen 7 doesn't have). ${SAMPLES} randomSet()`);
 lines.push(`// calls per list, sets under ${MIN_SHARE * 100}% dropped, at most ${MAX_SETS} per list.`);
+lines.push(`// Gimmick sets left out (gimmickReason in the script): ${[...dropped.keys()].join('; ')}.`);
 lines.push(`// ${outSets.length} sets in ${outLists.length} lists; ${pickGroups.size} species for RED's random pick.`);
 lines.push(``);
 lines.push(`#include "global.h"`);
@@ -463,7 +500,10 @@ lines.push(``);
 writeFileSync(OUT, lines.join('\n'));
 
 console.log(`Default forms used: ${[...defaultForms].map(([n, k]) => `${n} -> ${k}`).join(', ')}`);
-const distinct = lists.reduce((a, l) => a + l.distinct, 0);
+const droppedTotal = [...dropped.values()].reduce((a, b) => a + b, 0);
+console.log(`Gimmick samples dropped: ${droppedTotal} (${[...dropped].map(([r, n]) => `${r}: ${n}`).join('; ')})`
+  + `${noSets.length ? `; no sets left for ${noSets.join(', ')}` : ''}.`);
+const distinct = lists.filter((l) => l.sets.length).reduce((a, l) => a + l.distinct, 0);
 const byGen = GENS.map((g) => `Gen ${g}: ${outLists.filter((l) => l.gen === g).length}`).join(', ');
 console.log(`Wrote ${relative(process.cwd(), OUT)}: ${outSets.length} sets (of ${distinct} distinct generated) in `
   + `${outLists.length} lists (${byGen}), ${pickGroups.size} species for RED's random pick `
