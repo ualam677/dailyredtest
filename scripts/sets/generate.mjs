@@ -287,14 +287,17 @@ function tierLevel(tier) {
   return LOWEST_TIER_LEVEL;
 }
 
-// RED's random pick from any generation: fully evolved, not a starter (nor
-// Pikachu's family), legendary, mythical, Ultra Beast or Paradox Pokemon.
-// Judged with the latest generation's data, so a Pokemon that gained an
-// evolution later (Scyther, Ursaring...) counts as not fully evolved.
+// RED's random pick: a Pokemon of the Gen 1-3 Pokedex (national dex 1-386,
+// regular form: no later-generation evolutions or regional forms), fully
+// evolved, and not a starter (nor Pikachu's family), legendary or mythical.
+// "Fully evolved" is judged with the latest generation's data, so a Pokemon
+// that gained an evolution later (Magneton, Scyther, Ursaring...) is out.
+const RANDOM_PICK_LAST_DEX = 386;
 function isRandomPick(list) {
   if (list.kind !== 'NORMAL') return false;
   const dex = Dex;
   const species = Dex.species.get(list.species.name);
+  if (species.num < 1 || species.num > RANDOM_PICK_LAST_DEX || species.forme) return false;
   if (species.nfe || species.battleOnly) return false;
   if (species.tags.some((t) => NOT_RANDOM_TAGS.includes(t))) return false;
   if (STARTER_ROOTS.has(familyRoot(dex, species))) return false;

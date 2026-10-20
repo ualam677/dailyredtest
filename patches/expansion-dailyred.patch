@@ -262,6 +262,963 @@ index 3492bf3b..c5abfb81 100644
 +	def_special DailyRed_OnBattleEnd
 +	def_special DailyRed_OnDailyGameOver
 +	def_special DailyRed_IsDailyGame
+diff --git a/graphics/battle_environment/dailyred_mt_silver/anim_map.bin b/graphics/battle_environment/dailyred_mt_silver/anim_map.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..e9784eb4c8849062d374dd2058af8814b024f3bd
+GIT binary patch
+literal 2048
+ccmZQz7zLvtFd71*Aut*OqaiRF0wXO100;m80RR91
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/battle_environment/dailyred_mt_silver/anim_tiles.png b/graphics/battle_environment/dailyred_mt_silver/anim_tiles.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..edc748111c430c55b95030fa2c4a573e2a6e6924
+GIT binary patch
+literal 849
+zcmeAS@N?(olHy`uVBq!ia0vp^93afW3?x5a^xMh6z|0Wf6XN=x;eUifM8Sp^9T$E~
+zSTSJ+5L~#iV#bOUFFu^uapJ;>3pXy@0D>0}UI4+5A3uQFN5N<a44V*`cr0`W&@()q
+hE{-7;bCMGl@Bw)q42*g^Z0bOs^mO%eS?83{1ON*GHFN*~
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/battle_environment/dailyred_mt_silver/map.bin b/graphics/battle_environment/dailyred_mt_silver/map.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..b52f0b159f9f3ea3ca9ca8fb654821d8f294095b
+GIT binary patch
+literal 4096
+zcmeH|S5E>#6h`UxF4*;;V?)H=3rZ7gU;~8z|375c<#8sP+y@?*dy>g!zubrUHrW#-
+zC?bT6Fft;@h$16~i~&pxGQ=<=j55YJ6HGG2G&9T+_x2L#nPZ*>7FlAM6;@f}f0C@T
+zfpRxD(X+)iJM5BTk2L#aIN*>Yjyd6!Gk5bG6Bk@^#WgqFdfahOmIofay&N*~$S6>t
+zNQo!PRCwlv*Uni{W%b58Mdjoss?_-4v(t?;Uwrf9KGkW^<d>SND%}@q(IQ~SHeeg*
+z+XmY77MZ<6LVJgW_Kpbc9TnO;X0*4-?A=V~2EXt1_V$;U?CmF$**hn+ci!k`lefE>
+Z<6sG{>;*^P{`l<0Z3DJ}KyU5e<_|V{8u9=D
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/battle_environment/dailyred_mt_silver/palette.pal b/graphics/battle_environment/dailyred_mt_silver/palette.pal
+new file mode 100644
+index 00000000..3b92d5b0
+--- /dev/null
++++ b/graphics/battle_environment/dailyred_mt_silver/palette.pal
+@@ -0,0 +1,51 @@
++JASC-PAL
++0100
++48
++255 0 255
++88 64 88
++112 176 232
++136 208 248
++144 168 144
++152 152 152
++152 208 216
++168 152 168
++168 232 240
++200 184 200
++208 200 208
++216 208 216
++216 216 216
++232 224 232
++232 232 232
++248 248 248
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/graphics/battle_environment/dailyred_mt_silver/tiles.png b/graphics/battle_environment/dailyred_mt_silver/tiles.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..310b9bc40c075f7f90e2b10e18a5c9a108c78718
+GIT binary patch
+literal 1594
+zcmeAS@N?(olHy`uVBq!ia0vp^4M1$b!3-qdX*KmQFfcO&_=LFrXZRoC5K*w<MaP97
+z6IM)^0R$IrteCN4#fuLocAU6y;=+v!H-O;9gBL*X<Hrx6_E9hz0>dT*CLRmj!N9=u
+z)zif>q+-t58E?yOEAX@x?(W^$_4xPx+etkwc82FX%a_T=o)Wot+{vRTIP2T?o9>&>
+zr|sz5|3CBFZ{KPEq8W7mEPRuFYuduU5)RW(RLV*)*08lTNmRw`50X3mkH=vNPjrr<
+z!<3pG?>f9+D(%+3eM6|Oj=MpGU0LR|c*E}N&l1<H;C`DMe7^6YnD_793?6bnuEqF%
+zp3}{;;QiC9Uq3x%{LZ|1L-nt}|1ZztKP>UArd8?d=79U#*WFL8WpMG>S+{Nav;dI<
+zlOwOPmw(P>wwi39sqOH4&Uu^0j>GI4eE;6H+byVja*0tQ|Neobj0R<fe?P^(mPsnt
+z?h-r6?|<LR$)jOY)yLBK`SITT3s#Hyp4q<g#O$|MXB~d*zF<eA(}kVp6U<!Ir|~n)
+zQZ8VbTQlu|{oBTE+zaMBbh*Ir>eu%CeG2=XKmBQSSFP|0{;EGkqWk)xRK}j*z)KAN
+zSqzKSWxCCU84gZet7!07zI*xGeTSDwGk4g&=-DeUMM38uhr*<PY7LByyA;K~aw#o7
+zP|cC!_CKi3deVi}QkOUl1b%6};gINco>%tQDT|pUd*!aalE05tN~*uHKM-usF)m@*
+zTe)jtHtRvAno4F(bw%U3VGMKBWo2cq9hp>Jrk1n#VsAO)mc{#3s|pI#yY=p$3S_vT
+znP!o3tI~#pp@xAgChzkB4u_%$A+rw?i?b@({BC_nOgQLez?k5<=G|j)CJl!wr+k*#
+z8$RepSlgL6NLR!$C0ITD*v}YnS8{)POZudE_l3+G8jIx;%<k?L5n=Eant9M^ef|8^
+z)|(~XW}J5OOn)cw!05rl`%Gc~xXR*I?Yb)4;8C-RaqZ5kz!wE8X0m;_(yqHa{Hs-T
+zN=*K4ozp+_nGJSd-f_L2X*Tb#=ns0;K5hknoZWV9TBY~&W^<-3%LDx*3cv2uGR(YW
+zwCZoJbU<%%h<HP3dg^bp183sPzwHR$q*i8hhi%5`6$`?zF>u&x?JQ?p_axoj_S0^5
+nfpbdhZ_6_LD+zcj&s4)K6!Y6cIM>e$l$$+W{an^LB{Ts5SYw%~
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/battle_interface/ability_pop_up.pal b/graphics/battle_interface/ability_pop_up.pal
+index 19895d0b..4a8984a4 100644
+--- a/graphics/battle_interface/ability_pop_up.pal
++++ b/graphics/battle_interface/ability_pop_up.pal
+@@ -2,18 +2,18 @@ JASC-PAL
+ 0100
+ 16
+ 1 177 91
+-143 129 149
+-103 91 111
+-79 65 85
+-59 31 81
+-103 89 109
+-231 239 245
+-249 253 255
+-0 0 0
+-0 0 0
+-107 115 115
+-74 66 82
+-0 0 0
++189 189 189
++148 148 148
++57 49 65
++65 65 65
++113 113 113
++154 154 154
++251 251 251
++186 186 186
++227 227 227
++113 113 113
++65 65 65
++48 48 48
+ 214 214 206
+-132 140 140
++154 154 154
+ 0 0 0
+diff --git a/graphics/battle_interface/ability_pop_up.png b/graphics/battle_interface/ability_pop_up.png
+index fa0f09dba38e527f29092bcc76e8b00f69b175b1..f8db62a8adc8e6d8b8bc8a5f1394e3691dcd5e83 100644
+GIT binary patch
+delta 185
+zcmaFGc$IO2N<Cw7kh>GZx^prw85kH00(?ST88=4n-Me?nlqr^mjzCaYSU79etlz(X
+z@7lHN@#DupE>O_Gz~I`ob3k#RCW$V!Xdo5r>Eaj?(faoKLEZxn9L$b!YU<zb=X*8u
+zi_YD2n?bp5-KxH@WL@^l8Yk|>bKFv&#R$~%fXV29a4$cQ#c+UW!IN5DhA@Nk4eQGt
+fD`w_yll;3!JR&oC<#AK?iy#%Au6{1-oD!M<sEJ9r
+
+delta 206
+zcmcc0_=<6YO1(jVPlzky#_0aWsp--A{*Iy6@`34*xzFE!{rUGl0~ll%7kfDc0h!mX
+zoongo0WyM_m)r(YrJgR1ArY-_ryKG$81OL9wrKtTf5ry}p6<;LW^4a^r8wz&meSHA
+zk6aclY0zeQC+_sCK7lQA=g|@tZH8BW_Bv`wXf(KoPY|tY+|a<PbAXj?0n>4YkOwjc
+zn8bhrKUA+gzwFKNLf`O%j>3G^^_N}toZh$A_;b46p%lyg205;|Ajf&S`njxgN@xNA
+D?dMd=
+
+diff --git a/graphics/battle_interface/ball_caught_indicator.png b/graphics/battle_interface/ball_caught_indicator.png
+index 5473d53df88cda1e6ef5096507e75e2626a2f21f..138473ba7cac1278fd6080ce535ba8bfe79e10e1 100644
+GIT binary patch
+delta 156
+zcmbQoxQ20pL_G&H0|Ue7i+($S6k~CayA#8@b22Z19D@L#5LY1W=;-+S_wQM=W;Hi=
+zdpSl0Wkmtmzc(@5%Zg%{#2|540m$Bz$?-c<W0ir$wa91zpdKwx7sn8enY!JLybKOJ
+zjB{Dv?0;JytyIXV!YDPd#d})aL*0$Xql&KAhKlk_A7q$tVDoWzpf(0iS3j3^P6<r_
+D(0Diy
+
+delta 142
+zcmZ3(IFE6HL_G^L0|SGZ;^G}Z${@fe#1%+eT3Y`9|NrXQz0J+tUXD>gSyBJDRDYXN
+zd@n1i`2U)ytIhwPS)N_P@juFPjiXo36EAk49!*ad#}JO0$q5|12?+^TXPi19aM94X
+tLGcLd3H~56zJvr*v(yBJ(@hKvGw!lgB==cd0%~ILWOwy*S?83{1OQ?BHU<Cy
+
+diff --git a/graphics/battle_interface/ball_display.png b/graphics/battle_interface/ball_display.png
+index 0c49d7ac42b4d9bf27c624c6bafd8c9fa6aefff9..1c22a5954da0fd3fa12c9294f1cef03bc5e918fb 100644
+GIT binary patch
+delta 189
+zcmdnbc$RU3L_G&H0|UeQXx_O%im^Dz-HBn{IhmJ0jzNG=h%1nGbaedv`}eF_vznW`
+zy&R*0vZ8?O-<ufjWkoSeVvsnj0Az2<<oF$_vC6>WT4b~UP>;8#i(`ny)YkrkTnq{v
+z&dWLE{{G*;c4eu?qC}lL&fE<h4OLYxAGY=HUT!vfX2?0G%QGh@%sV2pM5c^!>CK?j
+nyA44*lYjnfd-uQo<3)y_@r)f_J;q!>a~V8c{an^LB{Ts5AJI%#
+
+delta 175
+zcmX@hxSw%?L_G^L0|P_W>IZXxltF+`h%1n`w6y&H|Nqsqdz+iPy&R*0vZDTPss1*l
+z_+D02@&7eZSDXJovpl<o<A0Rp8b`05CtmD8JzkzJjv*W~lM^_26C4h%kqVZKa5T`J
+z+IaQo)JDZc$!QD$HVQhrx(Y{*sx~MdQ5Df+IK<<4>X=4BV?y#{2DY%|;1)>-Gv+qk
+b7Yq!as>B|>zoV}RG?u~B)z4*}Q$iB}<$FUa
+
+diff --git a/graphics/battle_interface/ball_status_bar.png b/graphics/battle_interface/ball_status_bar.png
+index b947a7803a93d36dc0c993d8776f6f5235072a70..56dac8d851419ff632a9120c9137289a8b113563 100644
+GIT binary patch
+delta 170
+zcmZ3-xQlUuL_G&H0|NsaGrJFvVk{1FcVbv~PUa<$V-VmI;tHf49UUJ(e!Oefu358Y
+z73KK<{{8#yDWRL&89XQb{y%4m<JtcV4FAE9A#2M2T8F0<Ks^?oE{-7<y~zm-%xP|I
+zjVxz+dYE4_O!&HlSxlmZDGi9tfLJTKzd)IhdlvVMi!lxt7#AlTVP<$=#rU;$tC%Cu
+O5C%_IKbLh*2~7Zv9zH1m
+
+delta 158
+zcmdnRxQ=mxL_G^L0|Ue1&#!!eltF+`h%1nGbaedx|K7c;TaNB6uAb5yl$E4l$zU1e
+z`2QKh|2b0}&;Dm%_z#8*SyTS=Tip`^>ap~6aSYLzn4FN1;E}$7XUX*7Rr2Z?>`i<M
+zCm5Pc6gZfh0u&U&>ML0V8hA38nI<r<bZAICpdp^Xz`!k`pKt3KbrWa`gQu&X%Q~lo
+FCIIv`HQN9H
+
+diff --git a/graphics/battle_interface/burst_trigger.png b/graphics/battle_interface/burst_trigger.png
+index f9b1f1370759ed47f7146c4697d00009ac71fec1..48212ce113fb062639521e58a33554ef5a67fe7d 100644
+GIT binary patch
+delta 681
+zcmV;a0#^Om0>A~3BYy#eX+uL$Nkc;*aB^>EX>4Tx04R}tkv&MmKpe$iQ;Q-M2ZI!G
+z$WWauh+jBL6^me@v=v%)FuC*#nlvOWE{=k0!NHHks)LKOt`4q(Aou~|?BJy6A|?JW
+zDYS_3;J6>}?mh0_0Yan9G^=YI(DbUAj76nPc2(+rMF1iO5r4w8%q%0GT1>-peBHyx
+z*SiSM@;>+H=u>kR1AG$k95c)+@dokCX4T-lPb{*ctP-CSkC}8q;zzD4F28XuI4tl?
+z(M%`jiA7?m(7{Rvv!baHPZ5VzO{aVz<Fd+mi?dd)vDQ8L3xhd*CB=1`!-!!CaU>u?
+zK@BC8QALDSoqrSyN!pKk_=g;Sf?Nu@N?_zzKm{6P#}EDozq_^alM`-IFbV`-Z2Myb
+z=-vgIb=&?vw(aH#;C}|L^tQj!0A@c)ueY`E5zxO4TwJ#`We>RA0YXoPY|4)0rzzy~
+z!220}Qx+Jw1$x)q-dg)OeE`zb)$$E+a0rYRD0|)G-G4ouz5RQp)!z@w0CLK%NHz@s
+z000<JOjJd=&!c8$G(kZ@nwpx!&&lZMQ26+0`1tr9*<s26007fTL_t(YiS3j@5``cP
+zL$T6w{~Ozaf0PJe<KizY<0{V-uqLIeN>n0Mb`cIpp@16{YT>V!`rHZ)9Ow)6j0Bv3
+z08I~|41a;p#pPHdpy_Uq(c-2{)pMQ$aym>~usvK&=rPw9CD;J3ntzK%2myZcF#X&y
+z5VF&eON*KP>a}_!A8eHmw#WxF<M|K(8(OmsiT(r(XnFuP1nO_&a;y<hb#;TyE%XVr
+zUspqSVhYIVFm2&`P+w$|q7HNoFdrCj5*z544<d>Nk9<J=kq`Ri!#~#n+LsFI{@!tv
+P00000NkvXXu0mjfGITqH
+
+delta 319
+zcmV-F0l@yi1=#|SBYyxeP)t-sxzD5c`1sW5;kCHKe4nOrY=nE4hfQf=0000000000
+z0QmT5=)+XemOP|{W_n>uCVQvB0002wNkl<ZNQv!~(GJ5P2mo~;JP7*#f4hJ#*;>Wd
+zEg7$OMbkEy(&sRza3}+XoHKA_aDD&;htLpwwj8Ii<Wr!v;D6i&SPH~U8B9Q5vEaS{
+zaIRQz&VY!e6vUh0oXMUyemi1tX1hSag4avFxUZNCc*U8AaCuR0+zuHB?7q6K!03-4
+z1`I!UBEXQJf4TpB(VY7rr#{G`4^<@Yg9%X|s<de=`4oaaR2O952Qi_^why(6w7Fuz
+zIZJD;_pZ9@gE&2JeA@@RK-aGOK8Oh#^kE25A4~}QAfg)gLG;iE(SIL)cb;Cy4U&QD
+Rh(G`U002ovPDHLkV1hoWlx_e3
+
+diff --git a/graphics/battle_interface/dailyred_healthbar.pal b/graphics/battle_interface/dailyred_healthbar.pal
+new file mode 100644
+index 00000000..5cd6076e
+--- /dev/null
++++ b/graphics/battle_interface/dailyred_healthbar.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++65 65 65
++251 251 251
++154 154 154
++131 131 139
++29 29 29
++82 106 90
++154 154 154
++12 12 12
++222 106 90
++0 146 0
++24 195 32
++251 178 0
++178 105 8
++251 89 40
++170 48 56
+diff --git a/graphics/battle_interface/dynamax_trigger.png b/graphics/battle_interface/dynamax_trigger.png
+index 954de81e7c631d0db7b7000de8bf70208902e1c8..83f30988bd0896e073a9f5c692d411bbf5e6865e 100644
+GIT binary patch
+delta 687
+zcmV;g0#N<Z0>%Z9BYy#eX+uL$Nkc;*aB^>EX>4Tx04R}tkv&MmKpe$iQ)@*kf_4yb
+z$WWauh>AE$6^me@v=v%)FuC*#nlvOSE{=k0!NHHks)LKOt`4q(Aou~|=;Wm6A|?JW
+zDYS_3;J6>}?mh0_0Yam~RI_UWP&La)#baVNw<-o-(TxH45r06p#7sSrUd+IAeBHyx
+z*Sjds@;>+H=u`401AHR!9McVpc!PLm)6zNb6NgzzQi#uq#|^q5@gvt|m)|%S9Ts?I
+z*vO>jiNnNVv4iCfW+g)<o+gecsz&)j)@6nB7H73mW37Ag7l!iMN}B65M-ayn5=cUX
+zj2g<Qz(SN(jeisqDcX;D_=g>Tl3X&m%3$PJKou$^#}EDozq>UHQ<H8|C<X*xZ2Myr
+z2<`&Sx@~_S+jjE=@IM1rTH9Z30JEQ@*V|g;2<YDiF0R{}ya!zF07Fl@WJr$WrzsQ)
+z!220}Qw|us1$x)q-dg)OeE>4l)$$E+a0rYQDSO@H-G4ouz5RQp)!z^9Z*p?NJyApe
+z001yhOjJd=&!a&>LBnT-nwpx3Q)9!-&;S4b000000000000000000000000000000
+z0002&`1Tb5006;BL_t(YiS3lZ62dSDL>m_P|4$YYJ4yo4g9jbEm(FzG03q!j$CpVL
+zO+MPJ=zlME1l)%J6=1%#5Hx5Ccz>v<NSGx0RzOwSbC)oGuhGd8fCG{NgRlk|HS!^4
+z)VERdW1c$za^QZDdQs_BMBwFRW!H7g#QuA@^k4cwKCr0-)NB%>fJ9%x0)}!1SbwIG
+z50nAjC-!{s=K}crZ14NO%_VT=Ljv>`k9<ggw<z<$maxeOTNKrc8guMcedWXN>jqY+
+V2KLpSMKS;Y002ovPDHLkV1n+uHv<3w
+
+delta 312
+zcmX@cdWmU*ay^4VfKQ0)&hv|}ym(kMe_2sZOZD`2-^@e?4DcTavKkHtPVIMXPqe>X
+z4^(j1)5S5wqw{TuBi~^I4sDe?Jb(Ug7oL#$+H33SEx~J61g5l0X#KSK*Q2Rq^!|pz
+z%o(Z|@2Dm5F&baYVJVz@Elazj{=<SJ8LYuGybUdCO#VIo=xDM+*rh(P&rM_}*QWog
+z;_vf2e%f@;|7c{upBnKw&jR-7{9i4;^MljN=E^GzXI`%PyXK~EQS#&OKj!gsUA|qz
+z;KREt%V9o0+nUnJ{I5KAeEXRY#TCBQO#V?JyG_oPp9x~uWw~~TocOnTpSH-oXU?At
+z)7CNEs;S^gdjDzR3kQ!`H4eWFK3ka--}<?s(1zi;0C&hutGly7Vd3fO=d#Wzp$P!9
+C5RO*>
+
+diff --git a/graphics/battle_interface/enemy_mon_shadow.png b/graphics/battle_interface/enemy_mon_shadow.png
+index 3db333a92558957249f4ed846003f0b646ada565..e7b9acd697eeefd784f8447c03731a01537f892f 100644
+GIT binary patch
+delta 151
+zcmbQmxSVl<L_G&H0|UeQXx_O%im^Dz-HBn{IhmJ0jzNG=h%1nGbaZ_D`0=h?yJpRr
+z_5V7<@87@AZ?!f^yzM#Z_y0Ll9MAq|VE7M)3|UkD_ZxN{0P0coba4!kn3|l>!00A&
+ypn*xEkm1iJ1JfT*B_%nv6*5>8-Gx4=F=S{koD^X6j$Z`S!QkoY=d#Wzp$P!d(l>_y
+
+delta 138
+zcmZ3^IE!(DL_G^L0|P_W>IZXxltF+`h%1nGbaedx|K7c;TaNB6uAb5yl$E4l$zU1e
+z`2QKh|2b0}&;Dm%_z#8*SyTS=Tip`^>QVJ{aSY*@nVi7Dw9Ul8BcY+eM5SRuYa>gW
+liAjTI!$Q`>0VUateTUR<+8$4t3Dm&g>FVdQj@c=p2>{g#GGhP$
+
+diff --git a/graphics/battle_interface/enemy_mon_shadows_sized.png b/graphics/battle_interface/enemy_mon_shadows_sized.png
+index 8d0e96885292fdf4a81edac08fed71a246b71312..0b9b4ccbc4e9ef0cf0ee183b170d76300560dc0f 100644
+GIT binary patch
+delta 211
+zcmV;^04)Fi0q+5jB!2;OQb$4nuFf3k0000mP)t-s0000%K|$l=<GQ-Knwpyb*8uzb
+z`_HvIFk#zClKcOhltIn^00930{{a600BV%~k1>kC0001ONkl<ZNQt%4K@xy42n50S
+z|4)0h6tcTa%ze6mto7f!9uLI>q{<Vb>$w1z2=Xry$HfSwO-z(s?HIZj0tWC3%FuPM
+z_-#AHyfhsr-XKX{5*WZM95|wMoKj6OFQwzh6_VF40|R)46Gt3>;|*RW1OEV!rK11<
+N002ovPDHLkV1k|uTk!w@
+
+delta 227
+zcmaFQ_@8ltO1(jVPlzi61B0WZ<NyEn?p@t-bZ>F>l;)tUBn3+b%OJ=9&lvvCnc{f%
+zKLf*mFl5M@@}J-8o)A!vKuM5a@P9OLR&mo5pj@7(i(`mK=hlmcLJbBy%m+jM{6D#c
+z=f=b*+%NNwmtFhyKDNL85o1uyQ_hQDV;a0!eu{TKPGY&Fc4}Q2&s}at<_gx-7rVm$
+zY?Dojo7E?rKS4#GljngbpG=^Y-^yh(reFH_nCs;0>5Ytg4s|N`?f=NelO+E2)KYe9
+Ppw$eXu6{1-oD!M<OxSCq
+
+diff --git a/graphics/battle_interface/expbar.png b/graphics/battle_interface/expbar.png
+index b54dbe6008fc8701743dd416e43eb7e2a97569c1..e515b13e4e87f7e29e989a2caf0d757fbe228cd4 100644
+GIT binary patch
+delta 171
+zcmZ3+xSMf;L_G&H0|P^Dwx=YJVk{1FcVbv~PUa<$V-VmI;tHf49UUJ(e!Oefu358Y
+z73KK<{{8#yDWRL&89XQb{y%4m<JtcV4FAE9A#2M2T8F0<Ks}b8E{-7@6W5;K$a}zn
+z;gG{37yZaL``?>?WZSV*>{H(<bFK3$EO=c5MO;+^i~g;;nzc1*ZCUx-o>Qy1_rB-w
+U-FR4~3}_02r>mdKI;Vst0M05$-2eap
+
+delta 150
+zcmdnZxQuavL_G^L0|Uc~*-IpVltF+`h%1nGbaedx|K7c;TaNB6uAb5yl$E4l$zU1e
+z`2QKh|2b0}&;Dm%_z#8*SyTS=Tip`^>M`_maSV}|nrxuPWH3dTQQ}eu1CN@+2G)-9
+wW`hYEtIav`86VwM*aPGXFYnNJy@HKF+af|Tia$532dJCD)78&qol`;+0N+bAg8%>k
+
+diff --git a/graphics/battle_interface/healthbox_doubles_opponent.png b/graphics/battle_interface/healthbox_doubles_opponent.png
+index 28fdbbbeb984bf600c0053c14c26901ac57248fc..d2ab9c057380da836c1da987c24c32e3fa9276d4 100644
+GIT binary patch
+delta 259
+zcmV+e0sQ`z0+Rxe7=H)@0002({D2n#0004VQb$4nuFf3k0000mP)t-s0000%K|$l=
+z<GQ-Knwpyb*8uzb`_HvIFk#zClKcOhltIn^00930{{a600BV%~k1>kC0001yNkl<Z
+zScUDE%L>3C3<R4R^8cS)`tsIhDGWmDT)gS9QCOE{Jb@ve?|cT~nn6(Ko2dehAsK|N
+z6j}sR02I(J0VtqFP+CBm0VyCwP+LHm0V<$GP*uRM#YYL;yXFy87s%g1SR?4WrV+50
+zP?!OfK*v3)$FxA(>+zccSxOJihW@Mo)^f3<b3dam|D?(P*Z_U;8I#*8+))4k002ov
+JPDHLkV1msxad!X!
+
+delta 261
+zcmbQtG?i(BL_G^L0|SEwPp%k{G6?VqaRt(jj*kET-@A8p%hA2X)l-^-vXT@m87zYw
+z|372+KWB>L+5Zd-|G|(UYs!Cqt9wE~J)8v|k;M!Qd`Cc-ajG_-G*GbH)5S5wqcb@{
+zf~CQ<H)BFqXuX@|#Ra+y-Hd{w=Z?8BO|I)>(P3L+ttrTRXQRY{TaJ6`REu@kHcSo3
+za`?D{aWUJ4n+(duIzMNMFwZ)B+2FIWCR@ggWX&KC6Nby2DwPLiy;r&gDU>Zqv}&C4
+z$zdsv_rX)w9BU@txHqlsB}*4~YMa5M)vRlNxidaxU|1FMGVEFSiKReyF?hQAxvX<a
+GXaWEWl402Z
+
+diff --git a/graphics/battle_interface/healthbox_doubles_player.png b/graphics/battle_interface/healthbox_doubles_player.png
+index c3587ec3fd14505ac511b1fb72f3bd07c097846c..8d5be8d4d4e99454883a05519a33112b41ea3102 100644
+GIT binary patch
+delta 246
+zcmbQm)W$SHqMn19fq~)ep9XOt#aJBV?!>U}oXkrg#~{Eb#1%+8Iyydn{CL-{U9)D*
+zD$4Qy{rmUZQ$jblGk8w={eR9B$Fu(#82*DHL)Mi4wGK}!fO=XyT^vIqTHju0<Z3YB
+zalUx8_1^yzP2vW^`+_s{F1X)VAp1C3Q-%Apu0nnvYv_?0O?HWsOb+Z5B?7*sF$6m>
+zCo!1rXVh%?)neJ8rNC0ax`e@3E1J=dF@*6K_kuTP8D4RwH5}sVkW0KO@|``O@p?t)
+tO}6H_0=Jq!ubr{eMNVFA?z!KVjGyHs*B=UgqXKjggQu&X%Q~loCIC4_VeJ3_
+
+delta 267
+zcmZo;n#D9hqMn7Bfq_ATCszze83g!*xB_WMN5}vF@7=q)<>=nx>M6}ZSxE|(43<HT
+z|DQ4ZpEJer?0*J^|6s_FHRV6Q)jc7g9?k-f$YKTtz9S&aI8~cZ8Ynoy)5S5wqcb@{
+zLZ!j9H)BFqXuX@|#Ra+y-Hd{w=Z?8BO|I`_(P3L+ttrTRXQRY{TaJ6`REu@kHcSo3
+za`?D{aWPxK!3F~%9)m+k4B1kgY$nNu3OypsCI-9=)7+*=3b;*TJS*{(afOA7s(|%{
+zZj%MfmpnB1Lr!h5P*~giLuun)QDez~IF07Ljw%OM)r$nMF`USH`L^@7!ycgH7(8A5
+LTv*mQB{Ts5E!kW3
+
+diff --git a/graphics/battle_interface/healthbox_safari.png b/graphics/battle_interface/healthbox_safari.png
+index b2a9255c5a3cdc87b64e3f064d48bcd6fce04dfb..f393ead8184e8598224afb8ab68d57389a342ef0 100644
+GIT binary patch
+delta 276
+zcmV+v0qg#p0;2+u7=H)@0002x2#-ww0004VQb$4nuFf3k0000mP)t-s0000%K|$l=
+z<GQ-Knwpw&Y)||9`|ZjS*|z{mlKcOhltIn^00930{{a600BV%~eL&@S0001?Nkl<Z
+zXo2n6K?=h#3`EhW6_fklIM8Jl?TF?ROy*y}57`@Q+fE7Se1FEb)OC415$O8!X95IJ
+zK0r-00n`g9fQ10+emVfTfdG5}^aKU~W&i=$0O|?&0B8UKxB%=4*Z^t(s{pj`Hv_N%
+zECK*;zyxpu2*3i6Prw0)9KdgY^sXBLpW~~LkGb<bXI2t}1qHE{`e#d(Qc5YMlu}BM
+a>i`SVA2P^>jtwvX0000<MNUMnLSTa9LT@Ml
+
+delta 269
+zcmZ3?G>2(|L_G^L0|SG?k0c);Wf0&K;tHf49UcGwzjyEImZN)%tEV&vWhE(CGFS#V
+z{(r{sf6f%gv;P?w{(~Vy)|CJJR`-N}dN>O_B8wRq_>O=u<5X=vX`tXFPZ!6Kh}O5)
+z4EY=!1X>f%T6OGT?40McdShS~kL^Lu8_D&PHPX9g<}9wL-ygqhf{o{=$ucWvANhWI
+z;k#EX2^O=RA|>4zXT0`_)n?FpaX)=3!;)y74NMFS2lxaS83g#ZFg?(9c+jAHSnr87
+zyAA7KlY8Q~pO@d#eSC)f-s}Io``pSJHtKz9(EQXeua=cVvE@R46~iCVxK*{%F&#kX
+PF?hPN`MIofN@xNA&o*hl
+
+diff --git a/graphics/battle_interface/healthbox_singles_opponent.png b/graphics/battle_interface/healthbox_singles_opponent.png
+index 3047ed62d06c9c0ee5b27a2276fd43bd3c966494..1cf6e2ce3ede6600c2c745d6c737c77819a2ff64 100644
+GIT binary patch
+delta 267
+zcmV+m0rdWs0-6Gl7=H)@0002({D2n#0004VQb$4nuFf3k0000mP)t-s0000%K|$l=
+z<GQ-Knwpw&Y)||9`|ZjS*|z{mlKcOhltIn^00930{{a600BV%~eL&@S0001(Nkl<Z
+zScUD^u?~PB420oU8{YqsO<csm9u7Y>hMSn+%MnOwW{r&Lw103ep#|vq?gIey{2@S~
+zk%HzM8C}5wz<`KifUaNxXn_0)Xn?HX{{VFdI6zfE0iqgkZ7V)Q9v~|C0ANSbZCleo
+zbj$Q1QVrbNs0Sp18G!T-W&qL(<^Vh%3G`fW#{HQ9Peub{5;`2epOvTQ0RI*qm6anO
+Rng9R*07*qoL<FuvV1hFUZ@vHk
+
+delta 262
+zcmbQmG>vJ3L_G^L0|SEwPp%k{G6?VqaRt(jj*kET-@A8p%hA2X)l-^-vXT@m87zYw
+z|372+KWB>L+5Zd-|G|(UYs!Cqt9wE~J)8v|k;M!Qd`Cc-ajG_-G*Ga|)5S5wqcb@{
+zf~CQ<H)BFqXuX@|#Ra+y-Hd{w=Z?8BO|I`_(P3L+ttrTRXQRY{TaJ6`REu@kHcSo3
+za`?D{aWUJ4n+(ccycx@`F!VB-FOZC`bO=%?OVAYY)Z`C2b;*F+bsOKK?jzsKbe<Y{
+zwi<0nIbPx<@$o9tyH$-M!W%+)RdzD17M5_*EIq`)#K5H|6E1dhT^i6~44$rjF6*2U
+FngDq=TZ{kz
+
+diff --git a/graphics/battle_interface/healthbox_singles_player.png b/graphics/battle_interface/healthbox_singles_player.png
+index cf65e676129334422cf47eccbc013ed8ec6c8967..4e7b8e9ca5c552c6e6d3c1c40aa0f9460325e537 100644
+GIT binary patch
+delta 315
+zcmV-B0mS~u0?GoA7=H)@0002x2#-ww0004VQb$4nuFf3k0000mP)t-s0000%K|$l=
+z<GQ-Knwpw&Y)||9`|ZjS*|z{mlKcOhltIn^00930{{a600BV%~eL&@S0002UNkl<Z
+zXo2mRK@Nj33<Tp6`TtL@XyH(yk_|9~!_EV;qjfHJDZeB{5r4^GsHy=aARAx;p$TL}
+zWsn745Ejq`GKLFK`4-Rwz%QT*VEGo11jsKS3J}S4v_QxL&;)t}CW7TvNq{IoZy<wd
+zpsEc(6Igk^05yRQ0W{wNO#%7~v;>kaU|%3}q6^p)_{0wsSodLQDQz#O^Z5eX$<_7z
+z|7GR;Xuj$CjWlL6pR>oIMc`O|xneqfN2;yCH5|=1#u#IaF~*o1cmpopCHW}}3h)2`
+N002ovPDHLkV1l@|g0cVr
+
+delta 313
+zcmX@bbb@JuL_G^L0|SG?k0c);Wf0&K;tHf49UcGwzjyEImZN)%tEV&vWhE(CGFS#V
+z{(r{sf6f%gv;P?w{(~Vy)|CJJR`-N}dN>O_B8wRq_>O=u<5X=vX`tXfPZ!6Kh}O5)
+zHgX*@5IFWx@1tW=b8&RR^-1eudHQ0jUahHLvHQX^&X#?-&3)w$TA5E4{NMR=qSM3d
+zz?4ahWz3cT{v?=}u@uz2(@raW!TDgz<~LDH295Ri@;DPpCo_e!iu^DR@M@eca^nOe
+z!$WP3#vrZ;)*^-|rVpA92O1h%Vk7PwK2ZFyyin?*-SJF+$#k0!|91cGEnZhR$G$}_
+z_Q7QyBk>vc1O98+-JB@i(Vl#Of$bO58@?CX7fgIFZ|R9**vc0C;Ak`R7NB1kJYD@<
+J);T3K0RV4SgggKM
+
+diff --git a/graphics/battle_interface/hpbar.png b/graphics/battle_interface/hpbar.png
+index f3a0314e4984432ae397fd101157fe30c2d09818..1f1294dcb79ee57f5adb7557c7b98747af03b1f8 100644
+GIT binary patch
+delta 192
+zcmcb~c!6<(L_G&H0|SHMLoQn&#aJBV?!>U}oXkrg#~{Eb#1%+8Iy(OT{d?A|S<TJe
+zUXD>gSy4dt?@bK%vZ5F!F-RO%0J1k_a{P|eSY=>wEizgFsK?LK#W6%<;@*pnTnz?1
+zE*FpKwamQpe~;F;U@kph`^N1&ifeOMyL%Qpx>!E5F5k*Mud`T1gsatQVZiIAIpQ+P
+pi!WxFNcH~P^WeOh-OjI*^tdB9R1CJxz5+Cw!PC{xWt~$(696W_NZSAa
+
+delta 201
+zcmV;)05<>70oehN7=Hu<0002=5$8Mr001yhOjJbx0022TIsgCv)y=(wgNsT*T2g9S
+z|FnDdlylx{T66!bTGfO9<~hx*2>)6+tU*eQ<Vpts003l3L_t&-m7UMA4Zt7_1VE&0
+zk|DB57ND@h1gyXcEI{F&%FFQ&3qW3+<mQDP!k=8SpILY`t3u{1_eN$xW<leNba2Ap
+zP92;&_$qv*;6;AfzzBmGH85&mYo%0Es<OY*@zEz4LNj3YV^TqX00000NkvXXu0mjf
+DAQe~J
+
+diff --git a/graphics/battle_interface/hpbar_anim.png b/graphics/battle_interface/hpbar_anim.png
+index 5817a6e675ece82306810ed6ab2a7572deba7a71..34f31b2011a29bf90d89c25451a109852e29be37 100644
+GIT binary patch
+delta 163
+zcmcb?c!hC-Wxb=L<L}?UXU&?`+}!Qu7!{Ni1!Vu;#BeVwieVCi#9;*>ds8OI??{bR
+z1{T*MqXifk7=k=q978O6&tBZfd%%E)+3~2}osK8}ZZG?29;xu_nHD2Ui0Rt&h|g?u
+zX9sAAaJ4#}^EZ&-VQW5kWtXWL7!>X6aa(*b!=&n-%;|q}AJ%@`5Vxs?PjFMF^-iGi
+N44$rjF6*2UngI21MUMag
+
+delta 167
+zcmcb@c!P0*Wxb`P<^TWxub$o8+}!Qu7!{Ni^?ytCw<*Q<vZ9LruZg<a{QsHd*)<&h
+zqb%1rdi6Z<VrO7r2=jDt46*1vds&gM!GXu+Vp~dhY1+H`Xdd}yWyLSEm#?}N=9|sG
+zx-aqSE+MW~r-cD0esHlhA51WqQJvZg0X_MPFJ_oX^(xHUzG;2m=iGYxpNoaV?g($(
+TU)T2+Xa$3(tDnm{r-UW|qMuH2
+
+diff --git a/graphics/battle_interface/last_used_ball_r.png b/graphics/battle_interface/last_used_ball_r.png
+index 581569cf1bf4ce3f5cee78fcd83a7a34b149d012..f2bd26650aa64e89f39aadc2c2fd5e9bee508c4f 100644
+GIT binary patch
+delta 209
+zcmV;?051RE0r3Hl7#0Wv0000)q>9D>0004VQb$4nuFf3kks%a+K|w)radDB6k^B4m
+zy1KgK<KuC0aX~>rFfcII*3O!mng9R*qX*gv0001QNkl<ZIF0R-u?oN-3`Db8E?oZq
+zb1O<|OjCu@p+g@I#=Ha^PDDzAI0~QvpbUL8^V7BVMy<)-sL%aE^Mdja+Gzqc70wMe
+z!g9kz!0?MiAUsSkgvc*E5w?VvH+(>VUHd~WTCxH$d(&*L)4gB^fZ`n>0xKPD00000
+LNkvXXu0mjf9)nf}
+
+delta 207
+zcmey!c%N~CL_G^L0|P^2NcwRgWf0&K;>x%&y1KYI$Scay&{31a5y*J{{_D@b|AF#A
+zkX>Bt<rD;DT)TFzrKbnTNOo3T1f;S&T^vI+CMGA`;AQ7YII#DXtjL;M3}QF7zRR<e
+zSW~-IO6kM5s>+|Mo<4mV`dxwP_d6!mY2l2l9`E+KaWsS~a3`#A5Z%GLF;z6?!8<L3
+zh;D&~#z4j#rrq}r{kTxUcuYpbA(>A(&oD_|mVx29v$8&Gzp5P2S_V&7KbLh*2~7Zf
+CO-pS6
+
+diff --git a/graphics/battle_interface/last_used_ball_r_cycle.png b/graphics/battle_interface/last_used_ball_r_cycle.png
+index 55b7bc7c0c7b587cb11fca68a54fe15ce0004cf6..78c7fb58877d556da8e243bff3f8c6ee45a71386 100644
+GIT binary patch
+delta 199
+zcmV;&0672m0fYjOMSnp-L2+?$k&%)6`}?}Oy5r;HadB}$K|wGuFxJ-2nwpvb005&0
+z+6e#v0DnnDK~zYI?UcI?z#s@k9W*u=`2WwX!9IY}x^!^h#6jhF69-5s2o%*p)d89T
+zpsG3%$=CfXjebTPg?>FYNK$Bc3cOgr<_dShi!e?25J3IH5kL?m=m?e&78N#!pA(i5
+zN<K=txI)R7z(!Ne`%F;H%k6Kl1LAXl%tuhL3OfYNA?|cYq*VX_002ovPDHLkV1m;f
+BR$~AF
+
+delta 186
+zcmZo+`p!7PwO*6MF~}?G`TMUw|NhS|F7|Q?f{+Xh4A-umYw76$GKv>-O#xCxo-U3d
+z9-VKmY~*WD;BgH!dpPm>|Nk+<i#)tr1KaOy_`2jGV^Eh;XlYQfgO9`2;!hGxQ&-gT
+zJrHCTxVK;~n}%M6*`9{CZLAHyxY-4gOB!??8qOO#>Rn%vBL3u(qi~Ym`nwDC^bKl{
+k{&83%H{q|a$ls;H>fbaN8@FEi1hk&P)78&qol`;+0RBBrlmGw#
+
+diff --git a/graphics/battle_interface/level_up_banner.png b/graphics/battle_interface/level_up_banner.png
+index 24700ef4d1f822b008d25f4246d58add0ca812b8..d07fe57260ab9d2fb7d956886e90b0bf043237a4 100644
+GIT binary patch
+delta 160
+zcmZ3-c#v^|gct`i0|SGRIma>}#aJBV?!>U}oXpFKiX!#9cJ11G_TA&hk3Bs-3kwTp
+z&6)*N0tD4Z|1&Uj|8H(y!oaZe#$yhkkiDmiV~9uR+iM$n85DS!9laG4e(TG)C$+x+
+z!~ElvOH{_Ey2i*4|DIMcH~eN~V)=34W`d}K1B1*8#utnI_v`YiRvPhi_bPx)XYh3O
+Kb6Mw<&;$U3C_9+|
+
+delta 158
+zcmX@exQ=mxL_G^L0|UeN<4>0ZDT4r?5ZC`;kQG%76uA2A|K79j-o5*uwdQD4_m=9T
+zXMuu1P<`}214H-!=H?{~42|3@_klu|o-U3d7QM*{W@?-g1`_90I3<iD{PfjXO^hQZ
+zEvXARyx?NOGbbSqxvK^$raRb-CE6#k^hkP$>!vYGbeL^8<6rIukjb8|elF{r5}E)Z
+CsXO=p
+
+diff --git a/graphics/battle_interface/mega_trigger.png b/graphics/battle_interface/mega_trigger.png
+index bdb3e8e95703ae17b229d5b2fcbed3750628009d..80d252d55ae0ebec250eee75265c6d47aa4b93a9 100644
+GIT binary patch
+delta 345
+zcmV-f0jB=R0`vlqB!2;OQb$4nuFf3k0000mP)t-sxzD3PK|#l#$KA2dIhS>d-Tn8W
+zg>i9lnO8&U>3xC!-<6a1<KyF+nwtCj`?|WiYe$oH0002;Nkl<ZNQv!~(GJ5P2t{RT
+z(^}#GKX-_Iz*cCM>|skvNNd6Y5zP(ZLn9(Ti~u$v;c5ddjDJKXAk_)Eg0caSIPg!|
+z2oP_8t<V%8M3Nqera&v+W2lMK3D~hO&OqN7skVHsg>!&6sXVEw+6Wh-GnWdAfZ-hB
+zOrVU*7?cpTbvg$+LFOcbJQmRD7vQ)s>o$)X?u&cur|b**@Ve257+rmc5nrA@a5_Xs
+zA9mc?9ev2$LsDk5^x=r1CdLzFcI*p7A98B>T+7mjQW8K)r4&maI3$d%58KAhA6p+b
+rfgF8Uaamn`Se6@o(CLpp{F}W2z~2y8?z>R&00000NkvXXu0mjflYXIZ
+
+delta 302
+zcmV+}0nz^S0?7i9B!4haOjJd=&!g1n;kCHKdzXhzX<+~W00000!fU$SvCoy0_lw>A
+zO{<-O|KI89efOb-nO8%z6d{=a007iUL_t(YiS3k24udcZ1$p+92u=d`zikzQs`9Z>
+z*Wm38;6!MK;m=X>hD#`r05y0Vps<g}311+Z0rdoJOab6p(0{gIW7>@iPBf@ZIScED
+z719-)u4`Ki5K?6Q)D`D?4khLAhA-dNz+s0Uz8U*d>^OxG?<V_g9``#6H^0L>51acw
+zj5j}2N?{*T;u!TIB{Btlm^e+Gf<Bm1&CJ|Bbf(?7;Isx?AI$56<*u05hf*?`b1B8^
+zLt!aOX1@=WS|@9*K_6Bl>chf$3Hvb5Zy%mKALNk-?z5p*djJ3c07*qoM6N<$f@vs>
+Ar~m)}
+
+diff --git a/graphics/battle_interface/misc.png b/graphics/battle_interface/misc.png
+index 9d39df975ed5f0274e7ed10e0774858217527a72..a57a4b043e4976342d6cd8d8cce5a806c2f8ac12 100644
+GIT binary patch
+delta 165
+zcmbQkxRr5&L_G&H0|SHC(Gwqm6k~CayA#8@b22Z19D@L#5LY1W=;-+P@#9^)cFmeK
+z>;H9z-@kvK-)e1;c-wQ*@BeeAIG+8_!0;ao8M3DQ?>Fo^0Mujb>EaloF)=ye0OO2>
+z4V+vvE;1<A?s&o}b*6)vC$2fNfT4>w?J#49*$lZDhi%=OW;0?K7!EvR?X=5$Aqv#b
+N;OXk;vd$@?2>>t5KvMt!
+
+delta 140
+zcmdnWIEQh9L_G^L0|P_9sp<zHWf0&K;tHf49UcGwzjyEImZN)%tEV&vWhE(CGFS#V
+z{(r{sf6f%gv;P?w{(~Vy)|CJJR`-N}del8#9780gCMP&Bd1Wxf_BCd8U7o<;c=V}9
+n!-Aw_6^8&rJNtleLxxT3)lNRMIUEJl!r<xZ$Lg}qDWM4f5c@MM
+
+diff --git a/graphics/battle_interface/misc_frameend.png b/graphics/battle_interface/misc_frameend.png
+index 630f44242f96b1d2a131395ca3904e4b31088dfd..ab0cf9b1600cee4fc0d7cd39839ba80460a3454a 100644
+GIT binary patch
+delta 133
+zcmeBSoW?joqK<=^fq~)kMZcXuim^Dz-HBn{IhmJ0jzNG=h%1nGbaZ_D`0=h?yJpRr
+z_5V7<@87@AZ?!f^yzM#Z_y0Ll9MAq|VE7M)3|UkD_ZxN{0O}F(ba4#fn3<g5z^r4y
+frYy*_BZ-ZH@f-th%U8?aKzRmFS3j3^P6<r_O*b*%
+
+delta 123
+zcmbQn*uywMqJ)K+fq}tHaq$iyWf0&K;tHf49UcGwzjyEImZN)%tEV&vWhE(CGFS#V
+z{(r{sf6f%gv;P?w{(~Vy)|CJJR`-N}dc-|l978x}CMPs7r3oamDNTCNA{o=f$RO6w
+VXkK<NzZ9s1!PC{xWt~$(698{8DwY5M
+
+diff --git a/graphics/battle_interface/move_info_window_l.png b/graphics/battle_interface/move_info_window_l.png
+index 548acf653bf3ae29820f5ee08e8449599140aeae..36dcf8a11dd7bd00c4c69f87077d79f579096898 100644
+GIT binary patch
+delta 244
+zcmV<Q01N-40-yqrBnkm@Qb$4nuFf3kks%a+K|w)radDB6k^B4my1KgK<KuC0aX~>r
+zFfcII*3O!mng9R*qX*gv0001<Nkl<ZIE~elOA^E&2t?g!wFUP-ZUhW*MlhS%OlyAf
+zXh@ZoQtClvr~*9^P&Lk~HE}Mn5aWYH7H~q>hz01B1Jr*H3}t{P8@L06RTKcB9sqV<
+zNiJkelLdgz8K%7lU!O0COB@}%2YY_^@cI|-kJ~2z?&6@&9-0a=bT*r+pv2L^ZcS|#
+u2X3iY0OSOB-L!*9<oo`3F5XYpALs%%iz4&91c=rE0000<MNUMnLSTZ}e`h@a
+
+delta 264
+zcmZ3$w3umvO1(jVPlzky#^~ze<{+;qOG8IZ4o4v4`TMUw|NdtHgY4pBFQ*_N^V+p@
+zEj>LzMzXW&A|NGD666>B9}S#U+%yF!H_6k*F~p+x>SS-e0}322cPFSNfB1KNZP)&=
+z1HR^Sv$CFaHeVEQDybLQq%?ttG4N4LiLTS!hh9fa`+83_94T$M{M}(1YtK=pcMQp*
+z+6}8XCzNRItx5gBvSOQ9T9DC}pJocR+~$WrDE!~vo-C?t|J8=;g1LH_P09Nr0kMKJ
+x7hVV3-UvOQ_-by8@0sfNd%HiM{?(W_$3yk(?*%CnfzD&_boFyt=aj(M1OUuict-#L
+
+diff --git a/graphics/battle_interface/move_info_window_r.png b/graphics/battle_interface/move_info_window_r.png
+index f83e8f7f884a0cbcfe3e0f9f37fd500a63de7ea2..6da23f47dc2aa8993b2075d5925a38a69d3419d5 100644
+GIT binary patch
+delta 249
+zcmV<V00#f30;K|wBnkm@Qb$4nuFf3kks%a+K|w)radDB6k^B4my1KgK<KuC0aX~>r
+zFfcII*3O!mng9R*qX*gv0001^Nkl<ZIE~elQ4)Y42t@tUSqJWa+yu<XP`_KL44*5`
+zXi6z>l$tV77Xq@5v&v8GDHfvrkjMsF#yXlK7NC*?G#-HJ3``DR;OMXc@Y+QH5WFa4
+z075+g?2);U)=eA$jXq4@8b-c%5HGQH7&X{;uHm?g;g8!V0Pe*>?;45<(lm;NDp+Fc
+zV6UP!&VkEPECAL7S3R_iSZJL4?Y%hPtRLtCW27Sg7MnHO00000NkvXXu0mjf&}VGo
+
+delta 268
+zcmZ3=w47;zO1(jVPlzky#^~ze<{+;qOG8IZ4o4v4`TMUw|NdtHgY4pBFQ*_N^V+p@
+zEj>LzMzXW&A|NGD666>B9}S#U+%yF!H_g+<F~p+x>g3ye41zo^drfBdT=`%B?$WOO
+ztDpItzNBn%;!w2WimVs(U}p?`9P`De>CFa#!an939XuI(m@cs&$YeKb*Dok7V9*Jb
+zU`Q5|Zdl1Uflq7kmQ4|ilj08hv^n2h&%LR?K(>m{>b+&m>KFg6)bK2j^~-s3q3C+I
+z1!H)7*!-D?cXC;@?D3q_`SIP}`ojN__7}KMB&y!rGm}jV=tKrjS3g#lbxsLQ0LPMa
+Ac>n+a
+
+diff --git a/graphics/battle_interface/status.png b/graphics/battle_interface/status.png
+index ceb39fb777ff813be0929e4c930a27c6ec8233fc..d1569b107ac7b4fc92b431995a56b604ba509e75 100644
+GIT binary patch
+delta 364
+zcmZ3<GMi<BrI4ee<KxGVckS9WYu2plDb2rs|DNbAhfTB^tLSR1qPMY$PUdEmt}m$<
+zH)mjAxasNQ7-G>oce1b0VFixX-4EB^NqH}5!Q}qo-}9Fr78?fMTGr=yn4O<@^7V;5
+z*8{y69kQ-YI2Xhe;JAZf7jr*LA{)nZw^h5%5;W(@nX_&U(_J_1*S2d6A&JY*zjye2
+z@ong;z7HZiE1!Q)NMq}8-1qrv<4$H5m-7l`&vYNmUot~o)77Fs;lWQ^mm?uxI@flv
+zD41{aVw=OKIq5>df78QRJL;#->aySOp6z@2uF2hiY~6-^J5T@X7gpFKwjt$7khFm}
+z?}vK(CEuIB-S3)K$8zivzxwPR{-EuTPF67Yp2(iM?9;coKwmO=y85}Sb4q9e01g?r
+A9{>OV
+
+literal 553
+zcmeAS@N?(olHy`uVBq!ia0vp^5<qOg!3-pA!n`H|DaPU;cPEB*=VV?2IUfRiLR^6~
+z5d8mt@7}eo5H==xH0dZDL1gi(-?vW!j)+meWJxz15u?6)%QHA4M*XwmAUI-YEeZqb
+zdG6`r7-G@eJMpHVvm%G9?2oN2;Z3RmO@FTohlww$Occ4I94^C^;M=AU_G6B-==tFG
+zNkO&Qe#v(m=7!v8co$}89A?Y@;=${W**hEjH~l#NxuD|6@l#8lcpNJ^72mMB!F#Qw
+zaxT-IMxH;hdI{cQ{~xF_oL|Px5j1OFBlB*717_+M%2t+5kxH=9+nzYBR9}3;q@(s7
+zDqWwaPCOLeaK?3s@P<-`@XpV31e5p*rbfx{pT>P-@=^P$=K_B1o~8F^UB1CCF<n&m
+zfFA!!mMW$l-e-@mfBNq(ztuP9yuTZIobAs^az3fM5N&VwyR>?<<dhx9LBZtd>gTe~
+HDWM4f>Wsb6
+
+diff --git a/graphics/battle_interface/status2.png b/graphics/battle_interface/status2.png
+index ecb72c52de53433431155f6b46a402af32378a5d..8004dc9e8847279831c5517c15830a0f9b3e97f5 100644
+GIT binary patch
+delta 364
+zcmZ3<GMi<BrI4ee<KxGVckS9WYu2plDb2rs|DNbAhfTB^tLSR1qPMY$PUdEmt}m$<
+zH)mjAxasNQ7-G>ock)@mBMKa?-w*As^kAIkz&R!1|Jyeo78?eZnZK4Wsrhihpi=f^
+zh3rxhh9zOVFLhKIL|eEQSby*kNNXs_Te2&gdD^3wg~0*YS081q%+Ka^5Ka5_htEX*
+zZrsvW9R3F<RMqjPr8P)Av5uFWVeR1Zg{Lg(9@9V1uF6S4EuT5q=G}L8@o}AhqsxP#
+zD0y|tftM4MIC;Ov8?R~m9lmnqkI&Uxu9@8Rz0AAy8q<r}yWjk`U_6w~=<TMrm2vYG
+yhX3E4tL!uWug!Sro}lx$VAIJT3Z>ffdd$;JaxJdzGM)|eC4;A{pUXO@geCyr#k0cz
+
+literal 553
+zcmeAS@N?(olHy`uVBq!ia0vp^5<qOg!3-pA!n`H|DaPU;cPEB*=VV?2IUfRiLR^6~
+z5d8mt@7}eo5H==xH0dZDL1gi(-?vW!j)+meWJxz15u?6)%QHA4M*XwmAUI-YEeZqb
+zdG6`r7-G@eJMpHVvm%G9?2m0N;Z3RmO@Frwhlww$Occ4I94^C^;M=AU_G6B-==tFG
+zNkO&Qe#v(m=7!v8co$}89A?Y@;=${W**hEjH~l#NxuD|6@l#8lcpNJ^72mMB!F#Qw
+zaxT-IMxH;hdI{cQ{~xF_oL|Px5j1OFBlB*717_+M%2t+5kxH=9+nzYBR9}3;q@(s7
+zDqWwaPCOLeaK?3s@P<-`@XpV31e5p*rbfx{pT>P-@=^P$=K_B1o~8F^UB1CCF<n&m
+zfFA!!mMW$l-e-@mfBNq(ztuP9yuTZIobAs^az3fM5N&TKky_{BC6{ps6ilA3elF{r
+G5}E+4%e%Y)
+
+diff --git a/graphics/battle_interface/status3.png b/graphics/battle_interface/status3.png
+index 369564815fbad5b54eca666297ae410808a00fe6..3657017e5b9d03c9b91c1445b100fb29fa1894b8 100644
+GIT binary patch
+delta 366
+zcmZ3<GM8n7rI4ee<KxGVckS9WYu2plDb2rs|DNbAhfTB^tLSR1qPMY$PUdEmt}m$<
+zH)mjAxb5lU7-G>ock*rC!wNjEzaRhZoWd$`P`QHTy}jR4_7;|m*=|P!<bO+T_+({v
+z{<X$Z28GROC)_kSS180X+;wzmGGJO#tavqs+d%YwUO9Kx+ORu1TT|C^t~lf?eZTSP
+z;+v~O-ad@Juyo%1=9!WTY)7@8F}(AeAgEi>JY#x8{iGzhB|H!BG&MheE+81b(R{kn
+zq=rL3bgTuocu!p7_G7(dobsQ|R|5Y0v<$g=>F^3&k5J(o;XD5Pw_v>VnlboTTo$9-
+zO1^*Z+qcy9Y`4B6>igHDXQjNOn56uYyrbslr5zUJ-L8oKt^o8WgQu&X%Q~loCIA)o
+Bv?Blj
+
+literal 553
+zcmeAS@N?(olHy`uVBq!ia0vp^5<qOg!3-pA!n`H|DaPU;cPEB*=VV?2IUfRiLR^6~
+z5d8mt@7}eo5H==xH0dZDL1gi(-?vW!j)+meWJxz15u?6)%QHA4M*XwmAUI-YEeZqb
+zdG6`r7-G@eJMpHVvm%G9?2qj&;Z3RmO@F5ghlww$Occ4I94^C^;M=AU_G6B-==tFG
+zNkO&Qe#v(m=7!v8co$}89A?Y@;=${W**hEjH~l#NxuD|6@l#8lcpNJ^72mMB!F#Qw
+zaxT-IMxH;hdI{cQ{~xF_oL|Px5j1OFBlB*717_+M%2t+5kxH=9+nzYBR9}3;q@(s7
+zDqWwaPCOLeaK?3s@P<-`@XpV31e5p*rbfx{pT>P-@=^P$=K_B1o~8F^UB1CCF<n&m
+zfFA!!mMW$l-e-@mfBNq(ztuP9yuTZIobAs^az3fM5N&T~>eg`gs!%~8D40B5{an^L
+HB{Ts5pQXHL
+
+diff --git a/graphics/battle_interface/status4.png b/graphics/battle_interface/status4.png
+index 119d4f4aa76f8d0db71ec22989a1e644e05b7517..b86934e925bf11bb7e94d8bd39eb7c081931e4e4 100644
+GIT binary patch
+delta 364
+zcmZ3<GMi<BrI4ee<KxGVckS9WYu2plDb2rs|DNbAhfTB^tLSR1qPMY$PUdEmt}m$<
+zH)mjAxasNQ7-G>ock*q)BMKa@-`jt`Uc%(PfW>RW|Gct_44)}?&swqZvg=8ytyh*@
+zzjz8$!<AKvbC<F#XewYVVVC1P#3OL7H>5oGK#+}X9#_`ds2JU^xoa6$9P*iezwz1P
+z+p9xlA8JYjoqvDu439u_&GXgF#q1p&^Bl|0L?5vCH1rSZDv&#P;B$3H$I2JN(Sn=~
+zc{x*gEM$XJ7C!u!-FCI$zm}<JeO>>xS<7~3?pk;)ilMf6`d@i<hYH<<lP8v%B}|ig
+y@W0OEJ^S1JqPl-MdX~!jnMuko$vZmvBbyXYK^@<hdOe^o89ZJ6T-G@yGywoQm9DY?
+
+literal 553
+zcmeAS@N?(olHy`uVBq!ia0vp^5<qOg!3-pA!n`H|DaPU;cPEB*=VV?2IUfRiLR^6~
+z5d8mt@7}eo5H==xH0dZDL1gi(-?vW!j)+meWJxz15u?6)%QHA4M*XwmAUI-YEeZqb
+zdG6`r7-G@eJF!!cS&_q4R^x!sHWu#%EWh8Y&5?82oG5ZdJzj<@!M9Bz?8h8u(euIW
+zlY(lq{gUrC%niBG@Gi{GILwy)#e>%$vv)T5Z~Afkb3w(C<ENH9@i<m;D!yTLgZElV
+z<y@vajXZy1^%A_r{y$J<IKPaWBWTvVM&{iD2h7wjl&vhAB9&mHw>@!MslNDxNk{EF
+zRJuM-op>m`;f(7N;SHq>;hmr72qy6rOpTJ?KaKmw<fHag&jtM2JxlM;x_pCOV!EjA
+z0X_beELBW9yw4tA|McHoeyeZHd4D(bINP6-<a|<hA==(9NWHn})KfnjP%wGA`njxg
+HN@xNAVCcIY
+
+diff --git a/graphics/battle_interface/tera_trigger.png b/graphics/battle_interface/tera_trigger.png
+index 660880acf92bae4ae4741430ae84a088d191e5f4..fa340f8a7cbac7234b649836442a8faf8590e0b2 100644
+GIT binary patch
+delta 758
+zcmV<S0tx-Z0*wZcBYy#fX+uL$Nkc;*aB^>EX>4Tx04R}tkv&MmP!xqvQ%glEf)*5U
+z$WWauh>AE$6^me@v=v%)FnQ@8G-*guTpR`0f`dPcRR<SmT^(EnLGTB})x}BCMM}Ic
+zDYS_3!sC6MchBLy`v9R)VXE0R0jQc~q~b9#n_CrwuLz(YgMaYBFELY3q!%;rtgn0O
+zqq>XoEbqQQt5?aJ4DgA>b4)iZ;tk@NO-tvzPaI|?Ng+Nb9yjQM#E)E;U4G+SbXee-
+zVIz~8Ck_*f#SWG`n3W8bc$zq(s2b%9S(g>gTb$KOjkWH{Ul_`3D`~FN8bKUONFWIj
+zGHNKJ0t->vHGfh}r06{6;U9MVNpi{LDua<@0ad7w96$IU{GP2@n3{BxLNOrlV%s01
+zKyVjm)@}Ry*tVM|fd3h|(%SxN1DO3Jz24R$M?l{;aB<z%<UQbW2N-(NB|~x~KP{n9
+z0N&5&n{vRwEzq;(&aHKh(+40!vs%6Z4i15_B4w|8ynnm9b8i3kwC48%4<T}YTjLhB
+z0000mP)t-sxzD3PK|z|Dn#0e@(bw71*xFo-xoDr#lELk})$QZu<p2Nw0000000000
+z00000!2dAX00038Nkl<ZNQv!~!H&fs2t^AdAoBnJJAiG{H!AKXvv@3wiKlWwdavsp
+zmT~RF5Ptwm0EnOl%yvL##{h7tB(i&SqMn;ci9zq3fDnE0Elk%q;fGO$L*o{Y&m57)
+zzxC^322#T#5@uj%+yi$FC!o@hXJr+JJ*v+>WJgwIMi!!RKTg0yycGTd?p72)JZQ|r
+z9*75l=e5_<cbv&@{8^m+fdRPw{Y4J`pj!F^2XDY@f8ZRkCem^<DKTiR2?(<<zFql4
+z^TVjZp|<u1^<)1QSa<%QL!>Uoe*9K@;P!_TP-zIFuEMZI_1TB)$i^R3WZcg?f6$l0
+or9V_a`h!RT41eISKm6DD0X$R;zqzNIO#lD@07*qoM6N<$f-@^)^8f$<
+
+delta 298
+zcmeBWJHj+Uxt_rwz$e6Y=lR7~UOe2o<8aOVW!2N$eKQjoP{Ho2ZzmmmTfF#9OwUgD
+z_~j3$&*uOtIPdA=7~;|SHsmzlVFey-Ma!oL|NnpMvM}0Qb)j|Ms;gce+YBt$Zhz}7
+z@YIGWVV|SsO)-yHg9kIp85mfYSQuoQ_SKj4aAd9BU@y8yw!>@r?`RqBH~Uz#G@Jj6
+zys1&D_|$mx!DHt~f{q2gOT_mqI9DU~)kj<YT5F-c{S4{))>QiydcPVgFY=$MwC`Bu
+z@>gMz$EsB=T93XqM;Mz1XRFoOZ`h`GX;#q{{x!#Ptlxik*0K0;BI(0NMRobO&wu_`
+mJMR6i>?{K{^8Vismn#^G7I1yuBlXJ#<a<w7KbLh*2~7Y77=<GM
+
+diff --git a/graphics/battle_interface/text.pal b/graphics/battle_interface/text.pal
+index 574999b7..512ff19f 100755
+--- a/graphics/battle_interface/text.pal
++++ b/graphics/battle_interface/text.pal
+@@ -6,14 +6,14 @@ JASC-PAL
+ 131 0 0
+ 255 164 98
+ 131 82 49
+-0 0 0
+-0 0 0
+-0 0 0
++172 230 172
++123 205 115
++160 160 160
+ 0 0 0
+ 0 0 0
+ 0 0 0
+ 131 131 131
+-74 74 74
+-74 74 74
++24 24 24
++24 24 24
+ 255 255 255
+-213 213 205
++208 208 200
+diff --git a/graphics/battle_interface/text_pp.pal b/graphics/battle_interface/text_pp.pal
+index 8c2a2741..bdf98cbb 100644
+--- a/graphics/battle_interface/text_pp.pal
++++ b/graphics/battle_interface/text_pp.pal
+@@ -7,8 +7,8 @@ JASC-PAL
+ 255 238 115
+ 230 24 0
+ 246 222 156
+-74 74 74
+-222 222 222
++24 24 24
++208 208 200
+ 0 0 0
+ 0 0 0
+ 0 0 0
+diff --git a/graphics/battle_interface/textbox.png b/graphics/battle_interface/textbox.png
+index 96f6b8b15f3bb58830eb7a4cd1d1e716b7a9ea49..0100259d886d4fceb557bdcaff7ce15d77b52ca6 100644
+GIT binary patch
+delta 421
+zcmdnPyqS4|L_G&H0|UdC2NQn+DaPU;cPEB*=VV?2IR*hfA+A8$!^6YNG3fnL%dGCb
+z|NsBLaN$H&RPoibSA&A0fa1x?*-=r+bLOo5e=i#-8^_-B4rq>{r;B4q#hkZSZWlEx
+zh&TkMrLa}+ne+euZLcF7jgM6?oAKX$ebmQfgXx0$;?6vkSJw}Ve%^3_`Qsm*OTFE{
+z*8JYxu>NR?;evj~&#dLlubR>h80|l0!?*m{&pd}zeu0}zkN)i9t9h2r9CR@GUp$Az
+zd1jU0kz6aneU0w&PFS~+=LFZa#<M?z56*4aR{JsY&hohy-TaDQejcdhc=h)E?AyC{
+z=w15Tr1?+T(4n^8)t{-W@#)@%<9`et{tCn$ZCc!*@b|LOe#wA8rkV?4CVM+1|2ypd
+z_Vwwt3~QOTh$iq<C_8*^`1^NJXv03Xo@j^16QdYkZGB|Qzv7*Z{jQ?$t{L5@V%{EG
+zWO`5k_T2oKt@`)x<W2kb>O9jtdAn8yCXOE!z%WGsIS8|%{=M`iuCR5=;cZeN5l>e?
+Jmvv4FO#sd5!Q}t|
+
+delta 430
+zcmV;f0a5<51H1!}7=Hu<0000n5PbLm001yhOjJbx00960|Nj60QevEHi@pE<|7u!u
+z)y>sGN_$E{QiF?&YC&48YGTz&Ih;yjYNVvBSuFPe00BoyL_t(&f$h>UO2j}E#_?I$
+z1MGuswihoTSnq<By$7&~Sf+9C7-<ZHXk!-?Ya0(BcmTy`FMr|%Z1l}cCiAjxaNSbA
+zA1ox<;h)LO7$Zo`oGaZ57tGIJ$_?|=CG$(VH=6{`nfdl-pk6!RKJr5qu;ko5_q-1T
+z<Qw>*2|{32NuVxC|Iswpa`U!2pk5RMPNraq^wi?m*MUIR1}gs*q!&kg%I)2n0T%*#
+zd%Q>ahF=3|pnp-uyGIAX$>CgIt1S;NBx_5PrfQ~pt;JH{I9{I(2f|{F_IFxalYXG6
+ztvD@opvr-?UE`~w)t|Nmy5~7SDL^J27(K8T*iO%B-kq5$1xhk$HT6_=V6<ol({$3E
+z8H(q||5P9^R&V9i;_5Tw-|nfv@YZQ+2V%gFTORZ$2q*lD0000000000000000Kf*m
+Y0Tl@ZW14Mnw*UYD07*qoM6N<$f&&7;HUIzs
+
+diff --git a/graphics/battle_interface/textbox_0.pal b/graphics/battle_interface/textbox_0.pal
+index 67e1af89..abc6701d 100644
+--- a/graphics/battle_interface/textbox_0.pal
++++ b/graphics/battle_interface/textbox_0.pal
+@@ -2,18 +2,18 @@ JASC-PAL
+ 0100
+ 16
+ 0 0 0
+-255 255 255
+-255 0 0
+-82 98 156
++24 24 24
++74 65 82
++239 165 57
+ 106 139 189
+ 255 255 255
++208 208 200
+ 106 90 115
+ 213 205 213
+-65 74 123
++82 82 90
+ 74 65 82
+-131 139 139
+-106 65 90
+-172 106 98
+-213 74 57
+-156 74 98
+-106 164 164
++99 99 107
++90 90 99
++156 156 173
++255 222 107
++255 255 255
+diff --git a/graphics/battle_interface/z_move_trigger.png b/graphics/battle_interface/z_move_trigger.png
+index 907a4cf20cb07342256db7bab6a22d0083eea591..a25b98f319c71069944c042395c3e5dff8684b17 100644
+GIT binary patch
+delta 719
+zcmV;=0x<pN0_FvfBYy#eX+uL$Nkc;*aB^>EX>4Tx04R}tkv&MmKpe$iQ;Q-M2ZI!G
+z$WWauh+jBL6^me@v=v%)FuC*#nlvOWE{=k0!NHHks)LKOt`4q(Aou~|?BJy6A|?JW
+zDYS_3;J6>}?mh0_0Yan9G^=YI(DbUAj76nPc2(+rMF1iO5r4w8%q%0GT1>-peBHyx
+z*SiSM@;>+H=u>kR1AG$k95c)+@dokCX4T-lPb{*ctP-CSkC}8q;zzD4F28XuI4tl?
+z(M%`jiA7?m(7{Rvv!baHPZ5VzO{aVz<Fd+mi?dd)vDQ8L3xhd*CB=1`!-!!CaU>u?
+zK@BC8QALDSoqrSyN!pKk_=g;Sf?Nu@N?_zzKm{6P#}EDozq_^alM`-IFbV`-Z2Myb
+z=-vgIb=&?vw(aH#;C}|L^tQj!0A@c)ueY`E5zxO4TwJ#`We>RA0YXoPY|4)0rzzy~
+z!220}Qx+Jw1$x)q-dg)OeE`zb)$$E+a0rYRD0|)G-G4ouz5RQp)!z@w0CLK%NHz@s
+z001FSOjJd=&!a&>L346(f`p8knwr4C0K?D8=;%=J@L>4(X!!W}a*>vu0002+Nkl<Z
+zNQv!~%M!yN2t_46Qu+T6E@%`~VmF;GIysxn^d5{-gL4`r+y)E)urV+orgU#`PTU$-
+zUX0F?1Ai2wGv)P1ZRk8mT}rc1&(~R2Xw`|p{wfjr>fUoB)E;5TJwx^0n}V0zi=tj}
+zFqD_)VQy0LwNceTK7)>jM%6x~@ep&X8<ya7t4+b-C&8hCeRUpwz&GYY&fEEL61T>c
+z7vp9=PzX>A`_gjEXk*BwPK@Dvx$~M=XjeYx7)V)|_n_uOQRZtu%m=F9&WDn3<^wfh
+zJ0DuUHmVwDjBJ?SCL8=euws9_7*4?wp84<(yaC;S4b5!d`Mv-E002ovPDHLkV1hGL
+BSYH4D
+
+delta 332
+zcmV-S0ki(*1?B>fBYyxeP)t-sxzD5c`1sW5;kCHKe4nOrY=nE4hfQf=0000000000
+z0QmT5=)+XemOP|{W_n>uCVQvB0002-Nkl<ZNQv!~(T+nQ2t=<)nFo>n|KB#~?%Gzk
+z*}gV+UQC=3L6dVFpGg3m`6z|xB!NP;);xhyhY0aS?h7C@5r6vLB0NGtKnk7|^x?Zp
+zdj*-by~W|b2Yzm6CLeU4VxDIg5i!eKK<4Q`pP8}Ozqx9yW4&SX0a^Y_53;6bW=}}`
+z)B+!J+z-g^AE-;wSIP5BM+Gi@pZ>vz)=v4*R5eea=uk`fpz3^>iO~P$gD3X>U-%I8
+z;k!#2A4ZGAPeu4()_l;659VsEnT33?<(pZ+hr3Hv$9fO>u>6b<y?0NfeDEQA?>*y#
+eE?s>1Qau1dJ`Y+<ilwjs0000<MNUMnLSTYGx}oC$
+
+diff --git a/graphics/battle_transitions/dailyred_red_bg.pal b/graphics/battle_transitions/dailyred_red_bg.pal
+new file mode 100644
+index 00000000..3ce4089b
+--- /dev/null
++++ b/graphics/battle_transitions/dailyred_red_bg.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++172 49 49
++115 115 115
++148 148 148
++180 180 180
++213 213 213
++180 16 16
++197 32 32
++213 49 49
++230 65 65
++246 82 82
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/graphics/trainers/front_pics/dailyred_leaf.png b/graphics/trainers/front_pics/dailyred_leaf.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..87e3fc2b5b660aee8a307558f58e930b8659f030
+GIT binary patch
+literal 1514
+zcmeAS@N?(olHy`uVBq!ia0vp^4j|0I3?%1nZ+yeRz|0Wf6XN=x;XhEsAfv;=At0b*
+zLxh7yg@Z%IjvF&(?ATF}aKORg#EBa>7F7I5i1=|~$B!RBfQm=KXb23O5IDYzp@)Hi
+zX{o1+V@SoErPCWHy;k6G^$rlaqVoU$_V-Phlgi4XUM81Y-CXybqeDWz-+$YTTA7a*
+zD{h_@`=|f&e8=p%``L32d|kJG>Z69L$^Y3_oZhw0`|YuV3KcJZO+K*kX-wIRYg^^y
+zw~DQt=#s>^<Vw(lhM)$mW&KMU%a!M-eKh%|w8A`@i?Qh3q0_!TmhKFZqAhbp+;%_7
+zQ)KcfzZ;buHTz+a4vRpEwXSwuk;i+-oao}cte?0Y6!SkUej3kcX|44Ac>tgMJeJcb
+z+5WXRSR1=$GjH-Jk(Ae(SJ_s{BgB&Nx_iCbhZZJ5h6F~3gp`KMDGV)_Qe+;OsvO$P
+zD72b+o0_1l+h-PsS?OY;AK#l8*>C$|(`<0QQ>XcnspJg#hAC=0Ca8VV+Hgol@y8B1
+zUH{8hL_CjhJqlm<zoziPOx<~BSS=dn_Vio-ZoX;5zVNug#{Zt~1^1f;w3#-3OJvYd
+zcoliC>Gvy^t`1H?6_taGE>`Qz)o(CpR`U2t8CI+EP8VW%CAWYtw=VY&Pl`yx%?qb1
+zjS_{K3sQ`^%<f06m@S-CC2)lASr8w?E@oCHg9EqLK4=jscDxYG#G%QaV9PMA%|T3m
+z?`{Xb48}v!2hzjUdD4Qeoql85=yxbXHBRn}#1o#RE36wke|z1so3Mg=n{3YAj-0=5
+zR1e;&Il_8>;)D{Rlvf8h60Da^wp)LM@wT8r$nCa(D#O0#2X<M^^{-M%{!{YlpZjy=
+z2$5>fORMW&zVtcpho_=z&E@{G!@?hw4!*u;Hs@dQrQNr;_w-1f=Ujei=>f&`zorZx
+z3Lj33TPPiiZK(6pe_ZJnEvJ6t!F5hf^LeRT44w1J*IXCih_2o+>4ubJtk^E*jH7>(
+zWto1oZeExFPwb9TVW|}3guB;g-Y@f2VL#sZ?fUlmzW?m3Ra)ADqRZ?-xzE$p&t;uc
+GLK6T0uU|?4
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/trainers/front_pics/dailyred_red.png b/graphics/trainers/front_pics/dailyred_red.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..edf6b1abb86d58fd4b2e32eea7007c2fb0639741
+GIT binary patch
+literal 1438
+zcmeAS@N?(olHy`uVBq!ia0vp^4j|0I3?%1nZ+yeRz|0Wf6XN=x;XhEs00=4?EFv-j
+zW^AZ%aF{S-#*T`F0}c)cb_86waO1{;iXRCPKQ8R}@#6<j@hBJ#fngH@oa~F77#Nr$
+zJzX3_D(0-6-ksNMz~fpdG)Mi(|Nmvz`C7v+v-qWl@J8Jgwin)}Qy&%f`}cS0)0M%e
+z&lLZ9n`(J^`Y%Za=g8{yvzH|*v4z=kC{HXCw|IW<c)DD`Ol><G_6EJOttV!xGgLoj
+z4mfF<u3B(-X_5F!OXJ4N^DNwyl3uOcd2P<wMioYfxk1T0^Uq%6+*Id1;eFQGRq;Y9
+z5&O3~X5{cB6#Bkq^Lu1_=nR89Qv-j5{kN!iRfVcB9@ZmK$^x7X!T&d?U)Bp{caVyd
+z;V60Wd-Gn#mC1$S438XiQd_2MpK{68A!vSwSLX%w&Ltbll&Z4)bNB16WLO};5G4^e
+z#VE>h;hLhm0$aXuome5iM}k4%!sH#7V#7DSNUdXd!Ng%F^SNW61K+zz2X=KaZR_jg
+zyZYK8d7eRte;M1AeJ5r34v4L~637<xHco%{L>*%W({A=g54BU<v=uscGBG$Mgl{;Q
+zu*-+Rj=^%up;m*3+cxfF&}neGmdn^+#?b6=j6-b6f~&XgG4QAVOigDoI?QCS@;~#0
+z`wT*dTbRWeCa0D;u%EDexWM>r6+;P2eA@N(29haT6Ryo?___I4KI7{n-qSQ5{<k@>
+z`nAjEhUBLobQ@0aUr;%4xoAg%+8l2Gw2zZ&Sp)Vr&*w~BQF2q^`#~NK@dNDdn+;i_
+znAeFPXy-hj)lvBVXivk3X+Ie^2riiDx#aW7IW7EWD-3oQWO}^!ZE&_Xk>}_C`eH7>
+z1BV*}-xqJDIrDhVKixF@v4+L<C2yX{uUO6!_0{I&_1hOdo-J<Jqh!7B+@z1bwR4*9
+et6#i(@eA{n53)C16au3_ImXk~&t;ucLK6T&VmQG7
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/trainers/front_pics/dailyred_red_anim.png b/graphics/trainers/front_pics/dailyred_red_anim.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..ba4c52fdef804ad90104dbf9b8e15ab66388c760
+GIT binary patch
+literal 1689
+zcmeAS@N?(olHy`uVBq!ia0vp^4nW+%!3-pO;^#*&FfcO&_=LFrXZQ~kF#v*!28)P{
+zfEgPq92_Rhn6aZG;edm~fgJ%CF5I}WpyEeD#E%O*e*E|WR6GhsLtxm104Mt*CtzL(
+z@pN$vshIP2#_PVt20X2W9==XN75}&2O;&es-;gEq?6_BVpy`&ypO5aeXf)=j?_Kfn
+z`~Uh*iThF$cl!Uor{uP4<$FehDVedCquUoQ=3i4KaLVCU@B@kKTWfwXc3M6>T+8rc
+zS!nX36S57e#jGkt=OQ`h6t2AEJ7w<71BskAzAi_$w7n@R+s4vV!thGK=ydJ5ZBrHA
+zK4<v3XyV#miVjWRiuGE~9OL8Bd%dSoxMHS2T7xp90{a&GwVJuX4p+=1xn=~-YT#ga
+z^Xr(Yq}a?-h7?6_rg^LCa&Jo;l<2(VauAyFY-fq)K4*^mj7DD?Gv=wkX#SFt7TXyS
+z?0w?&bxlzQ5vBt|ZepKfrWGC7a_VdAg5vcJ9Y3ALSQ(hEsjT~u8@lnu(mI9+)(7tK
+zuLWN-C4a~jh=>k6Q0?ma+a$|z@w|W#U2EoNcHXjL2X3p+bl3FgeP4C6cgaj9k3gdj
+zE<u6YVi}tygc%en%8bn<LZ)*b5Eb}q^Vw%bL3E@%gV+I|Yq^XKF$}E^$K-e<n&t%k
+zV=%e)NvxWGNgHcI(0?|CI))|uvYavuA=4}wbrqhsG*8XE&b&Z%M{DeVClAH!ip_QG
+zC+1(T5dZM1;)Iaur}ykVv#bL37i@d;o~h#)(<_!9lPe-;TJ}CX7ig2Ronh8?`RZK(
+zA-C2{ug+)t!EErW@XIm13#T97Vp#m1VGm2-J9kdy1NA*Mj5jzgc&J|bch-i(-sEYw
+zWvjDuRX$Tl?ZrPoF0D9z>nG!fdmINE>pU7RPhJ?Sx7)I>X|HdWU)+Ky&M%iftH}8~
+zf1O^|V54MhcW%-r?<~3I&z@H*O+1fOoOZnNr#X)KVff$Xc|4C4-&g-!$L6x<<FEhz
+zk^<M#&v@P7<ye=$$c!QGzdaAf<J0<|<W{^;cRx5Y{{F{%E|aAM9x1YHu2*2=@V)X@
+zeg&h^oe%s+zA!AjZ6CnwqV?mAyb044hMk}IrFc8C8s_|M4r5L-cF_CNY{u-wIQ^gF
+zY(~K=bvr=P9EJ`}yT9<y;^FwJ&r<M>{}xZj-TECLfC3$_>|=hi_p-TslwbF!`I_;z
+zAN=9}8ZS0j{AAx`T*A1jKH*CIPxfuOPoKy~m_IviU-75;xV?nj{{$f8;YWVIS;y^v
+c*#Bv^Pd{qC$hj?Z6{xWAboFyt=akR{0Fh;~t^fc4
+
+literal 0
+HcmV?d00001
+
+diff --git a/include/battle_transition.h b/include/battle_transition.h
+index fcfe42fd..206955b7 100644
+--- a/include/battle_transition.h
++++ b/include/battle_transition.h
+@@ -18,6 +18,7 @@ enum MugshotColor
+     MUGSHOT_COLOR_PINK,
+     MUGSHOT_COLOR_BLUE,
+     MUGSHOT_COLOR_YELLOW,
++    MUGSHOT_COLOR_RED, // Daily Red: RED's band in his VS transition
+     MUGSHOT_COLOR_COUNT
+ };
+ 
 diff --git a/include/config/battle.h b/include/config/battle.h
 index b29ee42a..eabc1f50 100644
 --- a/include/config/battle.h
@@ -355,10 +1312,21 @@ index 0bb20e41..d9fe44b8 100644
  
  #define MUS_NONE                    0xFFFF
 diff --git a/include/constants/trainers.h b/include/constants/trainers.h
-index 106cc06d..f5e6d99d 100644
+index 106cc06d..b3db360f 100644
 --- a/include/constants/trainers.h
 +++ b/include/constants/trainers.h
-@@ -521,6 +521,7 @@ enum TrainerClassID
+@@ -177,6 +177,10 @@ enum __attribute__((packed)) TrainerPicID
+     TRAINER_PIC_CRUSH_GIRL_FRLG,
+     TRAINER_PIC_POKEMON_BREEDER_FRLG,
+     TRAINER_PIC_PAINTER_FRLG,
++    // Daily Red: HeartGold/SoulSilver-style RED (his battle) and LEAF (the
++    // VS transition), made from art/ by scripts/graphics/make-graphics.py.
++    TRAINER_PIC_DAILYRED_RED,
++    TRAINER_PIC_DAILYRED_LEAF,
+     TRAINER_PIC_COUNT,
+ };
+ 
+@@ -521,6 +525,7 @@ enum TrainerClassID
      TRAINER_CLASS_RUIN_MANIAC_FRLG,
      TRAINER_CLASS_LADY_FRLG,
      TRAINER_CLASS_PAINTER_FRLG,
@@ -386,10 +1354,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..61c55d41
+index 00000000..63757cc5
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,94 @@
+@@ -0,0 +1,96 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -426,6 +1394,8 @@ index 00000000..61c55d41
 +// src/dailyred_red.c
 +u16 DailyRed_GenerateRedTeam(u32 *rngState);
 +void DailyRed_CreateRedParty(struct Pokemon *party);
++struct Sprite;
++void DailyRed_AnimateTrainerSprite(struct Sprite *sprite, u16 trainerPicId);
 +
 +// src/dailyred_sets.c, generated by scripts/sets/generate.mjs from Pokemon
 +// Showdown's Random Battle sets. Each species has a list of sets per kind:
@@ -484,6 +1454,39 @@ index 00000000..61c55d41
 +extern const u16 gDailyRedPickLists[];
 +
 +#endif // GUARD_DAILYRED_H
+diff --git a/include/graphics.h b/include/graphics.h
+index e72ab7db..3a3cfbd4 100644
+--- a/include/graphics.h
++++ b/include/graphics.h
+@@ -245,6 +245,12 @@ extern const u32 gBattleEnvironmentTilemap_PondWater[];
+ extern const u32 gBattleEnvironmentAnimTiles_PondWater[];
+ extern const u32 gBattleEnvironmentAnimTilemap_PondWater[];
+ extern const u16 gBattleEnvironmentPalette_PondWater[];
++// Daily Red: Mt. Silver's battle background (src/data/graphics/battle_environment.h).
++extern const u32 gBattleEnvironmentTiles_DailyRedMtSilver[];
++extern const u16 gBattleEnvironmentPalette_DailyRedMtSilver[];
++extern const u32 gBattleEnvironmentTilemap_DailyRedMtSilver[];
++extern const u32 gBattleEnvironmentAnimTiles_DailyRedMtSilver[];
++extern const u32 gBattleEnvironmentAnimTilemap_DailyRedMtSilver[];
+ extern const u32 gBattleEnvironmentTiles_Rock[];
+ extern const u32 gBattleEnvironmentTilemap_Rock[];
+ extern const u32 gBattleEnvironmentAnimTiles_Rock[];
+@@ -2032,6 +2038,7 @@ extern const u32 gBattleInterface_BallStatusBarGfx[];
+ extern const u8 gBattleInterface_BallDisplayGfx[];
+ extern const u16 gBattleInterface_BallStatusBarPal[];
+ extern const u16 gBattleInterface_BallDisplayPal[];
++extern const u16 gBattleInterface_DailyRedHealthbarPal[]; // Daily Red
+ extern const u8 gHealthboxElementsGfxTable[][32];
+ 
+ extern const u16 gNamingScreenMenu_Pal[6][16];
+@@ -2071,6 +2078,7 @@ extern const u32 gHealthboxSafariGfx[];
+ extern const u32 gBlankGfxCompressed[];
+ extern const u16 gBattleInterface_BallStatusBarPal[];
+ extern const u16 gBattleInterface_BallDisplayPal[];
++extern const u16 gBattleInterface_DailyRedHealthbarPal[]; // Daily Red
+ 
+ extern const u32 gSwapLineGfx[];
+ extern const u16 gSwapLinePal[];
 diff --git a/include/main.h b/include/main.h
 index 56cf13f0..f685a6ed 100644
 --- a/include/main.h
@@ -838,6 +1841,38 @@ index 00000000..3bcdb60e
 +	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 +	voice_noise_alt 60, 0, 0, 0, 2, 6, 0  @ 126: noise
 +	voice_noise_alt 60, 0, 0, 0, 1, 8, 1  @ 127: noise, hi-hat
+diff --git a/src/battle_controllers.c b/src/battle_controllers.c
+index 63c899bc..569f0510 100644
+--- a/src/battle_controllers.c
++++ b/src/battle_controllers.c
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "battle.h"
+ #include "battle_ai_main.h"
+ #include "battle_ai_util.h"
+@@ -2509,6 +2510,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
+         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSpawn;
+     else
+         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSlideIn;
++    // Daily Red: RED's HGSS sprite tips his cap once he's slid in.
++    DailyRed_AnimateTrainerSprite(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], trainerPicId);
+ 
+     gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
+ }
+diff --git a/src/battle_gfx_sfx_util.c b/src/battle_gfx_sfx_util.c
+index 1873a02a..d40347d3 100644
+--- a/src/battle_gfx_sfx_util.c
++++ b/src/battle_gfx_sfx_util.c
+@@ -84,7 +84,7 @@ static const struct CompressedSpriteSheet sSpriteSheets_HealthBar[MAX_BATTLERS_C
+ const struct SpritePalette sSpritePalettes_HealthBoxHealthBar[2] =
+ {
+     {gBattleInterface_BallStatusBarPal, TAG_HEALTHBOX_PAL},
+-    {gBattleInterface_BallDisplayPal, TAG_HEALTHBAR_PAL}
++    {gBattleInterface_DailyRedHealthbarPal, TAG_HEALTHBAR_PAL} // Daily Red: HGSS-style bars (was gBattleInterface_BallDisplayPal)
+ };
+ 
+ const struct CompressedSpriteSheet gSpriteSheet_EnemyShadow =
 diff --git a/src/battle_main.c b/src/battle_main.c
 index 46af80f3..72617a03 100644
 --- a/src/battle_main.c
@@ -851,7 +1886,7 @@ index 46af80f3..72617a03 100644
      [TRAINER_CLASS_TEAM_AQUA] = { _("TEAM AQUA") },
      [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} BREEDER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
 diff --git a/src/battle_setup.c b/src/battle_setup.c
-index 6024da3c..abcccc23 100644
+index 6024da3c..d786bd71 100644
 --- a/src/battle_setup.c
 +++ b/src/battle_setup.c
 @@ -1,4 +1,5 @@
@@ -860,18 +1895,19 @@ index 6024da3c..abcccc23 100644
  #include "data.h"
  #include "main.h"
  #include "battle.h"
-@@ -767,6 +768,10 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
+@@ -767,6 +768,11 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
  
      tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
  
-+    // Daily Red: the summit is an open mountain peak.
++    // Daily Red: the summit is Mt. Silver's snowy peak (its HGSS-style
++    // background is in src/data/battle_environment.h).
 +    if (DailyRed_IsOnSummit())
-+        return BATTLE_ENVIRONMENT_MOUNTAIN;
++        return BATTLE_ENVIRONMENT_SNOW;
 +
      if (MetatileBehavior_IsTallGrass(tileBehavior))
          return BATTLE_ENVIRONMENT_GRASS;
      if (MetatileBehavior_IsLongGrass(tileBehavior))
-@@ -1463,7 +1468,9 @@ void BattleSetup_StartTrainerBattle(void)
+@@ -1463,7 +1469,9 @@ void BattleSetup_StartTrainerBattle(void)
          }
      }
  
@@ -882,7 +1918,7 @@ index 6024da3c..abcccc23 100644
          gBattleTypeFlags |= BATTLE_TYPE_FIRST_BATTLE;
  
      if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
-@@ -2259,6 +2266,14 @@ void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Traine
+@@ -2259,6 +2267,14 @@ void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Traine
  
  static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
  {
@@ -897,6 +1933,54 @@ index 6024da3c..abcccc23 100644
      if (!GetTrainerStructFromId(trainerNum)->overrideTrainer)
      {
          CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum));
+diff --git a/src/battle_transition.c b/src/battle_transition.c
+index abe49bd2..d0cbb51b 100644
+--- a/src/battle_transition.c
++++ b/src/battle_transition.c
+@@ -869,6 +869,7 @@ static const u16 sMugshotPal_Green[]  = INCGFX_U16("graphics/battle_transitions/
+ static const u16 sMugshotPal_Pink[]   = INCGFX_U16("graphics/battle_transitions/pink_bg.pal", ".gbapal");
+ static const u16 sMugshotPal_Blue[]   = INCGFX_U16("graphics/battle_transitions/blue_bg.pal", ".gbapal");
+ static const u16 sMugshotPal_Yellow[] = INCGFX_U16("graphics/battle_transitions/yellow_bg.pal", ".gbapal");
++static const u16 sMugshotPal_DailyRedRed[] = INCGFX_U16("graphics/battle_transitions/dailyred_red_bg.pal", ".gbapal"); // Daily Red
+ static const u16 sMugshotPal_Brendan[] = INCGFX_U16("graphics/battle_transitions/brendan_bg.pal", ".gbapal");
+ static const u16 sMugshotPal_May[] = INCGFX_U16("graphics/battle_transitions/may_bg.pal", ".gbapal");
+ 
+@@ -878,7 +879,8 @@ static const u16 *const sOpponentMugshotsPals[MUGSHOT_COLOR_COUNT] =
+     [MUGSHOT_COLOR_GREEN]  = sMugshotPal_Green,
+     [MUGSHOT_COLOR_PINK]   = sMugshotPal_Pink,
+     [MUGSHOT_COLOR_BLUE]   = sMugshotPal_Blue,
+-    [MUGSHOT_COLOR_YELLOW] = sMugshotPal_Yellow
++    [MUGSHOT_COLOR_YELLOW] = sMugshotPal_Yellow,
++    [MUGSHOT_COLOR_RED]    = sMugshotPal_DailyRedRed, // Daily Red
+ };
+ 
+ static const u16 *const sPlayerMugshotsPals[GENDER_COUNT] =
+@@ -2287,7 +2289,9 @@ static bool8 Mugshot_SetGfx(struct Task *task)
+         mugshotColor = MUGSHOT_COLOR_PURPLE;
+ 
+     LoadPalette(sOpponentMugshotsPals[mugshotColor], BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+-    LoadPalette(sPlayerMugshotsPals[gSaveBlock2Ptr->playerGender], BG_PLTT_ID(15) + 10, PLTT_SIZEOF(6));
++    // Daily Red: the player's band is blue (Brendan's) for LEAF too, against
++    // RED's red one.
++    LoadPalette(sPlayerMugshotsPals[MALE], BG_PLTT_ID(15) + 10, PLTT_SIZEOF(6));
+ 
+     for (i = 0; i < 20; i++)
+     {
+@@ -2629,6 +2633,14 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
+         SetOamMatrixRotationScaling(partnerSprite->oam.matrixNum, -512, 512, 0);
+     }
+ 
++    // Daily Red: LEAF's HGSS-style picture in RED's VS transition, 8 pixels
++    // lower (a full-body sprite with no headroom) to keep her hat in the band.
++    if (gSaveBlock2Ptr->playerGender == FEMALE)
++        task->tPlayerSpriteId = CreateTrainerSprite(TRAINER_PIC_DAILYRED_LEAF,
++                                                    DISPLAY_WIDTH + 32,
++                                                    106 + 8,
++                                                    0, NULL);
++    else
+     task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender),
+                                                 DISPLAY_WIDTH + 32,
+                                                 106,
 diff --git a/src/battle_util.c b/src/battle_util.c
 index 85523e06..79fe93ec 100644
 --- a/src/battle_util.c
@@ -1263,12 +2347,14 @@ index 00000000..2e916e4a
 +}
 diff --git a/src/dailyred_red.c b/src/dailyred_red.c
 new file mode 100644
-index 00000000..54da868c
+index 00000000..5fb1ae11
 --- /dev/null
 +++ b/src/dailyred_red.c
-@@ -0,0 +1,477 @@
+@@ -0,0 +1,541 @@
 +#include "global.h"
 +#include "dailyred.h"
++#include "battle_gfx_sfx_util.h"
++#include "sprite.h"
 +#include "data.h"
 +#include "pokemon.h"
 +#include "random.h"
@@ -1744,12 +2830,74 @@ index 00000000..54da868c
 +    for (i = 0; i < PARTY_SIZE; i++)
 +        party[i] = gDailyRedRedParty[i];
 +}
++
++// --- RED's battle sprite ---------------------------------------------------------
++// His HeartGold/SoulSilver battle sprite is animated: he stands holding his cap
++// up, looking at you, then tips it down for a moment. The trainer picture
++// (TRAINER_PIC_DAILYRED_RED) is the first frame; in battle his sprite uses both
++// frames, uncompressed in the ROM, and plays the animation once he has slid in
++// (the battle's own picture buffers only hold one trainer frame).
++
++static const u8 sRedHgssFrames_Gfx[] = INCGFX_U8("graphics/trainers/front_pics/dailyred_red_anim.png", ".4bpp");
++
++static const struct SpriteFrameImage sRedHgssFrames[] =
++{
++    {sRedHgssFrames_Gfx, TRAINER_PIC_SIZE},
++    {sRedHgssFrames_Gfx + TRAINER_PIC_SIZE, TRAINER_PIC_SIZE},
++};
++
++static const union AnimCmd sAnim_RedHgss_Still[] =
++{
++    ANIMCMD_FRAME(0, 1),
++    ANIMCMD_END,
++};
++
++static const union AnimCmd sAnim_RedHgss_CapLift[] =
++{
++    ANIMCMD_FRAME(0, 20),
++    ANIMCMD_FRAME(1, 50), // cap tipped down
++    ANIMCMD_FRAME(0, 1),
++    ANIMCMD_END,
++};
++
++enum
++{
++    ANIM_RED_HGSS_STILL,
++    ANIM_RED_HGSS_CAP_LIFT,
++};
++
++static const union AnimCmd *const sAnims_RedHgss[] =
++{
++    [ANIM_RED_HGSS_STILL] = sAnim_RedHgss_Still,
++    [ANIM_RED_HGSS_CAP_LIFT] = sAnim_RedHgss_CapLift,
++};
++
++// Slides in as usual, then tips his cap.
++static void SpriteCB_RedHgssSlideIn(struct Sprite *sprite)
++{
++    SpriteCB_TrainerSlideIn(sprite);
++    if (sprite->callback != SpriteCB_RedHgssSlideIn)
++        StartSpriteAnim(sprite, ANIM_RED_HGSS_CAP_LIFT);
++}
++
++// Called from BtlController_HandleDrawTrainerPic (battle_controllers.c) for
++// every opponent's trainer sprite: RED's gets his frames and animation.
++void DailyRed_AnimateTrainerSprite(struct Sprite *sprite, u16 trainerPicId)
++{
++    if (trainerPicId != TRAINER_PIC_DAILYRED_RED)
++        return;
++    sprite->images = sRedHgssFrames;
++    sprite->anims = sAnims_RedHgss;
++    StartSpriteAnim(sprite, ANIM_RED_HGSS_STILL);
++    if (sprite->callback == SpriteCB_TrainerSlideIn)
++        sprite->callback = SpriteCB_RedHgssSlideIn;
++}
 diff --git a/src/dailyred_sets.c b/src/dailyred_sets.c
 new file mode 100644
-index 00000000..c9d1f0b1
+index 00000000..b8f949bc
 --- /dev/null
 +++ b/src/dailyred_sets.c
-@@ -0,0 +1,6002 @@
+@@ -0,0 +1,5708 @@
 +// Generated by scripts/sets/generate.mjs. Don't edit by hand: change the
 +// script's options and run it again.
 +//
@@ -1758,7 +2906,7 @@ index 00000000..c9d1f0b1
 +// Mega Meganium and Mega Feraligatr). 400 randomSet()
 +// calls per list, sets under 2% dropped, at most 10 per list.
 +// Gimmick sets left out (gimmickReason in the script): built for Dynamax (Max Moves); Tera Blast without a Tera type; status Z-Move.
-+// 3911 sets in 784 lists; 427 species for RED's random pick.
++// 3911 sets in 784 lists; 159 species for RED's random pick.
 +
 +#include "global.h"
 +#include "data.h"
@@ -7281,476 +8429,182 @@ index 00000000..c9d1f0b1
 +    {.first = 0, .count = 1}, // Butterfree
 +    {.first = 1, .count = 1}, // Beedrill
 +    {.first = 2, .count = 1}, // Pidgeot
-+    {.first = 3, .count = 2}, // Raticate
-+    {.first = 5, .count = 1}, // Fearow
-+    {.first = 6, .count = 1}, // Arbok
-+    {.first = 7, .count = 2}, // Sandslash
-+    {.first = 9, .count = 1}, // Nidoqueen
-+    {.first = 10, .count = 1}, // Nidoking
-+    {.first = 11, .count = 1}, // Clefable
-+    {.first = 12, .count = 2}, // Ninetales
-+    {.first = 14, .count = 1}, // Wigglytuff
-+    {.first = 15, .count = 1}, // Vileplume
-+    {.first = 16, .count = 1}, // Parasect
-+    {.first = 17, .count = 1}, // Venomoth
-+    {.first = 18, .count = 2}, // Dugtrio
-+    {.first = 20, .count = 2}, // Persian
-+    {.first = 22, .count = 1}, // Golduck
-+    {.first = 23, .count = 2}, // Arcanine
-+    {.first = 25, .count = 1}, // Poliwrath
-+    {.first = 26, .count = 1}, // Alakazam
-+    {.first = 27, .count = 1}, // Machamp
-+    {.first = 28, .count = 1}, // Victreebel
-+    {.first = 29, .count = 1}, // Tentacruel
-+    {.first = 30, .count = 2}, // Golem
-+    {.first = 32, .count = 2}, // Rapidash
-+    {.first = 34, .count = 2}, // Slowbro
-+    {.first = 36, .count = 1}, // Farfetch’d
-+    {.first = 37, .count = 1}, // Dodrio
-+    {.first = 38, .count = 1}, // Dewgong
-+    {.first = 39, .count = 2}, // Muk
-+    {.first = 41, .count = 1}, // Cloyster
-+    {.first = 42, .count = 1}, // Gengar
-+    {.first = 43, .count = 1}, // Hypno
-+    {.first = 44, .count = 1}, // Kingler
-+    {.first = 45, .count = 2}, // Electrode
-+    {.first = 47, .count = 2}, // Exeggutor
-+    {.first = 49, .count = 2}, // Marowak
-+    {.first = 51, .count = 1}, // Hitmonlee
-+    {.first = 52, .count = 1}, // Hitmonchan
-+    {.first = 53, .count = 2}, // Weezing
-+    {.first = 55, .count = 1}, // Kangaskhan
-+    {.first = 56, .count = 1}, // Seaking
-+    {.first = 57, .count = 1}, // Starmie
-+    {.first = 58, .count = 1}, // Mr. Mime
-+    {.first = 59, .count = 1}, // Jynx
-+    {.first = 60, .count = 1}, // Pinsir
-+    {.first = 61, .count = 4}, // Tauros
-+    {.first = 65, .count = 1}, // Gyarados
-+    {.first = 66, .count = 1}, // Lapras
-+    {.first = 67, .count = 1}, // Ditto
-+    {.first = 68, .count = 1}, // Vaporeon
-+    {.first = 69, .count = 1}, // Jolteon
-+    {.first = 70, .count = 1}, // Flareon
-+    {.first = 71, .count = 1}, // Omastar
-+    {.first = 72, .count = 1}, // Kabutops
-+    {.first = 73, .count = 1}, // Aerodactyl
-+    {.first = 74, .count = 1}, // Snorlax
-+    {.first = 75, .count = 1}, // Dragonite
-+    {.first = 76, .count = 1}, // Furret
-+    {.first = 77, .count = 1}, // Noctowl
-+    {.first = 78, .count = 1}, // Ledian
-+    {.first = 79, .count = 1}, // Ariados
-+    {.first = 80, .count = 1}, // Crobat
-+    {.first = 81, .count = 1}, // Lanturn
-+    {.first = 82, .count = 1}, // Xatu
-+    {.first = 83, .count = 1}, // Ampharos
-+    {.first = 84, .count = 1}, // Bellossom
-+    {.first = 85, .count = 1}, // Azumarill
-+    {.first = 86, .count = 1}, // Sudowoodo
-+    {.first = 87, .count = 1}, // Politoed
-+    {.first = 88, .count = 1}, // Jumpluff
-+    {.first = 89, .count = 1}, // Sunflora
-+    {.first = 90, .count = 1}, // Quagsire
-+    {.first = 91, .count = 1}, // Espeon
-+    {.first = 92, .count = 1}, // Umbreon
-+    {.first = 93, .count = 2}, // Slowking
-+    {.first = 95, .count = 1}, // Wobbuffet
-+    {.first = 96, .count = 1}, // Forretress
-+    {.first = 97, .count = 1}, // Steelix
-+    {.first = 98, .count = 1}, // Granbull
-+    {.first = 99, .count = 1}, // Qwilfish
-+    {.first = 100, .count = 1}, // Scizor
-+    {.first = 101, .count = 1}, // Shuckle
-+    {.first = 102, .count = 1}, // Heracross
-+    {.first = 103, .count = 1}, // Magcargo
-+    {.first = 104, .count = 1}, // Corsola
-+    {.first = 105, .count = 1}, // Octillery
-+    {.first = 106, .count = 1}, // Delibird
-+    {.first = 107, .count = 1}, // Mantine
-+    {.first = 108, .count = 1}, // Skarmory
-+    {.first = 109, .count = 1}, // Houndoom
-+    {.first = 110, .count = 1}, // Kingdra
-+    {.first = 111, .count = 1}, // Donphan
-+    {.first = 112, .count = 1}, // Smeargle
-+    {.first = 113, .count = 1}, // Hitmontop
-+    {.first = 114, .count = 1}, // Miltank
-+    {.first = 115, .count = 1}, // Blissey
-+    {.first = 116, .count = 1}, // Tyranitar
-+    {.first = 117, .count = 1}, // Mightyena
-+    {.first = 118, .count = 1}, // Linoone
-+    {.first = 119, .count = 1}, // Beautifly
-+    {.first = 120, .count = 1}, // Dustox
-+    {.first = 121, .count = 1}, // Ludicolo
-+    {.first = 122, .count = 1}, // Shiftry
-+    {.first = 123, .count = 1}, // Swellow
-+    {.first = 124, .count = 1}, // Pelipper
-+    {.first = 125, .count = 1}, // Gardevoir
-+    {.first = 126, .count = 1}, // Masquerain
-+    {.first = 127, .count = 1}, // Breloom
-+    {.first = 128, .count = 1}, // Slaking
-+    {.first = 129, .count = 1}, // Ninjask
-+    {.first = 130, .count = 1}, // Shedinja
-+    {.first = 131, .count = 1}, // Exploud
-+    {.first = 132, .count = 1}, // Hariyama
-+    {.first = 133, .count = 1}, // Delcatty
-+    {.first = 134, .count = 1}, // Sableye
-+    {.first = 135, .count = 1}, // Mawile
-+    {.first = 136, .count = 1}, // Aggron
-+    {.first = 137, .count = 1}, // Medicham
-+    {.first = 138, .count = 1}, // Manectric
-+    {.first = 139, .count = 1}, // Plusle
-+    {.first = 140, .count = 1}, // Minun
-+    {.first = 141, .count = 1}, // Volbeat
-+    {.first = 142, .count = 1}, // Illumise
-+    {.first = 143, .count = 1}, // Swalot
-+    {.first = 144, .count = 1}, // Sharpedo
-+    {.first = 145, .count = 1}, // Wailord
-+    {.first = 146, .count = 1}, // Camerupt
-+    {.first = 147, .count = 1}, // Torkoal
-+    {.first = 148, .count = 1}, // Grumpig
-+    {.first = 149, .count = 1}, // Spinda
-+    {.first = 150, .count = 1}, // Flygon
-+    {.first = 151, .count = 1}, // Cacturne
-+    {.first = 152, .count = 1}, // Altaria
-+    {.first = 153, .count = 1}, // Zangoose
-+    {.first = 154, .count = 1}, // Seviper
-+    {.first = 155, .count = 1}, // Lunatone
-+    {.first = 156, .count = 1}, // Solrock
-+    {.first = 157, .count = 1}, // Whiscash
-+    {.first = 158, .count = 1}, // Crawdaunt
-+    {.first = 159, .count = 1}, // Claydol
-+    {.first = 160, .count = 1}, // Cradily
-+    {.first = 161, .count = 1}, // Armaldo
-+    {.first = 162, .count = 1}, // Milotic
-+    {.first = 163, .count = 1}, // Castform
-+    {.first = 164, .count = 1}, // Kecleon
-+    {.first = 165, .count = 1}, // Banette
-+    {.first = 166, .count = 1}, // Tropius
-+    {.first = 167, .count = 1}, // Chimecho
-+    {.first = 168, .count = 1}, // Absol
-+    {.first = 169, .count = 1}, // Glalie
-+    {.first = 170, .count = 1}, // Walrein
-+    {.first = 171, .count = 1}, // Huntail
-+    {.first = 172, .count = 1}, // Gorebyss
-+    {.first = 173, .count = 1}, // Relicanth
-+    {.first = 174, .count = 1}, // Luvdisc
-+    {.first = 175, .count = 1}, // Salamence
-+    {.first = 176, .count = 1}, // Metagross
-+    {.first = 177, .count = 1}, // Staraptor
-+    {.first = 178, .count = 1}, // Bibarel
-+    {.first = 179, .count = 1}, // Kricketune
-+    {.first = 180, .count = 1}, // Luxray
-+    {.first = 181, .count = 1}, // Roserade
-+    {.first = 182, .count = 1}, // Rampardos
-+    {.first = 183, .count = 1}, // Bastiodon
-+    {.first = 184, .count = 3}, // Wormadam
-+    {.first = 187, .count = 1}, // Mothim
-+    {.first = 188, .count = 1}, // Vespiquen
-+    {.first = 189, .count = 1}, // Pachirisu
-+    {.first = 190, .count = 1}, // Floatzel
-+    {.first = 191, .count = 1}, // Cherrim
-+    {.first = 192, .count = 1}, // Gastrodon
-+    {.first = 193, .count = 1}, // Ambipom
-+    {.first = 194, .count = 1}, // Drifblim
-+    {.first = 195, .count = 1}, // Lopunny
-+    {.first = 196, .count = 1}, // Mismagius
-+    {.first = 197, .count = 1}, // Honchkrow
-+    {.first = 198, .count = 1}, // Purugly
-+    {.first = 199, .count = 1}, // Skuntank
-+    {.first = 200, .count = 1}, // Bronzong
-+    {.first = 201, .count = 1}, // Chatot
-+    {.first = 202, .count = 1}, // Spiritomb
-+    {.first = 203, .count = 1}, // Garchomp
-+    {.first = 204, .count = 1}, // Lucario
-+    {.first = 205, .count = 1}, // Hippowdon
-+    {.first = 206, .count = 1}, // Drapion
-+    {.first = 207, .count = 1}, // Toxicroak
-+    {.first = 208, .count = 1}, // Carnivine
-+    {.first = 209, .count = 1}, // Lumineon
-+    {.first = 210, .count = 1}, // Abomasnow
-+    {.first = 211, .count = 1}, // Weavile
-+    {.first = 212, .count = 1}, // Magnezone
-+    {.first = 213, .count = 1}, // Lickilicky
-+    {.first = 214, .count = 1}, // Rhyperior
-+    {.first = 215, .count = 1}, // Tangrowth
-+    {.first = 216, .count = 1}, // Electivire
-+    {.first = 217, .count = 1}, // Magmortar
-+    {.first = 218, .count = 1}, // Togekiss
-+    {.first = 219, .count = 1}, // Yanmega
-+    {.first = 220, .count = 1}, // Leafeon
-+    {.first = 221, .count = 1}, // Glaceon
-+    {.first = 222, .count = 1}, // Gliscor
-+    {.first = 223, .count = 1}, // Mamoswine
-+    {.first = 224, .count = 1}, // Porygon-Z
-+    {.first = 225, .count = 1}, // Gallade
-+    {.first = 226, .count = 1}, // Probopass
-+    {.first = 227, .count = 1}, // Dusknoir
-+    {.first = 228, .count = 1}, // Froslass
-+    {.first = 229, .count = 6}, // Rotom
-+    {.first = 235, .count = 1}, // Watchog
-+    {.first = 236, .count = 1}, // Stoutland
-+    {.first = 237, .count = 1}, // Liepard
-+    {.first = 238, .count = 1}, // Simisage
-+    {.first = 239, .count = 1}, // Simisear
-+    {.first = 240, .count = 1}, // Simipour
-+    {.first = 241, .count = 1}, // Musharna
-+    {.first = 242, .count = 1}, // Unfezant
-+    {.first = 243, .count = 1}, // Zebstrika
-+    {.first = 244, .count = 1}, // Gigalith
-+    {.first = 245, .count = 1}, // Swoobat
-+    {.first = 246, .count = 1}, // Excadrill
-+    {.first = 247, .count = 1}, // Audino
-+    {.first = 248, .count = 1}, // Conkeldurr
-+    {.first = 249, .count = 1}, // Seismitoad
-+    {.first = 250, .count = 1}, // Throh
-+    {.first = 251, .count = 1}, // Sawk
-+    {.first = 252, .count = 1}, // Leavanny
-+    {.first = 253, .count = 1}, // Scolipede
-+    {.first = 254, .count = 1}, // Whimsicott
-+    {.first = 255, .count = 2}, // Lilligant
-+    {.first = 257, .count = 1}, // Basculin
-+    {.first = 258, .count = 1}, // Krookodile
-+    {.first = 259, .count = 2}, // Darmanitan
-+    {.first = 261, .count = 1}, // Maractus
-+    {.first = 262, .count = 1}, // Crustle
-+    {.first = 263, .count = 1}, // Scrafty
-+    {.first = 264, .count = 1}, // Sigilyph
-+    {.first = 265, .count = 1}, // Cofagrigus
-+    {.first = 266, .count = 1}, // Carracosta
-+    {.first = 267, .count = 1}, // Archeops
-+    {.first = 268, .count = 1}, // Garbodor
-+    {.first = 269, .count = 2}, // Zoroark
-+    {.first = 271, .count = 1}, // Cinccino
-+    {.first = 272, .count = 1}, // Gothitelle
-+    {.first = 273, .count = 1}, // Reuniclus
-+    {.first = 274, .count = 1}, // Swanna
-+    {.first = 275, .count = 1}, // Vanilluxe
-+    {.first = 276, .count = 1}, // Sawsbuck
-+    {.first = 277, .count = 1}, // Emolga
-+    {.first = 278, .count = 1}, // Escavalier
-+    {.first = 279, .count = 1}, // Amoonguss
-+    {.first = 280, .count = 1}, // Jellicent
-+    {.first = 281, .count = 1}, // Alomomola
-+    {.first = 282, .count = 1}, // Galvantula
-+    {.first = 283, .count = 1}, // Ferrothorn
-+    {.first = 284, .count = 1}, // Klinklang
-+    {.first = 285, .count = 1}, // Eelektross
-+    {.first = 286, .count = 1}, // Beheeyem
-+    {.first = 287, .count = 1}, // Chandelure
-+    {.first = 288, .count = 1}, // Haxorus
-+    {.first = 289, .count = 1}, // Beartic
-+    {.first = 290, .count = 1}, // Cryogonal
-+    {.first = 291, .count = 1}, // Accelgor
-+    {.first = 292, .count = 2}, // Stunfisk
-+    {.first = 294, .count = 1}, // Mienshao
-+    {.first = 295, .count = 1}, // Druddigon
-+    {.first = 296, .count = 1}, // Golurk
-+    {.first = 297, .count = 1}, // Bouffalant
-+    {.first = 298, .count = 2}, // Braviary
-+    {.first = 300, .count = 1}, // Mandibuzz
-+    {.first = 301, .count = 1}, // Heatmor
-+    {.first = 302, .count = 1}, // Durant
-+    {.first = 303, .count = 1}, // Hydreigon
-+    {.first = 304, .count = 1}, // Volcarona
-+    {.first = 305, .count = 1}, // Diggersby
-+    {.first = 306, .count = 1}, // Talonflame
-+    {.first = 307, .count = 1}, // Vivillon
-+    {.first = 308, .count = 1}, // Pyroar
-+    {.first = 309, .count = 1}, // Floette
-+    {.first = 310, .count = 1}, // Florges
-+    {.first = 311, .count = 1}, // Gogoat
-+    {.first = 312, .count = 1}, // Pangoro
-+    {.first = 313, .count = 1}, // Furfrou
-+    {.first = 314, .count = 2}, // Meowstic
-+    {.first = 316, .count = 1}, // Aegislash
-+    {.first = 317, .count = 1}, // Aromatisse
-+    {.first = 318, .count = 1}, // Slurpuff
-+    {.first = 319, .count = 1}, // Malamar
-+    {.first = 320, .count = 1}, // Barbaracle
-+    {.first = 321, .count = 1}, // Dragalge
-+    {.first = 322, .count = 1}, // Clawitzer
-+    {.first = 323, .count = 1}, // Heliolisk
-+    {.first = 324, .count = 1}, // Tyrantrum
-+    {.first = 325, .count = 1}, // Aurorus
-+    {.first = 326, .count = 1}, // Sylveon
-+    {.first = 327, .count = 1}, // Hawlucha
-+    {.first = 328, .count = 1}, // Dedenne
-+    {.first = 329, .count = 1}, // Carbink
-+    {.first = 330, .count = 2}, // Goodra
-+    {.first = 332, .count = 1}, // Klefki
-+    {.first = 333, .count = 1}, // Trevenant
-+    {.first = 334, .count = 4}, // Gourgeist
-+    {.first = 338, .count = 2}, // Avalugg
-+    {.first = 340, .count = 1}, // Noivern
-+    {.first = 341, .count = 1}, // Toucannon
-+    {.first = 342, .count = 1}, // Gumshoos
-+    {.first = 343, .count = 1}, // Vikavolt
-+    {.first = 344, .count = 1}, // Crabominable
-+    {.first = 345, .count = 4}, // Oricorio
-+    {.first = 349, .count = 1}, // Ribombee
-+    {.first = 350, .count = 3}, // Lycanroc
-+    {.first = 353, .count = 1}, // Wishiwashi
-+    {.first = 354, .count = 1}, // Toxapex
-+    {.first = 355, .count = 1}, // Mudsdale
-+    {.first = 356, .count = 1}, // Araquanid
-+    {.first = 357, .count = 1}, // Lurantis
-+    {.first = 358, .count = 1}, // Shiinotic
-+    {.first = 359, .count = 1}, // Salazzle
-+    {.first = 360, .count = 1}, // Bewear
-+    {.first = 361, .count = 1}, // Tsareena
-+    {.first = 362, .count = 1}, // Comfey
-+    {.first = 363, .count = 1}, // Oranguru
-+    {.first = 364, .count = 1}, // Passimian
-+    {.first = 365, .count = 1}, // Golisopod
-+    {.first = 366, .count = 1}, // Palossand
-+    {.first = 367, .count = 1}, // Pyukumuku
-+    {.first = 368, .count = 1}, // Minior
-+    {.first = 369, .count = 1}, // Komala
-+    {.first = 370, .count = 1}, // Turtonator
-+    {.first = 371, .count = 1}, // Togedemaru
-+    {.first = 372, .count = 1}, // Mimikyu
-+    {.first = 373, .count = 1}, // Bruxish
-+    {.first = 374, .count = 1}, // Drampa
-+    {.first = 375, .count = 1}, // Dhelmise
-+    {.first = 376, .count = 1}, // Kommo-o
-+    {.first = 377, .count = 1}, // Greedent
-+    {.first = 378, .count = 1}, // Corviknight
-+    {.first = 379, .count = 1}, // Orbeetle
-+    {.first = 380, .count = 1}, // Thievul
-+    {.first = 381, .count = 1}, // Eldegoss
-+    {.first = 382, .count = 1}, // Dubwool
-+    {.first = 383, .count = 1}, // Boltund
-+    {.first = 384, .count = 1}, // Flapple
-+    {.first = 385, .count = 1}, // Appletun
-+    {.first = 386, .count = 1}, // Sandaconda
-+    {.first = 387, .count = 1}, // Cramorant
-+    {.first = 388, .count = 1}, // Barraskewda
-+    {.first = 389, .count = 1}, // Toxtricity
-+    {.first = 390, .count = 1}, // Centiskorch
-+    {.first = 391, .count = 1}, // Grapploct
-+    {.first = 392, .count = 1}, // Polteageist
-+    {.first = 393, .count = 1}, // Obstagoon
-+    {.first = 394, .count = 1}, // Perrserker
-+    {.first = 395, .count = 1}, // Cursola
-+    {.first = 396, .count = 1}, // Sirfetch’d
-+    {.first = 397, .count = 1}, // Mr. Rime
-+    {.first = 398, .count = 1}, // Runerigus
-+    {.first = 399, .count = 1}, // Falinks
-+    {.first = 400, .count = 1}, // Pincurchin
-+    {.first = 401, .count = 1}, // Frosmoth
-+    {.first = 402, .count = 1}, // Stonjourner
-+    {.first = 403, .count = 1}, // Eiscue
-+    {.first = 404, .count = 2}, // Indeedee
-+    {.first = 406, .count = 1}, // Morpeko
-+    {.first = 407, .count = 1}, // Copperajah
-+    {.first = 408, .count = 1}, // Dracozolt
-+    {.first = 409, .count = 1}, // Arctozolt
-+    {.first = 410, .count = 1}, // Dracovish
-+    {.first = 411, .count = 1}, // Arctovish
-+    {.first = 412, .count = 1}, // Dragapult
-+    {.first = 413, .count = 1}, // Annihilape
-+    {.first = 414, .count = 1}, // Clodsire
-+    {.first = 415, .count = 1}, // Overqwil
-+    {.first = 416, .count = 1}, // Sneasler
-+    {.first = 417, .count = 2}, // Basculegion
-+    {.first = 419, .count = 1}, // Drednaw
-+    {.first = 420, .count = 1}, // Coalossal
-+    {.first = 421, .count = 1}, // Hatterene
-+    {.first = 422, .count = 1}, // Grimmsnarl
-+    {.first = 423, .count = 1}, // Alcremie
-+    {.first = 424, .count = 1}, // Wyrdeer
-+    {.first = 425, .count = 1}, // Kleavor
-+    {.first = 426, .count = 2}, // Ursaluna
-+    {.first = 428, .count = 2}, // Oinkologne
-+    {.first = 430, .count = 1}, // Spidops
-+    {.first = 431, .count = 1}, // Lokix
-+    {.first = 432, .count = 1}, // Pawmot
-+    {.first = 433, .count = 1}, // Maushold
-+    {.first = 434, .count = 1}, // Dachsbun
-+    {.first = 435, .count = 1}, // Arboliva
-+    {.first = 436, .count = 4}, // Squawkabilly
-+    {.first = 440, .count = 1}, // Garganacl
-+    {.first = 441, .count = 1}, // Armarouge
-+    {.first = 442, .count = 1}, // Ceruledge
-+    {.first = 443, .count = 1}, // Bellibolt
-+    {.first = 444, .count = 1}, // Kilowattrel
-+    {.first = 445, .count = 1}, // Mabosstiff
-+    {.first = 446, .count = 1}, // Grafaiai
-+    {.first = 447, .count = 1}, // Brambleghast
-+    {.first = 448, .count = 1}, // Toedscruel
-+    {.first = 449, .count = 1}, // Klawf
-+    {.first = 450, .count = 1}, // Scovillain
-+    {.first = 451, .count = 1}, // Rabsca
-+    {.first = 452, .count = 1}, // Espathra
-+    {.first = 453, .count = 1}, // Tinkaton
-+    {.first = 454, .count = 1}, // Wugtrio
-+    {.first = 455, .count = 1}, // Bombirdier
-+    {.first = 456, .count = 1}, // Palafin
-+    {.first = 457, .count = 1}, // Revavroom
-+    {.first = 458, .count = 1}, // Cyclizar
-+    {.first = 459, .count = 1}, // Orthworm
-+    {.first = 460, .count = 1}, // Glimmora
-+    {.first = 461, .count = 1}, // Houndstone
-+    {.first = 462, .count = 1}, // Flamigo
-+    {.first = 463, .count = 1}, // Cetitan
-+    {.first = 464, .count = 1}, // Veluza
-+    {.first = 465, .count = 1}, // Dondozo
-+    {.first = 466, .count = 1}, // Tatsugiri
-+    {.first = 467, .count = 1}, // Farigiraf
-+    {.first = 468, .count = 1}, // Dudunsparce
-+    {.first = 469, .count = 1}, // Kingambit
-+    {.first = 470, .count = 1}, // Baxcalibur
-+    {.first = 471, .count = 1}, // Gholdengo
-+    {.first = 472, .count = 1}, // Sinistcha
-+    {.first = 473, .count = 1}, // Archaludon
-+    {.first = 474, .count = 1}, // Hydrapple
++    {.first = 3, .count = 1}, // Raticate
++    {.first = 4, .count = 1}, // Fearow
++    {.first = 5, .count = 1}, // Arbok
++    {.first = 6, .count = 1}, // Sandslash
++    {.first = 7, .count = 1}, // Nidoqueen
++    {.first = 8, .count = 1}, // Nidoking
++    {.first = 9, .count = 1}, // Clefable
++    {.first = 10, .count = 1}, // Ninetales
++    {.first = 11, .count = 1}, // Wigglytuff
++    {.first = 12, .count = 1}, // Vileplume
++    {.first = 13, .count = 1}, // Parasect
++    {.first = 14, .count = 1}, // Venomoth
++    {.first = 15, .count = 1}, // Dugtrio
++    {.first = 16, .count = 1}, // Persian
++    {.first = 17, .count = 1}, // Golduck
++    {.first = 18, .count = 1}, // Arcanine
++    {.first = 19, .count = 1}, // Poliwrath
++    {.first = 20, .count = 1}, // Alakazam
++    {.first = 21, .count = 1}, // Machamp
++    {.first = 22, .count = 1}, // Victreebel
++    {.first = 23, .count = 1}, // Tentacruel
++    {.first = 24, .count = 1}, // Golem
++    {.first = 25, .count = 1}, // Rapidash
++    {.first = 26, .count = 1}, // Slowbro
++    {.first = 27, .count = 1}, // Farfetch’d
++    {.first = 28, .count = 1}, // Dodrio
++    {.first = 29, .count = 1}, // Dewgong
++    {.first = 30, .count = 1}, // Muk
++    {.first = 31, .count = 1}, // Cloyster
++    {.first = 32, .count = 1}, // Gengar
++    {.first = 33, .count = 1}, // Hypno
++    {.first = 34, .count = 1}, // Kingler
++    {.first = 35, .count = 1}, // Electrode
++    {.first = 36, .count = 1}, // Exeggutor
++    {.first = 37, .count = 1}, // Marowak
++    {.first = 38, .count = 1}, // Hitmonlee
++    {.first = 39, .count = 1}, // Hitmonchan
++    {.first = 40, .count = 1}, // Weezing
++    {.first = 41, .count = 1}, // Kangaskhan
++    {.first = 42, .count = 1}, // Seaking
++    {.first = 43, .count = 1}, // Starmie
++    {.first = 44, .count = 1}, // Mr. Mime
++    {.first = 45, .count = 1}, // Jynx
++    {.first = 46, .count = 1}, // Pinsir
++    {.first = 47, .count = 1}, // Tauros
++    {.first = 48, .count = 1}, // Gyarados
++    {.first = 49, .count = 1}, // Lapras
++    {.first = 50, .count = 1}, // Ditto
++    {.first = 51, .count = 1}, // Vaporeon
++    {.first = 52, .count = 1}, // Jolteon
++    {.first = 53, .count = 1}, // Flareon
++    {.first = 54, .count = 1}, // Omastar
++    {.first = 55, .count = 1}, // Kabutops
++    {.first = 56, .count = 1}, // Aerodactyl
++    {.first = 57, .count = 1}, // Snorlax
++    {.first = 58, .count = 1}, // Dragonite
++    {.first = 59, .count = 1}, // Furret
++    {.first = 60, .count = 1}, // Noctowl
++    {.first = 61, .count = 1}, // Ledian
++    {.first = 62, .count = 1}, // Ariados
++    {.first = 63, .count = 1}, // Crobat
++    {.first = 64, .count = 1}, // Lanturn
++    {.first = 65, .count = 1}, // Xatu
++    {.first = 66, .count = 1}, // Ampharos
++    {.first = 67, .count = 1}, // Bellossom
++    {.first = 68, .count = 1}, // Azumarill
++    {.first = 69, .count = 1}, // Sudowoodo
++    {.first = 70, .count = 1}, // Politoed
++    {.first = 71, .count = 1}, // Jumpluff
++    {.first = 72, .count = 1}, // Sunflora
++    {.first = 73, .count = 1}, // Quagsire
++    {.first = 74, .count = 1}, // Espeon
++    {.first = 75, .count = 1}, // Umbreon
++    {.first = 76, .count = 1}, // Slowking
++    {.first = 77, .count = 1}, // Wobbuffet
++    {.first = 78, .count = 1}, // Forretress
++    {.first = 79, .count = 1}, // Steelix
++    {.first = 80, .count = 1}, // Granbull
++    {.first = 81, .count = 1}, // Qwilfish
++    {.first = 82, .count = 1}, // Scizor
++    {.first = 83, .count = 1}, // Shuckle
++    {.first = 84, .count = 1}, // Heracross
++    {.first = 85, .count = 1}, // Magcargo
++    {.first = 86, .count = 1}, // Corsola
++    {.first = 87, .count = 1}, // Octillery
++    {.first = 88, .count = 1}, // Delibird
++    {.first = 89, .count = 1}, // Mantine
++    {.first = 90, .count = 1}, // Skarmory
++    {.first = 91, .count = 1}, // Houndoom
++    {.first = 92, .count = 1}, // Kingdra
++    {.first = 93, .count = 1}, // Donphan
++    {.first = 94, .count = 1}, // Smeargle
++    {.first = 95, .count = 1}, // Hitmontop
++    {.first = 96, .count = 1}, // Miltank
++    {.first = 97, .count = 1}, // Blissey
++    {.first = 98, .count = 1}, // Tyranitar
++    {.first = 99, .count = 1}, // Mightyena
++    {.first = 100, .count = 1}, // Linoone
++    {.first = 101, .count = 1}, // Beautifly
++    {.first = 102, .count = 1}, // Dustox
++    {.first = 103, .count = 1}, // Ludicolo
++    {.first = 104, .count = 1}, // Shiftry
++    {.first = 105, .count = 1}, // Swellow
++    {.first = 106, .count = 1}, // Pelipper
++    {.first = 107, .count = 1}, // Gardevoir
++    {.first = 108, .count = 1}, // Masquerain
++    {.first = 109, .count = 1}, // Breloom
++    {.first = 110, .count = 1}, // Slaking
++    {.first = 111, .count = 1}, // Ninjask
++    {.first = 112, .count = 1}, // Shedinja
++    {.first = 113, .count = 1}, // Exploud
++    {.first = 114, .count = 1}, // Hariyama
++    {.first = 115, .count = 1}, // Delcatty
++    {.first = 116, .count = 1}, // Sableye
++    {.first = 117, .count = 1}, // Mawile
++    {.first = 118, .count = 1}, // Aggron
++    {.first = 119, .count = 1}, // Medicham
++    {.first = 120, .count = 1}, // Manectric
++    {.first = 121, .count = 1}, // Plusle
++    {.first = 122, .count = 1}, // Minun
++    {.first = 123, .count = 1}, // Volbeat
++    {.first = 124, .count = 1}, // Illumise
++    {.first = 125, .count = 1}, // Swalot
++    {.first = 126, .count = 1}, // Sharpedo
++    {.first = 127, .count = 1}, // Wailord
++    {.first = 128, .count = 1}, // Camerupt
++    {.first = 129, .count = 1}, // Torkoal
++    {.first = 130, .count = 1}, // Grumpig
++    {.first = 131, .count = 1}, // Spinda
++    {.first = 132, .count = 1}, // Flygon
++    {.first = 133, .count = 1}, // Cacturne
++    {.first = 134, .count = 1}, // Altaria
++    {.first = 135, .count = 1}, // Zangoose
++    {.first = 136, .count = 1}, // Seviper
++    {.first = 137, .count = 1}, // Lunatone
++    {.first = 138, .count = 1}, // Solrock
++    {.first = 139, .count = 1}, // Whiscash
++    {.first = 140, .count = 1}, // Crawdaunt
++    {.first = 141, .count = 1}, // Claydol
++    {.first = 142, .count = 1}, // Cradily
++    {.first = 143, .count = 1}, // Armaldo
++    {.first = 144, .count = 1}, // Milotic
++    {.first = 145, .count = 1}, // Castform
++    {.first = 146, .count = 1}, // Kecleon
++    {.first = 147, .count = 1}, // Banette
++    {.first = 148, .count = 1}, // Tropius
++    {.first = 149, .count = 1}, // Chimecho
++    {.first = 150, .count = 1}, // Absol
++    {.first = 151, .count = 1}, // Glalie
++    {.first = 152, .count = 1}, // Walrein
++    {.first = 153, .count = 1}, // Huntail
++    {.first = 154, .count = 1}, // Gorebyss
++    {.first = 155, .count = 1}, // Relicanth
++    {.first = 156, .count = 1}, // Luvdisc
++    {.first = 157, .count = 1}, // Salamence
++    {.first = 158, .count = 1}, // Metagross
 +};
 +
 +const u16 gDailyRedNumPickGroups = ARRAY_COUNT(gDailyRedPickGroups);
 +
 +const u16 gDailyRedPickLists[] =
 +{
-+    7, 8, 10, 12, 13, 14, 15, 19, 20, 21, 22, 23,
-+    24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36,
-+    641, 37, 38, 40, 41, 42, 43, 44, 45, 574, 46, 575,
-+    48, 49, 50, 51, 52, 53, 54, 56, 57, 58, 642, 59,
-+    60, 61, 62, 63, 64, 65, 576, 68, 70, 71, 72, 74,
-+    75, 77, 643, 644, 645, 78, 80, 81, 82, 83, 84, 85,
-+    86, 87, 89, 93, 101, 102, 103, 104, 105, 106, 107, 108,
-+    110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 581, 120,
-+    122, 125, 127, 128, 129, 131, 132, 135, 136, 137, 138, 139,
-+    140, 141, 143, 144, 147, 148, 149, 150, 154, 165, 166, 167,
-+    168, 169, 170, 171, 172, 173, 175, 176, 178, 179, 180, 181,
-+    182, 183, 184, 186, 188, 190, 192, 194, 195, 196, 197, 198,
-+    199, 201, 202, 204, 205, 206, 207, 208, 209, 211, 212, 213,
-+    214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 225, 226,
-+    227, 229, 231, 232, 233, 234, 235, 236, 238, 261, 262, 263,
-+    264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275,
-+    276, 277, 278, 279, 281, 282, 283, 284, 285, 286, 287, 288,
-+    290, 292, 293, 294, 295, 296, 297, 299, 300, 301, 302, 303,
-+    304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 315, 316,
-+    317, 318, 319, 320, 321, 322, 323, 361, 362, 363, 364, 365,
-+    366, 367, 368, 369, 370, 371, 372, 373, 376, 377, 378, 379,
-+    380, 381, 382, 383, 656, 384, 385, 386, 583, 387, 388, 389,
-+    390, 391, 392, 393, 394, 395, 659, 396, 397, 398, 399, 400,
-+    401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412,
-+    413, 414, 415, 416, 417, 584, 418, 419, 420, 422, 423, 660,
-+    424, 425, 426, 427, 428, 450, 451, 452, 453, 454, 455, 456,
-+    457, 458, 459, 460, 462, 463, 464, 465, 466, 467, 468, 469,
-+    470, 471, 472, 473, 474, 475, 476, 661, 477, 478, 479, 480,
-+    481, 482, 483, 662, 484, 497, 498, 499, 500, 501, 502, 503,
-+    504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515,
-+    516, 517, 518, 519, 520, 521, 522, 523, 543, 544, 545, 546,
-+    547, 548, 549, 550, 551, 589, 590, 591, 592, 593, 594, 595,
-+    596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607,
-+    608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619,
-+    620, 621, 622, 623, 625, 640, 647, 650, 652, 657, 658, 665,
-+    666, 667, 668, 669, 671, 672, 673, 674, 680, 681, 682, 683,
-+    684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695,
-+    696, 697, 698, 699, 700, 701, 702, 703, 704, 705, 706, 707,
-+    708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719,
-+    720, 721, 738, 739, 747, 755, 756,
++    7, 8, 10, 12, 14, 15, 19, 21, 22, 23, 24, 26,
++    27, 28, 29, 30, 32, 34, 36, 37, 38, 40, 41, 42,
++    43, 45, 46, 48, 49, 50, 51, 53, 54, 56, 57, 58,
++    59, 61, 63, 64, 65, 68, 70, 71, 72, 74, 75, 77,
++    78, 80, 81, 82, 83, 84, 85, 86, 87, 89, 93, 101,
++    102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
++    115, 116, 117, 118, 119, 120, 122, 125, 127, 128, 129, 131,
++    132, 135, 136, 137, 138, 139, 140, 141, 143, 144, 147, 148,
++    149, 150, 154, 165, 166, 167, 168, 169, 170, 171, 172, 173,
++    175, 176, 178, 179, 180, 181, 182, 183, 184, 186, 188, 190,
++    192, 194, 195, 196, 197, 198, 199, 201, 202, 204, 205, 206,
++    207, 208, 209, 211, 212, 213, 214, 215, 216, 217, 218, 219,
++    220, 221, 222, 223, 225, 226, 227, 229, 231, 232, 233, 234,
++    235, 236, 238,
 +};
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
@@ -8177,11 +9031,77 @@ index 00000000..691d5667
 +        SetMonData(&party[i], MON_DATA_MET_LOCATION, &metLocation);
 +    }
 +}
+diff --git a/src/data/battle_environment.h b/src/data/battle_environment.h
+index 5e2ab161..33940885 100644
+--- a/src/data/battle_environment.h
++++ b/src/data/battle_environment.h
+@@ -477,6 +477,12 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT]
+         .secretPowerEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+         .camouflageType = TYPE_ICE,
+         .camouflageBlend = DEFAULT_CAMOUFLAGE_BLEND,
++        // Daily Red: graphics for Mt. Silver's summit, where RED battles
++        // (BattleSetup_GetEnvironmentId in battle_setup.c).
++        .entry = ENVIRONMENT_ENTRY(DailyRedMtSilver),
++        .background = ENVIRONMENT_BACKGROUND(DailyRedMtSilver),
++        .palette = gBattleEnvironmentPalette_DailyRedMtSilver,
++        .battleIntroSlide = BattleIntroSlide1,
+     },
+ 
+     [BATTLE_ENVIRONMENT_ICE] =
+diff --git a/src/data/graphics/battle_environment.h b/src/data/graphics/battle_environment.h
+index 4e05930b..46649d25 100644
+--- a/src/data/graphics/battle_environment.h
++++ b/src/data/graphics/battle_environment.h
+@@ -86,3 +86,11 @@ const u32 gBattleEnvironmentAnimTilemap_Building[] = INCGFX_U32("graphics/battle
+ 
+ const u32 gBattleEnvironmentAnimTiles_Rayquaza[] = INCGFX_U32("graphics/battle_environment/sky/anim_tiles.png", ".4bpp.smol");
+ const u32 gBattleEnvironmentAnimTilemap_Rayquaza[] = INCGFX_U32("graphics/battle_environment/sky/anim_map.bin", ".smolTM");
++
++// Daily Red: Mt. Silver's summit (BATTLE_ENVIRONMENT_SNOW), the HGSS-style
++// background by Gold-Ruki, made from art/ by scripts/graphics/make-graphics.py.
++const u32 gBattleEnvironmentTiles_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/tiles.png", ".4bpp.smol");
++const u16 gBattleEnvironmentPalette_DailyRedMtSilver[] = INCGFX_U16("graphics/battle_environment/dailyred_mt_silver/palette.pal", ".gbapal");
++const u32 gBattleEnvironmentTilemap_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/map.bin", ".smolTM");
++const u32 gBattleEnvironmentAnimTiles_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/anim_tiles.png", ".4bpp.smol");
++const u32 gBattleEnvironmentAnimTilemap_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/anim_map.bin", ".smolTM");
+diff --git a/src/data/graphics/trainers.h b/src/data/graphics/trainers.h
+index a6416425..41fb7732 100644
+--- a/src/data/graphics/trainers.h
++++ b/src/data/graphics/trainers.h
+@@ -469,6 +469,12 @@ const u16 gTrainerPalette_LadyFrlg[] = INCGFX_U16("graphics/trainers/palettes/la
+ const u32 gTrainerFrontPic_PainterFrlg[] = INCGFX_U32("graphics/trainers/front_pics/painter_frlg.png", ".4bpp.smol");
+ const u16 gTrainerPalette_PainterFrlg[] = INCGFX_U16("graphics/trainers/palettes/painter_frlg.pal", ".gbapal");
+ 
++// Daily Red: HGSS-style RED and LEAF (see TRAINER_PIC_DAILYRED_RED).
++const u32 gTrainerFrontPic_DailyRedRed[] = INCGFX_U32("graphics/trainers/front_pics/dailyred_red.png", ".4bpp.smol");
++const u16 gTrainerPalette_DailyRedRed[] = INCGFX_U16("graphics/trainers/front_pics/dailyred_red.png", ".gbapal");
++const u32 gTrainerFrontPic_DailyRedLeaf[] = INCGFX_U32("graphics/trainers/front_pics/dailyred_leaf.png", ".4bpp.smol");
++const u16 gTrainerPalette_DailyRedLeaf[] = INCGFX_U16("graphics/trainers/front_pics/dailyred_leaf.png", ".gbapal");
++
+ static const u8 gTrainerBackPic_None[] = INCGFX_U8("graphics/trainers/back_pics/none.png", ".4bpp");
+ const u8 gTrainerBackPic_Brendan[] = INCGFX_U8("graphics/trainers/back_pics/brendan.png", ".4bpp");
+ const u8 gTrainerBackPic_May[] = INCGFX_U8("graphics/trainers/back_pics/may.png", ".4bpp");
+@@ -1226,4 +1232,15 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
+     {
+         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_PainterFrlg, gTrainerPalette_PainterFrlg),
+     },
++    // Daily Red
++    [TRAINER_PIC_DAILYRED_RED] =
++    {
++        // Full-body sprite with no headroom: 8 pixels lower in the VS transition
++        // keeps his cap inside the band.
++        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_DailyRedRed, gTrainerPalette_DailyRedRed, 0, 8),
++    },
++    [TRAINER_PIC_DAILYRED_LEAF] =
++    {
++        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_DailyRedLeaf, gTrainerPalette_DailyRedLeaf),
++    },
+ };
 diff --git a/src/data/trainers_frlg.party b/src/data/trainers_frlg.party
-index 20fdc713..dc991460 100644
+index 20fdc713..51038bd8 100644
 --- a/src/data/trainers_frlg.party
 +++ b/src/data/trainers_frlg.party
-@@ -13787,3 +13787,80 @@ IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+@@ -13787,3 +13787,82 @@ IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
  Muk
  Level: 39
  IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
@@ -8195,19 +9115,21 @@ index 20fdc713..dc991460 100644
 +His AI is the expansion's strongest: Smart Trainer (omniscient, smart
 +switching and mon choices...) with Prediction. His class
 +(TRAINER_CLASS_DAILYRED, "PKMN TRAINER") is his alone and gives him the vs
-+Red battle theme (GetBattleBGM in pokemon.c). "Mugshot: Yellow" gives him
-+the Champion's VS encounter transition (B_TRANSITION_MUGSHOT, picked in
-+GetTrainerBattleTransition, battle_setup.c) instead of a regular one.
++Red battle theme (GetBattleBGM in pokemon.c). His picture is his
++HeartGold/SoulSilver battle sprite (TRAINER_PIC_DAILYRED_RED). "Mugshot: Red" gives him
++the Elite Four/Champion VS encounter transition (B_TRANSITION_MUGSHOT, picked
++in GetTrainerBattleTransition, battle_setup.c) with his own red band
++(MUGSHOT_COLOR_RED) instead of a regular transition.
 +*/
 +=== TRAINER_DAILYRED_RED ===
 +Name: RED
 +Class: Dailyred
-+Pic: Red
++Pic: Dailyred Red
 +Gender: Male
 +Music: Male
 +Double Battle: No
 +AI: Smart Trainer / Prediction
-+Mugshot: Yellow
++Mugshot: Red
 +
 +Pikachu @ Light Ball
 +Level: 100
@@ -8262,6 +9184,20 @@ index 20fdc713..dc991460 100644
 +- Ice Beam
 +- Earthquake
 +- Hydro Cannon
+diff --git a/src/graphics.c b/src/graphics.c
+index 4ac676cd..66b83ebe 100644
+--- a/src/graphics.c
++++ b/src/graphics.c
+@@ -710,6 +710,9 @@ const u32 gUnusedTilemap_BasicFrame[] = INCGFX_U32("graphics/unused/basic_frame.
+ const u16 gBattleInterface_BallStatusBarPal[] = INCGFX_U16("graphics/battle_interface/ball_status_bar.png", ".gbapal");
+ 
+ const u16 gBattleInterface_BallDisplayPal[] = INCGFX_U16("graphics/battle_interface/ball_display.png", ".gbapal");
++// Daily Red: the HP/EXP bars' palette from the HGSS-style battle interface
++// (Eemeliri/soulgold, like the other graphics/battle_interface images).
++const u16 gBattleInterface_DailyRedHealthbarPal[] = INCGFX_U16("graphics/battle_interface/dailyred_healthbar.pal", ".gbapal");
+ 
+ const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface/hpbar.4bpp",
+                                                   "graphics/battle_interface/expbar.4bpp",
 diff --git a/src/intro_frlg.c b/src/intro_frlg.c
 index 96c46ec9..abb27499 100644
 --- a/src/intro_frlg.c

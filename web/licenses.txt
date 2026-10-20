@@ -2,8 +2,9 @@ Daily Red: third-party software and content
 ===========================================
 
 Pokémon FireRed (the ROM in game/)
-  Built from pret/pokefirered (https://github.com/pret/pokefirered), a
-  community decompilation of Pokémon FireRed, with Daily Red's changes.
+  Built from the FireRed build of pokeemerald-expansion
+  (https://github.com/rh-hideout/pokeemerald-expansion), based on the pret
+  decompilations (https://github.com/pret), with Daily Red's changes.
   Pokémon and all game content are © Nintendo, Creatures Inc. and GAME FREAK
   inc. This is a free, unofficial fan project, not affiliated with or endorsed
   by them or The Pokémon Company.
@@ -16,6 +17,11 @@ mGBA libretro core (vendor/mgba_libretro.js, vendor/mgba_libretro.wasm)
   Build used: https://github.com/arianrhodsandlot/retroarch-emscripten-build
   (release v1.22.2). Source code for these binaries is available at the links
   above.
+
+Graphics in the ROM
+  Mt. Silver's battle background: from Gold-Ruki's HGSS-style battle
+  backgrounds for GBA (credit to Gold-Ruki). RED's battle sprite: Pokémon
+  HeartGold/SoulSilver's, ripped by ChrisX698. LEAF's HGSS-style sprite.
 
 Nostalgist.js (vendor/nostalgist.js)
   MIT License, see vendor/nostalgist.LICENSE.txt

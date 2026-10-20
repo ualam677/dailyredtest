@@ -221,6 +221,7 @@ export function validateRed(party, rolls = null) {
       const tag = anyPick.speciesName;
       if (info2.legendary || info2.ultraBeast || info2.paradox) problems.push(`${tag}: legendary, Ultra Beast or Paradox`);
       if (info2.evolutions.length) problems.push(`${tag}: not fully evolved`);
+      if (!isGen1to3Regular(anyPick.species)) problems.push(`${tag}: not in the Gen 1-3 Pokedex`);
       if ([S('RAICHU'), S('PIKACHU')].includes(base(anyPick.species))) problems.push(`${tag}: Pikachu's family`);
     }
     for (let i = 0; i < picks.length; i++) {
@@ -247,8 +248,15 @@ export function validateRed(party, rolls = null) {
   return { kind, problems };
 }
 
-// RED's random pick from any generation (gDailyRedPickGroups in the ROM):
-// every entry fully evolved and none a starter (any generation's family),
+// The Gen 1-3 Pokedex in regular form: national dex 1-386, not a regional
+// or other alternate form.
+export function isGen1to3Regular(sp) {
+  const info = species(sp);
+  return info.natDexNum >= 1 && info.natDexNum <= 386 && !info.regional && !info.battleOnly && (info.forms.length === 0 || info.forms[0] === sp);
+}
+
+// RED's random pick (gDailyRedPickGroups in the ROM): every entry from the
+// Gen 1-3 Pokedex, fully evolved and none a starter (any generation's family),
 // Pikachu's family, legendary, mythical, Ultra Beast or Paradox Pokemon.
 // Returns { count, problems }.
 const STARTER_ROOTS = ['BULBASAUR', 'CHARMANDER', 'SQUIRTLE', 'CHIKORITA', 'CYNDAQUIL', 'TOTODILE', 'TREECKO', 'TORCHIC',
@@ -282,6 +290,7 @@ export function validatePickGroups() {
       if (info.legendary || info.ultraBeast || info.paradox) problems.push(`${tag}: legendary, Ultra Beast or Paradox`);
       if (info.evolutions.length) problems.push(`${tag}: not fully evolved`);
       if (info.battleOnly) problems.push(`${tag}: a battle-only forme`);
+      if (!isGen1to3Regular(list.species)) problems.push(`${tag}: not in the Gen 1-3 Pokedex`);
       if (roots.has(root(list.species))) problems.push(`${tag}: a starter or Pikachu's family`);
     }
   }
