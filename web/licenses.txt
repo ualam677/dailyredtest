@@ -26,6 +26,9 @@ Graphics in the ROM
   The HGSS-style battle interface and window frames: from Eemeliri/soulgold
   (https://github.com/Eemeliri/soulgold).
 
+Sound in the ROM
+  The summit's wind: from Pokémon HeartGold/SoulSilver's Mt. Silver.
+
 Nostalgist.js (vendor/nostalgist.js)
   MIT License, see vendor/nostalgist.LICENSE.txt
   https://github.com/arianrhodsandlot/nostalgist

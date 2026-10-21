@@ -114,6 +114,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Snow on the summit, as scenery only: it doesn't start Snow in RED's battle | `data/maps/DailyRed_Summit/map.json`; the battle check in `src/battle_util.c` |
 | Talking to RED → "…" → battle (he says "…!" if he loses, "…" if he wins) → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
 | RED's battle theme | `MUS_DAILYRED_VS_RED`, picked by his trainer class in `GetBattleBGM` (`src/pokemon.c`); see [RED's battle theme](#reds-battle-theme) |
+| The summit's howling wind instead of music | `MUS_DAILYRED_MT_SILVER_WIND`, the summit map's music; see [The summit's wind](#the-summits-wind) |
 | Mt. Silver's HGSS-style battle background on the summit | `BattleSetup_GetEnvironmentId` in `src/battle_setup.c` picks `BATTLE_ENVIRONMENT_SNOW`, whose graphics are in `src/data/battle_environment.h`; see [Graphics](#graphics) |
 | RED's animated HGSS battle sprite, and LEAF's HGSS-style sprite in the VS transition | `TRAINER_PIC_DAILYRED_RED` / `_LEAF`; `DailyRed_AnimateTrainerSprite` (`src/dailyred_red.c`, called from `src/battle_controllers.c`); `src/battle_transition.c` |
 | No free switch when RED's Pokémon faints: Battle Style starts on SET and is locked in Options | `StartNewGame` in `src/dailyred.c`, `src/option_menu.c` |
@@ -168,7 +169,10 @@ On 1 run in 100 (`EXIT_ODDS`, rolled per run from the seed, see
 `DailyRed_IsExitOpen`) the entrance is open: walking south off the path's last
 row (9, 14), like leaving a cave, warps you straight to the start of FireRed,
 your bedroom in Pallet Town, team and all, and the only way back up is to
-become Champion. Otherwise the entrance is just a wall. The Hall of Fame sends you straight back
+become Champion. Otherwise the entrance is just a wall. Arriving in the
+bedroom that way, the player says the second half of FireRed's NES line,
+"…Okay! It's time to go!" (`DailyRed_ArrivedFromSummit`, from the bedroom's
+own map scripts). The Hall of Fame sends you straight back
 to the summit start with your team healed instead of rolling the credits
 (`DailyRed_ReturnFromHallOfFame`, called from `Task_Hof_HandleExit` in
 `src/hall_of_fame.c`). RED and
@@ -397,6 +401,26 @@ every species, move, item and ability against the expansion's constants and
 every ability against what the species can have, and fails on anything
 missing. Your team uses the same table.
 
+### The summit's wind
+
+Like HGSS, the summit has no music, only the wind howling, until RED's battle
+theme starts. `music/mt-silver-wind.ogg`, a loop of HGSS's summit wind
+supplied by the project's owner, becomes a looping GBA sample and a one-note
+song (`MUS_DAILYRED_MT_SILVER_WIND`, entry 611 in `sound/song_table.inc`):
+
+```sh
+python3 scripts/audio/make-wind.py      # needs ffmpeg
+```
+
+writes `sound/direct_sound_samples/dailyred_mt_silver_wind.wav` (13379 Hz
+mono, its end crossfaded into its start so the loop doesn't click, made about
+8 dB louder with soft clipping, and a `smpl` loop chunk for wav2agb) and
+`sound/songs/midi/mus_dailyred_mt_silver_wind.mid` (one note held forever,
+before the song's loop, on the voice in `sound/voicegroups/dailyred_mt_silver_wind.inc`).
+In the game it averages about −20 dBFS, about as loud as RED's battle theme.
+It's map music outside `START_MUS`–`END_MUS`, so `GetNightMusicFromTrack`
+(`src/overworld.c`) now checks the range instead of reading past its table.
+
 ### RED's battle theme
 
 RED's battle plays a "vs Red" track (`MUS_DAILYRED_VS_RED`) instead of
@@ -587,7 +611,9 @@ This repository contains Daily Red's own work: the changes in `patches/`, the
 website and the tests. It doesn't include pokeemerald-expansion or a built ROM;
 the scripts fetch the expansion from its repository and build locally. The
 exceptions are RED's battle theme, `music/vs-red.mid` (and its prepared copy
-in the patch), a MIDI of a GBA song supplied by the project's owner, and the
+in the patch), a MIDI of a GBA song supplied by the project's owner, the
+summit's wind, `music/mt-silver-wind.ogg` (HGSS's, supplied by the project's
+owner, and the sample made from it in the patch), and the
 art in `art/` (and the graphics made from it in the patch): Mt. Silver's
 battle background is REKKA's, RED's battle sprite is HeartGold/SoulSilver's
 (ripped by ChrisX698), and LEAF's HGSS-style sprite and the Mt. Silver
@@ -632,6 +658,8 @@ scripts/sets/generate.mjs            Showdown Random Battle sets → expansion/s
 scripts/graphics/make-graphics.py    art/ → Mt. Silver's battle background and the HGSS-style sprites
 art/                                 source art (see Graphics)
 music/vs-red.mid                     RED's battle theme (source MIDI)
+music/mt-silver-wind.ogg             the summit's wind (source loop)
+scripts/audio/make-wind.py           the wind → a looping GBA sample and its song
 web/                                 the website
 tests/                               headless browser tests, the teams tool and the music recorder
 ```
