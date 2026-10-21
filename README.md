@@ -164,9 +164,11 @@ path at (9, 11), just inside the summit's entrance; the snowfield below it is
 scenery. Climb between the terraced cliffs and RED stands above the stairs at
 (9, 1) facing north, turning around when you talk to him.
 
-The entrance (row 15) is a joke exit: after a yes/no prompt it warps you to
-the start of FireRed, your bedroom in Pallet Town, team and all, and the only
-way back up is to become Champion. The Hall of Fame sends you straight back
+On 1 run in 100 (`EXIT_ODDS`, rolled per run from the seed, see
+`DailyRed_IsExitOpen`) the entrance is open: walking south off the path's last
+row (9, 14), like leaving a cave, warps you straight to the start of FireRed,
+your bedroom in Pallet Town, team and all, and the only way back up is to
+become Champion. Otherwise the entrance is just a wall. The Hall of Fame sends you straight back
 to the summit start with your team healed instead of rolling the credits
 (`DailyRed_ReturnFromHallOfFame`, called from `Task_Hof_HandleExit` in
 `src/hall_of_fame.c`). RED and

@@ -30,12 +30,12 @@ HcmV?d00001
 
 diff --git a/data/layouts/DailyRed_Summit/map.bin b/data/layouts/DailyRed_Summit/map.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..c02e8818ca434bd1c53fd15bb1d439b3acf83fc9
+index 0000000000000000000000000000000000000000..f06cb16b442d124a5548331445c5f8cc38188376
 GIT binary patch
 literal 800
-zcmc)H%MOA-429u$I*aps%%FIQ8Wr!lQ1n5~q%_lxQJ3Uju=&y!s9BrFtdMFrDhjk^
-z7wNMq@WeANxZ+l*=%xkU`9Oy!UO(KFGtT?_7F=@WtnL++?<=J^QGwY-dYPOm@4U3C
-xbXMkBX|mlb-%q#ed&u+C>CFF5<__i7lqQt+IN*pKwGAb?Z_DaSZU2{ta&O>}B2NGS
+zcmc)HIS#@=3_#I4x%lVHB<upjz87o<MI&bzdk|1Yzew|BJ4r)h>QhN<K(8oZ%dW;}
+zRp7u;PI8t@p=viRaOEa<dC2pJ8!=|m-Zy2&+}X5ORlcv3>Qn`?tMM|rq`dRes?u4R
+uXT`~OuYSL@J-vrMKV6#n-|5`0+yZTgwq?hj&ATO<-nXLq(z^Z2UAY(O3?f?q
 
 literal 0
 HcmV?d00001
@@ -66,10 +66,10 @@ index 2b25587a..15968213 100644
  }
 diff --git a/data/maps/DailyRed_Summit/map.json b/data/maps/DailyRed_Summit/map.json
 new file mode 100644
-index 00000000..3a7a55bb
+index 00000000..d2cac5a5
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/map.json
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,60 @@
 +{
 +  "id": "MAP_DAILY_RED_SUMMIT",
 +  "name": "DailyRed_Summit",
@@ -104,46 +104,59 @@ index 00000000..3a7a55bb
 +      "flag": "0"
 +    }
 +  ],
-+  "warp_events": [],
-+  "coord_events": [
++  "warp_events": [
 +    {
-+      "type": "trigger",
 +      "x": 8,
-+      "y": 15,
++      "y": 14,
 +      "elevation": 3,
-+      "var": "VAR_TEMP_1",
-+      "var_value": "0",
-+      "script": "DailyRed_Summit_EventScript_Entrance"
++      "dest_map": "MAP_DYNAMIC",
++      "dest_warp_id": "WARP_ID_DYNAMIC"
 +    },
 +    {
-+      "type": "trigger",
 +      "x": 9,
-+      "y": 15,
++      "y": 14,
 +      "elevation": 3,
-+      "var": "VAR_TEMP_1",
-+      "var_value": "0",
-+      "script": "DailyRed_Summit_EventScript_Entrance"
++      "dest_map": "MAP_DYNAMIC",
++      "dest_warp_id": "WARP_ID_DYNAMIC"
 +    },
 +    {
-+      "type": "trigger",
 +      "x": 10,
-+      "y": 15,
++      "y": 14,
 +      "elevation": 3,
-+      "var": "VAR_TEMP_1",
-+      "var_value": "0",
-+      "script": "DailyRed_Summit_EventScript_Entrance"
++      "dest_map": "MAP_DYNAMIC",
++      "dest_warp_id": "WARP_ID_DYNAMIC"
 +    }
 +  ],
++  "coord_events": [],
 +  "bg_events": []
 +}
 diff --git a/data/maps/DailyRed_Summit/scripts.inc b/data/maps/DailyRed_Summit/scripts.inc
 new file mode 100644
-index 00000000..9c8747fc
+index 00000000..063c3f8f
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/scripts.inc
-@@ -0,0 +1,147 @@
+@@ -0,0 +1,137 @@
 +DailyRed_Summit_MapScripts::
++	map_script MAP_SCRIPT_ON_LOAD, DailyRed_Summit_OnLoad
 +	.byte 0
++
++@ On 1 run in 100 (DailyRed_IsExitOpen) the summit's entrance leads all the
++@ way back down, like a cave exit: walking south off the path's last row
++@ (metatile 0x2A5, a south arrow warp) warps to the start of FireRed, the
++@ player's bedroom in Pallet Town, team and all. The only way back up is to
++@ become Champion: the Hall of Fame returns the player to the summit
++@ (DailyRed_ReturnFromHallOfFame) instead of rolling the credits.
++DailyRed_Summit_OnLoad:
++	specialvar VAR_RESULT, DailyRed_IsExitOpen
++	call_if_eq VAR_RESULT, TRUE, DailyRed_Summit_EventScript_OpenExit
++	end
++
++DailyRed_Summit_EventScript_OpenExit::
++	setmetatile 8, 14, 0x2A5, FALSE
++	setmetatile 9, 14, 0x2A5, FALSE
++	setmetatile 10, 14, 0x2A5, FALSE
++	setdynamicwarp MAP_PALLET_TOWN_PLAYERS_HOUSE_2F, 6, 6
++	return
 +
 +@ Talking to RED starts the battle. It's trainerbattle_earlyrival (an early
 +@ rival battle with RIVAL_BATTLE_HEAL_AFTER: the player can lose without
@@ -214,31 +227,6 @@ index 00000000..9c8747fc
 +	goto DailyRed_Summit_EventScript_DailyGameOverHold
 +	end
 +
-+@ The summit's entrance (row 15) leads all the way back to the start of
-+@ FireRed, in the player's bedroom with their team, and the only way back up
-+@ is to become Champion: the Hall of Fame sends the player back here
-+@ (DailyRed_ReturnFromHallOfFame) instead of rolling the credits.
-+DailyRed_Summit_EventScript_Entrance::
-+	lockall
-+	msgbox DailyRed_Summit_Text_Entrance, MSGBOX_YESNO
-+	goto_if_eq VAR_RESULT, NO, DailyRed_Summit_EventScript_EntranceStay
-+	closemessage
-+	warp MAP_PALLET_TOWN_PLAYERS_HOUSE_2F, 6, 6
-+	waitstate
-+	releaseall
-+	end
-+
-+DailyRed_Summit_EventScript_EntranceStay::
-+	closemessage
-+	applymovement OBJ_EVENT_ID_PLAYER, DailyRed_Summit_Movement_StepUp
-+	waitmovement 0
-+	releaseall
-+	end
-+
-+DailyRed_Summit_Movement_StepUp:
-+	walk_up
-+	step_end
-+
 +@ Anywhere else (practice runs, desktop emulators): straight into a new run.
 +DailyRed_Summit_EventScript_NextRun::
 +	msgbox DailyRed_Summit_Text_NextRun
@@ -263,10 +251,6 @@ index 00000000..9c8747fc
 +@ Shown in battle when RED wins.
 +DailyRed_Summit_Text_RedVictory::
 +	.string "…$"
-+
-+DailyRed_Summit_Text_Entrance::
-+	.string "Head back down Mt. Silver?\n"
-+	.string "Only Champions make it back up.$"
 +
 +DailyRed_Summit_Text_PlayerWon::
 +	.string "You defeated Red!$"
@@ -304,10 +288,10 @@ index d6320f48..911af6c6 100644
    "gMapGroup_TownsAndRoutes_Frlg": [
      "PalletTown_Frlg",
 diff --git a/data/specials.inc b/data/specials.inc
-index 3492bf3b..c5abfb81 100644
+index 3492bf3b..8b0f46a9 100644
 --- a/data/specials.inc
 +++ b/data/specials.inc
-@@ -638,3 +638,9 @@ gSpecials::
+@@ -638,3 +638,10 @@ gSpecials::
  	def_special UpdateTrainerCardPhotoIcons
  	def_special StickerManGetBragFlags
  	def_special CheckAddCoins
@@ -317,26 +301,27 @@ index 3492bf3b..c5abfb81 100644
 +	def_special DailyRed_OnBattleEnd
 +	def_special DailyRed_OnDailyGameOver
 +	def_special DailyRed_IsDailyGame
++	def_special DailyRed_IsExitOpen
 diff --git a/data/tilesets/secondary/mt_silver_summit/metatile_attributes.bin b/data/tilesets/secondary/mt_silver_summit/metatile_attributes.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..d8affb6ceefd1b157026495280f39ad32f77237f
+index 0000000000000000000000000000000000000000..c86f2de8a714c579682ea8e76715a37846814eb4
 GIT binary patch
 literal 160
-OcmZQzU{GKf#25gJuLS`B
+RcmZQzU{GKfWH=ScJphnv1!e#M
 
 literal 0
 HcmV?d00001
 
 diff --git a/data/tilesets/secondary/mt_silver_summit/metatiles.bin b/data/tilesets/secondary/mt_silver_summit/metatiles.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..e21c625598d0da09f7b7864299a33398d2ad5de7
+index 0000000000000000000000000000000000000000..bb025c9ae242b5e35498251c65a4882efd558378
 GIT binary patch
 literal 640
-zcma*j#cl#X6ouhF^S`)j9BLGIhq}8_7h0%Lm#1lHIw$FlnZ?bQb4NXRe&@*F@Z!Ty
-z0B4_hEnt3g4iX|vM0v=97O}AMQN|c&Lir?7rijUL5+q5<X)<KV$$1JCDamCjRH@1C
-z9<ElbY&EOu{DS4JWJNh+Y0FtwcI#ZN)1XO9`!}p^Eo-WOni*!9Q$EiEi!8|ri(AT)
-z>L2{(GAqglUS;i{*V&La*<za=d6zx*Igk%&bHuTH!YOB*%NJa7#kK6-HEiv0!!2E{
-f?{UXH5Aq{@o_LmDc;$_E`GZfs_?Cw~*Y*7XUz>}j
+zcma*lMNfl46op}a^Sij~uU?$Gd$Ho~?(T*1YnlRc5>_y?xOsBMGalYo@B3*!`~(Q%
+z>^GkUEnv<e!bFHF4_nBh7E#{M0D}xEA7+G6#^e}r5+vmmX)<Kx9C->9<q~BoRAqM#
+zSIbtis#Uaq-f~v7f}FOLWi2DSd9K!|)1ayK>sGU-H8g&l2_~6RK23`mX63lWENKai
+z@4e<6^U8Z(VDXoiSe92<WsP-tgH5*BmUq}?kA3-oLykC>PdMd_bJ^YNzx9GkuDI6x
+h8*aJdUVh+_C!XaOUU{P}zw<$dPx<>ddGcT9=mH1|k8S_}
 
 literal 0
 HcmV?d00001
@@ -2198,10 +2183,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..bf864d35
+index 00000000..cf8a3e2c
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,108 @@
+@@ -0,0 +1,109 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -2232,6 +2217,7 @@ index 00000000..bf864d35
 +bool32 DailyRed_IsOnSummit(void);
 +const u16 *DailyRed_GetMtSilverBattlePalette(void);
 +void DailyRed_ReturnFromHallOfFame(void);
++bool8 DailyRed_IsExitOpen(void);
 +
 +// The battle boxes' look (src/battle_bg.c; the tiles and frame colours come
 +// from scripts/graphics/make-graphics.py): white text on dark grey inside
@@ -3229,10 +3215,10 @@ index 85523e06..79fe93ec 100644
                      if (B_OVERWORLD_SNOW >= GEN_9)
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 00000000..5d88a048
+index 00000000..b4dd062b
 --- /dev/null
 +++ b/src/dailyred.c
-@@ -0,0 +1,264 @@
+@@ -0,0 +1,283 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "graphics.h"
@@ -3318,6 +3304,15 @@ index 00000000..5d88a048
 +static EWRAM_DATA u32 sTeamRngState = 0;
 +static EWRAM_DATA u32 sRedRngState = 0;
 +
++// The summit's entrance only leads back down (to the start of FireRed) on 1
++// run in 100: a roll per run from its own RNG, seeded like RED's (EXIT_RNG_SALT)
++// so it doesn't change the teams. The map's load script asks
++// DailyRed_IsExitOpen and opens it.
++#define EXIT_ODDS 1 // percent
++#define EXIT_RNG_SALT 0x45584954 // "EXIT"
++static EWRAM_DATA u32 sExitRngState = 0;
++static EWRAM_DATA bool8 sExitOpen = FALSE;
++
 +static const u8 sText_PlayerName[] = _("Blue");
 +static const u8 sText_RivalName[] = _("Red");
 +
@@ -3383,6 +3378,7 @@ index 00000000..5d88a048
 +    SeedRngAndSetTrainerIdFromSeed(seed);
 +    sTeamRngState = seed;
 +    sRedRngState = seed ^ RED_RNG_SALT;
++    sExitRngState = seed ^ EXIT_RNG_SALT;
 +    InitStatus(seed);
 +    // No resetting out of a losing battle in the daily game. Only saving,
 +    // link play and trading turn it back on, and none of those exist here.
@@ -3403,6 +3399,7 @@ index 00000000..5d88a048
 +    SeedRngAndSetTrainerId();
 +    sTeamRngState = Random32();
 +    sRedRngState = Random32();
++    sExitRngState = Random32();
 +    InitStatus(0);
 +    StartNewGame();
 +}
@@ -3412,6 +3409,8 @@ index 00000000..5d88a048
 +static void GenerateTeam(void)
 +{
 +    u16 redStarter = DailyRed_GenerateRedTeam(&sRedRngState);
++
++    sExitOpen = DailyRed_Random(&sExitRngState) % 100 < EXIT_ODDS;
 +    DailyRed_GenerateTeam(gParties[B_TRAINER_PLAYER], &sTeamRngState, redStarter);
 +    CalculatePlayerPartyCount();
 +}
@@ -3457,6 +3456,12 @@ index 00000000..5d88a048
 +    GenerateTeam();
 +    sStatus.phase = DAILYRED_PHASE_EXPLORING;
 +    sStatus.result = DAILYRED_RESULT_NONE;
++}
++
++// Special: whether this run's summit entrance leads back down (see sExitOpen).
++bool8 DailyRed_IsExitOpen(void)
++{
++    return sExitOpen;
 +}
 +
 +// Specials the map script calls so the website can follow the battle.
