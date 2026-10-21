@@ -2003,20 +2003,549 @@ index 00000000..3ce4089b
 +0 0 0
 +0 0 0
 +0 0 0
-diff --git a/graphics/text_window/1.png b/graphics/text_window/1.png
-index 5d8020eff5ac26935dca94e946ad345c28ef53fd..f02a63ab01e57e4ba39e69847216196012757c84 100644
+diff --git a/graphics/dailyred/option_menu/map_0.bin b/graphics/dailyred/option_menu/map_0.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..69e770aff25e178d82f2e1e968dd20f199aca337
 GIT binary patch
-literal 231
-zcmeAS@N?(olHy`uVBq!ia0vp^5+KaM3?#3wJbMaAF%}28J29*~C-V}>F$nMpaRt&|
-zUS0_W2j<M#I$^<$|Laa(yLRrxg%|(-{|8DT1E7ePV^EG*(_x^fKuM5aFauBs85{`c
-zb_U9Mdb&7<XiR)N$xw(vk%Kw*QO5KC^Q&2%6J?}d-=4(FyKt-c1jn<}C$j0@_c$Ej
-zGJonkTPI~!y&p$iIm#F-V>z8ePdJ8FeE6a$uM);po-aI~59AC_S3j3^P6<r_-8NRh
+literal 1280
+zcmeIw%L;%X5Czao&3sh$_<!yv%qN!agh9b&<yj5G<${cWsM?F|RZPS4M${d}{w$`H
+zm!w#lrUpYPKa*uS@(m&9B@|0zYB0$Cuq+4P5OV(S|MvecSUYX`ej@s%`|VH1SM=Y$
+C6_Gjs
 
-delta 165
-zcmV;W09ya&0mlK57%T(>0000ISs=>*001yhOjJc;#bPNjF-l5mb83TPVw7`ptc#1y
-zti7z>)!va&6>i&aBxwKu08&XrK~xx(V_-l5f^fjVz$lsq1%Uz#jLybTU;^YQ!#GA@
-zPDKY0v_m-N@4%oK%&~xQng@=9;v8g$s=&P91mvhfeP<E`<OnH2fuaCvfFJ_^tPW=0
-T_mrv|00000NkvXXu0mjf+loJ6
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/option_menu/map_1.bin b/graphics/dailyred/option_menu/map_1.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..76dee471a3b8972751c708144db95b49953b86fb
+GIT binary patch
+literal 1280
+zcmd_oNeX~43<XeYtF_M4{rN}85w+O`LJM6eXx}P?PiTmNN!mpB6jgP<8fm-eAEJtR
+z3#V$(W_ZMWhoI^)WQ?4*<Wvo{8J>7P1yxT&#>n~C|F3S};j#VyeEx*F(8Bk-qFlV+
+J^7Q(N`4`>ykvaeX
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/option_menu/map_2.bin b/graphics/dailyred/option_menu/map_2.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..7ec56cd736eebeb8de35bab717110fd684639762
+GIT binary patch
+literal 1280
+zcmd_oNeX~43<XfD9qgdi;r{$1<cQkt3ZaE=1npau@ChLi5LJ6oy^7!Pyb*OrQ9p}c
+z%1@9i1>Inf@-r;U!8e4Qf4x6RmLlC?D9=xp<;XXLoPT|OcKZ^4+5dvI)0XcyqF=h7
+J{&f6A{~P_;kvaeX
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/option_menu/map_3.bin b/graphics/dailyred/option_menu/map_3.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..f58e3222dcf2aec66e750c76d480e7c2c306ed6d
+GIT binary patch
+literal 1280
+zcmd_oNeaLq3<c2II@F=99q!LRLXOz#P6!Gvt8W#;Cy*#0s?MVO6xH;-8Fg3Dzl$p6
+z7f6<ZZZJss6_(}T8$!+xKc6H^k!~=Q_fMAP$Tx(XAASED_D)CszY+b?{rc1K7xP~o
+C%8@z%
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/option_menu/map_4.bin b/graphics/dailyred/option_menu/map_4.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..2e7bf00bfca7e611b5e0b27d8ed231a68719e62c
+GIT binary patch
+literal 1280
+zcmeIwNeX~43<XfD9qgdi;r{$1<cQkt3Z;Q=1hH=w!Y7baKs4<|_bRI4c_Z46qJI`u
+z%1@A03YuY%@-u9egJ*=C|L4EFf09*-G{aE7KiMiro)L2X?fWlSJ8k*@M)XVj>rcl|
+G%)bFWtdTkZ
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/option_menu/map_5.bin b/graphics/dailyred/option_menu/map_5.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..98eef15be4d276917538708f14b178618ad3ca69
+GIT binary patch
+literal 1280
+zcmeIwNe+M@3<Xe81{qWw?w@~z9#LUO(m=ve<*l0Lr=+QXsM?F}RaC?CM${ce|17GM
+zpCDNZy1^jjXIPelZwNX6&;R)TNwO5_21EJ&$g&*yhLH0M)=pc#--v$c|NZIsiupHP
+Cj*&V5
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/option_menu/palette.pal b/graphics/dailyred/option_menu/palette.pal
+new file mode 100644
+index 00000000..4d256f6d
+--- /dev/null
++++ b/graphics/dailyred/option_menu/palette.pal
+@@ -0,0 +1,115 @@
++JASC-PAL
++0100
++112
++0 0 0
++248 248 248
++24 24 32
++128 128 136
++48 48 56
++64 64 72
++208 208 216
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++8 8 8
++16 16 16
++24 24 32
++32 32 40
++40 40 48
++48 48 56
++248 248 248
++216 216 224
++120 120 128
++80 80 88
++64 64 72
++48 48 56
++56 40 40
++184 88 96
++128 56 64
++0 0 0
++8 8 8
++16 16 16
++24 24 32
++32 32 40
++40 40 48
++48 48 56
++56 56 64
++64 64 72
++72 72 80
++136 80 88
++112 56 64
++96 40 48
++120 64 72
++240 240 248
++200 96 104
+diff --git a/graphics/dailyred/option_menu/tiles.png b/graphics/dailyred/option_menu/tiles.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..439a59207773c6e11163dec6250afcb0d20a0b63
+GIT binary patch
+literal 427
+zcmeAS@N?(olHy`uVBq!ia0vp^7C<b)!VDy1S(K%L6nlxMuPggwHYQOMHLmuTW<VkF
+z64!{5;QX|b^2DN426rD9pfL(%sYMFLdM1UfOCAE1aFi7IxdUa4fouk^22FV&#ggvm
+z>&U>cv7h@-A}f$@5a1Ky3ZywWI0OU)BqSsh6cjWxGz<(3e*E}x<Hn7OiVClwAWJ7F
+zO+!OXP0Qr1Tb-&~-p;sO0o22o<n8Xl(7`I}0py(bba4!+m{U9PAnzdq9)`_K{`=NE
+zFt-m&X#Mo8aZ%3!mWkmRHy89=h_Cn16%J5iNZh^l_L7C_uA7PqbJULsNHevl9q9Sw
+zaNytVvw@W=4}N;3r?G75kI~R_O!ZuGCj4pbB<rT_YL(neeHLxf&ziMtUM}DF(A=}e
+zv)BFBF{<KpnEBpn-O`|@6{qbtMNM?|a?97MUC~qLtoCAe>Jx<z#*0ej=6;ruo}oC2
+z<yLl-)e-LXOKc)%e~dbz`)H@k1B(eSF7{7)-8N~K<o@=@tyg9k)vMnLKT^CSeHYMc
+N44$rjF6*2UngAVin^OP)
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/fonts/latin_normal.png b/graphics/fonts/latin_normal.png
+index 8d48dec16c8b17eb3fb74a1384a6b38ed642e15d..42e847faf0f281db3da29ac5a33b6c224a416207 100644
+GIT binary patch
+delta 3457
+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
+Q-`4_+^>65v>bOMy5B*MmNdN!<
+
+literal 4714
+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
+T;KAQdBH+)1&bDu?eXjlo3pKhD
+
+diff --git a/graphics/fonts/latin_small.png b/graphics/fonts/latin_small.png
+index eacebf21b39d83066084357b77d37a03f8b13314..9fd919498ef2fe4610d6259774d5ce9886c08018 100644
+GIT binary patch
+literal 3589
+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
+
+literal 4644
+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
+
+diff --git a/graphics/text_window/1.png b/graphics/text_window/1.png
+index 5d8020eff5ac26935dca94e946ad345c28ef53fd..054dae8951afbdd0136939b7d74838fc1bfaa622 100644
+GIT binary patch
+delta 192
+zcmX@k_>ggeW<3J~gO``r4Gn`ibGH5{$oRkR<h5((ew;Y*|NnoW6fyvccsT}bJhrMA
+zD9Tt8<QL4~@a#q!kQ49e;uumfCpqB&tAwOP?}9VC<s~Fr@|`WuJ(rZs-S1>6T_Pzl
+zdFq|}d#k^%b2;hL(D_i_=QlH(TFPZhHs<Gt*g0PRk7sjpTU;GbxOBJ9e|Zf@%l~#8
+i4E8ktd}z;{$H1`Sp_Ghy+l@Mqb39%BT-G@yGywov>`fN{
+
+delta 166
+zcmaFJc${&9W_{ApBuzs@FR!fPtmdSoDaFNWy1UP=*}LZ6)q4!6;Q#;sUXDSx^Hnl|
+z;z6D+jv*3LlM@^mn+gsbIG{0$jkS@9r{~<UfCQ!|8iy_168v1*1-3X_JbQm&fy9}O
+z4F$8<`<frgq_nR(u;&5GlNC<2=|U_|<T*4Q8y7KTH7GDMtl>+$_kGGLX^^#^u6{1-
+HoD!M<z)3%l
 
 diff --git a/graphics/text_window/2.png b/graphics/text_window/2.png
 index 5e89b4116b0fd30a30c812c7142ececfa836f7ac..d509bc7200627b75a7ad54858be4ccd3f0ca65f7 100644
@@ -13795,6 +14324,152 @@ index ca0e9c7f..8d253ba8 100644
  
  //------------------------------------------------------------------------------
  // WEATHER_RAIN_THUNDERSTORM
+diff --git a/src/fonts.c b/src/fonts.c
+index cc8fdedd..eee51935 100644
+--- a/src/fonts.c
++++ b/src/fonts.c
+@@ -38,38 +38,38 @@ ALIGNED(4) const u8 gFontSmallNarrowLatinGlyphWidths[] = {
+ 
+ ALIGNED(4) const u16 gFontSmallLatinGlyphs[] = INCGFX_U16("graphics/fonts/latin_small.png", ".latfont");
+ ALIGNED(4) const u8 gFontSmallLatinGlyphWidths[] = {
+-    3,  5,  5,  5,  5,  5,  5,  5,  5,  4,  3,  4,  4,  5,  5,  5,
+-    5,  5,  5,  5,  5,  5,  5,  5,  3,  5,  5,  5,  5,  5,  4,  3,
+-    4,  4,  5,  5,  5,  6,  5,  5,  5,  5,  5,  5,  8,  7,  8,  3,
+-    3,  3,  3,  3,  8,  8,  7,  3,  7,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    5,  5,  5,  8,  8,  8,  8,  8,  8,  8,  4,  7,  5,  5,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  5,  3,  3,  3,  3,  3,  3,  4,
+-    3,  3,  3,  3,  3,  3,  3,  5,  3,  8,  8,  8,  8,  1,  2,  3,
+-    4,  5,  6,  7,  5,  7,  7,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    8,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,  5,  5,  5,
+-    5,  5,  5,  5,  5,  5,  5,  8,  5,  8,  5,  5,  5,  5,  5,  5,
+-    5,  5,  5,  4,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,
+-    5,  5,  5,  4,  5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,  5,
+-    5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  8,
+-    7,  5,  5,  5,  5,  5,  5,  9,  3,  3,  3,  8,  3,  3,  3,  3,
+-    8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
+-    8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
+-    8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
+-    8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  3,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,  4,  4,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,
++     4,  4,  5,  5,  5,  6,  5,  5,  5,  5,  5,  5,  8,  7,  8,  5,
++     5,  5,  5,  5,  8,  8,  7,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  8,  8,  8,  8,  8,  8,  8,  4,  7,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  4,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  8,  8,  8,  8,  5,  5,  5,
++     5,  5,  5,  5,  5,  7,  7,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     8,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  8,  5,  8,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  4,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,
++     5,  5,  5,  4,  5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  8,
++     7,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
++     8,  8,  8,  8,  8,  8,  8,  8,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,
++     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
++     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
++     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  5,
+ };
+ 
+ ALIGNED(4) const u16 gFontNarrowLatinGlyphs[] = INCGFX_U16("graphics/fonts/latin_narrow.png", ".latfont");
+@@ -146,38 +146,38 @@ ALIGNED(4) const u8 gFontShortLatinGlyphWidths[] = {
+ 
+ ALIGNED(4) const u16 gFontNormalLatinGlyphs[] = INCGFX_U16("graphics/fonts/latin_normal.png", ".latfont");
+ ALIGNED(4) const u8 gFontNormalLatinGlyphWidths[] = {
+-    3,  6,  6,  6,  6,  6,  6,  6,  6,  6,  3,  6,  6,  6,  6,  6,
+-    8,  6,  6,  6,  6,  6,  6,  6,  3,  6,  6,  6,  6,  6,  6,  3,
+-    6,  6,  6,  6,  6,  8,  6,  6,  6,  6,  6,  6,  9,  7,  6,  3,
+-    3,  3,  3,  3, 10,  8,  3,  3,  7,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    6,  6,  4,  8,  8,  8,  7,  8,  8,  4,  6,  6,  4,  4,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  6,  3,  3,  3,  3,  3,  3,  6,
+-    3,  3,  3,  3,  3,  3,  3,  6,  3,  7,  7,  7,  7,  1,  2,  3,
+-    4,  5,  6,  7,  6,  6,  6,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    8,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  4,  6,  3,  6,  3,
+-    6,  6,  6,  3,  3,  6,  6,  6,  3,  7,  6,  6,  6,  6,  6,  6,
+-    6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
+-    6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  4,  5,  6,
+-    4,  6,  6,  6,  6,  6,  5,  6,  6,  6,  6,  6,  6,  6,  6,  8,
+-    3,  6,  6,  6,  6,  6,  6,  3,  3,  3,  3,  8,  3,  3,  3,  3,
+-    10, 10, 10, 10,  8, 10, 10,  8, 10, 10, 10, 10, 10, 10, 10, 10,
+-    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+-    8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
+-    8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
+-    8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  3,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     8,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  8,  6,  6,  6,  6,  6,  6,  9,  8,  8,  6,
++     6,  6,  6,  6, 10,  8,  5,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  8,  8,  8,  8,  8,  8,  4,  6,  8,  5,  5,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6, 12, 12, 12, 12,  6,  6,  6,
++     6,  6,  6,  6,  8,  8,  8,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     8,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  5,  6,  5,
++     6,  6,  6,  3,  3,  6,  6,  8,  5,  9,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  5,  6,  6,  4,  6,  5,
++     5,  6,  5,  6,  6,  6,  5,  5,  5,  6,  6,  6,  6,  6,  6,  8,
++     5,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++    12, 12, 12, 12,  8, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
++    10, 10, 10, 10, 10, 10, 10, 10,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
++     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
++     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
++     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  6,
+ };
+ 
+ ALIGNED(4) const u16 gFontNarrowerLatinGlyphs[] = INCGFX_U16("graphics/fonts/latin_narrower.png", ".latfont");
 diff --git a/src/graphics.c b/src/graphics.c
 index 4ac676cd..66b83ebe 100644
 --- a/src/graphics.c
@@ -13906,10 +14581,652 @@ index 89a2bf4c..2cf3f058 100644
          RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
      else
 diff --git a/src/option_menu.c b/src/option_menu.c
-index a10b727b..8a0c2f1c 100644
+index a10b727b..589c1050 100644
 --- a/src/option_menu.c
 +++ b/src/option_menu.c
-@@ -482,12 +482,8 @@ static void BattleScene_DrawChoices(u8 selection)
+@@ -1,13 +1,20 @@
++// Daily Red: the BW-style option menu from CompuMaxx's FireRed hack (Shiny-Miner's
++// FR-OptionMenu, translated to English by Shiny-Miner), ported to the expansion
++// and recoloured to Daily Red's red UI (scripts/graphics/make-ui.py). One row
++// per option over a dark background, the chosen row lit up, the choices to its
++// right and a description in a window frame at the bottom. A saves, B cancels.
+ #include "global.h"
+ #include "option_menu.h"
+ #include "bg.h"
+ #include "gpu_regs.h"
+ #include "international_string_util.h"
+ #include "main.h"
++#include "malloc.h"
+ #include "menu.h"
+ #include "palette.h"
+ #include "scanline_effect.h"
+ #include "sprite.h"
++#include "string_util.h"
+ #include "strings.h"
+ #include "task.h"
+ #include "text.h"
+@@ -23,6 +30,7 @@
+ #define tSound data[4]
+ #define tButtonMode data[5]
+ #define tWindowFrameType data[6]
++#define tTimer data[7]
+ 
+ enum
+ {
+@@ -32,28 +40,35 @@ enum
+     MENUITEM_SOUND,
+     MENUITEM_BUTTONMODE,
+     MENUITEM_FRAMETYPE,
+-    MENUITEM_CANCEL,
+     MENUITEM_COUNT,
+ };
+ 
+ enum
+ {
+-    WIN_HEADER,
+-    WIN_OPTIONS
++    DESCRIPTION_SAVING = MENUITEM_COUNT,
++    DESCRIPTION_CANCELLING,
+ };
+ 
+-#define YPOS_TEXTSPEED    (MENUITEM_TEXTSPEED * 16)
+-#define YPOS_BATTLESCENE  (MENUITEM_BATTLESCENE * 16)
+-#define YPOS_BATTLESTYLE  (MENUITEM_BATTLESTYLE * 16)
+-#define YPOS_SOUND        (MENUITEM_SOUND * 16)
+-#define YPOS_BUTTONMODE   (MENUITEM_BUTTONMODE * 16)
+-#define YPOS_FRAMETYPE    (MENUITEM_FRAMETYPE * 16)
++#define WIN_TEXT 0
++#define BG_TEXT 0
++#define BG_ROWS 1
++#define BG_FRAME 2
++
++#define TEXT_PAL 5          // the text's palette; the rows' are 10 and 11
++#define FRAME_PAL 14        // the window frame's
++#define FRAME_TILE 0x1A2    // where the window frame's tiles go
++#define ROWS_TILEMAP_OFFSET 0x3800
++
++#define CHOICES_X 112
++#define DESCRIPTION_X 12
++#define DESCRIPTION_Y 120
++#define ROW_Y(i) ((i) * 16 + 17)
+ 
+ static void Task_OptionMenuFadeIn(u8 taskId);
+ static void Task_OptionMenuProcessInput(u8 taskId);
+ static void Task_OptionMenuSave(u8 taskId);
++static void Task_OptionMenuCancel(u8 taskId);
+ static void Task_OptionMenuFadeOut(u8 taskId);
+-static void HighlightOptionMenuItem(u8 selection);
+ static u8 TextSpeed_ProcessInput(u8 selection);
+ static void TextSpeed_DrawChoices(u8 selection);
+ static u8 BattleScene_ProcessInput(u8 selection);
+@@ -66,31 +81,50 @@ static u8 FrameType_ProcessInput(u8 selection);
+ static void FrameType_DrawChoices(u8 selection);
+ static u8 ButtonMode_ProcessInput(u8 selection);
+ static void ButtonMode_DrawChoices(u8 selection);
+-static void DrawHeaderText(void);
+ static void DrawOptionMenuTexts(void);
+-static void DrawBgWindowFrames(void);
++static void DrawFrame(void);
++static void ShowDescription(u8 which);
++static void ShowRows(u8 selection);
+ 
+ EWRAM_DATA static bool8 sArrowPressed = FALSE;
++EWRAM_DATA static u16 *sFrameTilemap = NULL;
++
++static const u16 sOptionMenu_Pal[] = INCGFX_U16("graphics/dailyred/option_menu/palette.pal", ".gbapal");
++static const u32 sOptionMenu_Gfx[] = INCGFX_U32("graphics/dailyred/option_menu/tiles.png", ".4bpp");
++static const u16 sOptionMenu_Rows0[] = INCBIN_U16("graphics/dailyred/option_menu/map_0.bin");
++static const u16 sOptionMenu_Rows1[] = INCBIN_U16("graphics/dailyred/option_menu/map_1.bin");
++static const u16 sOptionMenu_Rows2[] = INCBIN_U16("graphics/dailyred/option_menu/map_2.bin");
++static const u16 sOptionMenu_Rows3[] = INCBIN_U16("graphics/dailyred/option_menu/map_3.bin");
++static const u16 sOptionMenu_Rows4[] = INCBIN_U16("graphics/dailyred/option_menu/map_4.bin");
++static const u16 sOptionMenu_Rows5[] = INCBIN_U16("graphics/dailyred/option_menu/map_5.bin");
++
++static const u16 *const sOptionMenuRows[MENUITEM_COUNT] =
++{
++    sOptionMenu_Rows0, sOptionMenu_Rows1, sOptionMenu_Rows2,
++    sOptionMenu_Rows3, sOptionMenu_Rows4, sOptionMenu_Rows5,
++};
+ 
+-static const u8 gText_Option[]             = _("OPTION");
+-static const u8 gText_TextSpeedSlow[]      = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}SLOW");
+-static const u8 gText_TextSpeedMid[]       = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}MID");
+-static const u8 gText_TextSpeedFast[]      = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}FAST");
+-static const u8 gText_BattleSceneOn[]      = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}ON");
+-static const u8 gText_BattleSceneOff[]     = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}OFF");
+-static const u8 gText_BattleStyleShift[]   = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}SHIFT");
+-static const u8 gText_BattleStyleSet[]     = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}SET");
+-static const u8 gText_SoundMono[]          = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}MONO");
+-static const u8 gText_SoundStereo[]        = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}STEREO");
+-static const u8 gText_FrameType[]          = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}TYPE");
+-static const u8 gText_FrameTypeNumber[]    = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}");
+-static const u8 gText_ButtonTypeNormal[]   = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}NORMAL");
+-static const u8 gText_ButtonTypeLR[]       = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}LR");
+-static const u8 gText_ButtonTypeLEqualsA[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}L=A");
+-
+-static const u16 sOptionMenuText_Pal[] = INCGFX_U16("graphics/interface/option_menu_text.pal", ".gbapal");
+-// note: this is only used in the Japanese release
+-static const u8 sEqualSignGfx[] = INCGFX_U8("graphics/interface/option_menu_equals_sign.png", ".4bpp");
++// Text colours (background, foreground, shadow) from the text palette.
++static const u8 sTextColor_Normal[] = {TEXT_COLOR_TRANSPARENT, 1, 2};
++static const u8 sTextColor_NotChosen[] = {TEXT_COLOR_TRANSPARENT, 3, 4};
++static const u8 sTextColor_Description[] = {TEXT_COLOR_TRANSPARENT, 5, 6};
++
++static const u8 sText_Option[] = _("OPTIONS");
++static const u8 sText_Save[] = _("SAVE");
++static const u8 sText_Cancel[] = _("CANCEL");
++static const u8 sText_TextSpeedSlow[] = _("SLOW");
++static const u8 sText_TextSpeedMid[] = _("MID");
++static const u8 sText_TextSpeedFast[] = _("FAST");
++static const u8 sText_BattleSceneOn[] = _("ON");
++static const u8 sText_BattleSceneOff[] = _("OFF");
++static const u8 sText_BattleStyleShift[] = _("SHIFT");
++static const u8 sText_BattleStyleSet[] = _("SET");
++static const u8 sText_SoundMono[] = _("MONO");
++static const u8 sText_SoundStereo[] = _("STEREO");
++static const u8 sText_FrameType[] = _("TYPE");
++static const u8 sText_ButtonTypeNormal[] = _("NORMAL");
++static const u8 sText_ButtonTypeLR[] = _("LR");
++static const u8 sText_ButtonTypeLEqualsA[] = _("L=A");
+ 
+ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
+ {
+@@ -98,30 +132,33 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
+     [MENUITEM_BATTLESCENE] = COMPOUND_STRING("BATTLE SCENE"),
+     [MENUITEM_BATTLESTYLE] = COMPOUND_STRING("BATTLE STYLE"),
+     [MENUITEM_SOUND]       = COMPOUND_STRING("SOUND"),
+-    [MENUITEM_BUTTONMODE]  = COMPOUND_STRING("BUTTON MODE"),
++    [MENUITEM_BUTTONMODE]  = COMPOUND_STRING("CONTROLS"),
+     [MENUITEM_FRAMETYPE]   = COMPOUND_STRING("FRAME"),
+-    [MENUITEM_CANCEL]      = COMPOUND_STRING("CANCEL"),
++};
++
++static const u8 *const sOptionMenuDescriptions[] =
++{
++    [MENUITEM_TEXTSPEED]    = COMPOUND_STRING("Choose from three text speed levels."),
++    [MENUITEM_BATTLESCENE]  = COMPOUND_STRING("Show or skip the animations\nduring battles."),
++    // Daily Red: Battle Style is locked to SET.
++    [MENUITEM_BATTLESTYLE]  = COMPOUND_STRING("Battles against Red are always\nplayed in the SET style."),
++    [MENUITEM_SOUND]        = COMPOUND_STRING("Set the sound to mono or stereo."),
++    [MENUITEM_BUTTONMODE]   = COMPOUND_STRING("Choose what the L and R\nbuttons do."),
++    [MENUITEM_FRAMETYPE]    = COMPOUND_STRING("Choose the frame of the\nmessage boxes."),
++    [DESCRIPTION_SAVING]     = COMPOUND_STRING("Saving the changes made…"),
++    [DESCRIPTION_CANCELLING] = COMPOUND_STRING("Discarding the changes made…"),
+ };
+ 
+ static const struct WindowTemplate sOptionMenuWinTemplates[] =
+ {
+-    [WIN_HEADER] = {
+-        .bg = 1,
+-        .tilemapLeft = 2,
+-        .tilemapTop = 1,
+-        .width = 26,
+-        .height = 2,
+-        .paletteNum = 1,
+-        .baseBlock = 2
+-    },
+-    [WIN_OPTIONS] = {
+-        .bg = 0,
+-        .tilemapLeft = 2,
+-        .tilemapTop = 5,
+-        .width = 26,
+-        .height = 14,
+-        .paletteNum = 1,
+-        .baseBlock = 0x36
++    [WIN_TEXT] = {
++        .bg = BG_TEXT,
++        .tilemapLeft = 0,
++        .tilemapTop = 0,
++        .width = 30,
++        .height = 20,
++        .paletteNum = TEXT_PAL,
++        .baseBlock = 1
+     },
+     DUMMY_WIN_TEMPLATE
+ };
+@@ -129,18 +166,27 @@ static const struct WindowTemplate sOptionMenuWinTemplates[] =
+ static const struct BgTemplate sOptionMenuBgTemplates[] =
+ {
+     {
+-        .bg = 1,
++        .bg = BG_TEXT,
+         .charBaseIndex = 1,
+-        .mapBaseIndex = 30,
++        .mapBaseIndex = 31,
+         .screenSize = 0,
+         .paletteMode = 0,
+         .priority = 0,
+         .baseTile = 0
+     },
+     {
+-        .bg = 0,
+-        .charBaseIndex = 1,
+-        .mapBaseIndex = 31,
++        .bg = BG_ROWS,
++        .charBaseIndex = 0,
++        .mapBaseIndex = 7,
++        .screenSize = 0,
++        .paletteMode = 0,
++        .priority = 2,
++        .baseTile = 0
++    },
++    {
++        .bg = BG_FRAME,
++        .charBaseIndex = 0,
++        .mapBaseIndex = 30,
+         .screenSize = 0,
+         .paletteMode = 0,
+         .priority = 1,
+@@ -148,8 +194,6 @@ static const struct BgTemplate sOptionMenuBgTemplates[] =
+     }
+ };
+ 
+-static const u16 sOptionMenuBg_Pal[] = {RGB(17, 18, 31)};
+-
+ static void MainCB2(void)
+ {
+     RunTasks();
+@@ -172,6 +216,7 @@ void CB2_InitOptionMenu(void)
+     default:
+     case 0:
+         SetVBlankCallback(NULL);
++        SetHBlankCallback(NULL);
+         gMain.state++;
+         break;
+     case 1:
+@@ -190,56 +235,48 @@ void CB2_InitOptionMenu(void)
+         ChangeBgX(3, 0, BG_COORD_SET);
+         ChangeBgY(3, 0, BG_COORD_SET);
+         InitWindows(sOptionMenuWinTemplates);
++        sFrameTilemap = AllocZeroed(BG_SCREEN_SIZE);
++        SetBgTilemapBuffer(BG_FRAME, sFrameTilemap);
+         DeactivateAllTextPrinters();
+         SetGpuReg(REG_OFFSET_WIN0H, 0);
+         SetGpuReg(REG_OFFSET_WIN0V, 0);
+-        SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_BG0);
+-        SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG0 | WINOUT_WIN01_BG1 | WINOUT_WIN01_CLR);
+-        SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_DARKEN);
++        SetGpuReg(REG_OFFSET_WININ, 0);
++        SetGpuReg(REG_OFFSET_WINOUT, 0);
++        SetGpuReg(REG_OFFSET_BLDCNT, 0);
+         SetGpuReg(REG_OFFSET_BLDALPHA, 0);
+-        SetGpuReg(REG_OFFSET_BLDY, 4);
+-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
+-        ShowBg(0);
+-        ShowBg(1);
++        SetGpuReg(REG_OFFSET_BLDY, 0);
++        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
++        ShowBg(BG_TEXT);
++        ShowBg(BG_ROWS);
++        ShowBg(BG_FRAME);
+         gMain.state++;
+         break;
+     case 2:
++        ResetSpriteData();
+         ResetPaletteFade();
+-        ScanlineEffect_Stop();
++        FreeAllSpritePalettes();
+         ResetTasks();
+-        ResetSpriteData();
++        ScanlineEffect_Stop();
+         gMain.state++;
+         break;
+     case 3:
+-        LoadBgTiles(1, GetWindowFrameTilesPal(gSaveBlock2Ptr->optionsWindowFrameType)->tiles, 0x120, 0x1A2);
++        LoadBgTiles(BG_FRAME, GetWindowFrameTilesPal(gSaveBlock2Ptr->optionsWindowFrameType)->tiles, 0x120, FRAME_TILE);
++        LoadPalette(GetWindowFrameTilesPal(gSaveBlock2Ptr->optionsWindowFrameType)->pal, BG_PLTT_ID(FRAME_PAL), PLTT_SIZE_4BPP);
+         gMain.state++;
+         break;
+     case 4:
+-        LoadPalette(sOptionMenuBg_Pal, BG_PLTT_ID(0), sizeof(sOptionMenuBg_Pal));
+-        LoadPalette(GetWindowFrameTilesPal(gSaveBlock2Ptr->optionsWindowFrameType)->pal, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
++        LoadBgTiles(BG_ROWS, sOptionMenu_Gfx, sizeof(sOptionMenu_Gfx), 0);
++        LoadPalette(sOptionMenu_Pal, BG_PLTT_ID(TEXT_PAL), sizeof(sOptionMenu_Pal));
++        ShowRows(0);
+         gMain.state++;
+         break;
+     case 5:
+-        LoadPalette(sOptionMenuText_Pal, BG_PLTT_ID(1), sizeof(sOptionMenuText_Pal));
+-        gMain.state++;
+-        break;
+-    case 6:
+-        PutWindowTilemap(WIN_HEADER);
+-        DrawHeaderText();
+-        gMain.state++;
+-        break;
+-    case 7:
+-        gMain.state++;
+-        break;
+-    case 8:
+-        PutWindowTilemap(WIN_OPTIONS);
++        PutWindowTilemap(WIN_TEXT);
+         DrawOptionMenuTexts();
+-        gMain.state++;
+-    case 9:
+-        DrawBgWindowFrames();
++        DrawFrame();
+         gMain.state++;
+         break;
+-    case 10:
++    case 6:
+     {
+         u8 taskId = CreateTask(Task_OptionMenuFadeIn, 0);
+ 
+@@ -257,13 +294,12 @@ void CB2_InitOptionMenu(void)
+         Sound_DrawChoices(gTasks[taskId].tSound);
+         ButtonMode_DrawChoices(gTasks[taskId].tButtonMode);
+         FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);
+-        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
+ 
+-        CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
++        CopyWindowToVram(WIN_TEXT, COPYWIN_FULL);
+         gMain.state++;
+         break;
+     }
+-    case 11:
++    case 7:
+         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+         SetVBlankCallback(VBlankCB);
+         SetMainCallback2(MainCB2);
+@@ -271,6 +307,11 @@ void CB2_InitOptionMenu(void)
+     }
+ }
+ 
++static void ShowRows(u8 selection)
++{
++    LoadBgTilemap(BG_ROWS, sOptionMenuRows[selection], sizeof(sOptionMenu_Rows0), 0);
++}
++
+ static void Task_OptionMenuFadeIn(u8 taskId)
+ {
+     if (!gPaletteFade.active)
+@@ -279,78 +320,70 @@ static void Task_OptionMenuFadeIn(u8 taskId)
+ 
+ static void Task_OptionMenuProcessInput(u8 taskId)
+ {
++    s16 *data = gTasks[taskId].data;
++
+     if (JOY_NEW(A_BUTTON))
+     {
+-        if (gTasks[taskId].tMenuSelection == MENUITEM_CANCEL)
+-            gTasks[taskId].func = Task_OptionMenuSave;
++        tTimer = 20;
++        ShowDescription(DESCRIPTION_SAVING);
++        gTasks[taskId].func = Task_OptionMenuSave;
+     }
+     else if (JOY_NEW(B_BUTTON))
+     {
+-        gTasks[taskId].func = Task_OptionMenuSave;
++        tTimer = 20;
++        ShowDescription(DESCRIPTION_CANCELLING);
++        gTasks[taskId].func = Task_OptionMenuCancel;
+     }
+-    else if (JOY_NEW(DPAD_UP))
++    else if (JOY_NEW(DPAD_UP | DPAD_DOWN))
+     {
+-        if (gTasks[taskId].tMenuSelection > 0)
+-            gTasks[taskId].tMenuSelection--;
++        if (JOY_NEW(DPAD_UP))
++            tMenuSelection = tMenuSelection > 0 ? tMenuSelection - 1 : MENUITEM_COUNT - 1;
+         else
+-            gTasks[taskId].tMenuSelection = MENUITEM_CANCEL;
+-        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
+-    }
+-    else if (JOY_NEW(DPAD_DOWN))
+-    {
+-        if (gTasks[taskId].tMenuSelection < MENUITEM_CANCEL)
+-            gTasks[taskId].tMenuSelection++;
+-        else
+-            gTasks[taskId].tMenuSelection = 0;
+-        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
++            tMenuSelection = tMenuSelection < MENUITEM_COUNT - 1 ? tMenuSelection + 1 : 0;
++        ShowRows(tMenuSelection);
++        ShowDescription(tMenuSelection);
+     }
+     else
+     {
+         u8 previousOption;
+ 
+-        switch (gTasks[taskId].tMenuSelection)
++        switch (tMenuSelection)
+         {
+         case MENUITEM_TEXTSPEED:
+-            previousOption = gTasks[taskId].tTextSpeed;
+-            gTasks[taskId].tTextSpeed = TextSpeed_ProcessInput(gTasks[taskId].tTextSpeed);
+-
+-            if (previousOption != gTasks[taskId].tTextSpeed)
+-                TextSpeed_DrawChoices(gTasks[taskId].tTextSpeed);
++            previousOption = tTextSpeed;
++            tTextSpeed = TextSpeed_ProcessInput(tTextSpeed);
++            if (previousOption != tTextSpeed)
++                TextSpeed_DrawChoices(tTextSpeed);
+             break;
+         case MENUITEM_BATTLESCENE:
+-            previousOption = gTasks[taskId].tBattleSceneOff;
+-            gTasks[taskId].tBattleSceneOff = BattleScene_ProcessInput(gTasks[taskId].tBattleSceneOff);
+-
+-            if (previousOption != gTasks[taskId].tBattleSceneOff)
+-                BattleScene_DrawChoices(gTasks[taskId].tBattleSceneOff);
++            previousOption = tBattleSceneOff;
++            tBattleSceneOff = BattleScene_ProcessInput(tBattleSceneOff);
++            if (previousOption != tBattleSceneOff)
++                BattleScene_DrawChoices(tBattleSceneOff);
+             break;
+         case MENUITEM_BATTLESTYLE:
+-            previousOption = gTasks[taskId].tBattleStyle;
+-            gTasks[taskId].tBattleStyle = BattleStyle_ProcessInput(gTasks[taskId].tBattleStyle);
+-
+-            if (previousOption != gTasks[taskId].tBattleStyle)
+-                BattleStyle_DrawChoices(gTasks[taskId].tBattleStyle);
++            previousOption = tBattleStyle;
++            tBattleStyle = BattleStyle_ProcessInput(tBattleStyle);
++            if (previousOption != tBattleStyle)
++                BattleStyle_DrawChoices(tBattleStyle);
+             break;
+         case MENUITEM_SOUND:
+-            previousOption = gTasks[taskId].tSound;
+-            gTasks[taskId].tSound = Sound_ProcessInput(gTasks[taskId].tSound);
+-
+-            if (previousOption != gTasks[taskId].tSound)
+-                Sound_DrawChoices(gTasks[taskId].tSound);
++            previousOption = tSound;
++            tSound = Sound_ProcessInput(tSound);
++            if (previousOption != tSound)
++                Sound_DrawChoices(tSound);
+             break;
+         case MENUITEM_BUTTONMODE:
+-            previousOption = gTasks[taskId].tButtonMode;
+-            gTasks[taskId].tButtonMode = ButtonMode_ProcessInput(gTasks[taskId].tButtonMode);
+-
+-            if (previousOption != gTasks[taskId].tButtonMode)
+-                ButtonMode_DrawChoices(gTasks[taskId].tButtonMode);
++            previousOption = tButtonMode;
++            tButtonMode = ButtonMode_ProcessInput(tButtonMode);
++            if (previousOption != tButtonMode)
++                ButtonMode_DrawChoices(tButtonMode);
+             break;
+         case MENUITEM_FRAMETYPE:
+-            previousOption = gTasks[taskId].tWindowFrameType;
+-            gTasks[taskId].tWindowFrameType = FrameType_ProcessInput(gTasks[taskId].tWindowFrameType);
+-
+-            if (previousOption != gTasks[taskId].tWindowFrameType)
+-                FrameType_DrawChoices(gTasks[taskId].tWindowFrameType);
++            previousOption = tWindowFrameType;
++            tWindowFrameType = FrameType_ProcessInput(tWindowFrameType);
++            if (previousOption != tWindowFrameType)
++                FrameType_DrawChoices(tWindowFrameType);
+             break;
+         default:
+             return;
+@@ -359,20 +392,42 @@ static void Task_OptionMenuProcessInput(u8 taskId)
+         if (sArrowPressed)
+         {
+             sArrowPressed = FALSE;
+-            CopyWindowToVram(WIN_OPTIONS, COPYWIN_GFX);
++            CopyWindowToVram(WIN_TEXT, COPYWIN_GFX);
+         }
+     }
+ }
+ 
+ static void Task_OptionMenuSave(u8 taskId)
+ {
+-    gSaveBlock2Ptr->optionsTextSpeed = gTasks[taskId].tTextSpeed;
+-    gSaveBlock2Ptr->optionsBattleSceneOff = gTasks[taskId].tBattleSceneOff;
+-    gSaveBlock2Ptr->optionsBattleStyle = gTasks[taskId].tBattleStyle;
+-    gSaveBlock2Ptr->optionsSound = gTasks[taskId].tSound;
+-    gSaveBlock2Ptr->optionsButtonMode = gTasks[taskId].tButtonMode;
+-    gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
++    s16 *data = gTasks[taskId].data;
++
++    if (tTimer)
++    {
++        tTimer--;
++        return;
++    }
++    gSaveBlock2Ptr->optionsTextSpeed = tTextSpeed;
++    gSaveBlock2Ptr->optionsBattleSceneOff = tBattleSceneOff;
++    gSaveBlock2Ptr->optionsBattleStyle = tBattleStyle;
++    gSaveBlock2Ptr->optionsSound = tSound;
++    gSaveBlock2Ptr->optionsButtonMode = tButtonMode;
++    gSaveBlock2Ptr->optionsWindowFrameType = tWindowFrameType;
++
++    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
++    gTasks[taskId].func = Task_OptionMenuFadeOut;
++}
++
++static void Task_OptionMenuCancel(u8 taskId)
++{
++    s16 *data = gTasks[taskId].data;
+ 
++    if (tTimer)
++    {
++        tTimer--;
++        return;
++    }
++    // The sound setting takes effect as it's changed; put it back.
++    SetPokemonCryStereo(gSaveBlock2Ptr->optionsSound);
+     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+     gTasks[taskId].func = Task_OptionMenuFadeOut;
+ }
+@@ -383,52 +438,39 @@ static void Task_OptionMenuFadeOut(u8 taskId)
+     {
+         DestroyTask(taskId);
+         FreeAllWindowBuffers();
++        UnsetBgTilemapBuffer(BG_FRAME);
++        TRY_FREE_AND_SET_NULL(sFrameTilemap);
+         SetMainCallback2(gMain.savedCallback);
+     }
+ }
+ 
+-static void HighlightOptionMenuItem(u8 index)
++static void DrawOptionMenuChoice(const u8 *text, u8 x, u8 y, bool8 chosen)
+ {
+-    SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(16, DISPLAY_WIDTH - 16));
+-    SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(index * 16 + 40, index * 16 + 56));
++    AddTextPrinterParameterized3(WIN_TEXT, FONT_NORMAL, x, y, chosen ? sTextColor_Normal : sTextColor_NotChosen, TEXT_SKIP_DRAW, text);
+ }
+ 
+-static void DrawOptionMenuChoice(const u8 *text, u8 x, u8 y, u8 style)
++static void ClearChoices(u8 item)
+ {
+-    u8 dst[16];
+-    u16 i;
+-
+-    for (i = 0; *text != EOS && i < ARRAY_COUNT(dst) - 1; i++)
+-        dst[i] = *(text++);
+-
+-    if (style != 0)
+-    {
+-        dst[2] = TEXT_COLOR_RED;
+-        dst[5] = TEXT_COLOR_LIGHT_RED;
+-    }
++    FillWindowPixelRect(WIN_TEXT, PIXEL_FILL(0), CHOICES_X, ROW_Y(item), 240 - 8 - CHOICES_X, 14);
++}
+ 
+-    dst[i] = EOS;
+-    AddTextPrinterParameterized(WIN_OPTIONS, FONT_NORMAL, dst, x, y + 1, TEXT_SKIP_DRAW, NULL);
++static void ShowDescription(u8 which)
++{
++    FillWindowPixelRect(WIN_TEXT, PIXEL_FILL(0), 8, DESCRIPTION_Y, 224, 32);
++    AddTextPrinterParameterized3(WIN_TEXT, FONT_NORMAL, DESCRIPTION_X, DESCRIPTION_Y, sTextColor_Description, TEXT_SKIP_DRAW, sOptionMenuDescriptions[which]);
++    CopyWindowToVram(WIN_TEXT, COPYWIN_GFX);
+ }
+ 
+ static u8 TextSpeed_ProcessInput(u8 selection)
+ {
+     if (JOY_NEW(DPAD_RIGHT))
+     {
+-        if (selection <= 1)
+-            selection++;
+-        else
+-            selection = 0;
+-
++        selection = selection < OPTIONS_TEXT_SPEED_FAST ? selection + 1 : OPTIONS_TEXT_SPEED_SLOW;
+         sArrowPressed = TRUE;
+     }
+     if (JOY_NEW(DPAD_LEFT))
+     {
+-        if (selection != 0)
+-            selection--;
+-        else
+-            selection = 2;
+-
++        selection = selection > OPTIONS_TEXT_SPEED_SLOW ? selection - 1 : OPTIONS_TEXT_SPEED_FAST;
+         sArrowPressed = TRUE;
+     }
+     return selection;
+@@ -436,25 +478,10 @@ static u8 TextSpeed_ProcessInput(u8 selection)
+ 
+ static void TextSpeed_DrawChoices(u8 selection)
+ {
+-    u8 styles[3];
+-    s32 widthSlow, widthMid, widthFast, xMid;
+-
+-    styles[0] = 0;
+-    styles[1] = 0;
+-    styles[2] = 0;
+-    styles[selection] = 1;
+-
+-    DrawOptionMenuChoice(gText_TextSpeedSlow, 104, YPOS_TEXTSPEED, styles[0]);
+-
+-    widthSlow = GetStringWidth(FONT_NORMAL, gText_TextSpeedSlow, 0);
+-    widthMid = GetStringWidth(FONT_NORMAL, gText_TextSpeedMid, 0);
+-    widthFast = GetStringWidth(FONT_NORMAL, gText_TextSpeedFast, 0);
+-
+-    widthMid -= 94;
+-    xMid = (widthSlow - widthMid - widthFast) / 2 + 104;
+-    DrawOptionMenuChoice(gText_TextSpeedMid, xMid, YPOS_TEXTSPEED, styles[1]);
+-
+-    DrawOptionMenuChoice(gText_TextSpeedFast, GetStringRightAlignXOffset(FONT_NORMAL, gText_TextSpeedFast, 198), YPOS_TEXTSPEED, styles[2]);
++    ClearChoices(MENUITEM_TEXTSPEED);
++    DrawOptionMenuChoice(sText_TextSpeedSlow, CHOICES_X, ROW_Y(MENUITEM_TEXTSPEED), selection == OPTIONS_TEXT_SPEED_SLOW);
++    DrawOptionMenuChoice(sText_TextSpeedMid, CHOICES_X + 38, ROW_Y(MENUITEM_TEXTSPEED), selection == OPTIONS_TEXT_SPEED_MID);
++    DrawOptionMenuChoice(sText_TextSpeedFast, CHOICES_X + 72, ROW_Y(MENUITEM_TEXTSPEED), selection >= OPTIONS_TEXT_SPEED_FAST);
+ }
+ 
+ static u8 BattleScene_ProcessInput(u8 selection)
+@@ -464,43 +491,28 @@ static u8 BattleScene_ProcessInput(u8 selection)
+         selection ^= 1;
+         sArrowPressed = TRUE;
+     }
+-
+     return selection;
+ }
+ 
+ static void BattleScene_DrawChoices(u8 selection)
+ {
+-    u8 styles[2];
+-
+-    styles[0] = 0;
+-    styles[1] = 0;
+-    styles[selection] = 1;
+-
+-    DrawOptionMenuChoice(gText_BattleSceneOn, 104, YPOS_BATTLESCENE, styles[0]);
+-    DrawOptionMenuChoice(gText_BattleSceneOff, GetStringRightAlignXOffset(FONT_NORMAL, gText_BattleSceneOff, 198), YPOS_BATTLESCENE, styles[1]);
++    ClearChoices(MENUITEM_BATTLESCENE);
++    DrawOptionMenuChoice(sText_BattleSceneOn, CHOICES_X, ROW_Y(MENUITEM_BATTLESCENE), selection == 0);
++    DrawOptionMenuChoice(sText_BattleSceneOff, CHOICES_X + 50, ROW_Y(MENUITEM_BATTLESCENE), selection == 1);
+ }
  
  static u8 BattleStyle_ProcessInput(u8 selection)
  {
@@ -13924,6 +15241,239 @@ index a10b727b..8a0c2f1c 100644
      return selection;
  }
  
+ static void BattleStyle_DrawChoices(u8 selection)
+ {
+-    u8 styles[2];
+-
+-    styles[0] = 0;
+-    styles[1] = 0;
+-    styles[selection] = 1;
+-
+-    DrawOptionMenuChoice(gText_BattleStyleShift, 104, YPOS_BATTLESTYLE, styles[0]);
+-    DrawOptionMenuChoice(gText_BattleStyleSet, GetStringRightAlignXOffset(FONT_NORMAL, gText_BattleStyleSet, 198), YPOS_BATTLESTYLE, styles[1]);
++    ClearChoices(MENUITEM_BATTLESTYLE);
++    DrawOptionMenuChoice(sText_BattleStyleShift, CHOICES_X, ROW_Y(MENUITEM_BATTLESTYLE), selection == 0);
++    DrawOptionMenuChoice(sText_BattleStyleSet, CHOICES_X + 50, ROW_Y(MENUITEM_BATTLESTYLE), selection == 1);
+ }
+ 
+ static u8 Sound_ProcessInput(u8 selection)
+@@ -511,98 +523,57 @@ static u8 Sound_ProcessInput(u8 selection)
+         SetPokemonCryStereo(selection);
+         sArrowPressed = TRUE;
+     }
+-
+     return selection;
+ }
+ 
+ static void Sound_DrawChoices(u8 selection)
+ {
+-    u8 styles[2];
+-
+-    styles[0] = 0;
+-    styles[1] = 0;
+-    styles[selection] = 1;
+-
+-    DrawOptionMenuChoice(gText_SoundMono, 104, YPOS_SOUND, styles[0]);
+-    DrawOptionMenuChoice(gText_SoundStereo, GetStringRightAlignXOffset(FONT_NORMAL, gText_SoundStereo, 198), YPOS_SOUND, styles[1]);
++    ClearChoices(MENUITEM_SOUND);
++    DrawOptionMenuChoice(sText_SoundMono, CHOICES_X, ROW_Y(MENUITEM_SOUND), selection == 0);
++    DrawOptionMenuChoice(sText_SoundStereo, CHOICES_X + 50, ROW_Y(MENUITEM_SOUND), selection == 1);
+ }
+ 
+ static u8 FrameType_ProcessInput(u8 selection)
+ {
+     if (JOY_NEW(DPAD_RIGHT))
+     {
+-        if (selection < WINDOW_FRAMES_COUNT - 1)
+-            selection++;
+-        else
+-            selection = 0;
+-
+-        LoadBgTiles(1, GetWindowFrameTilesPal(selection)->tiles, 0x120, 0x1A2);
+-        LoadPalette(GetWindowFrameTilesPal(selection)->pal, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
++        selection = selection < WINDOW_FRAMES_COUNT - 1 ? selection + 1 : 0;
+         sArrowPressed = TRUE;
+     }
+     if (JOY_NEW(DPAD_LEFT))
+     {
+-        if (selection != 0)
+-            selection--;
+-        else
+-            selection = WINDOW_FRAMES_COUNT - 1;
+-
+-        LoadBgTiles(1, GetWindowFrameTilesPal(selection)->tiles, 0x120, 0x1A2);
+-        LoadPalette(GetWindowFrameTilesPal(selection)->pal, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
++        selection = selection != 0 ? selection - 1 : WINDOW_FRAMES_COUNT - 1;
+         sArrowPressed = TRUE;
+     }
++    if (sArrowPressed)
++    {
++        LoadBgTiles(BG_FRAME, GetWindowFrameTilesPal(selection)->tiles, 0x120, FRAME_TILE);
++        LoadPalette(GetWindowFrameTilesPal(selection)->pal, BG_PLTT_ID(FRAME_PAL), PLTT_SIZE_4BPP);
++    }
+     return selection;
+ }
+ 
+ static void FrameType_DrawChoices(u8 selection)
+ {
+-    u8 text[16] = {EOS};
+-    u8 n = selection + 1;
+-    u16 i;
+-
+-    for (i = 0; gText_FrameTypeNumber[i] != EOS && i <= 5; i++)
+-        text[i] = gText_FrameTypeNumber[i];
+-
+-    // Convert a number to decimal string
+-    if (n / 10 != 0)
+-    {
+-        text[i] = n / 10 + CHAR_0;
+-        i++;
+-        text[i] = n % 10 + CHAR_0;
+-        i++;
+-    }
+-    else
+-    {
+-        text[i] = n % 10 + CHAR_0;
+-        i++;
+-        text[i] = CHAR_SPACER;
+-        i++;
+-    }
++    u8 text[8];
++    u8 *end = ConvertIntToDecimalStringN(text, selection + 1, STR_CONV_MODE_LEFT_ALIGN, 2);
+ 
+-    text[i] = EOS;
+-
+-    DrawOptionMenuChoice(gText_FrameType, 104, YPOS_FRAMETYPE, 0);
+-    DrawOptionMenuChoice(text, 128, YPOS_FRAMETYPE, 1);
++    *end = EOS;
++    ClearChoices(MENUITEM_FRAMETYPE);
++    DrawOptionMenuChoice(sText_FrameType, CHOICES_X, ROW_Y(MENUITEM_FRAMETYPE), TRUE);
++    DrawOptionMenuChoice(text, CHOICES_X + 30, ROW_Y(MENUITEM_FRAMETYPE), TRUE);
+ }
+ 
+ static u8 ButtonMode_ProcessInput(u8 selection)
+ {
+     if (JOY_NEW(DPAD_RIGHT))
+     {
+-        if (selection <= 1)
+-            selection++;
+-        else
+-            selection = 0;
+-
++        selection = selection < OPTIONS_BUTTON_MODE_L_EQUALS_A ? selection + 1 : OPTIONS_BUTTON_MODE_NORMAL;
+         sArrowPressed = TRUE;
+     }
+     if (JOY_NEW(DPAD_LEFT))
+     {
+-        if (selection != 0)
+-            selection--;
+-        else
+-            selection = 2;
+-
++        selection = selection != OPTIONS_BUTTON_MODE_NORMAL ? selection - 1 : OPTIONS_BUTTON_MODE_L_EQUALS_A;
+         sArrowPressed = TRUE;
+     }
+     return selection;
+@@ -610,75 +581,37 @@ static u8 ButtonMode_ProcessInput(u8 selection)
+ 
+ static void ButtonMode_DrawChoices(u8 selection)
+ {
+-    s32 widthNormal, widthLR, widthLA, xLR;
+-    u8 styles[3];
+-
+-    styles[0] = 0;
+-    styles[1] = 0;
+-    styles[2] = 0;
+-    styles[selection] = 1;
+-
+-    DrawOptionMenuChoice(gText_ButtonTypeNormal, 104, YPOS_BUTTONMODE, styles[0]);
+-
+-    widthNormal = GetStringWidth(FONT_NORMAL, gText_ButtonTypeNormal, 0);
+-    widthLR = GetStringWidth(FONT_NORMAL, gText_ButtonTypeLR, 0);
+-    widthLA = GetStringWidth(FONT_NORMAL, gText_ButtonTypeLEqualsA, 0);
+-
+-    widthLR -= 94;
+-    xLR = (widthNormal - widthLR - widthLA) / 2 + 104;
+-    DrawOptionMenuChoice(gText_ButtonTypeLR, xLR, YPOS_BUTTONMODE, styles[1]);
+-
+-    DrawOptionMenuChoice(gText_ButtonTypeLEqualsA, GetStringRightAlignXOffset(FONT_NORMAL, gText_ButtonTypeLEqualsA, 198), YPOS_BUTTONMODE, styles[2]);
+-}
+-
+-static void DrawHeaderText(void)
+-{
+-    FillWindowPixelBuffer(WIN_HEADER, PIXEL_FILL(1));
+-    AddTextPrinterParameterized(WIN_HEADER, FONT_NORMAL, gText_Option, 8, 1, TEXT_SKIP_DRAW, NULL);
+-    CopyWindowToVram(WIN_HEADER, COPYWIN_FULL);
++    ClearChoices(MENUITEM_BUTTONMODE);
++    DrawOptionMenuChoice(sText_ButtonTypeNormal, CHOICES_X, ROW_Y(MENUITEM_BUTTONMODE), selection == OPTIONS_BUTTON_MODE_NORMAL);
++    DrawOptionMenuChoice(sText_ButtonTypeLR, CHOICES_X + 50, ROW_Y(MENUITEM_BUTTONMODE), selection == OPTIONS_BUTTON_MODE_LR);
++    DrawOptionMenuChoice(sText_ButtonTypeLEqualsA, CHOICES_X + 76, ROW_Y(MENUITEM_BUTTONMODE), selection == OPTIONS_BUTTON_MODE_L_EQUALS_A);
+ }
+ 
+ static void DrawOptionMenuTexts(void)
+ {
+     u8 i;
+ 
+-    FillWindowPixelBuffer(WIN_OPTIONS, PIXEL_FILL(1));
++    FillWindowPixelBuffer(WIN_TEXT, PIXEL_FILL(0));
++    AddTextPrinterParameterized3(WIN_TEXT, FONT_NORMAL, 8, 1, sTextColor_Normal, TEXT_SKIP_DRAW, sText_Option);
++    // Beside the A and B buttons drawn in the background.
++    AddTextPrinterParameterized3(WIN_TEXT, FONT_SMALL, 140, 1, sTextColor_Normal, TEXT_SKIP_DRAW, sText_Save);
++    AddTextPrinterParameterized3(WIN_TEXT, FONT_SMALL, 196, 1, sTextColor_Normal, TEXT_SKIP_DRAW, sText_Cancel);
+     for (i = 0; i < MENUITEM_COUNT; i++)
+-        AddTextPrinterParameterized(WIN_OPTIONS, FONT_NORMAL, sOptionMenuItemsNames[i], 8, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
+-    CopyWindowToVram(WIN_OPTIONS, COPYWIN_FULL);
++        AddTextPrinterParameterized3(WIN_TEXT, FONT_NORMAL, 8, ROW_Y(i), sTextColor_Normal, TEXT_SKIP_DRAW, sOptionMenuItemsNames[i]);
++    ShowDescription(MENUITEM_TEXTSPEED);
+ }
+ 
+-#define TILE_TOP_CORNER_L 0x1A2
+-#define TILE_TOP_EDGE     0x1A3
+-#define TILE_TOP_CORNER_R 0x1A4
+-#define TILE_LEFT_EDGE    0x1A5
+-#define TILE_RIGHT_EDGE   0x1A7
+-#define TILE_BOT_CORNER_L 0x1A8
+-#define TILE_BOT_EDGE     0x1A9
+-#define TILE_BOT_CORNER_R 0x1AA
+-
+-static void DrawBgWindowFrames(void)
+-{
+-    //                     bg, tile,              x, y, width, height, palNum
+-    // Draw title window frame
+-    FillBgTilemapBufferRect(1, TILE_TOP_CORNER_L,  1,  0,  1,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_TOP_EDGE,      2,  0, 27,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_TOP_CORNER_R, 28,  0,  1,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_LEFT_EDGE,     1,  1,  1,  2,  7);
+-    FillBgTilemapBufferRect(1, TILE_RIGHT_EDGE,   28,  1,  1,  2,  7);
+-    FillBgTilemapBufferRect(1, TILE_BOT_CORNER_L,  1,  3,  1,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_BOT_EDGE,      2,  3, 27,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_BOT_CORNER_R, 28,  3,  1,  1,  7);
+-
+-    // Draw options list window frame
+-    FillBgTilemapBufferRect(1, TILE_TOP_CORNER_L,  1,  4,  1,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_TOP_EDGE,      2,  4, 26,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_TOP_CORNER_R, 28,  4,  1,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_LEFT_EDGE,     1,  5,  1, 18,  7);
+-    FillBgTilemapBufferRect(1, TILE_RIGHT_EDGE,   28,  5,  1, 18,  7);
+-    FillBgTilemapBufferRect(1, TILE_BOT_CORNER_L,  1, 19,  1,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_BOT_EDGE,      2, 19, 26,  1,  7);
+-    FillBgTilemapBufferRect(1, TILE_BOT_CORNER_R, 28, 19,  1,  1,  7);
+-
+-    CopyBgTilemapBufferToVram(1);
++static void DrawFrame(void)
++{
++    //                      bg,       tile,           x,  y, width, height, palette
++    FillBgTilemapBufferRect(BG_FRAME, FRAME_TILE + 0,  0, 14,  1, 1, FRAME_PAL);
++    FillBgTilemapBufferRect(BG_FRAME, FRAME_TILE + 1,  1, 14, 28, 1, FRAME_PAL);
++    FillBgTilemapBufferRect(BG_FRAME, FRAME_TILE + 2, 29, 14,  1, 1, FRAME_PAL);
++    FillBgTilemapBufferRect(BG_FRAME, FRAME_TILE + 3,  0, 15,  1, 4, FRAME_PAL);
++    FillBgTilemapBufferRect(BG_FRAME, FRAME_TILE + 4,  1, 15, 28, 4, FRAME_PAL);
++    FillBgTilemapBufferRect(BG_FRAME, FRAME_TILE + 5, 29, 15,  1, 4, FRAME_PAL);
++    FillBgTilemapBufferRect(BG_FRAME, FRAME_TILE + 6,  0, 19,  1, 1, FRAME_PAL);
++    FillBgTilemapBufferRect(BG_FRAME, FRAME_TILE + 7,  1, 19, 28, 1, FRAME_PAL);
++    FillBgTilemapBufferRect(BG_FRAME, FRAME_TILE + 8, 29, 19,  1, 1, FRAME_PAL);
++    CopyBgTilemapBufferToVram(BG_FRAME);
+ }
 diff --git a/src/overworld.c b/src/overworld.c
 index 4d01b45e..87cdad35 100644
 --- a/src/overworld.c
