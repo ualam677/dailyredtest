@@ -82,12 +82,13 @@ def battle_background():
 
 # The sea of clouds beyond the summit's edge, added to the summit tileset
 # (data/tilesets/secondary/mt_silver_summit/, which otherwise comes as is):
-# art/mt-silver-clouds.png is a seamless 96x64 strip (cut from an HGSS
+# art/mt-silver-clouds.png is a seamless 96x80 strip (cut from an HGSS
 # screenshot of the summit, its snowflakes filtered out, stretched so the
 # texture's own period is exactly 96 px and contrast raised a little for the
-# GBA's colours). It becomes 12x8 tiles after the tileset's own 96 (on
-# palette 8), 6x4 metatiles after its 40 (0x2A8-0x2BF; the map repeats them
-# every 6 columns) and the animation's source frame, anim/clouds.png, which
+# GBA's colours). It becomes 12x10 tiles after the tileset's own 96 (on
+# palette 8), 6x5 metatiles after its 40 (0x2A8-0x2C5; the map repeats them
+# every 6 columns, the fifth row behind the summit's edge, see summit_edge)
+# and the animation's source frame, anim/clouds.png, which
 # src/tileset_anims.c scrolls a pixel at a time.
 SUMMIT_TILES = 96          # the tileset's own tiles (6 rows of 16)
 SUMMIT_METATILES = 40      # and metatiles (0x280-0x2A7)
@@ -139,15 +140,26 @@ def summit_clouds():
         w, h, len(colours), 0x280 + SUMMIT_METATILES, 0x280 + SUMMIT_METATILES + (w // 16) * (h // 16) - 1))
 
 
-# The summit's top edge, where the snow meets the clouds: FireRed-sized
-# metatiles cut it flat, so the edge row gets its own versions of the pieces
-# that have no snow on top (the platform's rock walls and its snow), with a
-# 1-px rim line like the ridge caps' (0x283/0x284) and a rounded cap of snow
-# on each rock column. They're metatiles 0x2C0-0x2C2, edge versions of 0x285,
-# 0x286 and 0x280, their top tiles drawn in a tile row after the clouds.
-EDGE_PIECES = [0x285, 0x286, 0x280]
-EDGE_LINE, EDGE_SNOW, EDGE_SNOW_LIGHT, EDGE_SNOW_SHADE = 8, 3, 2, 5  # palette 7 indices
-EDGE_ROCK = 7  # palette 7 index from which a pixel counts as rock
+# The summit's top edge (row 4 of the layout, under the clouds' rows 0-3):
+# the pale band above the ridges' snow caps and the flat-cut tops of the
+# platform's rock walls give way to the drifting clouds. Each edge piece
+# becomes a metatile with the clouds' fifth row as its bottom layer (so they
+# move too) and the piece on top, its band see-through: on the ridge caps
+# (0x283/0x284) the pale band connected to the top row, on the walls
+# (0x285/0x286) everything above a rounded white cap on the rock column, and
+# on the platform (0x280, and the walls' platform side) everything above a
+# 1-px rim line, all about level with the caps' snow. One metatile per piece
+# and cloud column (the clouds repeat every 6 columns), from 0x2C6; the
+# script also writes the layout's edge row.
+EDGE_ROW = [0x283] * 7 + [0x285] + [0x280] * 3 + [0x286] + [0x284] * 8  # the summit layout's row 0
+EDGE_LAYOUT_ROW = 4
+EDGE_LINE, EDGE_LIGHT = 8, 2           # palette 7 indices
+EDGE_BAND = {2, 3, 4, EDGE_LINE}       # the caps' pale band (and its top line)
+EDGE_BAND_ROWS = 8                     # the band never goes below row 7
+EDGE_ROCK = 7                          # from this index a pixel counts as rock
+EDGE_WALL_CAP_TOP = 5                  # the walls' snow caps start this far down
+EDGE_PLATFORM_TOP = 6                  # and the platform's rim line
+EDGE_WALL_PATH_SIDE = {0x285: 'right', 0x286: 'left'}  # which side the platform is on
 
 
 def summit_edge():
@@ -157,11 +169,10 @@ def summit_edge():
         metatiles = bytearray(f.read())
     with open(os.path.join(out, 'metatile_attributes.bin'), 'rb') as f:
         attributes = bytearray(f.read())
-    first_tile = (sheet.height // 8) * 16  # a new tile row after everything else
-    edge_sheet = Image.new('P', (128, sheet.height + 8))
-    edge_sheet.putpalette(sheet.getpalette())
-    edge_sheet.paste(sheet, (0, 0))
-    for n, piece in enumerate(EDGE_PIECES):
+    cloud_w = Image.open(os.path.join(ART, 'mt-silver-clouds.png')).width // 16
+    cloud_row = SUMMIT_METATILES + cloud_w * 4  # the clouds' fifth row of metatiles
+
+    def piece_pixels(piece):
         entries = struct.unpack_from('<8H', metatiles, (piece - 0x280) * 16)
         img = [[0] * 16 for _ in range(16)]
         for k in range(4):
@@ -173,43 +184,93 @@ def summit_edge():
                     sx = 7 - x if v & 0x400 else x
                     sy = 7 - y if v & 0x800 else y
                     img[(k // 2) * 8 + y][(k % 2) * 8 + x] = sheet.getpixel((tx + sx, ty + sy))
-        # Rock columns along the top row, and a rounded snow cap on each.
-        depth = [0] * 16
-        x = 0
-        while x < 16:
-            if img[0][x] >= EDGE_ROCK:
-                start = x
-                while x < 16 and img[0][x] >= EDGE_ROCK:
-                    x += 1
-                centre, half = (start + x - 1) / 2, (x - start) / 2
-                for cx in range(start, x):
-                    depth[cx] = 3 + round(2 * (1 - abs(cx - centre) / (half + 1)))
-            else:
-                x += 1
-        for x in range(16):
-            img[0][x] = EDGE_LINE
-            if depth[x]:
-                for y in range(1, depth[x] - 1):
-                    img[y][x] = EDGE_SNOW
-                img[depth[x] - 1][x] = EDGE_SNOW_SHADE
-            else:
-                img[1][x] = EDGE_SNOW_LIGHT
-        # The top two tiles are new; the bottom two are the piece's own.
-        tiles = [first_tile + n * 2, first_tile + n * 2 + 1]
+        return img
+
+    def edge_pixels(piece):
+        img = piece_pixels(piece)
+        if piece == 0x280:  # the platform: clouds, then a rim line
+            for y in range(EDGE_PLATFORM_TOP):
+                img[y] = [0] * 16
+            img[EDGE_PLATFORM_TOP] = [EDGE_LINE] * 16
+            img[EDGE_PLATFORM_TOP + 1] = [EDGE_LIGHT] * 16
+        elif piece in EDGE_WALL_PATH_SIDE:
+            row = img[0]
+            start = next(x for x in range(16) if row[x] >= EDGE_ROCK)
+            end = max(x for x in range(16) if row[x] >= EDGE_ROCK) + 1
+            centre, half = (start + end - 1) / 2, (end - start) / 2
+            path_right = EDGE_WALL_PATH_SIDE[piece] == 'right'
+            for x in range(16):
+                if start <= x < end:
+                    # Clouds down to a rounded cap (its top at row 4 in the
+                    # middle of the column, 6 at its sides, like the ridge
+                    # caps' snow), then white snow and a shade onto the rock.
+                    top = EDGE_WALL_CAP_TOP + round(2 * abs(x - centre) / (half + 1))
+                    for y in range(top):
+                        img[y][x] = 0
+                    for y in range(top, top + 3):
+                        img[y][x] = 1
+                    img[top + 3][x] = 4
+                elif (x >= end) == path_right:  # the platform's side
+                    for y in range(EDGE_PLATFORM_TOP):
+                        img[y][x] = 0
+                    img[EDGE_PLATFORM_TOP][x], img[EDGE_PLATFORM_TOP + 1][x] = EDGE_LINE, EDGE_LIGHT
+                else:  # the far side
+                    for y in range(EDGE_BAND_ROWS):
+                        img[y][x] = 0
+        else:  # a ridge cap: its pale band, from the top, is see-through
+            todo = [(0, x) for x in range(16) if img[0][x] in EDGE_BAND]
+            while todo:
+                y, x = todo.pop()
+                if not (0 <= y < EDGE_BAND_ROWS and 0 <= x < 16) or img[y][x] not in EDGE_BAND:
+                    continue
+                img[y][x] = 0
+                todo += [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
+        return img
+
+    # New top-layer tiles, a tile row each for the edge pieces after everything else.
+    pieces = sorted(set(EDGE_ROW))
+    first_row = sheet.height // 8
+    edge_sheet = Image.new('P', (128, sheet.height + 8 * ((len(pieces) * 4 + 15) // 16)))
+    edge_sheet.putpalette(sheet.getpalette())
+    edge_sheet.paste(sheet, (0, 0))
+    piece_tiles = {}
+    for n, piece in enumerate(pieces):
+        img = edge_pixels(piece)
+        tiles = [first_row * 16 + n * 4 + k for k in range(4)]
+        piece_tiles[piece] = tiles
         for k, t in enumerate(tiles):
             for y in range(8):
                 for x in range(8):
-                    edge_sheet.putpixel(((t % 16) * 8 + x, (t // 16) * 8 + y), img[y][k * 8 + x])
-        new = [(640 + t) | (7 << 12) for t in tiles] + list(entries[2:])
-        metatiles += struct.pack('<8H', *new)
-        attributes += attributes[(piece - 0x280) * 4:(piece - 0x280) * 4 + 4]
+                    edge_sheet.putpixel(((t % 16) * 8 + x, (t // 16) * 8 + y), img[(k // 2) * 8 + y][(k % 2) * 8 + x])
     edge_sheet.save(os.path.join(out, 'tiles.png'))
+
+    ids = {}
+    row_ids = []
+    for col, piece in enumerate(EDGE_ROW):
+        top = [(640 + t) | (7 << 12) for t in piece_tiles[piece]]
+        phase = col % cloud_w
+        key = (piece, phase)
+        if key not in ids:
+            ids[key] = 0x280 + len(metatiles) // 16
+            clouds = struct.unpack_from('<4H', metatiles, (cloud_row + phase) * 16)
+            metatiles += struct.pack('<8H', *clouds, *top)
+            attributes += struct.pack('<I', 0x20000000)  # covered: both layers under the player
+        row_ids.append(ids[key])
     with open(os.path.join(out, 'metatiles.bin'), 'wb') as f:
         f.write(metatiles)
     with open(os.path.join(out, 'metatile_attributes.bin'), 'wb') as f:
         f.write(attributes)
-    print('summit edge: metatiles 0x%X-0x%X' % (0x280 + len(metatiles) // 16 - len(EDGE_PIECES),
-                                               0x280 + len(metatiles) // 16 - 1))
+
+    layout = os.path.join(GAME, 'data', 'layouts', 'DailyRed_Summit', 'map.bin')
+    with open(layout, 'rb') as f:
+        blocks = bytearray(f.read())
+    for col, mid in enumerate(row_ids):
+        at = (EDGE_LAYOUT_ROW * 20 + col) * 2
+        v = struct.unpack_from('<H', blocks, at)[0]
+        struct.pack_into('<H', blocks, at, (v & ~0x3FF) | mid)
+    with open(layout, 'wb') as f:
+        f.write(blocks)
+    print('summit edge: metatiles 0x%X-0x%X, layout row %d' % (min(ids.values()), max(ids.values()), EDGE_LAYOUT_ROW))
 
 
 # --- Battle text boxes -------------------------------------------------------------

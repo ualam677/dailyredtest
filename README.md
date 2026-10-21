@@ -168,14 +168,16 @@ turning around when you talk to him.
 
 `scripts/graphics/make-graphics.py` adds two things to the tileset:
 - the clouds (`summit_clouds`): `art/mt-silver-clouds.png`, a seamless
-  96×64 strip cut from an HGSS screenshot of the summit (its snowflakes
-  filtered out), on palette 8 as metatiles 0x2A8–0x2BF that the map repeats
+  96×80 strip cut from an HGSS screenshot of the summit (its snowflakes
+  filtered out), on palette 8 as metatiles 0x2A8–0x2C5 that the map repeats
   every 6 columns. They drift left a pixel every 16 frames
   (`InitTilesetAnim_MtSilverSummit` in `src/tileset_anims.c` turns the strip's
   tiles in EWRAM and copies them to VRAM);
-- the edge (`summit_edge`): versions of the platform's rock walls and snow
-  for the top row (0x2C0–0x2C2) with a rim line and rounded snow caps, so
-  the summit doesn't end in a flat cut against the clouds.
+- the edge (`summit_edge`, which also writes the layout's edge row 4): the
+  clouds' fifth row behind see-through versions of the edge pieces
+  (0x2C6–0x2D6), so the drifting clouds come right down to the ridges' snow
+  caps, the platform's rock walls get rounded snow caps and the platform a
+  rim line, instead of a flat cut.
 
 The snow is a swirling snowstorm (`src/field_weather_effect.c`): 44 flakes
 instead of 16, all there from the start, falling two to three times as fast,
