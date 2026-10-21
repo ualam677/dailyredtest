@@ -25,8 +25,10 @@
 //   TERA    Gen 9 sets with their Tera type, for the Kanto starters.
 //
 // The ROM gives every Pokemon perfect stats (all IVs maxed by hyper training),
-// so the IVs in the table only decide Hidden Power's type. Natures and EVs are
-// the set's.
+// so the IVs in the table only decide Hidden Power's type. Random Battle sets
+// have neutral natures and the same EVs in every stat, so each set gets a
+// competitive spread instead (competitiveSpread below): a nature that helps
+// it and 252/252/4 EVs, from its Showdown role, its attacks and its base stats.
 //
 // The output is deterministic (fixed PRNG seed, pinned Showdown version), and
 // it is checked against the expansion's own constants: every species, move,
@@ -62,7 +64,7 @@ const generators = new Map(GENS.map((gen) => [gen, Teams.getGenerator(`gen${gen}
 const dexes = new Map(GENS.map((gen) => [gen, Dex.forGen(gen)]));
 const entriesOf = (gen) => Object.keys(generators.get(gen).randomSets);
 // Pokemon Champions' Random Battles: the only sets for the Megas added after
-// Gen 7 (Mega Meganium, Mega Feraligatr). Its stat points become EVs below.
+// Gen 7 (Mega Meganium, Mega Feraligatr).
 const CHAMPIONS = 'champions';
 generators.set(CHAMPIONS, Teams.getGenerator('gen9championsrandombattle', SEED));
 dexes.set(CHAMPIONS, Dex.forGen(9));
@@ -287,14 +289,17 @@ function tierLevel(tier) {
   return LOWEST_TIER_LEVEL;
 }
 
-// RED's random pick from any generation: fully evolved, not a starter (nor
-// Pikachu's family), legendary, mythical, Ultra Beast or Paradox Pokemon.
-// Judged with the latest generation's data, so a Pokemon that gained an
-// evolution later (Scyther, Ursaring...) counts as not fully evolved.
+// RED's random pick: a Pokemon of the Gen 1-3 Pokedex (national dex 1-386,
+// regular form: no later-generation evolutions or regional forms), fully
+// evolved, and not a starter (nor Pikachu's family), legendary or mythical.
+// "Fully evolved" is judged with the latest generation's data, so a Pokemon
+// that gained an evolution later (Magneton, Scyther, Ursaring...) is out.
+const RANDOM_PICK_LAST_DEX = 386;
 function isRandomPick(list) {
   if (list.kind !== 'NORMAL') return false;
   const dex = Dex;
   const species = Dex.species.get(list.species.name);
+  if (species.num < 1 || species.num > RANDOM_PICK_LAST_DEX || species.forme) return false;
   if (species.nfe || species.battleOnly) return false;
   if (species.tags.some((t) => NOT_RANDOM_TAGS.includes(t))) return false;
   if (STARTER_ROOTS.has(familyRoot(dex, species))) return false;
@@ -368,10 +373,104 @@ function gimmickReason(dex, list, set) {
 }
 const dropped = new Map(); // reason -> samples
 
-// Champions sets have stat points (up to 32 per stat), not EVs: every stat
-// with points gets 85 EVs, as in the other generations' sets.
-function championsEVs(set) {
-  return { ...set, evs: Object.fromEntries(Object.entries(set.evs).map(([stat, points]) => [stat, points > 0 ? 85 : 0])) };
+// --- Competitive natures and EVs ---------------------------------------------------
+//
+// What a set is built to do decides its spread:
+//   fast attacker      +Speed, minus the attack it doesn't use (Jolly, Timid);
+//                      252 attack / 252 Speed / 4 HP
+//   bulky attacker     +attack (Adamant, Modest); 252 HP / 252 attack / 4 to
+//                      the lower defence
+//   mixed attacker     +its main attack or Speed, minus a defence (Naive,
+//                      Lonely...); 252 main attack, 252 Speed (or HP if
+//                      bulky), 4 the other attack
+//   defensive          +a defence, minus an unused attack (Bold, Impish, Calm,
+//                      Careful); 252 HP / 252 that defence / 4 the other
+//   Trick Room / Gyro Ball sets lower Speed instead (Brave, Quiet, Relaxed,
+//   Sassy) and put nothing in it.
+// Fast or bulky comes from Showdown's role for the set ('Fast Attacker',
+// 'Bulky Support'...), a Choice Scarf always means fast, and a set without a
+// role is fast from base Speed 80. A defensive set raises the defence its
+// setup move doesn't (Calm Mind raises Sp. Def, so Bold) or Defense for Body
+// Press, otherwise its lower defence.
+const NATURES = {
+  atk: { spa: 'Adamant', spe: 'Brave', def: 'Lonely', spd: 'Naughty' },
+  spa: { atk: 'Modest', spe: 'Quiet', def: 'Mild', spd: 'Rash' },
+  spe: { atk: 'Timid', spa: 'Jolly', def: 'Hasty', spd: 'Naive' },
+  def: { atk: 'Bold', spa: 'Impish', spd: 'Lax', spe: 'Relaxed' },
+  spd: { atk: 'Calm', spa: 'Careful', def: 'Gentle', spe: 'Sassy' },
+};
+const FAST_ROLES = ['Fast Attacker', 'Setup Sweeper', 'Fast Support', 'Fast Bulky Setup'];
+const BULKY_ROLES = ['Bulky Attacker', 'Wallbreaker', 'AV Pivot', 'Bulky Setup'];
+const DEFENSIVE_ROLES = ['Bulky Support', 'Staller'];
+// Attacks whose damage doesn't come from the user's Attack or Sp. Atk.
+const FIXED_DAMAGE = new Set(['seismictoss', 'nightshade', 'superfang', 'endeavor', 'finalgambit', 'ruination',
+  'counter', 'mirrorcoat', 'metalburst', 'psywave', 'dragonrage', 'sonicboom', 'naturesmadness', 'foulplay', 'bodypress']);
+const SLOW_MOVES = new Set(['trickroom', 'gyroball']);
+// Setup moves that make a Bulky Setup set defensive, and the defence they raise.
+const DEFENSIVE_SETUP = { calmmind: 'spd', amnesia: 'spd', bulkup: 'def', curse: 'def', irondefense: 'def',
+  acidarmor: 'def', barrier: 'def', cottonguard: 'def', stockpile: 'def', cosmicpower: 'def', coil: 'def' };
+
+function competitiveSpread(dex, set) {
+  const species = dex.species.get(set.species);
+  const base = species.baseStats;
+  const moves = set.moves.map((m) => dex.moves.get(m));
+  const weight = { atk: 0, spa: 0 };
+  for (const m of moves) {
+    if (m.category === 'Status' || FIXED_DAMAGE.has(m.id)) continue;
+    const strong = !m.basePower || m.basePower >= 60 || m.multihit;
+    weight[m.category === 'Physical' ? 'atk' : 'spa'] += strong ? 1 : 0.5;
+  }
+  const slow = moves.some((m) => SLOW_MOVES.has(m.id));
+  const setup = moves.map((m) => DEFENSIVE_SETUP[m.id]).find(Boolean);
+  const role = set.role;
+  let kind;
+  if (DEFENSIVE_ROLES.includes(role) || (role === 'Bulky Setup' && setup)) kind = 'defensive';
+  else if (set.item === 'Choice Scarf') kind = 'fast';
+  else if (FAST_ROLES.includes(role)) kind = 'fast';
+  else if (BULKY_ROLES.includes(role)) kind = 'bulky';
+  else if (weight.atk + weight.spa < 1.5) kind = 'defensive';
+  else kind = base.spe >= 80 ? 'fast' : 'bulky';
+  // A fast set with no attacks to boost (status moves only) keeps its Speed
+  // and bulk: 252 HP / 252 Speed.
+  const attacking = weight.atk + weight.spa > 0;
+
+  const evs = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
+  let up, down;
+  const unusedAttack = weight.atk > 0 && weight.spa === 0 ? 'spa' : 'atk';
+  const lowerDefence = base.def <= base.spd ? 'def' : 'spd';
+  const higherDefence = lowerDefence === 'def' ? 'spd' : 'def';
+  if (kind === 'defensive' || (kind === 'fast' && !attacking)) {
+    const defence = moves.some((m) => m.id === 'bodypress') ? 'def'
+      : setup ? (setup === 'spd' ? 'def' : 'spd') : lowerDefence;
+    if (kind === 'fast') {
+      up = 'spe'; down = unusedAttack;
+      evs.hp = 252; evs.spe = 252; evs[defence] = 4;
+    } else {
+      up = defence; down = slow ? 'spe' : unusedAttack;
+      evs.hp = 252; evs[defence] = 252; evs[defence === 'def' ? 'spd' : 'def'] = 4;
+    }
+  } else {
+    const main = weight.atk > weight.spa || (weight.atk === weight.spa && base.atk >= base.spa) ? 'atk' : 'spa';
+    const other = main === 'atk' ? 'spa' : 'atk';
+    const mixed = weight[other] >= 1 && weight[other] >= weight[main] / 2;
+    if (slow) {
+      up = main; down = 'spe';
+      evs.hp = 252; evs[main] = 252; evs[mixed ? other : lowerDefence] = 4;
+    } else if (kind === 'fast') {
+      up = 'spe'; down = mixed ? higherDefence : other;
+      evs[main] = 252; evs.spe = 252; evs[mixed ? other : 'hp'] = 4;
+    } else {
+      up = main; down = mixed ? higherDefence : other;
+      evs.hp = 252; evs[main] = 252; evs[mixed ? other : lowerDefence] = 4;
+    }
+  }
+  // Shedinja always has 1 HP: its HP EVs go to Speed.
+  if (base.hp === 1 && evs.hp) {
+    evs.spe += evs.hp;
+    evs.hp = 0;
+    if (evs.spe > 252) { evs.def += evs.spe - 252; evs.spe = 252; }
+  }
+  return { ...set, nature: NATURES[up][down], evs };
 }
 
 const startTime = Date.now();
@@ -381,7 +480,6 @@ for (const list of lists) {
   const counts = new Map();
   for (let i = 0; i < SAMPLES; i++) {
     let set = generator.randomSet(list.id, { ...list.details }, false);
-    if (list.gen === CHAMPIONS) set = championsEVs(set);
     const reason = gimmickReason(dex, list, set);
     if (reason) {
       dropped.set(reason, (dropped.get(reason) ?? 0) + 1);
@@ -389,6 +487,7 @@ for (const list of lists) {
     }
     if (list.forceZ) set = addZCrystal(dex, set);
     set = forcePikachu(dex, set);
+    set = competitiveSpread(dex, set);
     const item = dex.items.get(set.item);
     if (list.kind === 'NORMAL' && (item.zMove || item.megaStone)) throw new Error(`${list.id}: NORMAL set holds ${set.item}`);
     if (list.kind !== 'TERA') set = { ...set, teraType: undefined };

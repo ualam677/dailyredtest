@@ -18,6 +18,7 @@ reimplemented in JavaScript.
 - [How it works](#how-it-works)
 - [Your team](#your-team)
 - [RED's team](#reds-team)
+  - [Graphics](#graphics)
   - [Sets](#sets)
 - [Development workflow](#development-workflow)
 - [Testing and debugging](#testing-and-debugging)
@@ -107,13 +108,14 @@ file server works without special headers. Everything loads from `web/vendor/`.
 |---|---|
 | Copyright screen → straight in (seed set) | `src/intro_frlg.c` → `CB2_DailyRed_StartFromCopyright` (`src/dailyred.c`) |
 | Title screen → straight in (no seed) | `src/title_screen_frlg.c` → `CB2_DailyRed_StartFromTitle` |
-| New game data: LEAF (FireRed's female player), fast text | `StartNewGame` in `src/dailyred.c`, then vanilla `CB2_NewGame` |
+| New game data: the player is named Blue (on FireRed's female player, LEAF's sprites) and RED is named Red, fast text | `StartNewGame` in `src/dailyred.c`, then vanilla `CB2_NewGame` |
 | Team + warp to the summit instead of the bedroom | `src/new_game.c` → `DailyRed_InitNewGame` |
 | The summit: an open peak with no exits; stairs up to RED, who faces the drop | `data/maps/DailyRed_Summit/`, `data/layouts/DailyRed_Summit/` |
 | Snow on the summit, as scenery only: it doesn't start Snow in RED's battle | `data/maps/DailyRed_Summit/map.json`; the battle check in `src/battle_util.c` |
 | Talking to RED → "…" → battle (he says "…!" if he loses, "…" if he wins) → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
 | RED's battle theme | `MUS_DAILYRED_VS_RED`, picked by his trainer class in `GetBattleBGM` (`src/pokemon.c`); see [RED's battle theme](#reds-battle-theme) |
-| Mountain battle background on the summit | `BattleSetup_GetEnvironmentId` in `src/battle_setup.c` |
+| Mt. Silver's HGSS-style battle background on the summit | `BattleSetup_GetEnvironmentId` in `src/battle_setup.c` picks `BATTLE_ENVIRONMENT_SNOW`, whose graphics are in `src/data/battle_environment.h`; see [Graphics](#graphics) |
+| RED's animated HGSS battle sprite, and LEAF's HGSS-style sprite in the VS transition | `TRAINER_PIC_DAILYRED_RED` / `_LEAF`; `DailyRed_AnimateTrainerSprite` (`src/dailyred_red.c`, called from `src/battle_controllers.c`); `src/battle_transition.c` |
 | No free switch when RED's Pokémon faints: Battle Style starts on SET and is locked in Options | `StartNewGame` in `src/dailyred.c`, `src/option_menu.c` |
 | RED as a trainer, with his AI | `TRAINER_DAILYRED_RED` in `include/constants/opponents_frlg.h` and `src/data/trainers_frlg.party` |
 | RED's team, built each run | `src/dailyred_red.c` from the sets in `src/dailyred_sets.c` (see [RED's team](#reds-team)); used by `CreateNPCTrainerParty` in `src/battle_setup.c` |
@@ -157,7 +159,7 @@ grep -rn "Daily Red" expansion/src expansion/include expansion/data
 The summit layout is a copy of Navel Rock's summit (the peak where Ho-Oh
 appears) with the arrival ladder removed. RED stands on the tip at (9, 11)
 facing north, out over the drop, and turns around when you talk to him. RED and
-LEAF use FireRed's own player sprites.
+the player (named Blue) use FireRed's own player sprites, RED's and LEAF's.
 
 The status block in RAM is `volatile`: nothing in the game reads it, and the
 expansion builds with link-time optimization, which would otherwise drop every
@@ -189,6 +191,9 @@ right after RED's (his starter decides yours), from the seed:
 - **5% of days mirror RED's team** (`MIRROR_RED_ODDS`): the starter, a
   **shiny Pikachu** (level 100, Light Ball and Volt Tackle, like his), a
   legendary for sure, and three more.
+- **At most one starter and one Eeveelution:** the counter-starter is the
+  only one of the nine final Gen 1–3 starters, and the five can't add a
+  second (or a second Eeveelution).
 - **No species twice, no type on more than two** of the six (a Mega's types
   count with its base form's), and the six's **base stats add up to at least
   2700** (`MIN_TEAM_BASE_STAT_TOTAL`; RED's original team totals 2974). The
@@ -196,7 +201,8 @@ right after RED's (his starter decides yours), from the seed:
   team is equally likely.
 - **Sets and stats:** every Pokémon gets one of its Showdown Random Battle
   sets from the same table as RED's (see [Sets](#sets)), with perfect stats
-  (every IV maxed by hyper training) and the set's nature and EVs.
+  (every IV maxed by hyper training) and the set's competitive nature and
+  EVs (see [Sets](#sets)).
 - **Levels by Showdown tier**, so strong Pokémon are a little lower: 95 for OU
   and up (Ubers, OU), 96 UU, 97 RU, 98 NU and below. A "BL" tier (banned to
   the tier above) counts as the tier above (UUBL 95, RUBL 96, NUBL 97). The
@@ -241,13 +247,13 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 | Pikachu | always; Light Ball and Volt Tackle in every set | 100 |
 | Legendary | picked by the starter, see below | 99 (Mewtwo 100) |
 | Two from his pool | Poliwrath, Gyarados, Aerodactyl, Lapras, Snorlax, Vaporeon, Jolteon, Flareon, Espeon, Umbreon, Leafeon, Glaceon, Sylveon, Hitmonlee, Kabutops, Victreebel, Machamp, Arcanine, Gengar | 96 |
-| One from any generation | any fully evolved Pokémon except starters (of any generation), Pikachu's family, legendaries, mythicals, Ultra Beasts and Paradox Pokémon (427 species) | 96 |
+| One from Gens 1–3 | any fully evolved Pokémon of the Gen 1–3 Pokédex (no later-generation evolutions or regional forms; "fully evolved" by today's evolutions, so no Magneton or Scyther) except starters, Pikachu's family, legendaries and mythicals (159 species) | 96 |
 
 | Legendary roll | Odds | Venusaur | Charizard | Blastoise |
 |---|---|---|---|---|
-| His bird | 43% | Moltres | Zapdos | Articuno |
-| Johto dog | 20% | Entei | Raikou | Suicune |
-| Galarian bird | 15% | Galarian Moltres | Galarian Zapdos | Galarian Articuno |
+| His bird | 43% | Moltres | Articuno | Zapdos |
+| Johto dog | 20% | Entei | Suicune | Raikou |
+| Galarian bird | 15% | Galarian Moltres | Galarian Articuno | Galarian Zapdos |
 | Mewtwo (level 100) | 10% | | | |
 | Deoxys (any forme) | 5% | | | |
 | Mew (1% of days a shiny one) | 5% | | | |
@@ -258,7 +264,7 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
   Otherwise the legendary may hold a Z-Crystal when its set has one (not the
   Galarian birds: their sets are from Gen 8, which has no Z-Moves). So RED has
   at most one Mega Evolution and one Z-Move.
-- The pool picks and the any-generation pick never hold a Mega Stone or a
+- The pool picks and the Gen 1–3 pick never hold a Mega Stone or a
   Z-Crystal. No two of those three share a type, no type is on more than two
   of RED's six (a Mega's types count with its base form's), and he has at most
   one Eeveelution.
@@ -288,9 +294,57 @@ choices, PP-stall prevention, Smart Tera, and predicting your switches and
 moves). That entry's party, his HeartGold/SoulSilver team, only stands in for
 the real one where the game reads it outside the battle (prize money). His
 class, `TRAINER_CLASS_DAILYRED`, is his alone: it shows as "PKMN TRAINER" and
-gives him his own battle theme. `Mugshot: Yellow` in the same entry gives his
-battle the Champion's VS encounter transition (the mugshot bands with RED and
-LEAF) instead of a regular one.
+gives him his own battle theme. `Mugshot: Red` in the same entry gives his
+battle the Elite Four/Champion VS encounter transition (the mugshot bands with
+RED and LEAF) instead of a regular one: RED on a red band
+(`MUGSHOT_COLOR_RED`, a palette made for him), LEAF on the blue one the game
+gives a male player (`Mugshot_SetGfx` in `src/battle_transition.c`).
+
+### Graphics
+
+RED's battle looks like HeartGold/SoulSilver's on Mt. Silver (the overworld
+is still FireRed's). The source art is in `art/`, and
+`scripts/graphics/make-graphics.py` (Python 3 with Pillow) turns it into the
+game's files; run it again after changing the art:
+
+- `art/mt-silver-battle-bg/`: Mt. Silver's HGSS-style battle background by
+  REKKA, already in the game's format (tiles, tilemap, the peaks that scroll
+  past in the intro) with a palette for each time of day. It's copied to
+  `graphics/battle_environment/dailyred_mt_silver/` for
+  `BATTLE_ENVIRONMENT_SNOW`, which also makes Nature Power, Secret Power and
+  Camouflage icy on the summit. The palette follows the player's clock
+  (`DailyRed_GetMtSilverBattlePalette`): day until 5 pm (and the morning),
+  evening 5–8 pm, night 8 pm–6 am (the evening hours in
+  `include/constants/rtc.h` are Daily Red's; they were 7–8 pm).
+- `art/red-hgss.png`: RED's HGSS battle sprite (ripped by ChrisX698), two
+  frames: holding his cap up, looking at you, then tipping it down. GBA trainer
+  pictures are 64×64 and 15 colours, and he's 69 pixels tall, so the script
+  drops 5 near-identical rows from his jeans (keeping his cap and shoes
+  whole). The first frame is his trainer picture (the VS transition); in
+  battle his sprite uses both frames, uncompressed in the ROM: he slides in
+  with his cap down, then lifts it to look at you and tips it back down
+  (`DailyRed_AnimateTrainerSprite`).
+- The battle interface (healthboxes, HP/EXP bars, textbox, status icons,
+  gimmick buttons, text colours) and the window frames and message box in
+  `graphics/text_window/` are the HGSS-style ones from
+  [Eemeliri/soulgold](https://github.com/Eemeliri/soulgold), copied over
+  FireRed's files of the same names and sizes. Like soulgold, the message
+  window and the "What will X do?" prompt get their own palettes, and the HP
+  bars use soulgold's bar palette (`src/battle_bg.c`, `src/graphics.c`).
+  The ability/item pop-up prints in soulgold's dark text colour.
+- The boxes at the bottom of the screen (messages, "What will X do?", the
+  action menu, the moves and PP/type) share one rounded frame after RED's
+  cap: red with a charcoal outline and a thin white stripe inside, around
+  white text on dark grey (PP numbers too, yellow to red as they run low).
+  `battle_boxes()` in the script draws the frame's 9 tiles into the textbox
+  sheet and lays the boxes out on its tilemap, one tile of frame around the
+  game's text windows. The action menu and move list print on their own copy
+  of the text palette in those colours, and the cursor is erased
+  with the box's inside (`DAILYRED_BATTLE_*` in `include/dailyred.h`).
+- `art/leaf-hgss.png`: an HGSS-style LEAF for the VS transition (her battle
+  back sprite is still FireRed's). She's 70 pixels tall and 21 colours, so 6
+  rows go from her legs and 6 colours are merged: her bag's highlight first,
+  then the closest pairs by eye, keeping her blouse's three blues.
 
 ### Sets
 
@@ -307,8 +361,15 @@ the sets it produced (those that came up at least 2% of the time), with
 Showdown's odds. Sets come from Gen 7 Random Battles (the last generation with
 Mega Evolution and Z-Moves); species Gen 7 doesn't have (Galarian forms, Gen
 8–9 species) come from Gen 8, then Gen 9, and Mega Meganium and Mega
-Feraligatr from Showdown's Pokémon Champions Random Battles (their stat points
-become 85 EVs per stat, like the other sets). Each list also has your level
+Feraligatr from Showdown's Pokémon Champions Random Battles. Random Battle
+sets have a neutral nature and the same EVs in every stat, so every set gets a
+competitive spread instead (`competitiveSpread`): from Showdown's role for the
+set, its attacks and its base stats, a fast attacker gets +Speed and 252
+attack / 252 Speed (Jolly, Timid), a bulky one +attack and 252 HP / 252
+attack (Adamant, Modest), a mixed one boosts its main attack or Speed at a
+defence's expense (Naive, Lonely…), a defensive one +the defence it needs and
+252 HP / 252 in it (Bold, Impish, Calm, Careful), and Trick Room or Gyro Ball
+sets give up Speed (Brave, Quiet, Relaxed, Sassy). Each list also has your level
 for the species, from its Showdown tier (see [Your team](#your-team)). Each species has a list per kind:
 `NORMAL` (no Mega Stone or Z-Crystal: Showdown's sets for a team that already
 has its Z-Move user), `MEGA` (a Mega Evolution's sets), `ZMOVE` (Z-Crystals
@@ -413,15 +474,16 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
   mirror-day seed too (shiny Pikachu, a legendary).
 - the same seed gives the same team, and different seeds give different ones.
 - the player starts at the foot of the stairs, RED faces away from them (and
-  again after every run), and talking to RED starts a trainer battle on the
-  mountain background.
+  again after every run), and talking to RED starts a trainer battle on
+  Mt. Silver's background (the snow environment, whose graphics are checked
+  in the ROM too).
 - battle style is SET from the start, the Options menu can't change it, and
   when one of RED's Pokémon is knocked out he sends the next one with no
-  "Will LEAF change POKéMON?" prompt.
-- RED's AI flags in the ROM are Smart Trainer and Prediction, and his battle
-  opens with the Champion's VS mugshot transition; every entry
-  of his any-generation pick is fully evolved and not a starter, legendary,
-  Ultra Beast or Paradox Pokémon; all of Pikachu's sets have a Light Ball and
+  "Will Blue change POKéMON?" prompt.
+- RED's AI flags in the ROM are Smart Trainer and Prediction, his battle
+  opens with the VS mugshot transition on his red band and uses his HGSS sprite;
+  every entry of his Gen 1–3 pick is in the Gen 1–3 Pokédex, fully evolved
+  and not a starter, legendary or mythical; all of Pikachu's sets have a Light Ball and
   Volt Tackle; no `NORMAL` set holds a Mega Stone or Z-Crystal; and there are
   no gimmick sets (every Z-Crystal powers up one of its set's attacks).
 - RED's team follows his rules (`validateRed` in `tests/red.mjs`, written
@@ -511,8 +573,12 @@ Creatures Inc. and GAME FREAK inc.
 This repository contains Daily Red's own work: the changes in `patches/`, the
 website and the tests. It doesn't include pokeemerald-expansion or a built ROM;
 the scripts fetch the expansion from its repository and build locally. The
-one exception is RED's battle theme: `music/vs-red.mid` (and its prepared copy
-in the patch) is a MIDI of a GBA song, supplied by the project's owner.
+exceptions are RED's battle theme, `music/vs-red.mid` (and its prepared copy
+in the patch), a MIDI of a GBA song supplied by the project's owner, and the
+art in `art/` (and the graphics made from it in the patch): Mt. Silver's
+battle background is REKKA's, RED's battle sprite is HeartGold/SoulSilver's
+(ripped by ChrisX698), and LEAF's HGSS-style sprite was supplied by the
+project's owner.
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page
@@ -550,6 +616,8 @@ scripts/fetch-vendor.sh              Nostalgist, mGBA core, font (pinned, checks
 scripts/serve.mjs                    local static server
 scripts/prepare-midi.mjs             Sappy MIDI dump → MIDI that mid2agb reads
 scripts/sets/generate.mjs            Showdown Random Battle sets → expansion/src/dailyred_sets.c
+scripts/graphics/make-graphics.py    art/ → Mt. Silver's battle background and the HGSS-style sprites
+art/                                 source art (see Graphics)
 music/vs-red.mid                     RED's battle theme (source MIDI)
 web/                                 the website
 tests/                               headless browser tests, the teams tool and the music recorder

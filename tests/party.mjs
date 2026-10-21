@@ -240,6 +240,15 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
     if (m.level < 95 || m.level > 98) problems.push(`${tag}: level ${m.level} outside 95-98`);
   }
 
+  // At most one starter (the counter-starter: the five never add another)
+  // and at most one Eeveelution.
+  const STARTERS = ['VENUSAUR', 'CHARIZARD', 'BLASTOISE', 'MEGANIUM', 'TYPHLOSION', 'FERALIGATR', 'SCEPTILE', 'BLAZIKEN', 'SWAMPERT'].map(S);
+  const EEVEELUTIONS = ['VAPOREON', 'JOLTEON', 'FLAREON', 'ESPEON', 'UMBREON', 'LEAFEON', 'GLACEON', 'SYLVEON'].map(S);
+  const starterCount = mons.filter((m) => STARTERS.includes(baseSpecies(m.species))).length;
+  if (starterCount > 1) problems.push(`${starterCount} starters`);
+  const eeveelutionCount = mons.filter((m) => EEVEELUTIONS.includes(baseSpecies(m.species))).length;
+  if (eeveelutionCount > 1) problems.push(`${eeveelutionCount} Eeveelutions`);
+
   // No type on more than two of the six.
   const typeCounts = new Map();
   for (const m of mons) for (const t of typesOf(m)) typeCounts.set(t, (typeCounts.get(t) ?? 0) + 1);
