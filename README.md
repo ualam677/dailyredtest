@@ -159,10 +159,17 @@ grep -rn "Daily Red" expansion/src expansion/include expansion/data
 The summit is HeartGold/SoulSilver's Mt. Silver summit: a 20×20 layout on an
 HGSS-derived secondary tileset (`data/tilesets/secondary/mt_silver_summit/`,
 `gTileset_MtSilverSummit`, with FireRed's General tileset as primary; 40
-metatiles on one palette, supplied by the project's owner). You start in the
-snowfield at the bottom (9, 18), climb the path between the terraced cliffs
-and RED stands above the stairs at (9, 1) facing north, turning around when
-you talk to him. RED and
+metatiles on one palette, supplied by the project's owner). You start on the
+path at (9, 11), just inside the summit's entrance; the snowfield below it is
+scenery. Climb between the terraced cliffs and RED stands above the stairs at
+(9, 1) facing north, turning around when you talk to him.
+
+The entrance (row 15) is a joke exit: after a yes/no prompt it warps you to
+the start of FireRed, your bedroom in Pallet Town, team and all, and the only
+way back up is to become Champion. The Hall of Fame sends you straight back
+to the summit start with your team healed instead of rolling the credits
+(`DailyRed_ReturnFromHallOfFame`, called from `Task_Hof_HandleExit` in
+`src/hall_of_fame.c`). RED and
 the player (named Blue) use FireRed's own player sprites, RED's and LEAF's.
 
 The status block in RAM is `volatile`: nothing in the game reads it, and the

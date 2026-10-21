@@ -30,13 +30,12 @@ HcmV?d00001
 
 diff --git a/data/layouts/DailyRed_Summit/map.bin b/data/layouts/DailyRed_Summit/map.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..051513dcc8c3d59fce8c5fabd3fab70776111bb8
+index 0000000000000000000000000000000000000000..c02e8818ca434bd1c53fd15bb1d439b3acf83fc9
 GIT binary patch
 literal 800
-zcmc)IOAf*?3<S_Sc`@fBDU^=@0p$-1C>#_;6DxL*U|EgSZl1<Y(*}*n1S3glF|HC|
-zQ(T0PRRL#Q<SIA0S1P);fCrw^%S+xr+zfLp@_tLKuy$7GQkDH`Nk<h>T!fd&sq)TC
-zt7>Ou=}OIZF2A2n*K_dw?X>g1WA9LI17-^5AV)dL9-1u}?zhYL%D>M(yL`(-xeug}
-BA&&q6
+zcmc)H%MOA-429u$I*aps%%FIQ8Wr!lQ1n5~q%_lxQJ3Uju=&y!s9BrFtdMFrDhjk^
+z7wNMq@WeANxZ+l*=%xkU`9Oy!UO(KFGtT?_7F=@WtnL++?<=J^QGwY-dYPOm@4U3C
+xbXMkBX|mlb-%q#ed&u+C>CFF5<__i7lqQt+IN*pKwGAb?Z_DaSZU2{ta&O>}B2NGS
 
 literal 0
 HcmV?d00001
@@ -67,10 +66,10 @@ index 2b25587a..15968213 100644
  }
 diff --git a/data/maps/DailyRed_Summit/map.json b/data/maps/DailyRed_Summit/map.json
 new file mode 100644
-index 00000000..0d8d0a13
+index 00000000..3a7a55bb
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/map.json
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,66 @@
 +{
 +  "id": "MAP_DAILY_RED_SUMMIT",
 +  "name": "DailyRed_Summit",
@@ -106,15 +105,43 @@ index 00000000..0d8d0a13
 +    }
 +  ],
 +  "warp_events": [],
-+  "coord_events": [],
++  "coord_events": [
++    {
++      "type": "trigger",
++      "x": 8,
++      "y": 15,
++      "elevation": 3,
++      "var": "VAR_TEMP_1",
++      "var_value": "0",
++      "script": "DailyRed_Summit_EventScript_Entrance"
++    },
++    {
++      "type": "trigger",
++      "x": 9,
++      "y": 15,
++      "elevation": 3,
++      "var": "VAR_TEMP_1",
++      "var_value": "0",
++      "script": "DailyRed_Summit_EventScript_Entrance"
++    },
++    {
++      "type": "trigger",
++      "x": 10,
++      "y": 15,
++      "elevation": 3,
++      "var": "VAR_TEMP_1",
++      "var_value": "0",
++      "script": "DailyRed_Summit_EventScript_Entrance"
++    }
++  ],
 +  "bg_events": []
 +}
 diff --git a/data/maps/DailyRed_Summit/scripts.inc b/data/maps/DailyRed_Summit/scripts.inc
 new file mode 100644
-index 00000000..69980b74
+index 00000000..9c8747fc
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/scripts.inc
-@@ -0,0 +1,118 @@
+@@ -0,0 +1,147 @@
 +DailyRed_Summit_MapScripts::
 +	.byte 0
 +
@@ -187,6 +214,31 @@ index 00000000..69980b74
 +	goto DailyRed_Summit_EventScript_DailyGameOverHold
 +	end
 +
++@ The summit's entrance (row 15) leads all the way back to the start of
++@ FireRed, in the player's bedroom with their team, and the only way back up
++@ is to become Champion: the Hall of Fame sends the player back here
++@ (DailyRed_ReturnFromHallOfFame) instead of rolling the credits.
++DailyRed_Summit_EventScript_Entrance::
++	lockall
++	msgbox DailyRed_Summit_Text_Entrance, MSGBOX_YESNO
++	goto_if_eq VAR_RESULT, NO, DailyRed_Summit_EventScript_EntranceStay
++	closemessage
++	warp MAP_PALLET_TOWN_PLAYERS_HOUSE_2F, 6, 6
++	waitstate
++	releaseall
++	end
++
++DailyRed_Summit_EventScript_EntranceStay::
++	closemessage
++	applymovement OBJ_EVENT_ID_PLAYER, DailyRed_Summit_Movement_StepUp
++	waitmovement 0
++	releaseall
++	end
++
++DailyRed_Summit_Movement_StepUp:
++	walk_up
++	step_end
++
 +@ Anywhere else (practice runs, desktop emulators): straight into a new run.
 +DailyRed_Summit_EventScript_NextRun::
 +	msgbox DailyRed_Summit_Text_NextRun
@@ -212,8 +264,12 @@ index 00000000..69980b74
 +DailyRed_Summit_Text_RedVictory::
 +	.string "…$"
 +
++DailyRed_Summit_Text_Entrance::
++	.string "Head back down Mt. Silver?\n"
++	.string "Only Champions make it back up.$"
++
 +DailyRed_Summit_Text_PlayerWon::
-+	.string "You defeated RED!$"
++	.string "You defeated Red!$"
 +
 +DailyRed_Summit_Text_PlayerLost::
 +	.string "Your team was wiped out…$"
@@ -232,7 +288,7 @@ index 00000000..69980b74
 +	.string "Record: {STR_VAR_1} win(s) in\n"
 +	.string "{STR_VAR_2} battle(s).\p"
 +	.string "A new team of six is ready.\n"
-+	.string "Climb back up and face RED!$"
++	.string "Climb back up and face Red!$"
 diff --git a/data/maps/map_groups.json b/data/maps/map_groups.json
 index d6320f48..911af6c6 100644
 --- a/data/maps/map_groups.json
@@ -2028,7 +2084,7 @@ index 334d0ab5..bf0c16f2 100644
  #endif // GUARD_CONFIG_DEBUG_H
 diff --git a/include/constants/dailyred.h b/include/constants/dailyred.h
 new file mode 100644
-index 00000000..27c41b21
+index 00000000..9bf9527b
 --- /dev/null
 +++ b/include/constants/dailyred.h
 @@ -0,0 +1,13 @@
@@ -2038,11 +2094,11 @@ index 00000000..27c41b21
 +// Daily Red constants shared by C code and map scripts.
 +
 +// Where the player stands at the start of each run on MAP_DAILY_RED_SUMMIT:
-+// on the platform at the foot of the stairs. RED stands at the tip of the
-+// peak at (9, 11), facing out over the drop (see
++// on the path up from the summit's entrance (row 15, which leads back down to
++// FireRed's start). RED stands above the stairs at (9, 1), facing north (see
 +// data/maps/DailyRed_Summit/map.json).
 +#define DAILYRED_START_X 9
-+#define DAILYRED_START_Y 18
++#define DAILYRED_START_Y 11
 +
 +#endif // GUARD_CONSTANTS_DAILYRED_H
 diff --git a/include/constants/opponents_frlg.h b/include/constants/opponents_frlg.h
@@ -2142,10 +2198,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..5050cfd7
+index 00000000..bf864d35
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,107 @@
+@@ -0,0 +1,108 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -2175,6 +2231,7 @@ index 00000000..5050cfd7
 +u16 DailyRed_IsDailyGame(void);
 +bool32 DailyRed_IsOnSummit(void);
 +const u16 *DailyRed_GetMtSilverBattlePalette(void);
++void DailyRed_ReturnFromHallOfFame(void);
 +
 +// The battle boxes' look (src/battle_bg.c; the tiles and frame colours come
 +// from scripts/graphics/make-graphics.py): white text on dark grey inside
@@ -3172,10 +3229,10 @@ index 85523e06..79fe93ec 100644
                      if (B_OVERWORLD_SNOW >= GEN_9)
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 00000000..d3d738d9
+index 00000000..5d88a048
 --- /dev/null
 +++ b/src/dailyred.c
-@@ -0,0 +1,251 @@
+@@ -0,0 +1,264 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "graphics.h"
@@ -3190,6 +3247,7 @@ index 00000000..d3d738d9
 +#include "pokemon.h"
 +#include "random.h"
 +#include "save.h"
++#include "script_pokemon_util.h"
 +#include "string_util.h"
 +#include "gba/m4a_internal.h"
 +#include "constants/maps.h"
@@ -3377,6 +3435,18 @@ index 00000000..d3d738d9
 +    GenerateTeam();
 +    SetWarpDestination(MAP_GROUP(MAP_DAILY_RED_SUMMIT), MAP_NUM(MAP_DAILY_RED_SUMMIT), WARP_ID_NONE, DAILYRED_START_X, DAILYRED_START_Y);
 +    WarpIntoMap();
++}
++
++// Called by the Hall of Fame in place of the credits. The summit's entrance
++// leads down to the start of FireRed (data/maps/DailyRed_Summit/scripts.inc),
++// and becoming Champion is the only way back up: straight to the start of
++// the summit, team healed.
++void DailyRed_ReturnFromHallOfFame(void)
++{
++    HealPlayerParty();
++    SetWarpDestination(MAP_GROUP(MAP_DAILY_RED_SUMMIT), MAP_NUM(MAP_DAILY_RED_SUMMIT), WARP_ID_NONE, DAILYRED_START_X, DAILYRED_START_Y);
++    WarpIntoMap();
++    SetMainCallback2(CB2_LoadMap);
 +}
 +
 +// Special: replaces the player's team after a battle (when not playing the
@@ -10476,6 +10546,31 @@ index 4ac676cd..66b83ebe 100644
  
  const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface/hpbar.4bpp",
                                                    "graphics/battle_interface/expbar.4bpp",
+diff --git a/src/hall_of_fame.c b/src/hall_of_fame.c
+index 0a3f2b1a..b8ae1ad4 100644
+--- a/src/hall_of_fame.c
++++ b/src/hall_of_fame.c
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "hall_of_fame.h"
+ #include "task.h"
+ #include "palette.h"
+@@ -769,11 +770,12 @@ static void Task_Hof_HandleExit(u8 taskId)
+         ResetBgsAndClearDma3BusyFlags(0);
+         DestroyTask(taskId);
+         FreeAllHoFMem();
+-        StartCredits();
++        // Daily Red: back to the top of Mt. Silver instead of the credits.
++        DailyRed_ReturnFromHallOfFame();
+     }
+ }
+ 
+-static void StartCredits(void)
++static void UNUSED StartCredits(void) // Daily Red: unused, see Task_Hof_HandleExit
+ {
+     SetMainCallback2(CB2_StartCreditsSequence);
+ }
 diff --git a/src/intro_frlg.c b/src/intro_frlg.c
 index 96c46ec9..abb27499 100644
 --- a/src/intro_frlg.c
