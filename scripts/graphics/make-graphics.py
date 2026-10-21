@@ -78,6 +78,140 @@ def battle_background():
           % (tiles.size, os.path.relpath(out, ROOT)))
 
 
+# --- Mt. Silver summit clouds ----------------------------------------------------
+
+# The sea of clouds beyond the summit's edge, added to the summit tileset
+# (data/tilesets/secondary/mt_silver_summit/, which otherwise comes as is):
+# art/mt-silver-clouds.png is a seamless 96x64 strip (cut from an HGSS
+# screenshot of the summit, its snowflakes filtered out, stretched so the
+# texture's own period is exactly 96 px and contrast raised a little for the
+# GBA's colours). It becomes 12x8 tiles after the tileset's own 96 (on
+# palette 8), 6x4 metatiles after its 40 (0x2A8-0x2BF; the map repeats them
+# every 6 columns) and the animation's source frame, anim/clouds.png, which
+# src/tileset_anims.c scrolls a pixel at a time.
+SUMMIT_TILES = 96          # the tileset's own tiles (6 rows of 16)
+SUMMIT_METATILES = 40      # and metatiles (0x280-0x2A7)
+CLOUD_PALETTE = 8
+
+
+def summit_clouds():
+    out = os.path.join(GAME, 'data', 'tilesets', 'secondary', 'mt_silver_summit')
+    strip = Image.open(os.path.join(ART, 'mt-silver-clouds.png')).convert('RGB')
+    w, h = strip.size
+    assert w % 16 == 0 and h % 16 == 0
+    q = strip.quantize(colors=15, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+    colours = [tuple(q.getpalette()[i * 3:i * 3 + 3]) for i in range(15)]
+    pal = [TRANSPARENT] + colours
+    write_jasc(os.path.join(out, 'palettes', '%02d.pal' % CLOUD_PALETTE), pal, 16)
+    indices = Image.new('P', (w, h))
+    indices.putdata([v + 1 for v in q.getdata()])
+    indices.putpalette([v for c in pal for v in c])
+
+    anim = os.path.join(out, 'anim')
+    os.makedirs(anim, exist_ok=True)
+    indices.save(os.path.join(anim, 'clouds.png'))
+
+    sheet = Image.open(os.path.join(out, 'tiles.png'))
+    rows = SUMMIT_TILES // 16
+    tiles = Image.new('P', (128, rows * 8 + h))
+    tiles.putpalette(sheet.getpalette())
+    tiles.paste(sheet.crop((0, 0, 128, rows * 8)), (0, 0))
+    tiles.paste(indices, (0, rows * 8))
+    tiles.save(os.path.join(out, 'tiles.png'))
+
+    with open(os.path.join(out, 'metatiles.bin'), 'rb') as f:
+        metatiles = bytearray(f.read()[:SUMMIT_METATILES * 16])
+    with open(os.path.join(out, 'metatile_attributes.bin'), 'rb') as f:
+        attributes = bytearray(f.read()[:SUMMIT_METATILES * 4])
+    top = metatiles[8:16]  # the snow metatile's (empty) top layer
+    first = 640 + SUMMIT_TILES  # FireRed's primary tileset has 640 tiles
+    for my in range(h // 16):
+        for mx in range(w // 16):
+            tile = first + my * 2 * 16 + mx * 2
+            bottom = [tile, tile + 1, tile + 16, tile + 17]
+            metatiles += struct.pack('<4H', *[t | (CLOUD_PALETTE << 12) for t in bottom]) + top
+            attributes += struct.pack('<I', 0x20000000)  # MB_NORMAL, covered layers
+    with open(os.path.join(out, 'metatiles.bin'), 'wb') as f:
+        f.write(metatiles)
+    with open(os.path.join(out, 'metatile_attributes.bin'), 'wb') as f:
+        f.write(attributes)
+    print('summit clouds: %dx%d px, %d colours, metatiles 0x%X-0x%X' % (
+        w, h, len(colours), 0x280 + SUMMIT_METATILES, 0x280 + SUMMIT_METATILES + (w // 16) * (h // 16) - 1))
+
+
+# The summit's top edge, where the snow meets the clouds: FireRed-sized
+# metatiles cut it flat, so the edge row gets its own versions of the pieces
+# that have no snow on top (the platform's rock walls and its snow), with a
+# 1-px rim line like the ridge caps' (0x283/0x284) and a rounded cap of snow
+# on each rock column. They're metatiles 0x2C0-0x2C2, edge versions of 0x285,
+# 0x286 and 0x280, their top tiles drawn in a tile row after the clouds.
+EDGE_PIECES = [0x285, 0x286, 0x280]
+EDGE_LINE, EDGE_SNOW, EDGE_SNOW_LIGHT, EDGE_SNOW_SHADE = 8, 3, 2, 5  # palette 7 indices
+EDGE_ROCK = 7  # palette 7 index from which a pixel counts as rock
+
+
+def summit_edge():
+    out = os.path.join(GAME, 'data', 'tilesets', 'secondary', 'mt_silver_summit')
+    sheet = Image.open(os.path.join(out, 'tiles.png'))
+    with open(os.path.join(out, 'metatiles.bin'), 'rb') as f:
+        metatiles = bytearray(f.read())
+    with open(os.path.join(out, 'metatile_attributes.bin'), 'rb') as f:
+        attributes = bytearray(f.read())
+    first_tile = (sheet.height // 8) * 16  # a new tile row after everything else
+    edge_sheet = Image.new('P', (128, sheet.height + 8))
+    edge_sheet.putpalette(sheet.getpalette())
+    edge_sheet.paste(sheet, (0, 0))
+    for n, piece in enumerate(EDGE_PIECES):
+        entries = struct.unpack_from('<8H', metatiles, (piece - 0x280) * 16)
+        img = [[0] * 16 for _ in range(16)]
+        for k in range(4):
+            v = entries[k]
+            t = (v & 0x3FF) - 640
+            tx, ty = (t % 16) * 8, (t // 16) * 8
+            for y in range(8):
+                for x in range(8):
+                    sx = 7 - x if v & 0x400 else x
+                    sy = 7 - y if v & 0x800 else y
+                    img[(k // 2) * 8 + y][(k % 2) * 8 + x] = sheet.getpixel((tx + sx, ty + sy))
+        # Rock columns along the top row, and a rounded snow cap on each.
+        depth = [0] * 16
+        x = 0
+        while x < 16:
+            if img[0][x] >= EDGE_ROCK:
+                start = x
+                while x < 16 and img[0][x] >= EDGE_ROCK:
+                    x += 1
+                centre, half = (start + x - 1) / 2, (x - start) / 2
+                for cx in range(start, x):
+                    depth[cx] = 3 + round(2 * (1 - abs(cx - centre) / (half + 1)))
+            else:
+                x += 1
+        for x in range(16):
+            img[0][x] = EDGE_LINE
+            if depth[x]:
+                for y in range(1, depth[x] - 1):
+                    img[y][x] = EDGE_SNOW
+                img[depth[x] - 1][x] = EDGE_SNOW_SHADE
+            else:
+                img[1][x] = EDGE_SNOW_LIGHT
+        # The top two tiles are new; the bottom two are the piece's own.
+        tiles = [first_tile + n * 2, first_tile + n * 2 + 1]
+        for k, t in enumerate(tiles):
+            for y in range(8):
+                for x in range(8):
+                    edge_sheet.putpixel(((t % 16) * 8 + x, (t // 16) * 8 + y), img[y][k * 8 + x])
+        new = [(640 + t) | (7 << 12) for t in tiles] + list(entries[2:])
+        metatiles += struct.pack('<8H', *new)
+        attributes += attributes[(piece - 0x280) * 4:(piece - 0x280) * 4 + 4]
+    edge_sheet.save(os.path.join(out, 'tiles.png'))
+    with open(os.path.join(out, 'metatiles.bin'), 'wb') as f:
+        f.write(metatiles)
+    with open(os.path.join(out, 'metatile_attributes.bin'), 'wb') as f:
+        f.write(attributes)
+    print('summit edge: metatiles 0x%X-0x%X' % (0x280 + len(metatiles) // 16 - len(EDGE_PIECES),
+                                               0x280 + len(metatiles) // 16 - 1))
+
+
 # --- Battle text boxes -------------------------------------------------------------
 
 # The boxes at the bottom of the battle screen (messages, "What will X do?",
@@ -327,6 +461,8 @@ def trainer_pic(name, band, keep=(), first=(), frames=1):
 if __name__ == '__main__':
     battle_background()
     battle_boxes()
+    summit_clouds()
+    summit_edge()  # after the clouds, which rebuild the tileset's extra tiles and metatiles
     # Bands: RED's jeans (thighs to shins) and LEAF's legs.
     trainer_pic('red', (44, 62), frames=2)
     # LEAF has 21 colours: her blouse keeps all three of its blues, and her

@@ -22,7 +22,8 @@ Graphics in the ROM
   Mt. Silver's battle background (day, evening and night): by REKKA. RED's
   battle sprite: Pokémon
   HeartGold/SoulSilver's, ripped by ChrisX698. LEAF's HGSS-style sprite.
-  Mt. Silver's summit tileset: derived from Pokémon HeartGold/SoulSilver.
+  Mt. Silver's summit tileset and its clouds: derived from Pokémon
+  HeartGold/SoulSilver.
   The HGSS-style battle interface and window frames: from Eemeliri/soulgold
   (https://github.com/Eemeliri/soulgold).
 

@@ -30,18 +30,19 @@ HcmV?d00001
 
 diff --git a/data/layouts/DailyRed_Summit/map.bin b/data/layouts/DailyRed_Summit/map.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..f06cb16b442d124a5548331445c5f8cc38188376
+index 0000000000000000000000000000000000000000..2759b6d53759f381386dfaf88cc5b2f58168bb6d
 GIT binary patch
-literal 800
-zcmc)HIS#@=3_#I4x%lVHB<upjz87o<MI&bzdk|1Yzew|BJ4r)h>QhN<K(8oZ%dW;}
-zRp7u;PI8t@p=viRaOEa<dC2pJ8!=|m-Zy2&+}X5ORlcv3>Qn`?tMM|rq`dRes?u4R
-uXT`~OuYSL@J-vrMKV6#n-|5`0+yZTgwq?hj&ATO<-nXLq(z^Z2UAY(O3?f?q
+literal 960
+zcmc)H$x;F_6ouh;%Hn^%PJ;s!SSk((ED&6@6V5USC_EXJx*a+RMO=2BMegFObJLxS
+zdmeb?iD$CNJmQ5{-gxJO*!;;C-;9|sB{t9aVa|djzr^MWZvI#+lNHq<8aD?d%H)tV
+zh^sVhZd6BgRWDGf*QV)ns|ISQ?jr7(8uff{gC-}QwR=Ss_Y0*sQJTV~_|iD5eCJD7
+zh0c{lmuYtQ${)1b?RUtz>ul%$PI}97r$~;FTyn)V7u%d6k^7yK>`5zs<+9ucH6?6+
 
 literal 0
 HcmV?d00001
 
 diff --git a/data/layouts/layouts.json b/data/layouts/layouts.json
-index 2b25587a..15968213 100644
+index 2b25587a..008e5d7f 100644
 --- a/data/layouts/layouts.json
 +++ b/data/layouts/layouts.json
 @@ -9323,6 +9323,19 @@
@@ -53,7 +54,7 @@ index 2b25587a..15968213 100644
 +      "id": "LAYOUT_DAILY_RED_SUMMIT",
 +      "name": "DailyRed_Summit_Layout",
 +      "width": 20,
-+      "height": 20,
++      "height": 24,
 +      "border_width": 2,
 +      "border_height": 2,
 +      "primary_tileset": "gTileset_General_Frlg",
@@ -66,7 +67,7 @@ index 2b25587a..15968213 100644
  }
 diff --git a/data/maps/DailyRed_Summit/map.json b/data/maps/DailyRed_Summit/map.json
 new file mode 100644
-index 00000000..753d8573
+index 00000000..8959caaa
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/map.json
 @@ -0,0 +1,60 @@
@@ -93,7 +94,7 @@ index 00000000..753d8573
 +      "type": "object",
 +      "graphics_id": "OBJ_EVENT_GFX_RED_NORMAL",
 +      "x": 9,
-+      "y": 1,
++      "y": 4,
 +      "elevation": 3,
 +      "movement_type": "MOVEMENT_TYPE_FACE_UP",
 +      "movement_range_x": 0,
@@ -107,21 +108,21 @@ index 00000000..753d8573
 +  "warp_events": [
 +    {
 +      "x": 8,
-+      "y": 14,
++      "y": 18,
 +      "elevation": 3,
 +      "dest_map": "MAP_DYNAMIC",
 +      "dest_warp_id": "WARP_ID_DYNAMIC"
 +    },
 +    {
 +      "x": 9,
-+      "y": 14,
++      "y": 18,
 +      "elevation": 3,
 +      "dest_map": "MAP_DYNAMIC",
 +      "dest_warp_id": "WARP_ID_DYNAMIC"
 +    },
 +    {
 +      "x": 10,
-+      "y": 14,
++      "y": 18,
 +      "elevation": 3,
 +      "dest_map": "MAP_DYNAMIC",
 +      "dest_warp_id": "WARP_ID_DYNAMIC"
@@ -132,7 +133,7 @@ index 00000000..753d8573
 +}
 diff --git a/data/maps/DailyRed_Summit/scripts.inc b/data/maps/DailyRed_Summit/scripts.inc
 new file mode 100644
-index 00000000..063c3f8f
+index 00000000..d4b6153b
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/scripts.inc
 @@ -0,0 +1,137 @@
@@ -141,7 +142,7 @@ index 00000000..063c3f8f
 +	.byte 0
 +
 +@ On 1 run in 100 (DailyRed_IsExitOpen) the summit's entrance leads all the
-+@ way back down, like a cave exit: walking south off the path's last row
++@ way back down, like a cave exit: walking south off the path's last row, 18
 +@ (metatile 0x2A5, a south arrow warp) warps to the start of FireRed, the
 +@ player's bedroom in Pallet Town, team and all. The only way back up is to
 +@ become Champion: the Hall of Fame returns the player to the summit
@@ -152,9 +153,9 @@ index 00000000..063c3f8f
 +	end
 +
 +DailyRed_Summit_EventScript_OpenExit::
-+	setmetatile 8, 14, 0x2A5, FALSE
-+	setmetatile 9, 14, 0x2A5, FALSE
-+	setmetatile 10, 14, 0x2A5, FALSE
++	setmetatile 8, 18, 0x2A5, FALSE
++	setmetatile 9, 18, 0x2A5, FALSE
++	setmetatile 10, 18, 0x2A5, FALSE
 +	setdynamicwarp MAP_PALLET_TOWN_PLAYERS_HOUSE_2F, 6, 6
 +	return
 +
@@ -344,26 +345,69 @@ index 3492bf3b..ad1e1c2e 100644
 +	def_special DailyRed_IsDailyGame
 +	def_special DailyRed_IsExitOpen
 +	def_special DailyRed_ArrivedFromSummit
+diff --git a/data/tilesets/secondary/mt_silver_summit/anim/clouds.png b/data/tilesets/secondary/mt_silver_summit/anim/clouds.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..04921e51be9437409af44bebe1aa7d2d8e4a8260
+GIT binary patch
+literal 1536
+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
+
+literal 0
+HcmV?d00001
+
 diff --git a/data/tilesets/secondary/mt_silver_summit/metatile_attributes.bin b/data/tilesets/secondary/mt_silver_summit/metatile_attributes.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..c86f2de8a714c579682ea8e76715a37846814eb4
+index 0000000000000000000000000000000000000000..3d2dc02b97e2c1f0b1e0aab091302618a275f8f6
 GIT binary patch
-literal 160
-RcmZQzU{GKfWH=ScJphnv1!e#M
+literal 268
+ScmZQzU{GKfWH@zz+yelLfC$C_
 
 literal 0
 HcmV?d00001
 
 diff --git a/data/tilesets/secondary/mt_silver_summit/metatiles.bin b/data/tilesets/secondary/mt_silver_summit/metatiles.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..bb025c9ae242b5e35498251c65a4882efd558378
+index 0000000000000000000000000000000000000000..dc14f65729e4105dc90176a04c3ea4e690cbb821
 GIT binary patch
-literal 640
-zcma*lMNfl46op}a^Sij~uU?$Gd$Ho~?(T*1YnlRc5>_y?xOsBMGalYo@B3*!`~(Q%
-z>^GkUEnv<e!bFHF4_nBh7E#{M0D}xEA7+G6#^e}r5+vmmX)<Kx9C->9<q~BoRAqM#
-zSIbtis#Uaq-f~v7f}FOLWi2DSd9K!|)1ayK>sGU-H8g&l2_~6RK23`mX63lWENKai
-z@4e<6^U8Z(VDXoiSe92<WsP-tgH5*BmUq}?kA3-oLykC>PdMd_bJ^YNzx9GkuDI6x
-h8*aJdUVh+_C!XaOUU{P}zw<$dPx<>ddGcT9=mH1|k8S_}
+literal 1072
+zcma*mwUZY?5C!1FEx|RxHNiE(HNiDO|ADtv9sjQ18P2);;qLD4t`V*Yt_gL(ygDM-
+z4Z6O1J+rg3J2Aw5-En`ecsPgz1iQssg3*E#k%VNVC{MCPOR;3-i?IYtu}t}LtiVdF
+zl2eg}bY#ex$U-)9<Xq$-9|dwDicpLaIjkepA}h2KE7tS#EY}JwU(T{j%du=Zj0?3C
+zWhh65<}b5StFUtQuf`gz#X9Bdu>l*gNlvp=%dm9ySMKI!Y*Ak6t=RULw_}IA6T7e*
+zd*r>?hy6GpAH*RX#u51_j^Q{?$R}|Mr*TFO@Abd+EY9IPE@=EkT*75sk+0$!uH%M$
+z6Sr_1cjUXchx>RS|Nfg|^1s&c&>#6*f9Ij^u|M(m{y~1~&-|l*lArqv|LkAnm;TDX
+z`ZxKtzwz(>LyluLHe@4)`Kz-A8?%XAleO5C&E(pw!{%%u*JVAnWGlHo8?ZIo$Zgq<
+zJ=sfc&kpR(K5|EPVqf-?JF^S>bAa5H-8hhg<nHXj!5ktF<uFd<BzZVTa5AUJBRPsw
+wIZYnTF`UjB@>q`JOwN+Wa{^~`jyyM-7gas4^P>e()$_VAS`<}&)3AR(0Zq~FX#fBK
 
 literal 0
 HcmV?d00001
@@ -570,29 +614,29 @@ index 00000000..e87dc56d
 +64 88 72
 diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/08.pal b/data/tilesets/secondary/mt_silver_summit/palettes/08.pal
 new file mode 100644
-index 00000000..4b0812f0
+index 00000000..2c000798
 --- /dev/null
 +++ b/data/tilesets/secondary/mt_silver_summit/palettes/08.pal
 @@ -0,0 +1,19 @@
 +JASC-PAL
 +0100
 +16
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
-+0 0 0
++255 0 255
++219 231 232
++215 230 232
++211 230 232
++216 226 226
++210 226 227
++205 230 231
++204 228 229
++206 225 227
++200 225 227
++210 221 222
++205 220 224
++204 218 221
++198 219 223
++198 215 219
++196 213 216
 diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/09.pal b/data/tilesets/secondary/mt_silver_summit/palettes/09.pal
 new file mode 100644
 index 00000000..4b0812f0
@@ -770,53 +814,85 @@ index 00000000..4b0812f0
 +0 0 0
 diff --git a/data/tilesets/secondary/mt_silver_summit/tiles.png b/data/tilesets/secondary/mt_silver_summit/tiles.png
 new file mode 100644
-index 0000000000000000000000000000000000000000..dcd7d9b8b2dfb45e8c386e2dcb685e0ff639b139
+index 0000000000000000000000000000000000000000..e74a1c24559b32d6531fdb65df7c06cadc8ea03e
 GIT binary patch
-literal 2268
-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
+literal 3904
+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
+O0000<MNUMnLSTX;q@-#9
 
 literal 0
 HcmV?d00001
@@ -2111,21 +2187,22 @@ index 334d0ab5..bf0c16f2 100644
  #endif // GUARD_CONFIG_DEBUG_H
 diff --git a/include/constants/dailyred.h b/include/constants/dailyred.h
 new file mode 100644
-index 00000000..9bf9527b
+index 00000000..f90aae3e
 --- /dev/null
 +++ b/include/constants/dailyred.h
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,14 @@
 +#ifndef GUARD_CONSTANTS_DAILYRED_H
 +#define GUARD_CONSTANTS_DAILYRED_H
 +
 +// Daily Red constants shared by C code and map scripts.
 +
 +// Where the player stands at the start of each run on MAP_DAILY_RED_SUMMIT:
-+// on the path up from the summit's entrance (row 15, which leads back down to
-+// FireRed's start). RED stands above the stairs at (9, 1), facing north (see
-+// data/maps/DailyRed_Summit/map.json).
++// on the path up from the summit's entrance (row 19; the path's last row, 18,
++// is the rare exit back down to FireRed's start). RED stands at the top of the
++// stairs, on the summit's edge at (9, 4), facing north over the clouds (rows
++// 0-3; see data/maps/DailyRed_Summit/map.json).
 +#define DAILYRED_START_X 9
-+#define DAILYRED_START_Y 11
++#define DAILYRED_START_Y 15
 +
 +#endif // GUARD_CONSTANTS_DAILYRED_H
 diff --git a/include/constants/opponents_frlg.h b/include/constants/opponents_frlg.h
@@ -2389,6 +2466,18 @@ index 56cf13f0..f685a6ed 100644
  u16 GetGeneratedTrainerIdLower(void);
  
  #endif // GUARD_MAIN_H
+diff --git a/include/tileset_anims.h b/include/tileset_anims.h
+index f826c2e4..d51f60dd 100755
+--- a/include/tileset_anims.h
++++ b/include/tileset_anims.h
+@@ -34,6 +34,7 @@ void InitTilesetAnim_BattlePyramid(void);
+ 
+ // FRLG
+ void InitTilesetAnim_General_Frlg(void);
++void InitTilesetAnim_MtSilverSummit(void); // Daily Red
+ void InitTilesetAnim_CeladonCity(void);
+ void InitTilesetAnim_VermilionGym(void);
+ void InitTilesetAnim_CeladonGym(void);
 diff --git a/sound/direct_sound_data.inc b/sound/direct_sound_data.inc
 index 0e0d6bc5..e4f67d78 100644
 --- a/sound/direct_sound_data.inc
@@ -13434,7 +13523,7 @@ index e1a44dca..59529aeb 100644
 +    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/15.pal", ".gbapal"),
 +};
 diff --git a/src/data/tilesets/headers.h b/src/data/tilesets/headers.h
-index c7702c23..57f7498a 100644
+index c7702c23..cdb0d993 100644
 --- a/src/data/tilesets/headers.h
 +++ b/src/data/tilesets/headers.h
 @@ -1541,3 +1541,15 @@ const struct Tileset gTileset_HallOfFame =
@@ -13451,7 +13540,7 @@ index c7702c23..57f7498a 100644
 +    .palettes = gTilesetPalettes_MtSilverSummit,
 +    .metatiles = gMetatiles_MtSilverSummit,
 +    .metatileAttributes = gMetatileAttributes_MtSilverSummit,
-+    .callback = NULL,
++    .callback = InitTilesetAnim_MtSilverSummit, // the clouds drift
 +};
 diff --git a/src/data/tilesets/metatiles.h b/src/data/tilesets/metatiles.h
 index f82ea00f..bcc288fb 100644
@@ -13552,6 +13641,108 @@ index 20fdc713..e75260ab 100644
 +- Ice Beam
 +- Earthquake
 +- Hydro Cannon
+diff --git a/src/field_weather_effect.c b/src/field_weather_effect.c
+index ca0e9c7f..8d253ba8 100644
+--- a/src/field_weather_effect.c
++++ b/src/field_weather_effect.c
+@@ -764,6 +764,14 @@ static void DestroyRainSprites(void)
+ // Snow
+ //------------------------------------------------------------------------------
+ 
++// Daily Red: WEATHER_SNOW is Mt. Silver's (the summit is the only snowy map)
++// and it's a swirling snowstorm: more and faster snowflakes, blown left by
++// the wind and circling as they fall, all there from the start. FireRed's
++// gentle snow had 16, falling straight down with a slight sway, fading in
++// one every 36 frames.
++#define DAILYRED_SNOWFLAKES          44
++#define DAILYRED_SNOWFLAKE_INTERVAL  2  // frames between new snowflakes
++
+ static void UpdateSnowflakeSprite(struct Sprite *);
+ static bool8 UpdateVisibleSnowflakeSprites(void);
+ static bool8 CreateSnowflakeSprite(void);
+@@ -776,7 +784,7 @@ void Snow_InitVars(void)
+     gWeatherPtr->weatherGfxLoaded = FALSE;
+     gWeatherPtr->targetColorMapIndex = 0;
+     gWeatherPtr->colorMapStepDelay = 20;
+-    gWeatherPtr->targetSnowflakeSpriteCount = NUM_SNOWFLAKE_SPRITES;
++    gWeatherPtr->targetSnowflakeSpriteCount = DAILYRED_SNOWFLAKES; // Daily Red (was NUM_SNOWFLAKE_SPRITES)
+     gWeatherPtr->snowflakeVisibleCounter = 0;
+     Weather_SetBlendCoeffs(8, BASE_SHADOW_INTENSITY); // preserve shadow darkness
+     gWeatherPtr->noShadows = FALSE;
+@@ -830,7 +838,7 @@ static bool8 UpdateVisibleSnowflakeSprites(void)
+     if (gWeatherPtr->snowflakeSpriteCount == gWeatherPtr->targetSnowflakeSpriteCount)
+         return FALSE;
+ 
+-    if (++gWeatherPtr->snowflakeVisibleCounter > 36)
++    if (++gWeatherPtr->snowflakeVisibleCounter > DAILYRED_SNOWFLAKE_INTERVAL) // Daily Red (was 36)
+     {
+         gWeatherPtr->snowflakeVisibleCounter = 0;
+         if (gWeatherPtr->snowflakeSpriteCount < gWeatherPtr->targetSnowflakeSpriteCount)
+@@ -901,6 +909,10 @@ static const struct SpriteTemplate sSnowflakeSpriteTemplate =
+ #define tFallCounter  data[5]
+ #define tFallDuration data[6]
+ #define tDeltaY2      data[7]
++// Daily Red: the snowstorm's sideways drift, in 1/128 px a frame, and its
++// running remainder (FireRed set the two fall fields above but never used them).
++#define tDriftSub     data[5]
++#define tDrift        data[6]
+ 
+ static bool8 CreateSnowflakeSprite(void)
+ {
+@@ -931,18 +943,23 @@ static void InitSnowflakeSpriteMovement(struct Sprite *sprite)
+     u16 rand;
+     u16 x = ((sprite->tSnowflakeId * 5) & 7) * 30 + (Random() % 30);
+ 
+-    sprite->y = -3 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
++    // Daily Red: anywhere down the screen, not all at the top, so the storm's
++    // flakes don't fall in one band (they're all made at once).
++    sprite->y = (Random() % 168) - 3 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
+     sprite->x = x - (gSpriteCoordOffsetX + sprite->centerToCornerVecX);
+     sprite->tPosY = sprite->y * 128;
+     sprite->x2 = 0;
+     rand = Random();
+-    sprite->tDeltaY = (rand & 3) * 5 + 64;
++    // Daily Red: a snowstorm. Each flake falls 1-1.5 px a frame (was about
++    // 0.5), is blown left 0.75-1.75 px a frame, and circles as it goes
++    // (UpdateSnowflakeSprite), starting at a random point of its circle.
++    sprite->tDeltaY = (rand & 3) * 21 + 128;
+     sprite->tDeltaY2 = sprite->tDeltaY;
+     StartSpriteAnim(sprite, (rand & 1) ? 0 : 1);
+-    sprite->tWaveIndex = 0;
+-    sprite->tWaveDelta = ((rand & 3) == 0) ? 2 : 1;
+-    sprite->tFallDuration = (rand & 0x1F) + 210;
+-    sprite->tFallCounter = 0;
++    sprite->tWaveIndex = (rand >> 4) & 0xFF;
++    sprite->tWaveDelta = ((rand >> 12) & 3) + 3;
++    sprite->tDrift = -(96 + ((rand >> 2) & 127));
++    sprite->tDriftSub = 0;
+ }
+ 
+ static void UNUSED WaitSnowflakeSprite(struct Sprite *sprite)
+@@ -965,7 +982,13 @@ static void UpdateSnowflakeSprite(struct Sprite *sprite)
+     sprite->y = sprite->tPosY >> 7;
+     sprite->tWaveIndex += sprite->tWaveDelta;
+     sprite->tWaveIndex &= 0xFF;
+-    sprite->x2 = gSineTable[sprite->tWaveIndex] / 64;
++    // Daily Red: swirl round a circle (was a sway of 4 px) while the wind
++    // carries the flake left.
++    sprite->x2 = gSineTable[sprite->tWaveIndex] / 24;
++    sprite->y2 = gSineTable[(sprite->tWaveIndex + 64) & 0xFF] / 40;
++    sprite->tDriftSub += sprite->tDrift;
++    sprite->x += sprite->tDriftSub >> 7;
++    sprite->tDriftSub &= 0x7F;
+ 
+     x = (sprite->x + sprite->centerToCornerVecX + gSpriteCoordOffsetX) & 0x1FF;
+     if (x & 0x100)
+@@ -985,6 +1008,8 @@ static void UpdateSnowflakeSprite(struct Sprite *sprite)
+ #undef tFallCounter
+ #undef tFallDuration
+ #undef tDeltaY2
++#undef tDriftSub
++#undef tDrift
+ 
+ //------------------------------------------------------------------------------
+ // WEATHER_RAIN_THUNDERSTORM
 diff --git a/src/graphics.c b/src/graphics.c
 index 4ac676cd..66b83ebe 100644
 --- a/src/graphics.c
@@ -13793,6 +13984,60 @@ index 648fa837..b9a8447c 100644
      AddStartMenuAction(MENU_ACTION_OPTION);
      AddStartMenuAction(MENU_ACTION_EXIT);
  }
+diff --git a/src/tileset_anims.c b/src/tileset_anims.c
+index bee91512..e98c286a 100644
+--- a/src/tileset_anims.c
++++ b/src/tileset_anims.c
+@@ -1432,3 +1432,49 @@ void InitTilesetAnim_CeladonGym(void)
+     sSecondaryTilesetAnimCallback = TilesetAnim_CeladonGym;
+ }
+ 
++// Daily Red: Mt. Silver's summit. The sea of clouds beyond its edge drifts
++// left a pixel every 16 frames: its 12x8 tiles (after the tileset's own 96,
++// see summit_clouds in scripts/graphics/make-graphics.py) are kept in EWRAM in
++// VRAM's layout, 16 tiles a row like the tileset sheet, and every step each
++// pixel row turns one pixel left around the strip's 96 px, which repeat
++// seamlessly across the map.
++#define SUMMIT_CLOUD_WIDTH  12 // tiles
++#define SUMMIT_CLOUD_HEIGHT 8
++#define SUMMIT_CLOUD_TILE   (NUM_TILES_IN_PRIMARY_FRLG + 96)
++#define SUMMIT_CLOUD_DELAY  16 // frames per pixel
++
++static const u32 sTilesetAnims_MtSilverSummit_Clouds[] = INCGFX_U32("data/tilesets/secondary/mt_silver_summit/anim/clouds.png", ".4bpp");
++static EWRAM_DATA u32 sSummitClouds[SUMMIT_CLOUD_HEIGHT][16][TILE_SIZE_4BPP / 4] = {0};
++
++static void TilesetAnim_MtSilverSummit(u16 timer)
++{
++    u32 ty, py, tx, first;
++
++    if (timer != 0)
++        return;
++    for (ty = 0; ty < SUMMIT_CLOUD_HEIGHT; ty++)
++    {
++        for (py = 0; py < 8; py++)
++        {
++            // A 4bpp tile row is a word with its leftmost pixel in the low
++            // nibble: shifting right moves every pixel one to the left.
++            first = sSummitClouds[ty][0][py];
++            for (tx = 0; tx < SUMMIT_CLOUD_WIDTH - 1; tx++)
++                sSummitClouds[ty][tx][py] = (sSummitClouds[ty][tx][py] >> 4) | (sSummitClouds[ty][tx + 1][py] << 28);
++            sSummitClouds[ty][tx][py] = (sSummitClouds[ty][tx][py] >> 4) | (first << 28);
++        }
++    }
++    AppendTilesetAnimToBuffer((const u16 *)sSummitClouds, (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(SUMMIT_CLOUD_TILE)), sizeof(sSummitClouds));
++}
++
++void InitTilesetAnim_MtSilverSummit(void)
++{
++    u32 ty, tx;
++
++    for (ty = 0; ty < SUMMIT_CLOUD_HEIGHT; ty++)
++        for (tx = 0; tx < SUMMIT_CLOUD_WIDTH; tx++)
++            CpuCopy32(&sTilesetAnims_MtSilverSummit_Clouds[(ty * SUMMIT_CLOUD_WIDTH + tx) * (TILE_SIZE_4BPP / 4)], sSummitClouds[ty][tx], TILE_SIZE_4BPP);
++    sSecondaryTilesetAnimCounter = 0;
++    sSecondaryTilesetAnimCounterMax = SUMMIT_CLOUD_DELAY;
++    sSecondaryTilesetAnimCallback = TilesetAnim_MtSilverSummit;
++}
 diff --git a/src/title_screen_frlg.c b/src/title_screen_frlg.c
 index 57e9da2e..a3a86bc3 100644
 --- a/src/title_screen_frlg.c

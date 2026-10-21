@@ -157,17 +157,33 @@ Every vanilla file that was changed has a `Daily Red:` comment at the change:
 grep -rn "Daily Red" expansion/src expansion/include expansion/data
 ```
 
-The summit is HeartGold/SoulSilver's Mt. Silver summit: a 20×20 layout on an
+The summit is HeartGold/SoulSilver's Mt. Silver summit: a 20×24 layout on an
 HGSS-derived secondary tileset (`data/tilesets/secondary/mt_silver_summit/`,
 `gTileset_MtSilverSummit`, with FireRed's General tileset as primary; 40
 metatiles on one palette, supplied by the project's owner). You start on the
-path at (9, 11), just inside the summit's entrance; the snowfield below it is
-scenery. Climb between the terraced cliffs and RED stands above the stairs at
-(9, 1) facing north, turning around when you talk to him.
+path at (9, 15), just inside the summit's entrance; the snowfield below it is
+scenery. Climb between the terraced cliffs and up the stairs, and RED stands
+on the summit's edge at (9, 4), facing north over a sea of clouds (rows 0–3),
+turning around when you talk to him.
+
+`scripts/graphics/make-graphics.py` adds two things to the tileset:
+- the clouds (`summit_clouds`): `art/mt-silver-clouds.png`, a seamless
+  96×64 strip cut from an HGSS screenshot of the summit (its snowflakes
+  filtered out), on palette 8 as metatiles 0x2A8–0x2BF that the map repeats
+  every 6 columns. They drift left a pixel every 16 frames
+  (`InitTilesetAnim_MtSilverSummit` in `src/tileset_anims.c` turns the strip's
+  tiles in EWRAM and copies them to VRAM);
+- the edge (`summit_edge`): versions of the platform's rock walls and snow
+  for the top row (0x2C0–0x2C2) with a rim line and rounded snow caps, so
+  the summit doesn't end in a flat cut against the clouds.
+
+The snow is a swirling snowstorm (`src/field_weather_effect.c`): 44 flakes
+instead of 16, all there from the start, falling two to three times as fast,
+blown left and circling as they fall (the summit is the only snowy map).
 
 On 1 run in 100 (`EXIT_ODDS`, rolled per run from the seed, see
 `DailyRed_IsExitOpen`) the entrance is open: walking south off the path's last
-row (9, 14), like leaving a cave, warps you straight to the start of FireRed,
+row (9, 18), like leaving a cave, warps you straight to the start of FireRed,
 your bedroom in Pallet Town, team and all, and the only way back up is to
 become Champion. Otherwise the entrance is just a wall. Arriving in the
 bedroom that way, the player says the second half of FireRed's NES line,
@@ -616,8 +632,9 @@ summit's wind, `music/mt-silver-wind.ogg` (HGSS's, supplied by the project's
 owner, and the sample made from it in the patch), and the
 art in `art/` (and the graphics made from it in the patch): Mt. Silver's
 battle background is REKKA's, RED's battle sprite is HeartGold/SoulSilver's
-(ripped by ChrisX698), and LEAF's HGSS-style sprite and the Mt. Silver
-summit tileset (HGSS-derived) were supplied by the project's owner.
+(ripped by ChrisX698), and LEAF's HGSS-style sprite, the Mt. Silver
+summit tileset (HGSS-derived) and the HGSS screenshot the summit's clouds
+are cut from were supplied by the project's owner.
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page
