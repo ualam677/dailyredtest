@@ -1188,22 +1188,21 @@ index 8c2a2741..bdf98cbb 100644
  0 0 0
  0 0 0
 diff --git a/graphics/battle_interface/textbox.png b/graphics/battle_interface/textbox.png
-index 96f6b8b15f3bb58830eb7a4cd1d1e716b7a9ea49..4ed25514da70c051df00c4d531e867ba4af58529 100644
+index 96f6b8b15f3bb58830eb7a4cd1d1e716b7a9ea49..c15e12e53ef30432da1c83552c71304908ee0a05 100644
 GIT binary patch
-literal 1181
+literal 1173
 zcmeAS@N?(olHy`uVBq!ia0vp^4Is?H3?#oinD~={ftew|C&U%V{qf_6hJ?b8f{Ys)
-z1``AnA|ev9qKbinK|xVojzP)E*-=r+bLOo5e=l1@!vLs$6pV(zunB>k%U1kiU|@{!
-zba4!+nDh3^>8d6J0f$6|i#Jxx{a$}tO<~e$o)yyKw*TE;x1Z7E;XB;C=GYsZ=G3Bl
-z^YzXjep>YDp6|2gO4py5yOnz{F@D49(<{!zm3zRysNV3w9Oh*wO`o;gZRirZAijbz
-zbDvK7nw^Uoo^ty-q;pFgH&r+<{<<ZtLGX{?fyD{)^slMj<qXJ=+}LuQF}X6oXXz&9
-zFH39Lj+o^KviHO`Y<-*6kj8x>_q6&?%hHQBllc`ziZ4GAIC6Xb_S3fgtNTu;SU;He
-z-h*#K-Oncq3#<zN=p@XW&wM1_SzG)KYs-$cUbFJqJih)_U2yND$bvKX_g>j&e}`*=
-zp2HS~$1V9R9+Df*<vu@cv!8RvTE<hVTbYh{ANQ8L@b~%C*8%oZ4QF|$=I!3N#nqww
-zefR#hcRT-lC^W8Tzw%a}X<q)mRt6@HA5~aVL___1eiu*Y@0rKmbAY5hUHx3vIVCg!
-E0A}gP3IG5A
+z1``AnA|ev9qKbinK|xVojzP)E*-=r+bLOo5e=l1@!vLs$6pV(zunB>k%U1kiU|<aJ
+zba4!+nDh4X#iS+$k%mN{F1M|p|K(d3%slWgV^_D{w|ev2a|-{7%&DGqb3&|2td-`^
+zM=$>V)M|Zw^Y_P;Sn-{z_YM2LyNIN-Em561rNHKacI6()f|HDyN3ZP=4S31&qAAZ|
+zmj2$K+4oC!-Fv~J;eEj13}fZK2<~;PUz)zN*l;iVnPeNJeV{7!sM;MqiLTV|d1l#{
+z_c1N{S02XBQ_o@0_g3h__8hyD&r5pFJ#yyw`as~w?d!MC+V-w~cRFR~!-@Aj_yqpy
+zr7ACovXJAR@$5On$L$wRv1T(W>P4HLHD_M(>rcMJUiDyy^nb4wfBRLY?GV!Ng{g<N
+zoW(=Z;C$}$(<b{lcbsRO>z>8hA%4_ba>2gJpO>#LH*zZup1J$(jV-PXRo{=s`^`Pw
+veEjUC`+r>zyq@l_*ucPKCx;~^Jh=ax(Q2!E^yTkG-$2ryu6{1-oD!M<aN5Zt
 
 delta 430
-zcmV;f0a5;)3A_W47=Hu<0000n5PbLm001yhOjJbx00960|Nj60QevEHi@pE<|7u!u
+zcmV;f0a5;y3A_W47=Hu<0000n5PbLm001yhOjJbx00960|Nj60QevEHi@pE<|7u!u
 z)y>sGN_$E{QiF?&YC&48YGTz&Ih;yjYNVvBSuFPe00BoyL_t(&f$h>UO2j}E#_?I$
 z1MGuswihoTSnq<By$7&~Sf+9C7-<ZHXk!-?Ya0(BcmTy`FMr|%Z1l}cCiAjxaNSbA
 zA1ox<;h)LO7$Zo`oGaZ57tGIJ$_?|=CG$(VH=6{`nfdl-pk6!RKJr5qu;ko5_q-1T
@@ -1211,7 +1210,7 @@ z<Qw>*2|{32NuVxC|Iswpa`U!2pk5RMPNraq^wi?m*MUIR1}gs*q!&kg%I)2n0T%*#
 zd%Q>ahF=3|pnp-uyGIAX$>CgIt1S;NBx_5PrfQ~pt;JH{I9{I(2f|{F_IFxalYXG6
 ztvD@opvr-?UE`~w)t|Nmy5~7SDL^J27(K8T*iO%B-kq5$1xhk$HT6_=V6<ol({$3E
 z8H(q||5P9^R&V9i;_5Tw-|nfv@YZQ+2V%gFTORZ$2q*lD0000000000000000Kf*m
-Y0Tl@ZW14Mnw*UYD07*qoM6N<$g6IvvCIA2c
+Y0Tl@ZW14Mnw*UYD07*qoM6N<$g4&(H9smFU
 
 diff --git a/graphics/battle_interface/textbox_0.pal b/graphics/battle_interface/textbox_0.pal
 index 67e1af89..5530859f 100644

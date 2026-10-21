@@ -89,10 +89,12 @@ def battle_background():
 # Tiles 3-11: the HGSS sheet's own message box was there. (In battle, 18-26
 # and 34-42 of the textbox's VRAM get the player's window frames.)
 BOX_FIRST_TILE = 3
-# Rings from the box's edge inwards, as textbox palette indices: a margin the
-# battle background shows through, outline, frame light/mid/mid/dark, an
-# accent line, then the white fill (15, the text windows' background).
-BOX_RINGS = [0, 2, 3, 4, 4, 5, 8]
+# Rings from the box's edge inwards, as textbox palette indices: outline,
+# frame light/mid/mid/dark, the inner stripe, then the fill (15, the text
+# windows' background). The boxes fill their tiles to the edge, like
+# FireRed's, so they hide the bottom of your Pokemon's sprite; only the
+# rounded corners let the battle background through.
+BOX_RINGS = [2, 3, 4, 4, 5, 8]
 BOX_FILL = 15
 BOX_RADIUS = 7
 # Textbox palette 0, after RED's cap: a red frame with a thin white stripe
@@ -147,8 +149,11 @@ def battle_boxes():
         sx, sy = (tile % 16) * 8, (tile // 16) * 8
         for y in range(8):
             for x in range(8):
-                ring = box_ring(tx + x, ty + y, size)
-                sheet.putpixel((sx + x, sy + y), BOX_RINGS[ring] if ring < len(BOX_RINGS) else BOX_FILL)
+                # Ring 0 of a box one pixel bigger all round is outside the
+                # rounded corners.
+                ring = box_ring(tx + x + 1, ty + y + 1, size + 2) - 1
+                colour = 0 if ring < 0 else BOX_RINGS[ring] if ring < len(BOX_RINGS) else BOX_FILL
+                sheet.putpixel((sx + x, sy + y), colour)
     for tile in CURSOR_TILES:
         sx, sy = (tile % 16) * 8, (tile // 16) * 8
         for y in range(8):
