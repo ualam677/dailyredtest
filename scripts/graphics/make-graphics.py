@@ -82,17 +82,83 @@ def battle_background():
 
 # The sea of clouds beyond the summit's edge, added to the summit tileset
 # (data/tilesets/secondary/mt_silver_summit/, which otherwise comes as is):
-# art/mt-silver-clouds.png is a seamless 96x80 strip (cut from an HGSS
+# art/mt-silver-clouds.png is a seamless 96x112 strip (cut from an HGSS
 # screenshot of the summit, its snowflakes filtered out, stretched so the
-# texture's own period is exactly 96 px and contrast raised a little for the
-# GBA's colours). It becomes 12x10 tiles after the tileset's own 96 (on
-# palette 8), 6x5 metatiles after its 40 (0x2A8-0x2C5; the map repeats them
-# every 6 columns, the fifth row behind the summit's edge, see summit_edge)
-# and the animation's source frame, anim/clouds.png, which
-# src/tileset_anims.c scrolls a pixel at a time.
+# texture's own period is exactly 96 px, contrast raised a little for the
+# GBA's colours, and its top 32 px mirrored above it for height). It becomes
+# 12x14 tiles after the tileset's own 96 (on palette 8), 6x7 metatiles after
+# its 40 (0x2A8-0x2D1; the layout's rows 0-5 repeat them every 6 columns,
+# their last row is behind the summit's edge, see summit_edge) and the
+# animation's source frame, anim/clouds.png, which src/tileset_anims.c
+# scrolls a pixel at a time. The functions below also write the rows of the
+# summit layout they draw (data/layouts/DailyRed_Summit/map.bin, 20 wide):
+# enough rows of clouds that the camera never shows past the map's top.
 SUMMIT_TILES = 96          # the tileset's own tiles (6 rows of 16)
 SUMMIT_METATILES = 40      # and metatiles (0x280-0x2A7)
 CLOUD_PALETTE = 8
+SUMMIT_LAYOUT = os.path.join(GAME, 'data', 'layouts', 'DailyRed_Summit', 'map.bin')
+SUMMIT_WIDTH = 20
+SUMMIT_EDGE_ROW = 6        # the summit's edge, under the clouds (RED stands on it)
+SUMMIT_BLOCKED = (1 << 10) | (3 << 12)  # a layout block's collision and elevation bits
+
+
+def set_summit_blocks(blocks):
+    """Writes {(column, row): metatile} into the summit layout, keeping each
+    block's collision and elevation."""
+    with open(SUMMIT_LAYOUT, 'rb') as f:
+        layout = bytearray(f.read())
+    for (col, row), mid in blocks.items():
+        at = (row * SUMMIT_WIDTH + col) * 2
+        v = struct.unpack_from('<H', layout, at)[0]
+        struct.pack_into('<H', layout, at, (v & ~0x3FF) | mid)
+    with open(SUMMIT_LAYOUT, 'wb') as f:
+        f.write(layout)
+
+
+class SummitTiles:
+    """The summit tileset's tiles.png, for the pieces drawn below: a tile
+    that's already there (the same pixels) is reused, an empty one is the
+    blank tile, and new ones go in the free columns beside the clouds (the
+    strip is 12 tiles wide, the sheet 16). The secondary tileset's last
+    tiles don't load on FireRed's maps, so nothing goes after the clouds."""
+
+    def __init__(self, out):
+        self.path = os.path.join(out, 'tiles.png')
+        self.sheet = Image.open(self.path)
+        self.known = {}
+        for t in range((self.sheet.width // 8) * (self.sheet.height // 8)):
+            pixels = self._get(t)
+            if any(pixels):
+                self.known.setdefault(pixels, t)
+        first = SUMMIT_TILES // 16
+        self.free = [r * 16 + c for r in range(first, self.sheet.height // 8) for c in range(12, 16)
+                     if not any(self._get(r * 16 + c))]
+
+    def _get(self, t):
+        tx, ty = (t % 16) * 8, (t // 16) * 8
+        return tuple(self.sheet.getpixel((tx + x, ty + y)) for y in range(8) for x in range(8))
+
+    def entries(self, img, palette):
+        """A 16x16 piece as the 4 tilemap entries of a metatile layer."""
+        out = []
+        for k in range(4):
+            pixels = tuple(img[(k // 2) * 8 + y][(k % 2) * 8 + x] for y in range(8) for x in range(8))
+            if not any(pixels):
+                out.append(0)
+                continue
+            if pixels not in self.known:
+                if not self.free:
+                    raise SystemExit('summit tileset: no room for more tiles')
+                t = self.free.pop(0)
+                tx, ty = (t % 16) * 8, (t // 16) * 8
+                for i, v in enumerate(pixels):
+                    self.sheet.putpixel((tx + i % 8, ty + i // 8), v)
+                self.known[pixels] = t
+            out.append((640 + self.known[pixels]) | (palette << 12))
+        return out
+
+    def save(self):
+        self.sheet.save(self.path)
 
 
 def summit_clouds():
@@ -136,6 +202,8 @@ def summit_clouds():
         f.write(metatiles)
     with open(os.path.join(out, 'metatile_attributes.bin'), 'wb') as f:
         f.write(attributes)
+    set_summit_blocks({(c, r): 0x280 + SUMMIT_METATILES + r * (w // 16) + c % (w // 16)
+                       for r in range(SUMMIT_EDGE_ROW) for c in range(SUMMIT_WIDTH)})
     print('summit clouds: %dx%d px, %d colours, metatiles 0x%X-0x%X' % (
         w, h, len(colours), 0x280 + SUMMIT_METATILES, 0x280 + SUMMIT_METATILES + (w // 16) * (h // 16) - 1))
 
@@ -151,8 +219,7 @@ def summit_clouds():
 # soft, slightly uneven snow edge, all about level with the caps' snow. One metatile per piece
 # and cloud column (the clouds repeat every 6 columns), from 0x2C6; the
 # script also writes the layout's edge row.
-EDGE_ROW = [0x283] * 7 + [0x285] + [0x280] * 3 + [0x286] + [0x284] * 8  # the summit layout's row 0
-EDGE_LAYOUT_ROW = 4
+EDGE_ROW = [0x283] * 7 + [0x285] + [0x280] * 3 + [0x286] + [0x284] * 8  # the tileset sample layout's row 0
 EDGE_LINE, EDGE_LIGHT = 8, 2           # palette 7 indices
 EDGE_BAND = {2, 3, 4, EDGE_LINE}       # the caps' pale band (and its top line)
 EDGE_BAND_ROWS = 8                     # the band never goes below row 7
@@ -170,8 +237,9 @@ def summit_edge():
         metatiles = bytearray(f.read())
     with open(os.path.join(out, 'metatile_attributes.bin'), 'rb') as f:
         attributes = bytearray(f.read())
-    cloud_w = Image.open(os.path.join(ART, 'mt-silver-clouds.png')).width // 16
-    cloud_row = SUMMIT_METATILES + cloud_w * 4  # the clouds' fifth row of metatiles
+    clouds = Image.open(os.path.join(ART, 'mt-silver-clouds.png'))
+    cloud_w = clouds.width // 16
+    cloud_row = SUMMIT_METATILES + cloud_w * (clouds.height // 16 - 1)  # the clouds' last row of metatiles
 
     def piece_pixels(piece):
         entries = struct.unpack_from('<8H', metatiles, (piece - 0x280) * 16)
@@ -230,33 +298,20 @@ def summit_edge():
                 todo += [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
         return img
 
-    # New top-layer tiles, a tile row each for the edge pieces after everything else.
-    pieces = sorted(set(EDGE_ROW))
-    first_row = sheet.height // 8
-    edge_sheet = Image.new('P', (128, sheet.height + 8 * ((len(pieces) * 4 + 15) // 16)))
-    edge_sheet.putpalette(sheet.getpalette())
-    edge_sheet.paste(sheet, (0, 0))
-    piece_tiles = {}
-    for n, piece in enumerate(pieces):
-        img = edge_pixels(piece)
-        tiles = [first_row * 16 + n * 4 + k for k in range(4)]
-        piece_tiles[piece] = tiles
-        for k, t in enumerate(tiles):
-            for y in range(8):
-                for x in range(8):
-                    edge_sheet.putpixel(((t % 16) * 8 + x, (t // 16) * 8 + y), img[(k // 2) * 8 + y][(k % 2) * 8 + x])
-    edge_sheet.save(os.path.join(out, 'tiles.png'))
+    new_tiles = SummitTiles(out)
+    piece_tiles = {piece: new_tiles.entries(edge_pixels(piece), 7) for piece in sorted(set(EDGE_ROW))}
+    new_tiles.save()
 
     ids = {}
     row_ids = []
     for col, piece in enumerate(EDGE_ROW):
-        top = [(640 + t) | (7 << 12) for t in piece_tiles[piece]]
+        top = piece_tiles[piece]
         phase = col % cloud_w
         key = (piece, phase)
         if key not in ids:
             ids[key] = 0x280 + len(metatiles) // 16
-            clouds = struct.unpack_from('<4H', metatiles, (cloud_row + phase) * 16)
-            metatiles += struct.pack('<8H', *clouds, *top)
+            behind = struct.unpack_from('<4H', metatiles, (cloud_row + phase) * 16)
+            metatiles += struct.pack('<8H', *behind, *top)
             attributes += struct.pack('<I', 0x20000000)  # covered: both layers under the player
         row_ids.append(ids[key])
     with open(os.path.join(out, 'metatiles.bin'), 'wb') as f:
@@ -264,16 +319,8 @@ def summit_edge():
     with open(os.path.join(out, 'metatile_attributes.bin'), 'wb') as f:
         f.write(attributes)
 
-    layout = os.path.join(GAME, 'data', 'layouts', 'DailyRed_Summit', 'map.bin')
-    with open(layout, 'rb') as f:
-        blocks = bytearray(f.read())
-    for col, mid in enumerate(row_ids):
-        at = (EDGE_LAYOUT_ROW * 20 + col) * 2
-        v = struct.unpack_from('<H', blocks, at)[0]
-        struct.pack_into('<H', blocks, at, (v & ~0x3FF) | mid)
-    with open(layout, 'wb') as f:
-        f.write(blocks)
-    print('summit edge: metatiles 0x%X-0x%X, layout row %d' % (min(ids.values()), max(ids.values()), EDGE_LAYOUT_ROW))
+    set_summit_blocks({(col, SUMMIT_EDGE_ROW): mid for col, mid in enumerate(row_ids)})
+    print('summit edge: metatiles 0x%X-0x%X, layout row %d' % (min(ids.values()), max(ids.values()), SUMMIT_EDGE_ROW))
 
 
 # Beside the stairs the tileset's stair-side rocks (0x298/0x2A0, 0x29C/0x2A4)
@@ -285,11 +332,11 @@ def summit_edge():
 # (0x28A/0x28C: the terrace's snow band turning down into the path's wall);
 # both get the stairs' rail from the stair rocks, the bottom one its foot too.
 STAIR_PIECES = [
-    # (layout column, row, base, rail from, rail columns, foot from or None, foot columns)
-    (7, 6, 0x285, 0x298, range(13, 16), None, None),
-    (7, 7, 0x28A, 0x298, range(13, 16), 0x2A0, range(12, 16)),
-    (11, 6, 0x286, 0x29C, range(0, 3), None, None),
-    (11, 7, 0x28C, 0x29C, range(0, 3), 0x2A4, range(0, 4)),
+    # (layout column, rows below the edge, base, rail from, rail columns, foot from or None, foot columns)
+    (7, 2, 0x285, 0x298, range(13, 16), None, None),
+    (7, 3, 0x28A, 0x298, range(13, 16), 0x2A0, range(12, 16)),
+    (11, 2, 0x286, 0x29C, range(0, 3), None, None),
+    (11, 3, 0x28C, 0x29C, range(0, 3), 0x2A4, range(0, 4)),
 ]
 STAIR_RAIL_ROWS = (2, 11)    # the rail's plain stretch in the stair rocks
 STAIR_FOOT_ROWS = range(13, 16)
@@ -316,13 +363,8 @@ def summit_stairs():
                     img[(k // 2) * 8 + y][(k % 2) * 8 + x] = sheet.getpixel((tx + sx, ty + sy))
         return img
 
-    first_row = sheet.height // 8
-    new_sheet = Image.new('P', (128, sheet.height + 8 * ((len(STAIR_PIECES) * 4 + 15) // 16)))
-    new_sheet.putpalette(sheet.getpalette())
-    new_sheet.paste(sheet, (0, 0))
-    layout = os.path.join(GAME, 'data', 'layouts', 'DailyRed_Summit', 'map.bin')
-    with open(layout, 'rb') as f:
-        blocks = bytearray(f.read())
+    new_tiles = SummitTiles(out)
+    blocks = {}
     for n, (col, row, base, rail_piece, rail_cols, foot_piece, foot_cols) in enumerate(STAIR_PIECES):
         img = pixels(base)
         rail = pixels(rail_piece)
@@ -335,26 +377,133 @@ def summit_stairs():
             for y in STAIR_FOOT_ROWS:
                 for x in foot_cols:
                     img[y][x] = foot[y][x]
-        tiles = [first_row * 16 + n * 4 + k for k in range(4)]
-        for k, t in enumerate(tiles):
-            for y in range(8):
-                for x in range(8):
-                    new_sheet.putpixel(((t % 16) * 8 + x, (t // 16) * 8 + y), img[(k // 2) * 8 + y][(k % 2) * 8 + x])
         mid = 0x280 + len(metatiles) // 16
         top = struct.unpack_from('<4H', metatiles, (base - 0x280) * 16 + 8)
-        metatiles += struct.pack('<8H', *[(640 + t) | (7 << 12) for t in tiles], *top)
+        metatiles += struct.pack('<8H', *new_tiles.entries(img, 7), *top)
         attributes += attributes[(base - 0x280) * 4:(base - 0x280) * 4 + 4]
-        at = (row * 20 + col) * 2
-        v = struct.unpack_from('<H', blocks, at)[0]
-        struct.pack_into('<H', blocks, at, (v & ~0x3FF) | mid)
-    new_sheet.save(os.path.join(out, 'tiles.png'))
+        blocks[(col, SUMMIT_EDGE_ROW + row)] = mid
+    new_tiles.save()
     with open(os.path.join(out, 'metatiles.bin'), 'wb') as f:
         f.write(metatiles)
     with open(os.path.join(out, 'metatile_attributes.bin'), 'wb') as f:
         f.write(attributes)
-    with open(layout, 'wb') as f:
-        f.write(blocks)
+    set_summit_blocks(blocks)
     print('summit stairs: metatiles 0x%X-0x%X' % (mid - len(STAIR_PIECES) + 1, mid))
+
+
+# Where the cliffs meet the snowfield below the summit's entrance (the row
+# under the path's end), the tileset's pieces (0x287/0x294 "cliff base", and
+# 0x290/0x291 "ledge band" over the lower ridges at the sides) end the ridges
+# out of line with the ridges above them. Each spot gets a piece drawn from
+# the ridge above it instead: its rock columns end in rounded bottoms with a
+# shadow, a soft ledge line runs across at one height, then snow; at the
+# sides the lower ridge below starts again under a white cap.
+BASE_ROW = SUMMIT_EDGE_ROW + 15
+BASE_PIECES = (
+    # (columns, piece above, piece below or None for snow)
+    (range(0, 3), 0x281, 0x281),
+    (range(3, 4), 0x281, 0x292),
+    (range(4, 7), 0x281, None),
+    (range(7, 8), 0x285, None),
+    (range(11, 12), 0x286, None),
+    (range(12, 16), 0x282, None),
+    (range(16, 17), 0x282, 0x293),
+    (range(17, 20), 0x282, 0x282),
+)
+BASE_END_ROW = 7      # the ridges above end here
+SNOW, SNOW_LIGHT, SNOW_MID, SNOW_SOFT, SNOW_SHADE, ROCK_DARK = 1, 2, 3, 4, 5, 9  # palette 7 indices
+
+
+def summit_base():
+    out = os.path.join(GAME, 'data', 'tilesets', 'secondary', 'mt_silver_summit')
+    sheet = Image.open(os.path.join(out, 'tiles.png'))
+    with open(os.path.join(out, 'metatiles.bin'), 'rb') as f:
+        metatiles = bytearray(f.read())
+    with open(os.path.join(out, 'metatile_attributes.bin'), 'rb') as f:
+        attributes = bytearray(f.read())
+
+    def pixels(piece):
+        entries = struct.unpack_from('<4H', metatiles, (piece - 0x280) * 16)
+        img = [[0] * 16 for _ in range(16)]
+        for k, v in enumerate(entries):
+            t = (v & 0x3FF) - 640
+            tx, ty = (t % 16) * 8, (t // 16) * 8
+            for y in range(8):
+                for x in range(8):
+                    sx = 7 - x if v & 0x400 else x
+                    sy = 7 - y if v & 0x800 else y
+                    img[(k // 2) * 8 + y][(k % 2) * 8 + x] = sheet.getpixel((tx + sx, ty + sy))
+        return img
+
+    def rock_runs(row):
+        runs, x = [], 0
+        while x < 16:
+            if row[x] >= EDGE_ROCK:
+                start = x
+                while x < 16 and row[x] >= EDGE_ROCK:
+                    x += 1
+                runs.append((start, x))
+            else:
+                x += 1
+        return runs
+
+    def base(above, below):
+        src = pixels(above)
+        img = [[SNOW] * 16 for _ in range(16)]
+        r = BASE_END_ROW
+        for y in range(r):
+            img[y] = src[y][:]
+        depth = {}
+        for a, b in rock_runs(src[r - 1]):
+            centre, half = (a + b - 1) / 2, (b - a) / 2
+            for x in range(a, b):
+                depth[x] = round(2 * (1 - abs(x - centre) / (half + 1)))
+        for x in range(16):
+            if x in depth:  # a rounded bottom, then its shadow
+                k = depth[x]
+                for y in range(r, r + k):
+                    img[y][x] = src[y][x] if src[y][x] >= EDGE_ROCK else ROCK_DARK
+                img[r + k][x] = SNOW_SHADE
+                img[r + k + 1][x] = SNOW_MID
+            else:
+                img[r][x] = min(src[r - 1][x], SNOW_MID)
+                img[r + 1][x] = SNOW_LIGHT
+        for x in range(16):  # the ledge line
+            if img[r + 3][x] < EDGE_ROCK:
+                img[r + 3][x] = SNOW_SOFT
+            if img[r + 4][x] < EDGE_ROCK:
+                img[r + 4][x] = SNOW_LIGHT
+        if below:  # the lower ridge starts again under a white cap
+            low = pixels(below)
+            for y in range(r + 5, 16):
+                img[y] = [SNOW] * 16
+            for y in range(14, 16):
+                img[y] = low[y][:]
+            for a, b in rock_runs(low[14]):
+                centre, half = (a + b - 1) / 2, (b - a) / 2
+                for x in range(a, b):
+                    img[13][x] = SNOW_SOFT
+                    if abs(x - centre) / (half + 1) > 0.5:
+                        img[12][x] = SNOW
+        return img
+
+    new_tiles = SummitTiles(out)
+    blocks = {}
+    for n, (cols, above, below) in enumerate(BASE_PIECES):
+        img = base(above, below)
+        mid = 0x280 + len(metatiles) // 16
+        top = struct.unpack_from('<4H', metatiles, (above - 0x280) * 16 + 8)
+        metatiles += struct.pack('<8H', *new_tiles.entries(img, 7), *top)
+        attributes += attributes[(above - 0x280) * 4:(above - 0x280) * 4 + 4]
+        for col in cols:
+            blocks[(col, BASE_ROW)] = mid
+    new_tiles.save()
+    with open(os.path.join(out, 'metatiles.bin'), 'wb') as f:
+        f.write(metatiles)
+    with open(os.path.join(out, 'metatile_attributes.bin'), 'wb') as f:
+        f.write(attributes)
+    set_summit_blocks(blocks)
+    print('summit base: metatiles 0x%X-0x%X, layout row %d' % (mid - len(BASE_PIECES) + 1, mid, BASE_ROW))
 
 
 # --- Battle text boxes -------------------------------------------------------------
@@ -609,6 +758,7 @@ if __name__ == '__main__':
     summit_clouds()
     summit_edge()  # after the clouds, which rebuild the tileset's extra tiles and metatiles
     summit_stairs()  # and after the edge
+    summit_base()
     # Bands: RED's jeans (thighs to shins) and LEAF's legs.
     trainer_pic('red', (44, 62), frames=2)
     # LEAF has 21 colours: her blouse keeps all three of its blues, and her

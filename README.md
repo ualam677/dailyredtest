@@ -157,27 +157,27 @@ Every vanilla file that was changed has a `Daily Red:` comment at the change:
 grep -rn "Daily Red" expansion/src expansion/include expansion/data
 ```
 
-The summit is HeartGold/SoulSilver's Mt. Silver summit: a 20×24 layout on an
+The summit is HeartGold/SoulSilver's Mt. Silver summit: a 20×26 layout on an
 HGSS-derived secondary tileset (`data/tilesets/secondary/mt_silver_summit/`,
 `gTileset_MtSilverSummit`, with FireRed's General tileset as primary; 40
 metatiles on one palette, supplied by the project's owner). You start on the
-path at (9, 15), just inside the summit's entrance; the snowfield below it is
+path at (9, 17), just inside the summit's entrance; the snowfield below it is
 scenery. Climb between the terraced cliffs and up the stairs, and RED stands
-on the summit's edge at (9, 4), facing north over a sea of clouds (rows 0–3),
+on the summit's edge at (9, 6), facing north over a sea of clouds (rows 0–5),
 turning around when you talk to him. The layout is the tileset's sample one,
 moved down for the clouds and with its terraces a row higher, so they step
 out from the rocks beside the stairs as in HGSS.
 
 `scripts/graphics/make-graphics.py` adds two things to the tileset:
 - the clouds (`summit_clouds`): `art/mt-silver-clouds.png`, a seamless
-  96×80 strip cut from an HGSS screenshot of the summit (its snowflakes
-  filtered out), on palette 8 as metatiles 0x2A8–0x2C5 that the map repeats
-  every 6 columns. They drift left a pixel every 16 frames
+  96×112 strip cut from an HGSS screenshot of the summit (its snowflakes
+  filtered out), on palette 8 as metatiles 0x2A8–0x2D1 that the map repeats
+  every 6 columns, enough rows that the camera never shows past the map's
+  top. They drift left a pixel every 16 frames
   (`InitTilesetAnim_MtSilverSummit` in `src/tileset_anims.c` turns the strip's
   tiles in EWRAM and copies them to VRAM);
 - the edge (`summit_edge`, which also writes the layout's edge row 4): the
-  clouds' fifth row behind see-through versions of the edge pieces
-  (0x2C6–0x2D6), so the drifting clouds come right down to the ridges' snow
+  clouds' last row behind see-through versions of the edge pieces, so the drifting clouds come right down to the ridges' snow
   caps, the platform's rock walls get rounded snow caps and the platform a
   soft snow edge, instead of a flat cut;
 - the stairs' sides (`summit_stairs`, which also writes them into the
@@ -185,8 +185,16 @@ out from the rocks beside the stairs as in HGSS.
   walls, the terraces nor the path's walls, so beside the stairs' top row
   the platform's wall carries on down, and beside the bottom row there's a
   corner made from the terrace end the tileset pairs with those rocks (the
-  snow band turning down into the path's wall), both with the stairs' rail
-  (0x2D7–0x2DA).
+  snow band turning down into the path's wall), both with the stairs' rail;
+- the cliffs' base (`summit_base`) under the path's end, where the tileset's
+  pieces ended the ridges out of line with the ridges above: pieces drawn
+  from each ridge above, its rock ending in a rounded bottom over one soft
+  ledge line across the map, with the lower ridges at the sides starting
+  again under it.
+
+These functions write the layout rows they draw, and new tiles go in the
+four free columns beside the clouds (the secondary tileset's last tiles
+don't load on FireRed's maps).
 
 The snow is a swirling snowstorm (`src/field_weather_effect.c`): 44 flakes
 instead of 16, all there from the start, falling two to three times as fast,
@@ -194,7 +202,7 @@ blown left and circling as they fall (the summit is the only snowy map).
 
 On 1 run in 100 (`EXIT_ODDS`, rolled per run from the seed, see
 `DailyRed_IsExitOpen`) the entrance is open: walking south off the path's last
-row (9, 18), like leaving a cave, warps you straight to the start of FireRed,
+row (9, 20), like leaving a cave, warps you straight to the start of FireRed,
 your bedroom in Pallet Town, team and all, and the only way back up is to
 become Champion. Otherwise the entrance is just a wall. Arriving in the
 bedroom that way, the player says the second half of FireRed's NES line,
