@@ -2003,6 +2003,59 @@ index 00000000..3ce4089b
 +0 0 0
 +0 0 0
 +0 0 0
+diff --git a/graphics/dailyred/ev_iv/map.bin b/graphics/dailyred/ev_iv/map.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..d8bf593ebaf0bb239f4e1335d668f7b908a68a8c
+GIT binary patch
+literal 1280
+zcma))XG;S?5QZQ7*?aH3kO;=!Ma>6AML~m*sED9q$KHGQPrIAkncd4BcrP!zx9r?A
+zGdEy=;)o}KM3P7*1%p)5NGF3#vc%PFa>yl*d<yJ==6fMU6jMSeWt3AvB~?^YLoIdG
+z(?BClG}A&W?Ji$%K5k=}aXgxxZ#tc}Gen3^e46FWF1j`M&`Y1q{S1isVWE*fzE|V|
+z6O1yZ$csFedCJxD1d}5EMCe#EoHE6<A|DF`9lXMz$iZ%SXO=ldQKrR?tTXsojIrb|
+z5m4l#L-Z)t?)+tiJ|`;HxmG^z{8iQzjkw0!YnSh`{&kHXWM1SSvbmF$nA&AOWc?ci
+zjHo=~A6q%A>r71VExz9W2w$JGO)+y@uKaDLji@Alhh5Ek>~rACKjcVJP@6An-cC7l
+z<?H#Yv!w3NP5uR!T!nqjjYI#{7<GSZ^6$d473t4?xc?7Y{n1Y7yGN7%#4|6v@+SWL
+VN0|S~*FW@a@_+Ce9>cOf@fRvxo>c$<
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/ev_iv/tiles.png b/graphics/dailyred/ev_iv/tiles.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..63369ae9328f9a667291fb4432ba6b9b86b6b85c
+GIT binary patch
+literal 1358
+zcmV-U1+n^xP)<h;3K|Lk000e1NJLTq003|R002+~0{{R3Gh*yc0000mP)t-s@bK_}
+zfQYCdC}1EcFeor^7$6`ZC@3H(000000000000000000000000000000(n>@T000Ep
+zNkl<Zc$~$Uzi$*r6vscaUM~&t&M1=IL}77UM}~tISrPw23aIvkbgjGNZ`iHwN~ktX
+zC{QE{$|$lZi6Y!bm<74H6XM3@;^QX8%>Fpv?it+VN%p*%dEa^8H}mH0*y1r)6Yq++
+z{{iURCSm8nXlFW1hsn-#m>yakiV^bKgJ*F=OT@4kAC4SQ$mv*3DP*BAPZ+DI$pBE8
+z(n45mbIv%-R7rIJ0~iM)h+Wr8Fo>NJ+nMCtqzHng7>$h0Bok)<VhX?{1xS*#wAo~n
+zL(N32KgR^6hpE|#Q>g)lDdE`=ir+5TRiOgw-ONA&V5tX}9fu7u%!HB-BJ9NF=NKlE
+z{xqCvrw0H`yflR(NwOkIvLdbRtuCRj0vX7@k}{Be6-Xo?lu&v|B8)I<CJ3*^CGhiT
+zxR!`F00<=*34M|@NlCII4K9hm%SugX2p%Xz_(V;|Vb%$8<|-bs{TT+uvxg(L;{?R;
+z2_l$Us);gZMsmimcsAuQyA~(xOow=b0OG-500a=DHib+fh<Qqq0miW@vI2lqs2K2U
+zfL1~YgL4Mq8I#n^G61Rdww$pYj>Q=uCNi95fR|)(08or3R#TF`>?^4h3g{~p_mztK
+za<DC>2vpElNDwM`_<Ia|&T!h-NoSHjzXa%ajGy}l04L;;9k|$b<?2f;u0sUkG3PIu
+zL%+IqHvh2XrMF7;<^7`ryLM>^%<Q_|;&Fb^!f6Ij)~OC4ow&8)11v5KzLTql<(QVW
+z$1Z>CLd09cb6tq|=q}u{ye*ZDeM_fIxytXC<I1?I^Ixjf?}LrAOu3nI1I%};^ZfXa
+zo4sSl@`$4YH{`YRv-=XQGX9}dyjGmsm%QxOD|kmv@!!e%Y&s>c4N8}tm0WamN|&8L
+z)75b<JxTc)S|d@zsdMT76#>|<-}R?%a!UjBK9<J0Y&iY#ginh-caGZ5SF7#<3st+c
+z3peE}pDQc44q$XizY~~Wu+LXb{6*tdZMEYo5e>z^BkPIjajXAIOhZ{J$nVR2jPx?X
+z_5~n}Fv0+00K6_e-PZj40=OI2bR&SpUejjl_~IwPyRGvjPA#&l`H0)qs2bJn#!bns
+zz3=p9EUPgBqKscy`(>)-y=&aRQf|C)iVNebU&u8p+xSZ~B29Em^Wv@+Wyi(`Ftd6v
+zujoh(n67dzxFfm#0=TU?snTe%_jeB5)NPpFzsKMcX`3+{yPV+O-SU%V@zbs);^K12
+zpe)r~S|d|&TslshVJ^=aH`=Shk7&Jz21EI~xujR6S5CR-^?u|u2jo(jT=HTk%!PjK
+zt&zh%xwL1u3~BE>+32~<$z42^_qE^RQ#{Y}tcg26_bC%*vB%T9RSZj8`kakNF#q7U
+zcrcvq!SO8{n51s2O8YAE+G1H80Oz`!?L2C~9j5^N(Sh>dRr|GC95g!eLJJG#QF)Pt
+ztzOul)4c}p&knzS58#Wd%5Q<U_GRH@?nPE96Wv)#-*WxFx!4<Sxme&;heIvy1K%A1
+zc)v8BI4iPM&22oIe*hnZc{c;tRP$ZPZ`xY@{)R2u`M#D~+FDx0mq&Q@A-XrDv3JOn
+zibgM&+aBDz%Krg2_QB7u0PF$W`*xsxJo@=J1KnQ(_qzUIS@q-)`?m4_1D#)~!DO6_
+Q-T(jq07*qoM6N<$f(O@=Qvd(}
+
+literal 0
+HcmV?d00001
+
 diff --git a/graphics/dailyred/option_menu/map_0.bin b/graphics/dailyred/option_menu/map_0.bin
 new file mode 100644
 index 0000000000000000000000000000000000000000..69e770aff25e178d82f2e1e968dd20f199aca337
@@ -2210,6 +2263,44 @@ zaNytVvw@W=4}N;3r?G75kI~R_O!ZuGCj4pbB<rT_YL(neeHLxf&ziMtUM}DF(A=}e
 zv)BFBF{<KpnEBpn-O`|@6{qbtMNM?|a?97MUC~qLtoCAe>Jx<z#*0ej=6;ruo}oC2
 z<yLl-)e-LXOKc)%e~dbz`)H@k1B(eSF7{7)-8N~K<o@=@tyg9k)vMnLKT^CSeHYMc
 N44$rjF6*2UngAVin^OP)
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/start_menu/shelf.png b/graphics/dailyred/start_menu/shelf.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..9c73d8f666f50452f12b2ae783594fb64591e86a
+GIT binary patch
+literal 1481
+zcmV;)1vdJLP)<h;3K|Lk000e1NJLTq004*p007_w0{{R3Dl;=y0000mP)t-s0QdmN
+z01)^97~nV%*x2CUs92bopjcR7urLt#;CT4Bkoag2`1tq$007u1Fpv-+XFFy-000G4
+zNkl<Zc%1E;!E4)A7{Gt7?8v1}8?(W##it#b*1;?7p$C<@tWZY0Lty_wVJDYmWY7f+
+zO(B6C3>`b?xDrN9OAlF-;X`3PRH+~-3`#eToz|^!po3Yn6z?F(dU~^EDTDQ}_q#+^
+z-uv`DNe=ma-vfn0p-?E^Ao@Zr^_;96W8QFRqzrOI`aExt{UB{7QV{*p6gah%L8Rr(
+z1Mq#^4Bggiz{=<#^!K42oYZT<&;{?u3h>z<$E&eH^p*i#oLU2zxUPMK-2l+%yx-dm
+zbmQ2A4mdH(=>m1{@Y)pLov1jvcgbE8T<bK<_j3RnF+q$?HocSjlyl|cGFrt?+$?ee
+zz+gQGPD7j}J)LZB-ymxMpKyizhi6`xl^Q_ZAE@K30GY_FXb>Cgr)*`~YA`Y308I|c
+zkKX~h%oGZQv$cB6a@==cziM-HgA94#Y6i|d1#nGq*w*_onQ(jOWSiwXLCE~K1@Atu
+z6^q4UF&OMbC&`)E)7#{G4X|<OK0Et+rd!<udul)b!x1tKZ`4LUI!pfU+%9qBj(0Wl
+znRa(yyVZXQ`p3T<E6<#9YXB@Y;xoa%UAyCr+00d+)4wpew+8eui<~Gq^vNv1ThU3;
+zXEk|#aHw5uGIwxparQ+Uv=UEGQLv^h&Ko9_ov-eXT#oR~b01x1{odnhrwvfGPJufO
+zJfU1Jv-PJnD#&C__~1UNRC^Eld)@~Mg#s4fwgAUsaa0iLPk{O8GF~F!nx^Sp{7DOE
+z3&d2!dm`MCfbuIZNZAhypp{$;I2zs+G03jCn(?fbh6I`XIaLh$g9k0XCxvuD4hBbJ
+zkRQ_pQ79A&g+ihD@6i{Mjg$YQ77+C9&_Sa5cDNw2z8xxvuW$F<inO8xUW{I|8xZK*
+z8DHPhcyU;8i0WH9FZK!!LH?e;&B7Qj9#wF#ap+p7Co<h?2LQ9<{WMr-j2DLmhlswV
+z@?yW>0KjIG=kzaBJ8O*d;%E@Pg;#KZFRQ)v;;A`55y5u=wxU-aS#YqIu0LGQxz)Wj
+zfVCn(+aEQ?i^GBg_VU8<=7ZUnkk*UCf&;L!beYZ?r1WAN>#v#0E6aZi?B#`Dy`y+9
+zjs}_Z3l45@!lVMAHA_!Hv!*Mwi~^LLNc}<b;+>t7ZI-`5CY2Yv)7#{G;sB3yUc6J{
+z#y=BD>&3qHN+>T@C=?2XLZNtrWX2DHh`tRW#)}06eLH**LEnZUOVdaKefu|=)CX5f
+z;l=)OFtp1Ic-oM{i;)TrgSKWmFOC!(LVZinFV-)e-1i#Sk%EJuZwdOvp%+K`#i72X
+z@?xo9+{5g2D5dmbq2K_}EFA%DCm1Jrv6P9>h)3)fhx!J|y*S!0#-$*<_OcgCL9)5u
+zj8@jL!O5CvcQbF_^7LA4e=qTQToBQV#eT7U-}ASXlwQ1BZLZH9oLijTtKiEYR2b^T
+z(FeZ!DQCA?{@MbxnTO=A=JvLuSJmbLHmuM9<GeW1FAhoT#bUoWB)u00{o=@ilou-$
+z3WY+UP$VXy(h3aGxAZ~2@bv9H;Z#zQ3=<imZ;6#QAVFJmJPF#GV;QP%3B7nwa2V)Y
+zJtoL-FO~}q(stj3UK}kr$oe*NgStNDRBqficPsu%#Dc>{bW%bu77Gpuw)+Mf)TKuJ
+zpx`i6-x7N9pbu!bv_hd!a_TXe4D;ey#Dc@BQAWNi$-G!7IM^*ieql%Vi%0IGUTxt>
+zk0+TIhy7x(R~@;?CGDfW#%s6D&Bf9CsC|yc?4u6*#iRC7`y}iakJv{Ya2PL+?knI>
+jUM%*DeUuj~{@?r!%5U*Ss4zF-00000NkvXXu0mjfs_W7F
 
 literal 0
 HcmV?d00001
@@ -2886,10 +2977,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..a0ef3fae
+index 00000000..ed9d625e
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,110 @@
+@@ -0,0 +1,111 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -2920,6 +3011,7 @@ index 00000000..a0ef3fae
 +bool32 DailyRed_IsOnSummit(void);
 +const u16 *DailyRed_GetMtSilverBattlePalette(void);
 +void DailyRed_ReturnFromHallOfFame(void);
++void CB2_DailyRedEvIv(void);
 +bool8 DailyRed_IsExitOpen(void);
 +bool8 DailyRed_ArrivedFromSummit(void);
 +
@@ -7185,6 +7277,519 @@ index 00000000..889b8a78
 +        return gBattleEnvironmentPalette_DailyRedMtSilverNight;
 +    default:
 +        return gBattleEnvironmentPalette_DailyRedMtSilver;
++    }
++}
+diff --git a/src/dailyred_eviv.c b/src/dailyred_eviv.c
+new file mode 100644
+index 00000000..d0a63fe5
+--- /dev/null
++++ b/src/dailyred_eviv.c
+@@ -0,0 +1,507 @@
++// Daily Red: the EV/IV screen, from the start menu's Stats icon. A port of
++// Gender-based-EV-IV-Display (Acimut, Shiny Miner, Tio Terry; a FireRed C
++// injection) to the expansion, in Daily Red's red (scripts/graphics/make-ui.py).
++// For each of the team: base stats, EVs and IVs per stat (the nature's raised
++// stat in red with an up arrow, its lowered one in blue), the totals, the
++// Hidden Power type, level, nature and happiness, with the Pokemon jumping in
++// beside its type icons and a ball per team member. Left and right (or up and
++// down by rows of balls) change Pokemon, A plays its cry, B goes back.
++#include "global.h"
++#include "battle_main.h"
++#include "bg.h"
++#include "dailyred.h"
++#include "data.h"
++#include "gpu_regs.h"
++#include "main.h"
++#include "malloc.h"
++#include "menu.h"
++#include "palette.h"
++#include "party_menu.h"
++#include "pokeball.h"
++#include "pokemon.h"
++#include "scanline_effect.h"
++#include "sound.h"
++#include "sprite.h"
++#include "string_util.h"
++#include "task.h"
++#include "text.h"
++#include "trainer_pokemon_sprites.h"
++#include "window.h"
++#include "constants/rgb.h"
++#include "constants/songs.h"
++
++enum
++{
++    WIN_POKEMON_NAME,
++    WIN_STATS,
++    WIN_BOTTOM_BOX,
++    WIN_HIDDEN_POWER,
++    WIN_TYPE,
++};
++
++#define TEXT_PAL 15
++#define TYPE_ICONS_PAL 12
++
++// The Pokemon's picture, and where it lands after jumping in from the right.
++#define PIC_X (8 * 20 + 40 - 2)
++#define PIC_Y (8 * 6 + 40)
++#define JUMP_FRAMES 48
++
++#define BALL_X 188
++#define BALL_Y 21
++#define BALL_SIZE 16
++#define BALL_ANIM_CLOSED 3
++#define BALL_ANIM_OPEN 4
++
++// The table: stat names, then base stats, EVs and IVs.
++#define NAME_X 4
++#define BS_X 61
++#define EV_X (BS_X + 30)
++#define IV_X (EV_X + 36)
++#define ROW_Y(row) (1 + (row) * 14)
++
++struct EvIv
++{
++    u8 callbackStep;
++    u8 state;
++    u8 currentMon;
++    u8 partyCount;
++    u8 picTaskId;
++    u8 ballSpriteIds[PARTY_SIZE];
++    u16 tilemapBuffer[0x400];
++};
++
++static EWRAM_DATA struct EvIv *sEvIv = NULL;
++
++static void Task_EvIvInit(u8 taskId);
++static void Task_EvIvInput(u8 taskId);
++static void ShowMon(void);
++
++static const u16 sEvIv_Pal[] = INCGFX_U16("graphics/dailyred/ev_iv/tiles.png", ".gbapal");
++static const u32 sEvIv_Gfx[] = INCGFX_U32("graphics/dailyred/ev_iv/tiles.png", ".4bpp");
++static const u16 sEvIv_Tilemap[] = INCBIN_U16("graphics/dailyred/ev_iv/map.bin");
++
++// 0 transparent, 1 white, 2 grey, 3 light grey, 4 red, 5 dark red, 6 blue,
++// 7 dark blue, 8 yellow, 9 dark yellow.
++static const u16 sTextPal[] = {0x542E, 0x7FFF, 0x318C, 0x675A, 0x319E, 0x1CFE, 0x7EC4, 0x6600, 0x239E, 0x0611};
++
++static const u8 sTextColor_Black[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
++static const u8 sTextColor_Blue[] = {TEXT_COLOR_TRANSPARENT, 6, 7};
++static const u8 sTextColor_Red[] = {TEXT_COLOR_TRANSPARENT, 4, 5};
++static const u8 sTextColor_Gray[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_LIGHT_GRAY, TEXT_COLOR_DARK_GRAY};
++static const u8 sTextColor_Shiny[] = {TEXT_COLOR_TRANSPARENT, 8, 9};
++
++static const u8 sText_BsEvIv[] = _(" BS{CLEAR_TO 30} EV{CLEAR_TO 60} IV");
++static const u8 sText_Total[] = _("Total:");
++static const u8 sText_ArrowUp[] = _("{UP_ARROW}");
++static const u8 sText_ArrowDown[] = _("{DOWN_ARROW}");
++static const u8 sText_Male[] = _("♂");
++static const u8 sText_Female[] = _("♀");
++static const u8 sText_Is[] = _(" is ");
++static const u8 sText_Happy[] = _("% happy.");
++static const u8 sText_Level[] = _("Lv. ");
++
++// The table's rows, top to bottom.
++static const u8 sStatRows[NUM_STATS] = {STAT_HP, STAT_ATK, STAT_DEF, STAT_SPATK, STAT_SPDEF, STAT_SPEED};
++static const u8 *const sStatNames[NUM_STATS] =
++{
++    [STAT_HP]    = COMPOUND_STRING("HP"),
++    [STAT_ATK]   = COMPOUND_STRING("Attack"),
++    [STAT_DEF]   = COMPOUND_STRING("Defense"),
++    [STAT_SPATK] = COMPOUND_STRING("Sp. Atk."),
++    [STAT_SPDEF] = COMPOUND_STRING("Sp. Def."),
++    [STAT_SPEED] = COMPOUND_STRING("Speed"),
++};
++static const u8 sStatEvData[NUM_STATS] =
++{
++    [STAT_HP] = MON_DATA_HP_EV, [STAT_ATK] = MON_DATA_ATK_EV, [STAT_DEF] = MON_DATA_DEF_EV,
++    [STAT_SPEED] = MON_DATA_SPEED_EV, [STAT_SPATK] = MON_DATA_SPATK_EV, [STAT_SPDEF] = MON_DATA_SPDEF_EV,
++};
++static const u8 sStatIvData[NUM_STATS] =
++{
++    [STAT_HP] = MON_DATA_HP_IV, [STAT_ATK] = MON_DATA_ATK_IV, [STAT_DEF] = MON_DATA_DEF_IV,
++    [STAT_SPEED] = MON_DATA_SPEED_IV, [STAT_SPATK] = MON_DATA_SPATK_IV, [STAT_SPDEF] = MON_DATA_SPDEF_IV,
++};
++
++static const struct BgTemplate sBgTemplates[] =
++{
++    {
++        .bg = 0,
++        .charBaseIndex = 0,
++        .mapBaseIndex = 22,
++        .screenSize = 0,
++        .paletteMode = 0,
++        .priority = 0,
++        .baseTile = 1,
++    },
++    {
++        .bg = 1,
++        .charBaseIndex = 2,
++        .mapBaseIndex = 19,
++        .screenSize = 0,
++        .paletteMode = 0,
++        .priority = 2,
++        .baseTile = 0,
++    },
++};
++
++static const struct WindowTemplate sWindowTemplates[] =
++{
++    [WIN_POKEMON_NAME] = {.bg = 0, .tilemapLeft = 1, .tilemapTop = 0, .width = 30, .height = 5, .paletteNum = TEXT_PAL, .baseBlock = 0},
++    [WIN_STATS] = {.bg = 0, .tilemapLeft = 1, .tilemapTop = 5, .width = 20, .height = 11, .paletteNum = TEXT_PAL, .baseBlock = 150},
++    [WIN_BOTTOM_BOX] = {.bg = 0, .tilemapLeft = 1, .tilemapTop = 16, .width = 30, .height = 5, .paletteNum = TEXT_PAL, .baseBlock = 370},
++    [WIN_HIDDEN_POWER] = {.bg = 0, .tilemapLeft = 15, .tilemapTop = 16, .width = 5, .height = 2, .paletteNum = TYPE_ICONS_PAL, .baseBlock = 520},
++    [WIN_TYPE] = {.bg = 0, .tilemapLeft = 0, .tilemapTop = 2, .width = 9, .height = 3, .paletteNum = TYPE_ICONS_PAL, .baseBlock = 530},
++    DUMMY_WIN_TEMPLATE
++};
++
++static const u8 sBallCoords[PARTY_SIZE][2] =
++{
++    {BALL_X, BALL_Y},
++    {BALL_X + BALL_SIZE, BALL_Y},
++    {BALL_X + BALL_SIZE * 2, BALL_Y},
++    {BALL_X, BALL_Y + BALL_SIZE},
++    {BALL_X + BALL_SIZE, BALL_Y + BALL_SIZE},
++    {BALL_X + BALL_SIZE * 2, BALL_Y + BALL_SIZE},
++};
++
++static void CB2_EvIv(void)
++{
++    RunTasks();
++    AnimateSprites();
++    BuildOamBuffer();
++    UpdatePaletteFade();
++}
++
++static void VBlankCB_EvIv(void)
++{
++    LoadOam();
++    ProcessSpriteCopyRequests();
++    TransferPlttBuffer();
++}
++
++void CB2_DailyRedEvIv(void)
++{
++    sEvIv = AllocZeroed(sizeof(*sEvIv));
++    sEvIv->partyCount = gPartiesCount[B_TRAINER_PLAYER];
++    if (sEvIv->partyCount == 0 || sEvIv->partyCount > PARTY_SIZE)
++        sEvIv->partyCount = PARTY_SIZE;
++    sEvIv->picTaskId = TASK_NONE;
++    ResetSpriteData();
++    ResetPaletteFade();
++    FreeAllSpritePalettes();
++    ResetTasks();
++    ScanlineEffect_Stop();
++    PlaySE(SE_RG_CARD_OPEN);
++    CreateTask(Task_EvIvInit, 0);
++    SetMainCallback2(CB2_EvIv);
++}
++
++static void InitDisplay(void)
++{
++    SetVBlankCallback(NULL);
++    DmaClearLarge16(3, (void *)VRAM, VRAM_SIZE, 0x1000);
++    DmaClear32(3, (void *)OAM, OAM_SIZE);
++    DmaClear16(3, (void *)PLTT, PLTT_SIZE);
++    SetGpuReg(REG_OFFSET_DISPCNT, 0);
++    ResetBgsAndClearDma3BusyFlags(0);
++    InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
++    for (u32 bg = 0; bg < 4; bg++)
++    {
++        ChangeBgX(bg, 0, BG_COORD_SET);
++        ChangeBgY(bg, 0, BG_COORD_SET);
++    }
++    InitWindows(sWindowTemplates);
++    DeactivateAllTextPrinters();
++    SetGpuReg(REG_OFFSET_WIN0H, 0);
++    SetGpuReg(REG_OFFSET_WIN0V, 0);
++    SetGpuReg(REG_OFFSET_WININ, 0);
++    SetGpuReg(REG_OFFSET_WINOUT, 0);
++    SetGpuReg(REG_OFFSET_BLDCNT, 0);
++    SetGpuReg(REG_OFFSET_BLDALPHA, 0);
++    SetGpuReg(REG_OFFSET_BLDY, 0);
++    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
++    SetBgTilemapBuffer(1, sEvIv->tilemapBuffer);
++    ShowBg(0);
++    ShowBg(1);
++    FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 30, 20);
++    FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 30, 20);
++}
++
++static void LoadBalls(void)
++{
++    for (u32 i = 0; i < sEvIv->partyCount; i++)
++    {
++        enum PokeBall ballId = ItemIdToBallId(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKEBALL));
++        u8 spriteId;
++
++        LoadBallGfx(ballId);
++        spriteId = CreateSprite(&gPokeBalls[ballId].spriteTemplate, sBallCoords[i][0], sBallCoords[i][1], 0);
++        gSprites[spriteId].callback = SpriteCallbackDummy;
++        gSprites[spriteId].oam.priority = 0;
++        StartSpriteAnim(&gSprites[spriteId], BALL_ANIM_CLOSED);
++        sEvIv->ballSpriteIds[i] = spriteId;
++    }
++}
++
++static void Task_EvIvInit(u8 taskId)
++{
++    switch (sEvIv->callbackStep)
++    {
++    case 0:
++        InitDisplay();
++        break;
++    case 1:
++        LoadBgTiles(1, sEvIv_Gfx, sizeof(sEvIv_Gfx), 0);
++        LoadPalette(sEvIv_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
++        LoadPalette(sTextPal, BG_PLTT_ID(TEXT_PAL), sizeof(sTextPal));
++        ListMenuLoadStdPalAt(BG_PLTT_ID(TYPE_ICONS_PAL), 1);
++        break;
++    case 2:
++        CopyToBgTilemapBuffer(1, sEvIv_Tilemap, sizeof(sEvIv_Tilemap), 0);
++        break;
++    case 3:
++        LoadBalls();
++        ShowMon();
++        break;
++    case 4:
++        CopyBgTilemapBufferToVram(0);
++        CopyBgTilemapBufferToVram(1);
++        break;
++    case 5:
++        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
++        SetVBlankCallback(VBlankCB_EvIv);
++        break;
++    default:
++        if (!gPaletteFade.active)
++            gTasks[taskId].func = Task_EvIvInput;
++        return;
++    }
++    sEvIv->callbackStep++;
++}
++
++// The Pokemon's picture jumps in from the right in two hops.
++#define tState data[0]
++#define tSpriteId data[1]
++#define tFrame data[2]
++
++static void Task_MonPic(u8 taskId)
++{
++    struct Task *task = &gTasks[taskId];
++    struct Sprite *sprite = &gSprites[task->tSpriteId];
++    s16 f = task->tFrame;
++
++    switch (task->tState)
++    {
++    case 0:
++        if (f < JUMP_FRAMES)
++        {
++            static const s8 sHop[] = {0, 1, 2, 3, -3, -2, -1, 0, 1, 2, 3};
++            static const u8 sUntil[] = {10, 18, 24, 28, 30, 32, 36, 40, 44, 46, 48};
++            u32 i = 0;
++
++            while (f >= sUntil[i])
++                i++;
++            sprite->y += sHop[i];
++            sprite->x -= 1;
++            task->tFrame++;
++        }
++        break;
++    case 1: // replaced by the next Pokemon's
++        FreeAndDestroyMonPicSprite(task->tSpriteId);
++        DestroyTask(taskId);
++        break;
++    }
++}
++
++static void ShowMonPic(struct Pokemon *mon)
++{
++    u16 species = GetMonData(mon, MON_DATA_SPECIES);
++    u16 spriteId;
++    u8 taskId;
++
++    // The expansion loads the picture's palette tagged with the species.
++    spriteId = CreateMonPicSprite(species, IsMonShiny(mon), GetMonData(mon, MON_DATA_PERSONALITY), TRUE,
++                                  PIC_X + JUMP_FRAMES, PIC_Y - 32, 0, species);
++    if (spriteId == 0xFFFF)
++        return;
++    gSprites[spriteId].callback = SpriteCallbackDummy;
++    gSprites[spriteId].oam.priority = 0;
++    taskId = CreateTask(Task_MonPic, 80);
++    gTasks[taskId].tSpriteId = spriteId;
++    sEvIv->picTaskId = taskId;
++    PlayCry_Normal(species, 0);
++}
++
++static void HideMonPic(void)
++{
++    if (sEvIv->picTaskId != TASK_NONE)
++        gTasks[sEvIv->picTaskId].tState = 1;
++    sEvIv->picTaskId = TASK_NONE;
++}
++
++static void PrintStats(struct Pokemon *mon)
++{
++    u16 species = GetMonData(mon, MON_DATA_SPECIES);
++    u8 nature = GetNature(mon);
++    u32 totalBs = 0, totalEv = 0;
++    u32 hpTypeBits = 0;
++
++    AddTextPrinterParameterized3(WIN_POKEMON_NAME, FONT_NORMAL, BS_X, 22, sTextColor_Gray, TEXT_SKIP_DRAW, sText_BsEvIv);
++    GetMonNickname(mon, gStringVar4);
++    AddTextPrinterParameterized3(WIN_POKEMON_NAME, FONT_NORMAL, 0, 2, IsMonShiny(mon) ? sTextColor_Shiny : sTextColor_Gray, TEXT_SKIP_DRAW, gStringVar4);
++    if (species != SPECIES_NIDORAN_M && species != SPECIES_NIDORAN_F)
++    {
++        switch (GetMonGender(mon))
++        {
++        case MON_MALE:
++            AddTextPrinterParameterized3(WIN_POKEMON_NAME, FONT_NORMAL, 58, 3, sTextColor_Blue, TEXT_SKIP_DRAW, sText_Male);
++            break;
++        case MON_FEMALE:
++            AddTextPrinterParameterized3(WIN_POKEMON_NAME, FONT_NORMAL, 58, 3, sTextColor_Red, TEXT_SKIP_DRAW, sText_Female);
++            break;
++        }
++    }
++
++    for (u32 row = 0; row < NUM_STATS; row++)
++    {
++        u8 stat = sStatRows[row];
++        u8 bs = GetSpeciesBaseStat(species, stat);
++        u8 ev = GetMonData(mon, sStatEvData[stat]);
++        u8 iv = GetMonData(mon, sStatIvData[stat]);
++        const u8 *color = sTextColor_Black;
++
++        if (gNaturesInfo[nature].statUp != gNaturesInfo[nature].statDown)
++        {
++            if (stat == gNaturesInfo[nature].statUp)
++            {
++                color = sTextColor_Red;
++                AddTextPrinterParameterized3(WIN_STATS, FONT_NORMAL, BS_X - 14, ROW_Y(row), sTextColor_Red, TEXT_SKIP_DRAW, sText_ArrowUp);
++            }
++            else if (stat == gNaturesInfo[nature].statDown)
++            {
++                color = sTextColor_Blue;
++                AddTextPrinterParameterized3(WIN_STATS, FONT_NORMAL, BS_X - 14, ROW_Y(row), sTextColor_Blue, TEXT_SKIP_DRAW, sText_ArrowDown);
++            }
++        }
++        AddTextPrinterParameterized3(WIN_STATS, FONT_NORMAL, NAME_X, ROW_Y(row), sTextColor_Black, TEXT_SKIP_DRAW, sStatNames[stat]);
++        ConvertIntToDecimalStringN(gStringVar1, bs, STR_CONV_MODE_RIGHT_ALIGN, 3);
++        ConvertIntToDecimalStringN(gStringVar2, ev, STR_CONV_MODE_RIGHT_ALIGN, 3);
++        ConvertIntToDecimalStringN(gStringVar3, iv, STR_CONV_MODE_RIGHT_ALIGN, 2);
++        AddTextPrinterParameterized3(WIN_STATS, FONT_NORMAL, BS_X, ROW_Y(row), color, TEXT_SKIP_DRAW, gStringVar1);
++        AddTextPrinterParameterized3(WIN_STATS, FONT_NORMAL, EV_X, ROW_Y(row), color, TEXT_SKIP_DRAW, gStringVar2);
++        AddTextPrinterParameterized3(WIN_STATS, FONT_NORMAL, IV_X, ROW_Y(row), color, TEXT_SKIP_DRAW, gStringVar3);
++        totalBs += bs;
++        totalEv += ev;
++    }
++
++    // Hidden Power's type, as battles work it out.
++    hpTypeBits = ((GetMonData(mon, MON_DATA_HP_IV) & 1) << 0)
++               | ((GetMonData(mon, MON_DATA_ATK_IV) & 1) << 1)
++               | ((GetMonData(mon, MON_DATA_DEF_IV) & 1) << 2)
++               | ((GetMonData(mon, MON_DATA_SPEED_IV) & 1) << 3)
++               | ((GetMonData(mon, MON_DATA_SPATK_IV) & 1) << 4)
++               | ((GetMonData(mon, MON_DATA_SPDEF_IV) & 1) << 5);
++    {
++        enum Type hpTypes[NUMBER_OF_MON_TYPES];
++        u32 count = 0;
++
++        for (u32 i = 0; i < NUMBER_OF_MON_TYPES; i++)
++        {
++            if (gTypesInfo[i].isHiddenPowerType)
++                hpTypes[count++] = i;
++        }
++        if (count != 0)
++            BlitMenuInfoIcon(WIN_HIDDEN_POWER, hpTypes[((count - 1) * hpTypeBits) / 63] + 1, 3, 2);
++    }
++
++    BlitMenuInfoIcon(WIN_TYPE, GetSpeciesType(species, 0) + 1, 1, 4);
++    if (GetSpeciesType(species, 0) != GetSpeciesType(species, 1))
++        BlitMenuInfoIcon(WIN_TYPE, GetSpeciesType(species, 1) + 1, 35, 4);
++
++    AddTextPrinterParameterized3(WIN_BOTTOM_BOX, FONT_NORMAL, 6, 1, sTextColor_Black, TEXT_SKIP_DRAW, sText_Total);
++    ConvertIntToDecimalStringN(gStringVar1, totalBs, STR_CONV_MODE_RIGHT_ALIGN, 3);
++    ConvertIntToDecimalStringN(gStringVar2, totalEv, STR_CONV_MODE_RIGHT_ALIGN, 3);
++    AddTextPrinterParameterized3(WIN_BOTTOM_BOX, FONT_NORMAL, BS_X + 1, 1, sTextColor_Black, TEXT_SKIP_DRAW, gStringVar1);
++    AddTextPrinterParameterized3(WIN_BOTTOM_BOX, FONT_NORMAL, EV_X + 1, 1, sTextColor_Black, TEXT_SKIP_DRAW, gStringVar2);
++
++    ConvertIntToDecimalStringN(gStringVar4, GetMonData(mon, MON_DATA_LEVEL), STR_CONV_MODE_LEFT_ALIGN, 3);
++    AddTextPrinterParameterized3(WIN_BOTTOM_BOX, FONT_NORMAL, 187, 5, IsMonShiny(mon) ? sTextColor_Shiny : sTextColor_Gray, TEXT_SKIP_DRAW, sText_Level);
++    AddTextPrinterParameterized3(WIN_BOTTOM_BOX, FONT_NORMAL, 208, 5, IsMonShiny(mon) ? sTextColor_Shiny : sTextColor_Gray, TEXT_SKIP_DRAW, gStringVar4);
++    AddTextPrinterParameterized3(WIN_BOTTOM_BOX, FONT_NORMAL, 187, 17, sTextColor_Gray, TEXT_SKIP_DRAW, gNaturesInfo[nature].name);
++
++    StringCopy(gStringVar4, GetSpeciesName(species));
++    StringAppend(gStringVar4, sText_Is);
++    ConvertIntToDecimalStringN(gStringVar2, GetMonData(mon, MON_DATA_FRIENDSHIP) * 100 / 255, STR_CONV_MODE_LEFT_ALIGN, 3);
++    StringAppend(gStringVar4, gStringVar2);
++    StringAppend(gStringVar4, sText_Happy);
++    AddTextPrinterParameterized3(WIN_BOTTOM_BOX, FONT_NORMAL, 6, 17, sTextColor_Black, TEXT_SKIP_DRAW, gStringVar4);
++}
++
++static void ShowMon(void)
++{
++    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][sEvIv->currentMon];
++
++    for (u32 win = 0; win <= WIN_TYPE; win++)
++        FillWindowPixelBuffer(win, PIXEL_FILL(0));
++    PrintStats(mon);
++    for (u32 win = 0; win <= WIN_TYPE; win++)
++    {
++        PutWindowTilemap(win);
++        CopyWindowToVram(win, COPYWIN_FULL);
++    }
++    StartSpriteAnim(&gSprites[sEvIv->ballSpriteIds[sEvIv->currentMon]], BALL_ANIM_OPEN);
++    ShowMonPic(mon);
++}
++
++static void ChangeMon(u8 newMon)
++{
++    if (newMon == sEvIv->currentMon)
++        return;
++    PlaySE(SE_BALL_OPEN);
++    StartSpriteAnim(&gSprites[sEvIv->ballSpriteIds[sEvIv->currentMon]], BALL_ANIM_CLOSED);
++    sEvIv->currentMon = newMon;
++    HideMonPic();
++    ShowMon();
++}
++
++static void Task_EvIvInput(u8 taskId)
++{
++    u8 count = sEvIv->partyCount;
++    u8 cur = sEvIv->currentMon;
++
++    switch (sEvIv->state)
++    {
++    case 0:
++        if (JOY_REPEAT(DPAD_RIGHT))
++            ChangeMon(cur == count - 1 ? 0 : cur + 1);
++        else if (JOY_REPEAT(DPAD_LEFT))
++            ChangeMon(cur == 0 ? count - 1 : cur - 1);
++        else if (JOY_REPEAT(DPAD_UP | DPAD_DOWN))
++        {
++            if (cur > 2)
++                ChangeMon(cur - 3);
++            else if (count > cur + 3)
++                ChangeMon(cur + 3);
++        }
++        else if (JOY_NEW(A_BUTTON))
++        {
++            PlayCry_Normal(GetMonData(&gParties[B_TRAINER_PLAYER][cur], MON_DATA_SPECIES), 0);
++        }
++        else if (JOY_NEW(B_BUTTON))
++        {
++            PlaySE(SE_RG_CARD_FLIP);
++            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
++            sEvIv->state++;
++        }
++        break;
++    case 1:
++        if (gPaletteFade.active || IsCryPlaying())
++            break;
++        DestroyTask(taskId);
++        FreeAllWindowBuffers();
++        FREE_AND_SET_NULL(sEvIv);
++        SetMainCallback2(gMain.savedCallback);
++        break;
 +    }
 +}
 diff --git a/src/dailyred_mon.c b/src/dailyred_mon.c
@@ -15557,10 +16162,100 @@ index 82017777..ab204db6 100644
          case TRAINER_CLASS_MAGMA_LEADER:
              return MUS_VS_AQUA_MAGMA_LEADER;
 diff --git a/src/start_menu.c b/src/start_menu.c
-index 648fa837..b9a8447c 100644
+index 648fa837..2fc9b5c6 100644
 --- a/src/start_menu.c
 +++ b/src/start_menu.c
-@@ -324,22 +324,9 @@ static void AddStartMenuAction(u8 action)
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h"
+ #include "config/save.h"
+ #include "battle_pike.h"
+ #include "battle_pyramid.h"
+@@ -69,6 +70,7 @@ enum
+     MENU_ACTION_PYRAMID_BAG,
+     MENU_ACTION_DEBUG,
+     MENU_ACTION_DEXNAV,
++    MENU_ACTION_DAILYRED_STATS,
+ };
+ 
+ // Save status
+@@ -111,6 +113,7 @@ static bool8 StartMenuBattlePyramidRetireCallback(void);
+ static bool8 StartMenuBattlePyramidBagCallback(void);
+ static bool8 StartMenuDebugCallback(void);
+ static bool8 StartMenuDexNavCallback(void);
++static bool8 StartMenuDailyRedStatsCallback(void);
+ 
+ // Menu callbacks
+ static bool8 SaveStartCallback(void);
+@@ -206,8 +209,58 @@ static const struct MenuAction sStartMenuItems[] =
+     [MENU_ACTION_PYRAMID_BAG]     = {gText_MenuBag,     {.u8_void = StartMenuBattlePyramidBagCallback}},
+     [MENU_ACTION_DEBUG]           = {sText_MenuDebug,   {.u8_void = StartMenuDebugCallback}},
+     [MENU_ACTION_DEXNAV]          = {gText_MenuDexNav,  {.u8_void = StartMenuDexNavCallback}},
++    [MENU_ACTION_DAILYRED_STATS]  = {COMPOUND_STRING("STATS"), {.u8_void = StartMenuDailyRedStatsCallback}},
+ };
+ 
++// Daily Red: the start menu is a shelf of icons along the bottom of the
++// screen, from a FireRed hack's start menu (MENU_START_MI_PARCHE_REPUNTEADO):
++// left and right pick an icon, which stands up off the shelf. One picture of
++// the whole shelf per selected icon (scripts/graphics/make-ui.py), in the
++// order BuildNormalStartMenu adds the actions.
++#define SHELF_WIDTH 17
++#define SHELF_HEIGHT 7
++#define SHELF_TILES (SHELF_WIDTH * SHELF_HEIGHT)
++#define SHELF_PALETTE 13
++static const u32 sShelf_Gfx[] = INCGFX_U32("graphics/dailyred/start_menu/shelf.png", ".4bpp");
++static const u16 sShelf_Pal[] = INCGFX_U16("graphics/dailyred/start_menu/shelf.png", ".gbapal");
++static const struct WindowTemplate sShelfWindowTemplate =
++{
++    .bg = 0,
++    .tilemapLeft = 6,
++    .tilemapTop = 13,
++    .width = SHELF_WIDTH,
++    .height = SHELF_HEIGHT,
++    .paletteNum = SHELF_PALETTE,
++    .baseBlock = 0x260,
++};
++EWRAM_DATA static bool8 sUsingShelf = FALSE;
++EWRAM_DATA static u8 sShelfWindowId = 0; // WINDOW_NONE when there is none (set when the menu is built)
++
++static void DrawShelf(void)
++{
++    CopyToWindowPixelBuffer(sShelfWindowId, &sShelf_Gfx[sStartMenuCursorPos * SHELF_TILES * TILE_SIZE_4BPP / 4], SHELF_TILES * TILE_SIZE_4BPP, 0);
++    CopyWindowToVram(sShelfWindowId, COPYWIN_GFX);
++}
++
++static void ShowShelf(void)
++{
++    if (sStartMenuCursorPos >= sNumStartMenuActions)
++        sStartMenuCursorPos = 0;
++    sShelfWindowId = AddWindow(&sShelfWindowTemplate);
++    LoadPalette(sShelf_Pal, BG_PLTT_ID(SHELF_PALETTE), PLTT_SIZE_4BPP);
++    PutWindowTilemap(sShelfWindowId);
++    DrawShelf();
++    CopyWindowToVram(sShelfWindowId, COPYWIN_MAP);
++}
++
++static void HideShelf(void)
++{
++    ClearWindowTilemap(sShelfWindowId);
++    CopyWindowToVram(sShelfWindowId, COPYWIN_MAP);
++    RemoveWindow(sShelfWindowId);
++    sShelfWindowId = WINDOW_NONE;
++}
++
+ static const struct BgTemplate sBgTemplates_LinkBattleSave[] =
+ {
+     {
+@@ -283,6 +336,8 @@ static void HideStartMenuDebug(void);
+ static void BuildStartMenuActions(void)
+ {
+     sNumStartMenuActions = 0;
++    sUsingShelf = FALSE;
++    sShelfWindowId = WINDOW_NONE; // a shelf from before is gone with the windows
+ 
+     if (IsOverworldLinkActive() == TRUE)
+     {
+@@ -324,24 +379,14 @@ static void AddStartMenuAction(u8 action)
  
  static void BuildNormalStartMenu(void)
  {
@@ -15580,12 +16275,105 @@ index 648fa837..b9a8447c 100644
 -
 -    AddStartMenuAction(MENU_ACTION_PLAYER);
 -    AddStartMenuAction(MENU_ACTION_SAVE);
-+    // Daily Red: only the team, options and exit. There's nothing to use from
-+    // the bag, no Pokedex, and nothing to save.
++    // Daily Red: only the team, their stats (EVs and IVs), options and exit,
++    // on the shelf. There's nothing to use from the bag, no Pokedex, and
++    // nothing to save.
 +    AddStartMenuAction(MENU_ACTION_POKEMON);
++    AddStartMenuAction(MENU_ACTION_DAILYRED_STATS);
      AddStartMenuAction(MENU_ACTION_OPTION);
      AddStartMenuAction(MENU_ACTION_EXIT);
++    sUsingShelf = TRUE;
  }
+ 
+ static void BuildDebugStartMenu(void)
+@@ -526,6 +571,11 @@ static bool32 InitStartMenuStep(void)
+         break;
+     case 2:
+         LoadMessageBoxAndBorderGfx();
++        if (sUsingShelf)
++        {
++            ShowShelf();
++            return TRUE;
++        }
+         DrawStdWindowFrame(AddStartMenuWindow(sNumStartMenuActions), FALSE);
+         sInitStartMenuData[1] = 0;
+         sInitStartMenuData[0]++;
+@@ -624,8 +674,37 @@ void ShowStartMenu(void)
+     LockPlayerFieldControls();
+ }
+ 
++static bool8 HandleShelfInput(void)
++{
++    if (JOY_NEW(DPAD_LEFT | DPAD_RIGHT))
++    {
++        PlaySE(SE_SELECT);
++        if (JOY_NEW(DPAD_LEFT))
++            sStartMenuCursorPos = sStartMenuCursorPos == 0 ? sNumStartMenuActions - 1 : sStartMenuCursorPos - 1;
++        else
++            sStartMenuCursorPos = sStartMenuCursorPos == sNumStartMenuActions - 1 ? 0 : sStartMenuCursorPos + 1;
++        DrawShelf();
++    }
++    else if (JOY_NEW(A_BUTTON))
++    {
++        PlaySE(SE_SELECT);
++        gMenuCallback = sStartMenuItems[sCurrentStartMenuActions[sStartMenuCursorPos]].func.u8_void;
++        if (gMenuCallback != StartMenuExitCallback)
++            FadeScreen(FADE_TO_BLACK, 0);
++    }
++    else if (JOY_NEW(START_BUTTON | B_BUTTON))
++    {
++        HideStartMenu();
++        return TRUE;
++    }
++    return FALSE;
++}
++
+ static bool8 HandleStartMenuInput(void)
+ {
++    if (sUsingShelf)
++        return HandleShelfInput();
++
+     if (JOY_NEW(DPAD_UP))
+     {
+         PlaySE(SE_SELECT);
+@@ -1480,8 +1559,15 @@ void SaveForBattleTowerLink(void)
+ 
+ static void HideStartMenuWindow(void)
+ {
+-    ClearStdWindowAndFrame(GetStartMenuWindowId(), TRUE);
+-    RemoveStartMenuWindow();
++    if (sShelfWindowId != WINDOW_NONE)
++    {
++        HideShelf();
++    }
++    else
++    {
++        ClearStdWindowAndFrame(GetStartMenuWindowId(), TRUE);
++        RemoveStartMenuWindow();
++    }
+     ScriptUnfreezeObjectEvents();
+     UnlockPlayerFieldControls();
+ }
+@@ -1511,3 +1597,19 @@ void Script_ForceSaveGame(struct ScriptContext *ctx)
+     gMenuCallback = SaveCallback;
+     sSaveDialogCallback = SaveSavingMessageCallback;
+ }
++
++static bool8 StartMenuDailyRedStatsCallback(void)
++{
++    if (!gPaletteFade.active)
++    {
++        PlayRainStoppingSoundEffect();
++        RemoveExtraStartMenuWindows();
++        CleanupOverworldWindowsAndTilemaps();
++        SetMainCallback2(CB2_DailyRedEvIv);
++        gMain.savedCallback = CB2_ReturnToFieldWithOpenMenu;
++
++        return TRUE;
++    }
++
++    return FALSE;
++}
 diff --git a/src/tileset_anims.c b/src/tileset_anims.c
 index bee91512..e66c7afe 100644
 --- a/src/tileset_anims.c
