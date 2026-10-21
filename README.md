@@ -180,11 +180,13 @@ out from the rocks beside the stairs as in HGSS.
   (0x2C6–0x2D6), so the drifting clouds come right down to the ridges' snow
   caps, the platform's rock walls get rounded snow caps and the platform a
   soft snow edge, instead of a flat cut;
-- the stair corners (`summit_stairs`, which also writes them into the
-  layout): beside the stairs' bottom row, the tileset's stair-side rocks
-  joined neither the terraces nor the path's walls, so those spots get a
-  corner (0x2D7/0x2D8) made from the terrace end the tileset pairs with them
-  (the snow band turning down into the wall) plus the stairs' rail.
+- the stairs' sides (`summit_stairs`, which also writes them into the
+  layout): the tileset's stair-side rocks joined neither the platform's
+  walls, the terraces nor the path's walls, so beside the stairs' top row
+  the platform's wall carries on down, and beside the bottom row there's a
+  corner made from the terrace end the tileset pairs with those rocks (the
+  snow band turning down into the path's wall), both with the stairs' rail
+  (0x2D7–0x2DA).
 
 The snow is a swirling snowstorm (`src/field_weather_effect.c`): 44 flakes
 instead of 16, all there from the start, falling two to three times as fast,

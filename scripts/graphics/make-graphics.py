@@ -276,18 +276,21 @@ def summit_edge():
     print('summit edge: metatiles 0x%X-0x%X, layout row %d' % (min(ids.values()), max(ids.values()), EDGE_LAYOUT_ROW))
 
 
-# Beside the stairs' bottom row the terraces turn down into the path's walls,
-# but the tileset's stair-side rocks (0x2A0/0x2A4) have their ledge at another
-# height and a flat bottom, so they join neither. Their spots get a corner made
-# from the terrace end the tileset pairs with those pieces (0x28A/0x28C: the
-# terrace's snow band turning down into the wall), with the stairs' rail from
-# the stair rock above (0x298/0x29C) and the rail's foot from the old piece.
-STAIR_CORNERS = [
-    # (layout column, terrace end, rail from, rail columns, foot from, foot columns)
-    (7, 0x28A, 0x298, range(13, 16), 0x2A0, range(12, 16)),
-    (11, 0x28C, 0x29C, range(0, 3), 0x2A4, range(0, 4)),
+# Beside the stairs the tileset's stair-side rocks (0x298/0x2A0, 0x29C/0x2A4)
+# join neither the platform's walls above them, the terraces beside them nor
+# the path's walls below (their rock columns are a different width and their
+# ledge is at another height). So beside the stairs' top row the platform's
+# wall carries on down (0x285/0x286), and beside the bottom row there's a
+# corner made from the terrace end the tileset pairs with those rocks
+# (0x28A/0x28C: the terrace's snow band turning down into the path's wall);
+# both get the stairs' rail from the stair rocks, the bottom one its foot too.
+STAIR_PIECES = [
+    # (layout column, row, base, rail from, rail columns, foot from or None, foot columns)
+    (7, 6, 0x285, 0x298, range(13, 16), None, None),
+    (7, 7, 0x28A, 0x298, range(13, 16), 0x2A0, range(12, 16)),
+    (11, 6, 0x286, 0x29C, range(0, 3), None, None),
+    (11, 7, 0x28C, 0x29C, range(0, 3), 0x2A4, range(0, 4)),
 ]
-STAIR_CORNER_ROW = 7         # the stairs' bottom row in the layout
 STAIR_RAIL_ROWS = (2, 11)    # the rail's plain stretch in the stair rocks
 STAIR_FOOT_ROWS = range(13, 16)
 
@@ -314,32 +317,34 @@ def summit_stairs():
         return img
 
     first_row = sheet.height // 8
-    new_sheet = Image.new('P', (128, sheet.height + 8))
+    new_sheet = Image.new('P', (128, sheet.height + 8 * ((len(STAIR_PIECES) * 4 + 15) // 16)))
     new_sheet.putpalette(sheet.getpalette())
     new_sheet.paste(sheet, (0, 0))
     layout = os.path.join(GAME, 'data', 'layouts', 'DailyRed_Summit', 'map.bin')
     with open(layout, 'rb') as f:
         blocks = bytearray(f.read())
-    for n, (col, end, rail_piece, rail_cols, foot_piece, foot_cols) in enumerate(STAIR_CORNERS):
-        img = pixels(end)
-        rail, foot = pixels(rail_piece), pixels(foot_piece)
+    for n, (col, row, base, rail_piece, rail_cols, foot_piece, foot_cols) in enumerate(STAIR_PIECES):
+        img = pixels(base)
+        rail = pixels(rail_piece)
         lo, hi = STAIR_RAIL_ROWS
         for y in range(16):
             for x in rail_cols:
                 img[y][x] = rail[min(max(y, lo), hi)][x]
-        for y in STAIR_FOOT_ROWS:
-            for x in foot_cols:
-                img[y][x] = foot[y][x]
+        if foot_piece:
+            foot = pixels(foot_piece)
+            for y in STAIR_FOOT_ROWS:
+                for x in foot_cols:
+                    img[y][x] = foot[y][x]
         tiles = [first_row * 16 + n * 4 + k for k in range(4)]
         for k, t in enumerate(tiles):
             for y in range(8):
                 for x in range(8):
                     new_sheet.putpixel(((t % 16) * 8 + x, (t // 16) * 8 + y), img[(k // 2) * 8 + y][(k % 2) * 8 + x])
         mid = 0x280 + len(metatiles) // 16
-        top = struct.unpack_from('<4H', metatiles, (end - 0x280) * 16 + 8)
+        top = struct.unpack_from('<4H', metatiles, (base - 0x280) * 16 + 8)
         metatiles += struct.pack('<8H', *[(640 + t) | (7 << 12) for t in tiles], *top)
-        attributes += attributes[(end - 0x280) * 4:(end - 0x280) * 4 + 4]
-        at = (STAIR_CORNER_ROW * 20 + col) * 2
+        attributes += attributes[(base - 0x280) * 4:(base - 0x280) * 4 + 4]
+        at = (row * 20 + col) * 2
         v = struct.unpack_from('<H', blocks, at)[0]
         struct.pack_into('<H', blocks, at, (v & ~0x3FF) | mid)
     new_sheet.save(os.path.join(out, 'tiles.png'))
@@ -349,7 +354,7 @@ def summit_stairs():
         f.write(attributes)
     with open(layout, 'wb') as f:
         f.write(blocks)
-    print('summit stairs: corner metatiles 0x%X-0x%X' % (mid - len(STAIR_CORNERS) + 1, mid))
+    print('summit stairs: metatiles 0x%X-0x%X' % (mid - len(STAIR_PIECES) + 1, mid))
 
 
 # --- Battle text boxes -------------------------------------------------------------
