@@ -276,6 +276,82 @@ def summit_edge():
     print('summit edge: metatiles 0x%X-0x%X, layout row %d' % (min(ids.values()), max(ids.values()), EDGE_LAYOUT_ROW))
 
 
+# Beside the stairs' bottom row the terraces turn down into the path's walls,
+# but the tileset's stair-side rocks (0x2A0/0x2A4) have their ledge at another
+# height and a flat bottom, so they join neither. Their spots get a corner made
+# from the terrace end the tileset pairs with those pieces (0x28A/0x28C: the
+# terrace's snow band turning down into the wall), with the stairs' rail from
+# the stair rock above (0x298/0x29C) and the rail's foot from the old piece.
+STAIR_CORNERS = [
+    # (layout column, terrace end, rail from, rail columns, foot from, foot columns)
+    (7, 0x28A, 0x298, range(13, 16), 0x2A0, range(12, 16)),
+    (11, 0x28C, 0x29C, range(0, 3), 0x2A4, range(0, 4)),
+]
+STAIR_CORNER_ROW = 7         # the stairs' bottom row in the layout
+STAIR_RAIL_ROWS = (2, 11)    # the rail's plain stretch in the stair rocks
+STAIR_FOOT_ROWS = range(13, 16)
+
+
+def summit_stairs():
+    out = os.path.join(GAME, 'data', 'tilesets', 'secondary', 'mt_silver_summit')
+    sheet = Image.open(os.path.join(out, 'tiles.png'))
+    with open(os.path.join(out, 'metatiles.bin'), 'rb') as f:
+        metatiles = bytearray(f.read())
+    with open(os.path.join(out, 'metatile_attributes.bin'), 'rb') as f:
+        attributes = bytearray(f.read())
+
+    def pixels(piece):
+        entries = struct.unpack_from('<4H', metatiles, (piece - 0x280) * 16)
+        img = [[0] * 16 for _ in range(16)]
+        for k, v in enumerate(entries):
+            t = (v & 0x3FF) - 640
+            tx, ty = (t % 16) * 8, (t // 16) * 8
+            for y in range(8):
+                for x in range(8):
+                    sx = 7 - x if v & 0x400 else x
+                    sy = 7 - y if v & 0x800 else y
+                    img[(k // 2) * 8 + y][(k % 2) * 8 + x] = sheet.getpixel((tx + sx, ty + sy))
+        return img
+
+    first_row = sheet.height // 8
+    new_sheet = Image.new('P', (128, sheet.height + 8))
+    new_sheet.putpalette(sheet.getpalette())
+    new_sheet.paste(sheet, (0, 0))
+    layout = os.path.join(GAME, 'data', 'layouts', 'DailyRed_Summit', 'map.bin')
+    with open(layout, 'rb') as f:
+        blocks = bytearray(f.read())
+    for n, (col, end, rail_piece, rail_cols, foot_piece, foot_cols) in enumerate(STAIR_CORNERS):
+        img = pixels(end)
+        rail, foot = pixels(rail_piece), pixels(foot_piece)
+        lo, hi = STAIR_RAIL_ROWS
+        for y in range(16):
+            for x in rail_cols:
+                img[y][x] = rail[min(max(y, lo), hi)][x]
+        for y in STAIR_FOOT_ROWS:
+            for x in foot_cols:
+                img[y][x] = foot[y][x]
+        tiles = [first_row * 16 + n * 4 + k for k in range(4)]
+        for k, t in enumerate(tiles):
+            for y in range(8):
+                for x in range(8):
+                    new_sheet.putpixel(((t % 16) * 8 + x, (t // 16) * 8 + y), img[(k // 2) * 8 + y][(k % 2) * 8 + x])
+        mid = 0x280 + len(metatiles) // 16
+        top = struct.unpack_from('<4H', metatiles, (end - 0x280) * 16 + 8)
+        metatiles += struct.pack('<8H', *[(640 + t) | (7 << 12) for t in tiles], *top)
+        attributes += attributes[(end - 0x280) * 4:(end - 0x280) * 4 + 4]
+        at = (STAIR_CORNER_ROW * 20 + col) * 2
+        v = struct.unpack_from('<H', blocks, at)[0]
+        struct.pack_into('<H', blocks, at, (v & ~0x3FF) | mid)
+    new_sheet.save(os.path.join(out, 'tiles.png'))
+    with open(os.path.join(out, 'metatiles.bin'), 'wb') as f:
+        f.write(metatiles)
+    with open(os.path.join(out, 'metatile_attributes.bin'), 'wb') as f:
+        f.write(attributes)
+    with open(layout, 'wb') as f:
+        f.write(blocks)
+    print('summit stairs: corner metatiles 0x%X-0x%X' % (mid - len(STAIR_CORNERS) + 1, mid))
+
+
 # --- Battle text boxes -------------------------------------------------------------
 
 # The boxes at the bottom of the battle screen (messages, "What will X do?",
@@ -527,6 +603,7 @@ if __name__ == '__main__':
     battle_boxes()
     summit_clouds()
     summit_edge()  # after the clouds, which rebuild the tileset's extra tiles and metatiles
+    summit_stairs()  # and after the edge
     # Bands: RED's jeans (thighs to shins) and LEAF's legs.
     trainer_pic('red', (44, 62), frames=2)
     # LEAF has 21 colours: her blouse keeps all three of its blues, and her
