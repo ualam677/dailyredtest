@@ -20,30 +20,29 @@ index bc9688b6..9a07413b 100644
  	.include "data/maps/NavelRock_SummitPath_3F_Frlg/scripts.inc"
 diff --git a/data/layouts/DailyRed_Summit/border.bin b/data/layouts/DailyRed_Summit/border.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..4ecad6cd2b6dcd351a11e736dd8e523cbf25b6fc
+index 0000000000000000000000000000000000000000..5278f1594207c831fa0ef1a47be743653d971e61
 GIT binary patch
 literal 8
-Lcmdnav>glq4s-(L
+NcmZoPYcgvDVgL<<0^a}t
 
 literal 0
 HcmV?d00001
 
 diff --git a/data/layouts/DailyRed_Summit/map.bin b/data/layouts/DailyRed_Summit/map.bin
 new file mode 100644
-index 0000000000000000000000000000000000000000..1f58c16d04902d3dd22e74a8bb1d6f0839f22ae6
+index 0000000000000000000000000000000000000000..051513dcc8c3d59fce8c5fabd3fab70776111bb8
 GIT binary patch
-literal 950
-zcmeH@IS#@=3`IMC))2uEv4l%F5>lu*9GA#RasULh2q=Jx^&Z$WBq9h>Q=s2uJTLEC
-zlT!N6Z@<7eEyM$&7K*d?lZPcyw4yRj8Ap|I9iiql;{~m#`?a-$IVD0Rv?!(4yyXM$
-zc*CDvKBfq<7e;gBk(}FwRwX7dZ<Im&Li$1s5J*Ct_-u0#mrjO4s?jlOGUy?Z?OpnI
-z5<j_#{E@k?bjx$6%oT{w*f!^?pqi)lbZM)xCT-Kr>S*L?+O6~^mamLZTaj}2YBG2L
-DcJ3<K
+literal 800
+zcmc)IOAf*?3<S_Sc`@fBDU^=@0p$-1C>#_;6DxL*U|EgSZl1<Y(*}*n1S3glF|HC|
+zQ(T0PRRL#Q<SIA0S1P);fCrw^%S+xr+zfLp@_tLKuy$7GQkDH`Nk<h>T!fd&sq)TC
+zt7>Ou=}OIZF2A2n*K_dw?X>g1WA9LI17-^5AV)dL9-1u}?zhYL%D>M(yL`(-xeug}
+BA&&q6
 
 literal 0
 HcmV?d00001
 
 diff --git a/data/layouts/layouts.json b/data/layouts/layouts.json
-index 2b25587a..2ded0620 100644
+index 2b25587a..15968213 100644
 --- a/data/layouts/layouts.json
 +++ b/data/layouts/layouts.json
 @@ -9323,6 +9323,19 @@
@@ -54,12 +53,12 @@ index 2b25587a..2ded0620 100644
 +    {
 +      "id": "LAYOUT_DAILY_RED_SUMMIT",
 +      "name": "DailyRed_Summit_Layout",
-+      "width": 19,
-+      "height": 25,
++      "width": 20,
++      "height": 20,
 +      "border_width": 2,
 +      "border_height": 2,
 +      "primary_tileset": "gTileset_General_Frlg",
-+      "secondary_tileset": "gTileset_NavelRock_Frlg",
++      "secondary_tileset": "gTileset_MtSilverSummit",
 +      "border_filepath": "data/layouts/DailyRed_Summit/border.bin",
 +      "blockdata_filepath": "data/layouts/DailyRed_Summit/map.bin",
 +      "layout_version": "frlg"
@@ -68,7 +67,7 @@ index 2b25587a..2ded0620 100644
  }
 diff --git a/data/maps/DailyRed_Summit/map.json b/data/maps/DailyRed_Summit/map.json
 new file mode 100644
-index 00000000..f8099229
+index 00000000..0d8d0a13
 --- /dev/null
 +++ b/data/maps/DailyRed_Summit/map.json
 @@ -0,0 +1,38 @@
@@ -95,7 +94,7 @@ index 00000000..f8099229
 +      "type": "object",
 +      "graphics_id": "OBJ_EVENT_GFX_RED_NORMAL",
 +      "x": 9,
-+      "y": 11,
++      "y": 1,
 +      "elevation": 3,
 +      "movement_type": "MOVEMENT_TYPE_FACE_UP",
 +      "movement_range_x": 0,
@@ -262,6 +261,483 @@ index 3492bf3b..c5abfb81 100644
 +	def_special DailyRed_OnBattleEnd
 +	def_special DailyRed_OnDailyGameOver
 +	def_special DailyRed_IsDailyGame
+diff --git a/data/tilesets/secondary/mt_silver_summit/metatile_attributes.bin b/data/tilesets/secondary/mt_silver_summit/metatile_attributes.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..d8affb6ceefd1b157026495280f39ad32f77237f
+GIT binary patch
+literal 160
+OcmZQzU{GKf#25gJuLS`B
+
+literal 0
+HcmV?d00001
+
+diff --git a/data/tilesets/secondary/mt_silver_summit/metatiles.bin b/data/tilesets/secondary/mt_silver_summit/metatiles.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..e21c625598d0da09f7b7864299a33398d2ad5de7
+GIT binary patch
+literal 640
+zcma*j#cl#X6ouhF^S`)j9BLGIhq}8_7h0%Lm#1lHIw$FlnZ?bQb4NXRe&@*F@Z!Ty
+z0B4_hEnt3g4iX|vM0v=97O}AMQN|c&Lir?7rijUL5+q5<X)<KV$$1JCDamCjRH@1C
+z9<ElbY&EOu{DS4JWJNh+Y0FtwcI#ZN)1XO9`!}p^Eo-WOni*!9Q$EiEi!8|ri(AT)
+z>L2{(GAqglUS;i{*V&La*<za=d6zx*Igk%&bHuTH!YOB*%NJa7#kK6-HEiv0!!2E{
+f?{UXH5Aq{@o_LmDc;$_E`GZfs_?Cw~*Y*7XUz>}j
+
+literal 0
+HcmV?d00001
+
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/00.pal b/data/tilesets/secondary/mt_silver_summit/palettes/00.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/00.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/01.pal b/data/tilesets/secondary/mt_silver_summit/palettes/01.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/01.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/02.pal b/data/tilesets/secondary/mt_silver_summit/palettes/02.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/02.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/03.pal b/data/tilesets/secondary/mt_silver_summit/palettes/03.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/03.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/04.pal b/data/tilesets/secondary/mt_silver_summit/palettes/04.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/04.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/05.pal b/data/tilesets/secondary/mt_silver_summit/palettes/05.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/05.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/06.pal b/data/tilesets/secondary/mt_silver_summit/palettes/06.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/06.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/07.pal b/data/tilesets/secondary/mt_silver_summit/palettes/07.pal
+new file mode 100644
+index 00000000..e87dc56d
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/07.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++255 0 255
++240 248 248
++224 240 240
++216 232 232
++200 224 216
++192 208 200
++176 200 192
++168 184 176
++152 168 160
++144 152 152
++128 144 136
++112 128 120
++96 112 104
++88 104 96
++80 96 80
++64 88 72
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/08.pal b/data/tilesets/secondary/mt_silver_summit/palettes/08.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/08.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/09.pal b/data/tilesets/secondary/mt_silver_summit/palettes/09.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/09.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/10.pal b/data/tilesets/secondary/mt_silver_summit/palettes/10.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/10.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/11.pal b/data/tilesets/secondary/mt_silver_summit/palettes/11.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/11.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/12.pal b/data/tilesets/secondary/mt_silver_summit/palettes/12.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/12.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/13.pal b/data/tilesets/secondary/mt_silver_summit/palettes/13.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/13.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/14.pal b/data/tilesets/secondary/mt_silver_summit/palettes/14.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/14.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/palettes/15.pal b/data/tilesets/secondary/mt_silver_summit/palettes/15.pal
+new file mode 100644
+index 00000000..4b0812f0
+--- /dev/null
++++ b/data/tilesets/secondary/mt_silver_summit/palettes/15.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
++0 0 0
+diff --git a/data/tilesets/secondary/mt_silver_summit/tiles.png b/data/tilesets/secondary/mt_silver_summit/tiles.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..dcd7d9b8b2dfb45e8c386e2dcb685e0ff639b139
+GIT binary patch
+literal 2268
+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
+
+literal 0
+HcmV?d00001
+
 diff --git a/graphics/battle_environment/dailyred_mt_silver/anim_map.bin b/graphics/battle_environment/dailyred_mt_silver/anim_map.bin
 new file mode 100644
 index 0000000000000000000000000000000000000000..57c72d09f09bafde4b628b6eedc87fff326e0a2f
@@ -9836,6 +10312,69 @@ index a6416425..41fb7732 100644
 +        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_DailyRedLeaf, gTrainerPalette_DailyRedLeaf),
 +    },
  };
+diff --git a/src/data/tilesets/graphics.h b/src/data/tilesets/graphics.h
+index e1a44dca..59529aeb 100644
+--- a/src/data/tilesets/graphics.h
++++ b/src/data/tilesets/graphics.h
+@@ -3038,3 +3038,26 @@ const u16 ALIGNED(4) gTilesetPalettes_General_Frlg[][16] =
+ const u32 gTilesetTiles_General_Frlg[] = INCGFX_U32("data/tilesets/primary/general_frlg/tiles.png", ".4bpp.smol");
+ 
+ #endif // IS_FRLG
++
++// Daily Red: Mt. Silver's summit (an HGSS-derived tileset for FireRed).
++const u32 gTilesetTiles_MtSilverSummit[] = INCGFX_U32("data/tilesets/secondary/mt_silver_summit/tiles.png", ".4bpp.fastSmol");
++
++const u16 gTilesetPalettes_MtSilverSummit[][16] =
++{
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/00.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/01.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/02.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/03.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/04.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/05.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/06.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/07.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/08.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/09.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/10.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/11.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/12.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/13.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/14.pal", ".gbapal"),
++    INCGFX_U16("data/tilesets/secondary/mt_silver_summit/palettes/15.pal", ".gbapal"),
++};
+diff --git a/src/data/tilesets/headers.h b/src/data/tilesets/headers.h
+index c7702c23..57f7498a 100644
+--- a/src/data/tilesets/headers.h
++++ b/src/data/tilesets/headers.h
+@@ -1541,3 +1541,15 @@ const struct Tileset gTileset_HallOfFame =
+ };
+ 
+ #endif // IS_FRLG
++
++// Daily Red: Mt. Silver's summit, with FireRed's General tileset as primary.
++const struct Tileset gTileset_MtSilverSummit =
++{
++    .isCompressed = TRUE,
++    .isSecondary = TRUE,
++    .tiles = gTilesetTiles_MtSilverSummit,
++    .palettes = gTilesetPalettes_MtSilverSummit,
++    .metatiles = gMetatiles_MtSilverSummit,
++    .metatileAttributes = gMetatileAttributes_MtSilverSummit,
++    .callback = NULL,
++};
+diff --git a/src/data/tilesets/metatiles.h b/src/data/tilesets/metatiles.h
+index f82ea00f..bcc288fb 100644
+--- a/src/data/tilesets/metatiles.h
++++ b/src/data/tilesets/metatiles.h
+@@ -408,3 +408,7 @@ const u16 gMetatiles_HallOfFame[] = INCBIN_U16("data/tilesets/secondary/hall_of_
+ const u16 gMetatileAttributes_HallOfFame[] = INCBIN_U16("data/tilesets/secondary/hall_of_fame_frlg/metatile_attributes.bin");
+ 
+ #endif // IS_FRLG
++
++// Daily Red: Mt. Silver's summit.
++const u16 gMetatiles_MtSilverSummit[] = INCBIN_U16("data/tilesets/secondary/mt_silver_summit/metatiles.bin");
++const u16 gMetatileAttributes_MtSilverSummit[] = INCBIN_U16("data/tilesets/secondary/mt_silver_summit/metatile_attributes.bin");
 diff --git a/src/data/trainers_frlg.party b/src/data/trainers_frlg.party
 index 20fdc713..e75260ab 100644
 --- a/src/data/trainers_frlg.party

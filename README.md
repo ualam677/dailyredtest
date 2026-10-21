@@ -156,9 +156,13 @@ Every vanilla file that was changed has a `Daily Red:` comment at the change:
 grep -rn "Daily Red" expansion/src expansion/include expansion/data
 ```
 
-The summit layout is a copy of Navel Rock's summit (the peak where Ho-Oh
-appears) with the arrival ladder removed. RED stands on the tip at (9, 11)
-facing north, out over the drop, and turns around when you talk to him. RED and
+The summit is HeartGold/SoulSilver's Mt. Silver summit: a 20×20 layout on an
+HGSS-derived secondary tileset (`data/tilesets/secondary/mt_silver_summit/`,
+`gTileset_MtSilverSummit`, with FireRed's General tileset as primary; 40
+metatiles on one palette, supplied by the project's owner). You start in the
+snowfield at the bottom (9, 18), climb the path between the terraced cliffs
+and RED stands above the stairs at (9, 1) facing north, turning around when
+you talk to him. RED and
 the player (named Blue) use FireRed's own player sprites, RED's and LEAF's.
 
 The status block in RAM is `volatile`: nothing in the game reads it, and the
@@ -302,8 +306,8 @@ gives a male player (`Mugshot_SetGfx` in `src/battle_transition.c`).
 
 ### Graphics
 
-RED's battle looks like HeartGold/SoulSilver's on Mt. Silver (the overworld
-is still FireRed's). The source art is in `art/`, and
+RED's battle looks like HeartGold/SoulSilver's on Mt. Silver, and so does the
+summit itself (its tileset is in the patch, see above). The source art is in `art/`, and
 `scripts/graphics/make-graphics.py` (Python 3 with Pillow) turns it into the
 game's files; run it again after changing the art:
 
@@ -577,8 +581,8 @@ exceptions are RED's battle theme, `music/vs-red.mid` (and its prepared copy
 in the patch), a MIDI of a GBA song supplied by the project's owner, and the
 art in `art/` (and the graphics made from it in the patch): Mt. Silver's
 battle background is REKKA's, RED's battle sprite is HeartGold/SoulSilver's
-(ripped by ChrisX698), and LEAF's HGSS-style sprite was supplied by the
-project's owner.
+(ripped by ChrisX698), and LEAF's HGSS-style sprite and the Mt. Silver
+summit tileset (HGSS-derived) were supplied by the project's owner.
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page
