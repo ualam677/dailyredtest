@@ -164,7 +164,9 @@ metatiles on one palette, supplied by the project's owner). You start on the
 path at (9, 15), just inside the summit's entrance; the snowfield below it is
 scenery. Climb between the terraced cliffs and up the stairs, and RED stands
 on the summit's edge at (9, 4), facing north over a sea of clouds (rows 0–3),
-turning around when you talk to him.
+turning around when you talk to him. The layout is the tileset's sample one,
+moved down for the clouds and with its terraces a row higher, so they step
+out from the rocks beside the stairs as in HGSS.
 
 `scripts/graphics/make-graphics.py` adds two things to the tileset:
 - the clouds (`summit_clouds`): `art/mt-silver-clouds.png`, a seamless
@@ -177,7 +179,7 @@ turning around when you talk to him.
   clouds' fifth row behind see-through versions of the edge pieces
   (0x2C6–0x2D6), so the drifting clouds come right down to the ridges' snow
   caps, the platform's rock walls get rounded snow caps and the platform a
-  rim line, instead of a flat cut.
+  soft snow edge, instead of a flat cut.
 
 The snow is a swirling snowstorm (`src/field_weather_effect.c`): 44 flakes
 instead of 16, all there from the start, falling two to three times as fast,

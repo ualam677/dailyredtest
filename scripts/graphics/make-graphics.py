@@ -148,7 +148,7 @@ def summit_clouds():
 # (0x283/0x284) the pale band connected to the top row, on the walls
 # (0x285/0x286) everything above a rounded white cap on the rock column, and
 # on the platform (0x280, and the walls' platform side) everything above a
-# 1-px rim line, all about level with the caps' snow. One metatile per piece
+# soft, slightly uneven snow edge, all about level with the caps' snow. One metatile per piece
 # and cloud column (the clouds repeat every 6 columns), from 0x2C6; the
 # script also writes the layout's edge row.
 EDGE_ROW = [0x283] * 7 + [0x285] + [0x280] * 3 + [0x286] + [0x284] * 8  # the summit layout's row 0
@@ -158,7 +158,8 @@ EDGE_BAND = {2, 3, 4, EDGE_LINE}       # the caps' pale band (and its top line)
 EDGE_BAND_ROWS = 8                     # the band never goes below row 7
 EDGE_ROCK = 7                          # from this index a pixel counts as rock
 EDGE_WALL_CAP_TOP = 5                  # the walls' snow caps start this far down
-EDGE_PLATFORM_TOP = 6                  # and the platform's rim line
+EDGE_PLATFORM_TOP = 5                  # and the platform's snow
+EDGE_PLATFORM_BUMPS = [1, 0, 0, 1, 1, 2, 1, 0, 0, 1, 2, 2, 1, 0, 1, 1]  # rows lower, by column
 EDGE_WALL_PATH_SIDE = {0x285: 'right', 0x286: 'left'}  # which side the platform is on
 
 
@@ -188,11 +189,12 @@ def summit_edge():
 
     def edge_pixels(piece):
         img = piece_pixels(piece)
-        if piece == 0x280:  # the platform: clouds, then a rim line
-            for y in range(EDGE_PLATFORM_TOP):
-                img[y] = [0] * 16
-            img[EDGE_PLATFORM_TOP] = [EDGE_LINE] * 16
-            img[EDGE_PLATFORM_TOP + 1] = [EDGE_LIGHT] * 16
+        if piece == 0x280:  # the platform: clouds down to a soft, uneven snow edge
+            for x in range(16):
+                top = EDGE_PLATFORM_TOP + EDGE_PLATFORM_BUMPS[x]
+                for y in range(top):
+                    img[y][x] = 0
+                img[top][x] = EDGE_LIGHT
         elif piece in EDGE_WALL_PATH_SIDE:
             row = img[0]
             start = next(x for x in range(16) if row[x] >= EDGE_ROCK)
@@ -211,9 +213,10 @@ def summit_edge():
                         img[y][x] = 1
                     img[top + 3][x] = 4
                 elif (x >= end) == path_right:  # the platform's side
-                    for y in range(EDGE_PLATFORM_TOP):
+                    top = EDGE_PLATFORM_TOP + EDGE_PLATFORM_BUMPS[x]
+                    for y in range(top):
                         img[y][x] = 0
-                    img[EDGE_PLATFORM_TOP][x], img[EDGE_PLATFORM_TOP + 1][x] = EDGE_LINE, EDGE_LIGHT
+                    img[top][x] = EDGE_LIGHT
                 else:  # the far side
                     for y in range(EDGE_BAND_ROWS):
                         img[y][x] = 0
