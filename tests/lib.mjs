@@ -354,7 +354,7 @@ export function unkillableWrites() {
 
 // From the start tile: climb to RED, talk, and wait for the battle's turn menu.
 export async function startRedBattle(page) {
-  await walkTo(page, [[9, 12]]);
+  await walkTo(page, [[9, 7]]); // the top of the stairs, below RED
   await face(page, 'up');
   await press(page, 'a');
   for (let i = 0; i < 20 && !(await getStatus(page)).inBattle; i++) {

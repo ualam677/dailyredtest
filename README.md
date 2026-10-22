@@ -114,6 +114,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Snow on the summit, as scenery only: it doesn't start Snow in RED's battle | `data/maps/DailyRed_Summit/map.json`; the battle check in `src/battle_util.c` |
 | Talking to RED → "…" → battle (he says "…!" if he loses, "…" if he wins) → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
 | RED's battle theme | `MUS_DAILYRED_VS_RED`, picked by his trainer class in `GetBattleBGM` (`src/pokemon.c`); see [RED's battle theme](#reds-battle-theme) |
+| The summit's howling wind instead of music | `MUS_DAILYRED_MT_SILVER_WIND`, the summit map's music; see [The summit's wind](#the-summits-wind) |
 | Mt. Silver's HGSS-style battle background on the summit | `BattleSetup_GetEnvironmentId` in `src/battle_setup.c` picks `BATTLE_ENVIRONMENT_SNOW`, whose graphics are in `src/data/battle_environment.h`; see [Graphics](#graphics) |
 | RED's animated HGSS battle sprite, and LEAF's HGSS-style sprite in the VS transition | `TRAINER_PIC_DAILYRED_RED` / `_LEAF`; `DailyRed_AnimateTrainerSprite` (`src/dailyred_red.c`, called from `src/battle_controllers.c`); `src/battle_transition.c` |
 | No free switch when RED's Pokémon faints: Battle Style starts on SET and is locked in Options | `StartNewGame` in `src/dailyred.c`, `src/option_menu.c` |
@@ -121,6 +122,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | RED's team, built each run | `src/dailyred_red.c` from the sets in `src/dailyred_sets.c` (see [RED's team](#reds-team)); used by `CreateNPCTrainerParty` in `src/battle_setup.c` |
 | Win / battle counters | `VAR_DAILYRED_WINS` and `VAR_DAILYRED_BATTLES` in `include/constants/vars_frlg.h` |
 | Menus: POKéMON / OPTION / EXIT; party: SUMMARY / SWITCH / CANCEL | `src/start_menu.c`, `src/party_menu.c` |
+| Start menu as a shelf of icons; the BW-style Options, EV/IV screen and summary and the HGSS-style party screen, in red | `src/start_menu.c`, `src/option_menu.c`, `src/dailyred_eviv.c`, `src/dailyred_summary.c` (hooked from `ShowPokemonSummaryScreen`), `src/party_menu.c` and `src/data/party_menu.h`; see [Menus](#menus) |
 | No debug menus | `include/config/debug.h` |
 
 The battle itself is a standard trainer battle. The map script starts it as an
@@ -156,9 +158,60 @@ Every vanilla file that was changed has a `Daily Red:` comment at the change:
 grep -rn "Daily Red" expansion/src expansion/include expansion/data
 ```
 
-The summit layout is a copy of Navel Rock's summit (the peak where Ho-Oh
-appears) with the arrival ladder removed. RED stands on the tip at (9, 11)
-facing north, out over the drop, and turns around when you talk to him. RED and
+The summit is HeartGold/SoulSilver's Mt. Silver summit: a 20×26 layout on an
+HGSS-derived secondary tileset (`data/tilesets/secondary/mt_silver_summit/`,
+`gTileset_MtSilverSummit`, with FireRed's General tileset as primary; 40
+metatiles on one palette, supplied by the project's owner). You start on the
+path at (9, 17), just inside the summit's entrance; the snowfield below it is
+scenery. Climb between the terraced cliffs and up the stairs, and RED stands
+on the summit's edge at (9, 6), facing north over a sea of clouds (rows 0–5),
+turning around when you talk to him. The layout is the tileset's sample one,
+moved down for the clouds and with its terraces a row higher, so they step
+out from the rocks beside the stairs as in HGSS.
+
+`scripts/graphics/make-graphics.py` adds two things to the tileset:
+- the clouds (`summit_clouds`): `art/mt-silver-clouds.png`, a seamless
+  96×112 strip cut from an HGSS screenshot of the summit (its snowflakes
+  filtered out), on palette 8 as metatiles 0x2A8–0x2D1 that the map repeats
+  every 6 columns, enough rows that the camera never shows past the map's
+  top. They drift left a pixel every 16 frames
+  (`InitTilesetAnim_MtSilverSummit` in `src/tileset_anims.c` turns the strip's
+  tiles in EWRAM and copies them to VRAM);
+- the edge (`summit_edge`, which also writes the layout's edge row 4): the
+  clouds' last row behind see-through versions of the edge pieces, so the drifting clouds come right down to the ridges' snow
+  caps, the platform's rock walls get rounded snow caps and the platform a
+  soft snow edge, instead of a flat cut;
+- the stairs' sides (`summit_stairs`, which also writes them into the
+  layout): the tileset's stair-side rocks joined neither the platform's
+  walls, the terraces nor the path's walls, so beside the stairs' top row
+  the platform's wall carries on down, and beside the bottom row there's a
+  corner made from the terrace end the tileset pairs with those rocks (the
+  snow band turning down into the path's wall), both with the stairs' rail;
+- the cliffs' base (`summit_base`) under the path's end, where the tileset's
+  pieces ended the ridges out of line with the ridges above: pieces drawn
+  from each ridge above, its rock ending in a rounded bottom over one soft
+  ledge line across the map, with the lower ridges at the sides starting
+  again under it.
+
+These functions write the layout rows they draw, and new tiles go in the
+four free columns beside the clouds (the secondary tileset's last tiles
+don't load on FireRed's maps).
+
+The snow is a swirling snowstorm (`src/field_weather_effect.c`): 44 flakes
+instead of 16, all there from the start, falling two to three times as fast,
+blown left and circling as they fall (the summit is the only snowy map).
+
+On 1 run in 100 (`EXIT_ODDS`, rolled per run from the seed, see
+`DailyRed_IsExitOpen`) the entrance is open: walking south off the path's last
+row (9, 20), like leaving a cave, warps you straight to the start of FireRed,
+your bedroom in Pallet Town, team and all, and the only way back up is to
+become Champion. Otherwise the entrance is just a wall. Arriving in the
+bedroom that way, the player says the second half of FireRed's NES line,
+"…Okay! It's time to go!" (`DailyRed_ArrivedFromSummit`, from the bedroom's
+own map scripts). The Hall of Fame sends you straight back
+to the summit start with your team healed instead of rolling the credits
+(`DailyRed_ReturnFromHallOfFame`, called from `Task_Hof_HandleExit` in
+`src/hall_of_fame.c`). RED and
 the player (named Blue) use FireRed's own player sprites, RED's and LEAF's.
 
 The status block in RAM is `volatile`: nothing in the game reads it, and the
@@ -302,8 +355,8 @@ gives a male player (`Mugshot_SetGfx` in `src/battle_transition.c`).
 
 ### Graphics
 
-RED's battle looks like HeartGold/SoulSilver's on Mt. Silver (the overworld
-is still FireRed's). The source art is in `art/`, and
+RED's battle looks like HeartGold/SoulSilver's on Mt. Silver, and so does the
+summit itself (its tileset is in the patch, see above). The source art is in `art/`, and
 `scripts/graphics/make-graphics.py` (Python 3 with Pillow) turns it into the
 game's files; run it again after changing the art:
 
@@ -341,6 +394,38 @@ game's files; run it again after changing the art:
   game's text windows. The action menu and move list print on their own copy
   of the text palette in those colours, and the cursor is erased
   with the box's inside (`DAILYRED_BATTLE_*` in `include/dailyred.h`).
+- <a id="menus"></a>**Menus.** `scripts/graphics/make-ui.py` builds them from
+  `art/` into `graphics/dailyred/` (and FireRed's font and window frame 1 over
+  the expansion's), recolouring the originals red: greys stay neutral, warm
+  colours stay, everything else turns to RED's red.
+  - The start menu is a shelf of icons sliding up from the bottom, from a
+    start menu patch for FireRed (`MENU_START_MI_PARCHE_REPUNTEADO`, author
+    unknown), rebuilt with Daily Red's icons (`art/start-menu/`).
+  - Options: CompuMaxx's BW-style option menu, as released by
+    [Shiny-Miner/FR-OptionMenu](https://github.com/Shiny-Miner/FR-OptionMenu)
+    (`art/bw-option-menu/`); Battle Style stays locked on SET.
+  - EV/IV screen (from the shelf): after
+    [Shiny-Miner/Gender-based-EV-IV-Display](https://github.com/Shiny-Miner/Gender-based-EV-IV-Display)
+    by Acimut, Shiny Miner and Tio Terry (`art/ev-iv/`).
+  - Summary: the BW summary screen from
+    [Shiny-Miner/New-BW-summary-screen](https://github.com/Shiny-Miner/New-BW-summary-screen)
+    (CompuMaxx's design, Zake's FireRed port, on Acimut's template),
+    rewritten for the expansion in `src/dailyred_summary.c` with the same
+    pages, layout and controls (`art/bw-summary/`). Teaching a move still uses
+    the expansion's summary.
+  - Party screen: the HGSS-style one from "Pokémon Party Screen Patches"
+    (`BPRE_HGSS.ips`; its author isn't named in the archive), rebuilt in
+    the expansion's party menu: six equal boxes in two columns (the window
+    templates, text and sprite positions in `src/data/party_menu.h`; every
+    box uses the 14x5 box tilemaps), up/down move a row and left/right step
+    through the slots, and a switch slides each box out to its own side.
+    Its tiles, backdrop and Poke Balls are in `art/hgss-party/`. The teal
+    backdrop becomes dark maroon and the green boxes red; the box under the
+    cursor is brighter with a white outline, one picked to switch is
+    charcoal, and fainted ones are grey.
+  - Text uses FireRed's font (`art/firered-font/`, from pret/pokefirered),
+    with its glyph widths in `src/fonts.c`. Window frame 1 (the menus'
+    message box) has red sides instead of blue.
 - `art/leaf-hgss.png`: an HGSS-style LEAF for the VS transition (her battle
   back sprite is still FireRed's). She's 70 pixels tall and 21 colours, so 6
   rows go from her legs and 6 colours are merged: her bag's highlight first,
@@ -383,6 +468,26 @@ keep Showdown's odds among themselves. The script checks
 every species, move, item and ability against the expansion's constants and
 every ability against what the species can have, and fails on anything
 missing. Your team uses the same table.
+
+### The summit's wind
+
+Like HGSS, the summit has no music, only the wind howling, until RED's battle
+theme starts. `music/mt-silver-wind.ogg`, a loop of HGSS's summit wind
+supplied by the project's owner, becomes a looping GBA sample and a one-note
+song (`MUS_DAILYRED_MT_SILVER_WIND`, entry 611 in `sound/song_table.inc`):
+
+```sh
+python3 scripts/audio/make-wind.py      # needs ffmpeg
+```
+
+writes `sound/direct_sound_samples/dailyred_mt_silver_wind.wav` (13379 Hz
+mono, its end crossfaded into its start so the loop doesn't click, made about
+8 dB louder with soft clipping, and a `smpl` loop chunk for wav2agb) and
+`sound/songs/midi/mus_dailyred_mt_silver_wind.mid` (one note held forever,
+before the song's loop, on the voice in `sound/voicegroups/dailyred_mt_silver_wind.inc`).
+In the game it averages about −20 dBFS, about as loud as RED's battle theme.
+It's map music outside `START_MUS`–`END_MUS`, so `GetNightMusicFromTrack`
+(`src/overworld.c`) now checks the range instead of reading past its table.
 
 ### RED's battle theme
 
@@ -574,11 +679,14 @@ This repository contains Daily Red's own work: the changes in `patches/`, the
 website and the tests. It doesn't include pokeemerald-expansion or a built ROM;
 the scripts fetch the expansion from its repository and build locally. The
 exceptions are RED's battle theme, `music/vs-red.mid` (and its prepared copy
-in the patch), a MIDI of a GBA song supplied by the project's owner, and the
+in the patch), a MIDI of a GBA song supplied by the project's owner, the
+summit's wind, `music/mt-silver-wind.ogg` (HGSS's, supplied by the project's
+owner, and the sample made from it in the patch), and the
 art in `art/` (and the graphics made from it in the patch): Mt. Silver's
 battle background is REKKA's, RED's battle sprite is HeartGold/SoulSilver's
-(ripped by ChrisX698), and LEAF's HGSS-style sprite was supplied by the
-project's owner.
+(ripped by ChrisX698), and LEAF's HGSS-style sprite, the Mt. Silver
+summit tileset (HGSS-derived) and the HGSS screenshot the summit's clouds
+are cut from were supplied by the project's owner.
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page
@@ -619,6 +727,8 @@ scripts/sets/generate.mjs            Showdown Random Battle sets → expansion/s
 scripts/graphics/make-graphics.py    art/ → Mt. Silver's battle background and the HGSS-style sprites
 art/                                 source art (see Graphics)
 music/vs-red.mid                     RED's battle theme (source MIDI)
+music/mt-silver-wind.ogg             the summit's wind (source loop)
+scripts/audio/make-wind.py           the wind → a looping GBA sample and its song
 web/                                 the website
 tests/                               headless browser tests, the teams tool and the music recorder
 ```

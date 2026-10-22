@@ -24,7 +24,7 @@ const VAR_BATTLES = value('VAR_DAILYRED_BATTLES');
 const VAR_WINS = value('VAR_DAILYRED_WINS');
 const STYLE_SET = value('OPTIONS_BATTLE_STYLE_SET');
 const START = [value('DAILYRED_START_X'), value('DAILYRED_START_Y')];
-const RED_FRONT = [9, 12]; // the tile below RED, at the top of the stairs
+const RED_FRONT = [9, 7]; // the tile below RED, at the top of the stairs
 
 // Direction RED's overworld object faces.
 const redFacing = (mem) => objectFacing(mem, value('LOCALID_DAILYRED_RED'));

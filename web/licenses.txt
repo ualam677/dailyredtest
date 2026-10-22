@@ -22,8 +22,25 @@ Graphics in the ROM
   Mt. Silver's battle background (day, evening and night): by REKKA. RED's
   battle sprite: Pokémon
   HeartGold/SoulSilver's, ripped by ChrisX698. LEAF's HGSS-style sprite.
+  Mt. Silver's summit tileset and its clouds: derived from Pokémon
+  HeartGold/SoulSilver.
   The HGSS-style battle interface and window frames: from Eemeliri/soulgold
   (https://github.com/Eemeliri/soulgold).
+  The start menu's shelf: from a FireRed start menu patch
+  (MENU_START_MI_PARCHE_REPUNTEADO, author unknown).
+  The option menu: CompuMaxx's BW-style option menu, released by Shiny-Miner
+  (https://github.com/Shiny-Miner/FR-OptionMenu).
+  The EV/IV screen: by Acimut, Shiny Miner and Tio Terry
+  (https://github.com/Shiny-Miner/Gender-based-EV-IV-Display).
+  The summary screen: the BW summary by CompuMaxx, ported to FireRed by Zake
+  on Acimut's template (https://github.com/Shiny-Miner/New-BW-summary-screen).
+  The party screen: the HGSS-style one from "Pokémon Party Screen Patches"
+  (BPRE_HGSS.ips; author not named in the release).
+  These are recoloured red for Daily Red.
+  The text font: Pokémon FireRed's, from pret/pokefirered.
+
+Sound in the ROM
+  The summit's wind: from Pokémon HeartGold/SoulSilver's Mt. Silver.
 
 Nostalgist.js (vendor/nostalgist.js)
   MIT License, see vendor/nostalgist.LICENSE.txt
