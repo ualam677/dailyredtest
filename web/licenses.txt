@@ -26,6 +26,16 @@ Graphics in the ROM
   HeartGold/SoulSilver.
   The HGSS-style battle interface and window frames: from Eemeliri/soulgold
   (https://github.com/Eemeliri/soulgold).
+  The start menu's shelf: from a FireRed start menu patch
+  (MENU_START_MI_PARCHE_REPUNTEADO, author unknown).
+  The option menu: CompuMaxx's BW-style option menu, released by Shiny-Miner
+  (https://github.com/Shiny-Miner/FR-OptionMenu).
+  The EV/IV screen: by Acimut, Shiny Miner and Tio Terry
+  (https://github.com/Shiny-Miner/Gender-based-EV-IV-Display).
+  The summary screen: the BW summary by CompuMaxx, ported to FireRed by Zake
+  on Acimut's template (https://github.com/Shiny-Miner/New-BW-summary-screen).
+  These are recoloured red for Daily Red.
+  The text font: Pokémon FireRed's, from pret/pokefirered.
 
 Sound in the ROM
   The summit's wind: from Pokémon HeartGold/SoulSilver's Mt. Silver.

@@ -2305,6 +2305,321 @@ jUM%*DeUuj~{@?r!%5U*Ss4zF-00000NkvXXu0mjfs_W7F
 literal 0
 HcmV?d00001
 
+diff --git a/graphics/dailyred/summary/bg.bin b/graphics/dailyred/summary/bg.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..b3420aa0e36c56c94f607c0e319715c905a89c86
+GIT binary patch
+literal 2048
+zcmeH^u?+w)2*aTC|C=iz<$-v}QZZzTjG^mP?|3<NYj(VB$WQmbzxQ|DE&V^rmxr5_
+fpYFTf>ZSLme0jJ@`RTsvtzLS6%9n?mlu!E)QKSa}
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/bg_known_moves.bin b/graphics/dailyred/summary/bg_known_moves.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..e4f1918c0ae3c9b925181886258acb4c8bbc7a4e
+GIT binary patch
+literal 1152
+zcmbW0$qj=r6h!9=CkQzaOC+IzbU_U)q5m@AV_V*kJo2A|mp^Z0OSXc_Xn|CPI+5(>
+zXoVHc>1**Y>hLt;c!ljuaD0!K5z9-$fcK>jz8H;oUY|kyapmuC9de7bY?m4D5*W^T
+z(gfGzW^n>X`K~a*@33<}fn`FUO9=P*l}+G@*tuPgVIqD|Oxm>s{7{~tU*o^{1e)J5
+I7bXaQ0EB-zqyPW_
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/bg_moves.bin b/graphics/dailyred/summary/bg_moves.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..0adc0eca966b599e139de32de30414d91ce75ea2
+GIT binary patch
+literal 1280
+zcmdVXw+g^85Cc&C|Cru;@A<<RvfhD)K(Mv?or{2fmjhRgM_kQEpe7`IWOR%~oRJbf
+zL$0PEd?}v%zNsR7ZG3}PoYE1#H*&xz`ibx}7Bws3zvyqXzQ0}kf4;v%^h|#zE;TpN
+HpY2;7h!BW;
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/bg_moves_info.bin b/graphics/dailyred/summary/bg_moves_info.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..69aac7f356512b975eb8a9fdea3bd9540e05d5d5
+GIT binary patch
+literal 1152
+zcmcJNxlY4S5JgWNQJ^TLi!}84izuHEiI9CIgzWpi0^y^vE$i8_#SBu!JI!m(%+=^x
+zSOR%s0@zQoEega1{@*WBaw$_G8A0D)<sn3kCxh<SY0$i(MZ%!_ue3uKehb`F_dC4P
+zy`e|np!)-cckLfBX5ukrW;18Ol9h|Te@(`)Ve4gi=Fw5zC--m1KEQz^Czmr9KK|f;
+t2Cf}#vNJ&5|HW0n@zdgjZ_^dOHU7`>Q{n_YKjef2dVY8z`|AWf{||MkU~K>Z
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/bg_pokemon_info.bin b/graphics/dailyred/summary/bg_pokemon_info.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..b03fc04ca418c128d918f50488e7a058f5753208
+GIT binary patch
+literal 1152
+zcmbV~#}b1u5JPn#y^`KYVJ4H_%m4pbSld9n7-F*Tf*E8>Mh+ZC0Y!}xXv(N0p!ZeO
+z7<Du>nrH>zwc#o{=qgCxL!U9gkTD8&i1lMk6r_J)%9uqbg(tf3Fvmi$#0tKG^uPVf
+zG@eL73Vm$+%RH1KId=YK5|am8|7j`g{hL$d@o!482Iq}Uz*g&!-l*?;*ul&m2OLv5
+yMgJo1NWQ1ggYGQP$`fTcv##^*XRT?23$BK~+hvh$yk*>Ub{?s}<ALX2kp2TW=q!`~
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/bg_pokemon_skills.bin b/graphics/dailyred/summary/bg_pokemon_skills.bin
+new file mode 100644
+index 0000000000000000000000000000000000000000..a9143eedea060f2b2493a2c1bb57582a0e96cddb
+GIT binary patch
+literal 1152
+zcmbu8+fu?X6h+soS{M|$DOSZF;E4egyny!`a_9elgq|dnHpxRfX3b>Ibh=OWPEVUO
+z6<vC!y5J;5A6W++I>_^?;g&m7)u^W!P>S9=j(e6lH6-=BK2>aeokrAQuRr75Ao`AR
+zty9Qu`<FB!ms}~XX>nr^{Skphfue^{r4U7WRpJ}iC2;-g`;Zjw%I05x5ub;w{&gm|
+zLw5iE6nXsnQsndRrpW8xPLbb#Iz_;c`<MqFd17QS=GnuG8irTicu(*V|0nt!**~2b
+q*V8Ty+I;cN55I~De;%gHEas}Cp2kH~FFmL3&v&a;LceD75B(NN(>V12
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/cursor_left.png b/graphics/dailyred/summary/cursor_left.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..bb49bd3597224a258cc4626503512720219c7b3b
+GIT binary patch
+literal 292
+zcmeAS@N?(olHy`uVBq!ia0vp^4j|0J3?w7mbKU|eg8-ipS0MePqTz#u2MB%m@nge|
+z9|;*h7$k6^cP}2i0P0!q>EaktG3V&zgS>|vcw8>-U)-V0wNhc}fkrzGTUD1B#}>Xn
+z;kTS?zMiOyS}T1a?N!vOw1)XCCC=Kr8)vh6F-fWlC{9?aHo=+WVQypc)P|6Z*(~df
+z7QWrK<d5Ekk5|^1C2iyUCGzVjo1mjWZ{J~y-BJd3Rlls6#b_rqBkiWa)Vl``GpRQA
+z2z3Z_2%OMp<Y+wcv~<k_)yDT}!g|de3P5Pk#nA+UFRb=%e$Br&Lgb}Xz{2G~r!#oE
+L`njxgN@xNA<m7cQ
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/cursor_right.png b/graphics/dailyred/summary/cursor_right.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..7d6ba6857211517c1e306dd76e3ba781b51c356e
+GIT binary patch
+literal 316
+zcmeAS@N?(olHy`uVBq!ia0vp^4j|0J3?w7mbKU|eg8-ipS0MePqTz#u2MB%m@nge|
+z9|;*h7$k6^cP}2i0O~pJ>EaktF=y`-L%zcbJg&YWrD{Rn&CC;D2v#-7n6f_<coVY3
+zIbmg%{c7hu20uRj&^VYl?fzErrG{CJ`&#z-X$df9qzLH#E$6s<!TE)Qa<lRgrnUfv
+z9nNhl84N78URHWH_hH9eksqgJm>$nkIdJ~(2iFU{_c*L9lv?)Bzt<@`&+GBtgXhFo
+z>epU<?##4cl4IUEfnzlu3?W7p&Jmv#83Rrhv}|bbaA13o^+r_ixM?_(5yLr-wnSA0
+o<_EnCq^~h%`RiX6RKLbP<D%HTFSFTB0KLTE>FVdQ&MBb@07qGV^#A|>
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/exp_bar.png b/graphics/dailyred/summary/exp_bar.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..2b0f6b66a5e391d839cdcc98aff5f8a377e4f2a4
+GIT binary patch
+literal 299
+zcmeAS@N?(olHy`uVBq!ia0vp^2|&!j!VDz82tKy~QtTz3zOL*~I5>ILWG>h3b_WWH
+zm$*ih1m~xflqVLYGPwJ=0F6;7OD$3`)-x$=UGflQL`i|4J5a_L$Y$_r(3A&KEa{HE
+zjtmSN`?>!lvI6-A0X`wF3?~*O{78^Epa29ve*6ds2>8M90~s+eTzK)~#f}|27A#m{
+zU|=veFlshXFJqFoyUYKj?4OPTIsTq5jv*Cuk`oqiCKM(nCVp(*a9@y7B0?f!-G&Vx
+zY#A~wm|3bDD$F^UC3lxMe~?qS$9o9GXYQ7tFE2280b>d?vkP;fAJb39RgKRW81{!Y
+VDsR~yx*BLSgQu&X%Q~loCIDB{V?F=?
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/hp_bar.png b/graphics/dailyred/summary/hp_bar.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..eda2d99cdc7cf69b142c4eaddaba995b3a13bc6b
+GIT binary patch
+literal 329
+zcmeAS@N?(olHy`uVBq!ia0vp^2|&!j!VDz82tKy~QtTz3zOL*~I5>ILIQK1%Ujq~p
+zFL8}13C>R|DNig)WpMX#0UD!FmRh7>tY=c#y5u3qh>`+7cc6?hkj>!LpeYZeSkfJR
+z9T^xl_H+M9WCijK0(?ST8BQ!n_>mxSKmiDT{P+<N5b%TH2Qp${xbWh|iyb?5ELgC@
+zz`$T`VAO1&UdAMEcbET5**_fxa&kRg978JROub;p*Py_|8j$B8l^4+WKy;Va`~Ak<
+z%$tAQmRQ_<aQ>bp%)B*DGfsYZ6P#`vo7%DE_^0xuyQemmebp9IVV34OqsBa&N5*xF
+zx8!#xCL@UsA0{Kt7aChb_j;YNIjOxxV0rZazl+2Dep*y~{_1+?J<wtXPgg&ebxsLQ
+E0Ot;O*8l(j
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/hp_bar_0.pal b/graphics/dailyred/summary/hp_bar_0.pal
+new file mode 100644
+index 00000000..34363ad7
+--- /dev/null
++++ b/graphics/dailyred/summary/hp_bar_0.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 200 160
++96 248 96
++24 192 32
++32 32 32
++248 248 248
++80 80 80
++248 0 248
++248 0 248
++248 0 248
++248 0 248
++248 0 248
++0 0 208
++232 232 232
++184 184 184
++160 160 168
++48 48 48
+diff --git a/graphics/dailyred/summary/hp_bar_1.pal b/graphics/dailyred/summary/hp_bar_1.pal
+new file mode 100644
+index 00000000..edcd4af8
+--- /dev/null
++++ b/graphics/dailyred/summary/hp_bar_1.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 200 160
++248 216 0
++232 168 0
++32 32 32
++248 248 248
++80 80 80
++248 0 248
++248 0 248
++248 0 248
++248 0 248
++248 0 248
++0 0 208
++232 232 232
++184 184 184
++160 160 168
++48 48 48
+diff --git a/graphics/dailyred/summary/hp_bar_2.pal b/graphics/dailyred/summary/hp_bar_2.pal
+new file mode 100644
+index 00000000..703fe200
+--- /dev/null
++++ b/graphics/dailyred/summary/hp_bar_2.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++0 200 160
++255 49 66
++148 33 49
++32 32 32
++248 248 248
++80 80 80
++248 0 248
++248 0 248
++248 0 248
++248 0 248
++248 0 248
++0 0 208
++232 232 232
++184 184 184
++160 160 168
++48 48 48
+diff --git a/graphics/dailyred/summary/icon_status.png b/graphics/dailyred/summary/icon_status.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..22fb2bf322935eb561ea0285c223555b6ae8d2a1
+GIT binary patch
+literal 478
+zcmeAS@N?(olHy`uVBq!ia0vp^3P5bZ!VDzyE<QH|QtTz3zOL*~IJg9PcrWTKN(Tyw
+zm$*ih1m~xflqVLYGPwJ=0F6;7OD$3`)-x$=UGfm9grlUu&mAaZ3}iESHE7BMDVB6c
+zUq=Rpjs4tz5?O(Kg8-ipSA!i51_lN{e*9RmVaEl78yOl7FIF(D$Y5w_Xz=jxQ0Vx;
+z5Yh1<!eavi!-oYYelYxax>Gs;sFyLx+ug-r-5uR0KsJ-7i(^Q|oYqUWSw{>6SQBCu
+zH|Qv;w8|giP?T4467S@`ue`3LH)mzE%hp*duE!ePQ~g!Efp^}c<a-%ii9H*a|JiuF
+z{G!3E?8EnsCC+Vq#+zd+dO#w;`)Z=bB`4#O?{E0l8BeQR@@ZnC<nfuO7!w$8ow(#4
+zWpV%U%|l$f57qrUn8n&C%G#29aNVQ(9*k04AqD%6pXL>sbSj+f`IB$u1;wln6y}!X
+zvQOnZb>XvZoGsH7{#Vw{0jH`%8J*Z26DR9E`t2cEweL9VoW4HkC(@7mR~tLOeDM9W
+zu58Ikk&DiZTLfo0Of;HuPrB`}?LDPsnr;u&oxM6VmoYocx={LNVV}wQe@wC;mzHmN
+Sx{?JLGz^}uelF{r5}E+b6}y-K
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/shiny_indicator_gfx.png b/graphics/dailyred/summary/shiny_indicator_gfx.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..481b426e33cd86043a2720cd5700da80a7976847
+GIT binary patch
+literal 164
+zcmeAS@N?(olHy`uVBq!ia0vp^96&6<!VDyDE>ZRaQU(D&A+A9B|J9(qQv`qvVu0$?
+z+{r+7j3q&S!3+-1ZlnP@N}eu`AsjQ46BNV@4skd-Ix@1kIXVgiGiazNa0sQhtYBi`
+WyTh=qbxut*$O=zaKbLh*2~7YcW*!#+
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/tiles.png b/graphics/dailyred/summary/tiles.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..b3a4c57cc61c637b3a4eacf6c7d141b5410a0b7a
+GIT binary patch
+literal 1963
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/dailyred/summary/title.pal b/graphics/dailyred/summary/title.pal
+new file mode 100644
+index 00000000..915f86eb
+--- /dev/null
++++ b/graphics/dailyred/summary/title.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++255 255 255
++255 255 255
++98 98 98
++213 213 205
++230 8 8
++255 189 115
++32 156 8
++148 246 148
++49 82 205
++164 197 246
++238 222 0
++255 246 139
++0 0 0
++0 0 0
++0 0 0
++16 115 230
 diff --git a/graphics/fonts/latin_normal.png b/graphics/fonts/latin_normal.png
 index 8d48dec16c8b17eb3fb74a1384a6b38ed642e15d..42e847faf0f281db3da29ac5a33b6c224a416207 100644
 GIT binary patch
@@ -2977,10 +3292,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..ed9d625e
+index 00000000..a8b48428
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,111 @@
+@@ -0,0 +1,114 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -3012,6 +3327,9 @@ index 00000000..ed9d625e
 +const u16 *DailyRed_GetMtSilverBattlePalette(void);
 +void DailyRed_ReturnFromHallOfFame(void);
 +void CB2_DailyRedEvIv(void);
++// src/dailyred_summary.c: the BW-style summary for the party.
++struct Pokemon;
++void DailyRed_ShowSummary(struct Pokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
 +bool8 DailyRed_IsExitOpen(void);
 +bool8 DailyRed_ArrivedFromSummit(void);
 +
@@ -14159,6 +14477,924 @@ index 00000000..78935528
 +    220, 221, 222, 223, 225, 226, 227, 229, 231, 232, 233, 234,
 +    235, 236, 238,
 +};
+diff --git a/src/dailyred_summary.c b/src/dailyred_summary.c
+new file mode 100644
+index 00000000..0edfcc08
+--- /dev/null
++++ b/src/dailyred_summary.c
+@@ -0,0 +1,912 @@
++// Daily Red: the Pokemon summary, in the style of CompuMaxx's BW summary screen
++// for FireRed (Shiny-Miner/New-BW-summary-screen, ported by Zake), redrawn here
++// for the expansion's data and recoloured red (scripts/graphics/make-ui.py). Its
++// pages, layout, graphics and controls are the original's; what Daily Red
++// doesn't need (eggs, boxes, trades, swapping moves) isn't here, and the move
++// details show the move's category by name.
++//
++// Pages: info (dex number, species, types, trainer, item, a memo), skills
++// (stats with the nature's raised one in red and lowered one in blue, HP and
++// EXP bars, ability), moves (type, name and PP) and, from moves with A, a
++// move's details. Left/right change page, up/down the Pokemon, B goes back.
++// Over a red grid that scrolls, with the Pokemon on the right.
++#include "global.h"
++#include "bg.h"
++#include "dailyred.h"
++#include "data.h"
++#include "gpu_regs.h"
++#include "international_string_util.h"
++#include "item.h"
++#include "main.h"
++#include "malloc.h"
++#include "menu.h"
++#include "move.h"
++#include "palette.h"
++#include "party_menu.h"
++#include "pokeball.h"
++#include "pokemon.h"
++#include "pokemon_icon.h"
++#include "pokemon_summary_screen.h"
++#include "pokerus.h"
++#include "scanline_effect.h"
++#include "sound.h"
++#include "sprite.h"
++#include "string_util.h"
++#include "strings.h"
++#include "task.h"
++#include "text.h"
++#include "trainer_pokemon_sprites.h"
++#include "window.h"
++#include "constants/rgb.h"
++#include "constants/songs.h"
++
++enum
++{
++    PAGE_INFO,
++    PAGE_SKILLS,
++    PAGE_MOVES,
++    PAGE_MOVE_INFO,
++};
++
++enum
++{
++    WIN_TITLE,
++    WIN_INSTRUCTIONS,
++    WIN_NAME,
++    WIN_PAGE_A,
++    WIN_PAGE_B,
++    WIN_PAGE_C,
++    WIN_COUNT,
++};
++
++#define BG_TEXT 0
++#define BG_PAGE 1
++#define BG_GRID 2
++#define BG_MOVES 3
++
++#define TEXT_PAL 6      // the type icons' palette, which the text shares
++#define TITLE_PAL 7
++
++#define TAG_HP_BAR 0x7B10      // and 0x7B11, 0x7B12 for its yellow and red
++#define TAG_EXP_BAR 0x7B13
++#define TAG_STATUS 0x7B14
++#define TAG_SHINY 0x7B15
++#define TAG_CURSOR_LEFT 0x7B16
++#define TAG_CURSOR_RIGHT 0x7B17
++#define TAG_CURSOR_PAL 0x7B18
++
++#define PAGE_MAP_OFFSET (2 * 32) // the pages' maps start below the title bar
++#define TEXT_SHADOW_LIGHT 10    // a colour the type icons don't use, for dark text's shadow
++#define HP_BAR_TILES 9
++#define EXP_BAR_TILES 11
++#define MOVE_ROWS 5   // the moves and, on the details, CANCEL
++#define MOVE_ROW_Y(i) ((i) * 28 + 3)
++
++struct BwSummary
++{
++    struct Pokemon *mons;
++    MainCallback savedCallback;
++    u8 curMon;
++    u8 lastIdx;
++    u8 page;
++    u8 moveCursor;
++    u8 loadStep;
++    bool8 exiting;
++    u8 windows[WIN_COUNT];
++    u8 monSpriteId;
++    u8 ballSpriteId;
++    u8 statusSpriteId;
++    u8 shinySpriteId;
++    u8 iconSpriteId;
++    u8 hpBarSpriteIds[HP_BAR_TILES];
++    u8 expBarSpriteIds[EXP_BAR_TILES];
++    u8 cursorSpriteIds[2];
++    u16 textTilemap[0x400];
++};
++
++static EWRAM_DATA struct BwSummary *sSummary = NULL;
++
++static const u16 sTiles_Pal[] = INCGFX_U16("graphics/dailyred/summary/tiles.png", ".gbapal");
++static const u32 sTiles_Gfx[] = INCGFX_U32("graphics/dailyred/summary/tiles.png", ".4bpp");
++static const u16 sTitle_Pal[] = INCGFX_U16("graphics/dailyred/summary/title.pal", ".gbapal");
++static const u16 sMap_Grid[] = INCBIN_U16("graphics/dailyred/summary/bg.bin");
++static const u16 sMap_Info[] = INCBIN_U16("graphics/dailyred/summary/bg_pokemon_info.bin");
++static const u16 sMap_Skills[] = INCBIN_U16("graphics/dailyred/summary/bg_pokemon_skills.bin");
++static const u16 sMap_KnownMoves[] = INCBIN_U16("graphics/dailyred/summary/bg_known_moves.bin");
++static const u16 sMap_MoveInfo[] = INCBIN_U16("graphics/dailyred/summary/bg_moves_info.bin");
++static const u16 sMap_Moves[] = INCBIN_U16("graphics/dailyred/summary/bg_moves.bin");
++static const u32 sHpBar_Gfx[] = INCGFX_U32("graphics/dailyred/summary/hp_bar.png", ".4bpp");
++static const u32 sExpBar_Gfx[] = INCGFX_U32("graphics/dailyred/summary/exp_bar.png", ".4bpp");
++static const u16 sHpBar0_Pal[] = INCGFX_U16("graphics/dailyred/summary/hp_bar_0.pal", ".gbapal");
++static const u16 sHpBar1_Pal[] = INCGFX_U16("graphics/dailyred/summary/hp_bar_1.pal", ".gbapal");
++static const u16 sHpBar2_Pal[] = INCGFX_U16("graphics/dailyred/summary/hp_bar_2.pal", ".gbapal");
++static const u32 sStatus_Gfx[] = INCGFX_U32("graphics/dailyred/summary/icon_status.png", ".4bpp");
++static const u16 sStatus_Pal[] = INCGFX_U16("graphics/dailyred/summary/icon_status.png", ".gbapal");
++static const u32 sShiny_Gfx[] = INCGFX_U32("graphics/dailyred/summary/shiny_indicator_gfx.png", ".4bpp");
++static const u16 sShiny_Pal[] = INCGFX_U16("graphics/dailyred/summary/shiny_indicator_gfx.png", ".gbapal");
++static const u32 sCursorLeft_Gfx[] = INCGFX_U32("graphics/dailyred/summary/cursor_left.png", ".4bpp");
++static const u32 sCursorRight_Gfx[] = INCGFX_U32("graphics/dailyred/summary/cursor_right.png", ".4bpp");
++static const u16 sCursor_Pal[] = INCGFX_U16("graphics/dailyred/summary/cursor_left.png", ".gbapal");
++
++static const u16 *const sHpBarPals[] = {sHpBar0_Pal, sHpBar1_Pal, sHpBar2_Pal};
++
++// Text colours (background, foreground, shadow) from the type icons' palette.
++static const u8 sColor_Dark[] = {TEXT_COLOR_TRANSPARENT, 14, TEXT_SHADOW_LIGHT};
++static const u8 sColor_White[] = {TEXT_COLOR_TRANSPARENT, 15, 14};
++static const u8 sColor_Title[] = {TEXT_COLOR_TRANSPARENT, 1, 2};
++static const u8 sColor_Red[] = {TEXT_COLOR_TRANSPARENT, 1, 14};
++static const u8 sColor_Blue[] = {TEXT_COLOR_TRANSPARENT, 7, 14};
++static const u8 sColor_Orange[] = {TEXT_COLOR_TRANSPARENT, 2, 14};
++static const u8 sColor_RedOnLight[] = {TEXT_COLOR_TRANSPARENT, 1, TEXT_SHADOW_LIGHT};
++static const u8 sColor_BlueOnLight[] = {TEXT_COLOR_TRANSPARENT, 7, TEXT_SHADOW_LIGHT};
++static const u16 sShadowLight = RGB(24, 22, 23);
++
++static const u8 *const sPageTitles[] =
++{
++    [PAGE_INFO] = COMPOUND_STRING("POKéMON INFO"),
++    [PAGE_SKILLS] = COMPOUND_STRING("POKéMON SKILLS"),
++    [PAGE_MOVES] = COMPOUND_STRING("KNOWN MOVES"),
++    [PAGE_MOVE_INFO] = COMPOUND_STRING("KNOWN MOVES"),
++};
++static const u8 *const sPageInstructions[] =
++{
++    [PAGE_INFO] = COMPOUND_STRING("{DPAD_LEFTRIGHT}PAGE {A_BUTTON}CANCEL"),
++    [PAGE_SKILLS] = COMPOUND_STRING("{DPAD_LEFTRIGHT}PAGE"),
++    [PAGE_MOVES] = COMPOUND_STRING("{DPAD_LEFTRIGHT}PAGE {A_BUTTON}DETAIL"),
++    [PAGE_MOVE_INFO] = COMPOUND_STRING("{DPAD_UPDOWN}PICK {B_BUTTON}BACK"),
++};
++static const u8 *const sCategoryNames[] =
++{
++    [DAMAGE_CATEGORY_PHYSICAL] = COMPOUND_STRING("Physical"),
++    [DAMAGE_CATEGORY_SPECIAL] = COMPOUND_STRING("Special"),
++    [DAMAGE_CATEGORY_STATUS] = COMPOUND_STRING("Status"),
++};
++
++static const struct BgTemplate sBgTemplates[] =
++{
++    {.bg = BG_TEXT, .charBaseIndex = 1, .mapBaseIndex = 29, .screenSize = 0, .paletteMode = 0, .priority = 0, .baseTile = 0},
++    {.bg = BG_PAGE, .charBaseIndex = 0, .mapBaseIndex = 30, .screenSize = 0, .paletteMode = 0, .priority = 2, .baseTile = 0},
++    {.bg = BG_GRID, .charBaseIndex = 0, .mapBaseIndex = 31, .screenSize = 0, .paletteMode = 0, .priority = 3, .baseTile = 0},
++    {.bg = BG_MOVES, .charBaseIndex = 0, .mapBaseIndex = 28, .screenSize = 0, .paletteMode = 0, .priority = 1, .baseTile = 0},
++};
++
++static const struct WindowTemplate sHeaderWindows[] =
++{
++    [WIN_TITLE] = {.bg = BG_TEXT, .tilemapLeft = 0, .tilemapTop = 0, .width = 13, .height = 2, .paletteNum = TITLE_PAL, .baseBlock = 0x258},
++    [WIN_INSTRUCTIONS] = {.bg = BG_TEXT, .tilemapLeft = 19, .tilemapTop = 0, .width = 11, .height = 2, .paletteNum = TITLE_PAL, .baseBlock = 0x272},
++    [WIN_NAME] = {.bg = BG_TEXT, .tilemapLeft = 21, .tilemapTop = 2, .width = 10, .height = 4, .paletteNum = TEXT_PAL, .baseBlock = 0x288},
++};
++
++// Each page's windows A, B and C (a zero width is none).
++static const struct WindowTemplate sPageWindows[][3] =
++{
++    [PAGE_INFO] = {
++        {.bg = BG_TEXT, .tilemapLeft = 0, .tilemapTop = 2, .width = 21, .height = 10, .paletteNum = TEXT_PAL, .baseBlock = 1},
++        {.bg = BG_TEXT, .tilemapLeft = 0, .tilemapTop = 12, .width = 28, .height = 8, .paletteNum = TEXT_PAL, .baseBlock = 220},
++        {0},
++    },
++    [PAGE_SKILLS] = {
++        {.bg = BG_TEXT, .tilemapLeft = 0, .tilemapTop = 2, .width = 17, .height = 13, .paletteNum = TEXT_PAL, .baseBlock = 1},
++        {0},
++        {.bg = BG_TEXT, .tilemapLeft = 1, .tilemapTop = 15, .width = 29, .height = 5, .paletteNum = TEXT_PAL, .baseBlock = 292},
++    },
++    [PAGE_MOVES] = {
++        {.bg = BG_TEXT, .tilemapLeft = 5, .tilemapTop = 2, .width = 10, .height = 18, .paletteNum = TEXT_PAL, .baseBlock = 1},
++        {.bg = BG_TEXT, .tilemapLeft = 15, .tilemapTop = 6, .width = 15, .height = 14, .paletteNum = TEXT_PAL, .baseBlock = 181},
++        {.bg = BG_TEXT, .tilemapLeft = 0, .tilemapTop = 2, .width = 5, .height = 18, .paletteNum = TEXT_PAL, .baseBlock = 452},
++    },
++};
++
++static const struct OamData sOam_8x8 = {.size = SPRITE_SIZE(8x8), .shape = SPRITE_SHAPE(8x8), .priority = 2};
++static const struct OamData sOam_32x8 = {.size = SPRITE_SIZE(32x8), .shape = SPRITE_SHAPE(32x8), .priority = 0};
++static const struct OamData sOam_8x16 = {.size = SPRITE_SIZE(8x16), .shape = SPRITE_SHAPE(8x16), .priority = 0};
++static const struct OamData sOam_64x32 = {.size = SPRITE_SIZE(64x32), .shape = SPRITE_SHAPE(64x32), .priority = 1};
++
++static void Task_SummaryInput(u8 taskId);
++static void ShowMon(bool8 playCry);
++static void HideMon(void);
++static void ShowPage(void);
++
++static inline struct Pokemon *CurMon(void)
++{
++    return &sSummary->mons[sSummary->curMon];
++}
++
++static void CB2_Summary(void)
++{
++    RunTasks();
++    AnimateSprites();
++    BuildOamBuffer();
++    UpdatePaletteFade();
++    ChangeBgX(BG_GRID, 80, BG_COORD_ADD);
++    ChangeBgY(BG_GRID, 80, BG_COORD_ADD);
++}
++
++static void VBlankCB_Summary(void)
++{
++    LoadOam();
++    ProcessSpriteCopyRequests();
++    TransferPlttBuffer();
++}
++
++void DailyRed_ShowSummary(struct Pokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void))
++{
++    sSummary = AllocZeroed(sizeof(*sSummary));
++    sSummary->mons = mons;
++    sSummary->curMon = monIndex;
++    sSummary->lastIdx = maxMonIndex;
++    sSummary->savedCallback = callback;
++    sSummary->page = PAGE_INFO;
++    SetMainCallback2(CB2_Summary);
++    CreateTask(Task_SummaryInput, 0);
++}
++
++static void InitDisplay(void)
++{
++    SetVBlankCallback(NULL);
++    SetHBlankCallback(NULL);
++    ResetSpriteData();
++    ResetPaletteFade();
++    FreeAllSpritePalettes();
++    ScanlineEffect_Stop();
++    DmaClearLarge16(3, (void *)VRAM, VRAM_SIZE, 0x1000);
++    DmaClear32(3, (void *)OAM, OAM_SIZE);
++    DmaClear16(3, (void *)PLTT, PLTT_SIZE);
++    SetGpuReg(REG_OFFSET_DISPCNT, 0);
++    ResetBgsAndClearDma3BusyFlags(0);
++    InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
++    for (u32 bg = 0; bg < 4; bg++)
++    {
++        ChangeBgX(bg, 0, BG_COORD_SET);
++        ChangeBgY(bg, 0, BG_COORD_SET);
++    }
++    SetBgTilemapBuffer(BG_TEXT, sSummary->textTilemap);
++    InitWindows((const struct WindowTemplate[]){DUMMY_WIN_TEMPLATE});
++    DeactivateAllTextPrinters();
++    // The page's panel is see-through over the grid.
++    SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_EFFECT_BLEND | BLDCNT_TGT1_BG1 | BLDCNT_TGT2_BG2);
++    SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(13, 16));
++    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
++    ShowBg(BG_TEXT);
++    ShowBg(BG_PAGE);
++    ShowBg(BG_GRID);
++}
++
++static void LoadGraphics(void)
++{
++    LoadBgTiles(BG_PAGE, sTiles_Gfx, sizeof(sTiles_Gfx), 0);
++    LoadPalette(sTiles_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
++    ListMenuLoadStdPalAt(BG_PLTT_ID(TEXT_PAL), 1);
++    LoadPalette(&sShadowLight, BG_PLTT_ID(TEXT_PAL) + TEXT_SHADOW_LIGHT, PLTT_SIZEOF(1));
++    LoadPalette(sTitle_Pal, BG_PLTT_ID(TITLE_PAL), PLTT_SIZE_4BPP);
++    LoadBgTilemap(BG_GRID, sMap_Grid, sizeof(sMap_Grid), 0);
++
++    {
++        const struct SpriteSheet sheets[] =
++        {
++            {sHpBar_Gfx, sizeof(sHpBar_Gfx), TAG_HP_BAR},
++            {sExpBar_Gfx, sizeof(sExpBar_Gfx), TAG_EXP_BAR},
++            {sStatus_Gfx, sizeof(sStatus_Gfx), TAG_STATUS},
++            {sShiny_Gfx, sizeof(sShiny_Gfx), TAG_SHINY},
++            {sCursorLeft_Gfx, sizeof(sCursorLeft_Gfx), TAG_CURSOR_LEFT},
++            {sCursorRight_Gfx, sizeof(sCursorRight_Gfx), TAG_CURSOR_RIGHT},
++            {0},
++        };
++        const struct SpritePalette pals[] =
++        {
++            {sHpBar0_Pal, TAG_HP_BAR},
++            {sHpBar1_Pal, TAG_HP_BAR + 1},
++            {sHpBar2_Pal, TAG_HP_BAR + 2},
++            {sStatus_Pal, TAG_STATUS},
++            {sShiny_Pal, TAG_SHINY},
++            {sCursor_Pal, TAG_CURSOR_PAL},
++            {0},
++        };
++        LoadSpriteSheets(sheets);
++        LoadSpritePalettes(pals);
++    }
++}
++
++static u8 CreateTileSprite(u16 tileTag, u16 palTag, const struct OamData *oam, s16 x, s16 y)
++{
++    struct SpriteTemplate template = {
++        .tileTag = tileTag,
++        .paletteTag = palTag,
++        .oam = oam,
++        .anims = gDummySpriteAnimTable,
++        .images = NULL,
++        .affineAnims = gDummySpriteAffineAnimTable,
++        .callback = SpriteCallbackDummy,
++    };
++    return CreateSprite(&template, x, y, 0);
++}
++
++static void SetSpriteFrame(u8 spriteId, u16 tileTag, u16 tileOffset)
++{
++    gSprites[spriteId].oam.tileNum = GetSpriteTileStartByTag(tileTag) + tileOffset;
++}
++
++static void CreateFixedSprites(void)
++{
++    for (u32 i = 0; i < HP_BAR_TILES; i++)
++        sSummary->hpBarSpriteIds[i] = CreateTileSprite(TAG_HP_BAR, TAG_HP_BAR, &sOam_8x8, i * 8 + 81, 33);
++    for (u32 i = 0; i < EXP_BAR_TILES; i++)
++        sSummary->expBarSpriteIds[i] = CreateTileSprite(TAG_EXP_BAR, TAG_HP_BAR, &sOam_8x8, i * 8 + 156, 130);
++    sSummary->statusSpriteId = CreateTileSprite(TAG_STATUS, TAG_STATUS, &sOam_32x8, 214, 38);
++    sSummary->shinySpriteId = CreateTileSprite(TAG_SHINY, TAG_SHINY, &sOam_8x16, 166, 50);
++    sSummary->cursorSpriteIds[0] = CreateTileSprite(TAG_CURSOR_LEFT, TAG_CURSOR_PAL, &sOam_64x32, 32, 34);
++    sSummary->cursorSpriteIds[1] = CreateTileSprite(TAG_CURSOR_RIGHT, TAG_CURSOR_PAL, &sOam_64x32, 96, 34);
++}
++
++// The bars: a left cap in two tiles (frames 9 and 10), whole tiles (8), the
++// partly filled one (0 to 7, as the original works them out), empty ones (0)
++// and the right cap (11).
++static void SetupHpBar(void)
++{
++    struct Pokemon *mon = CurMon();
++    u32 curHp = GetMonData(mon, MON_DATA_HP), maxHp = GetMonData(mon, MON_DATA_MAX_HP);
++    u32 palOffset = 0, whole = 2, frame;
++    u8 *ids = sSummary->hpBarSpriteIds;
++
++    // The battle HP bar's colours: yellow at half, red at a fifth.
++    if (curHp * 48 <= maxHp * 9)
++        palOffset = 2;
++    else if (curHp * 48 <= maxHp * 24)
++        palOffset = 1;
++    for (u32 i = 0; i < HP_BAR_TILES; i++)
++        gSprites[ids[i]].oam.paletteNum = IndexOfSpritePaletteTag(TAG_HP_BAR + palOffset);
++
++    if (curHp >= maxHp)
++    {
++        for (u32 i = 2; i < 8; i++)
++            SetSpriteFrame(ids[i], TAG_HP_BAR, 8);
++    }
++    else
++    {
++        u32 perTile = (maxHp * 4) / 6, left = curHp * 4;
++
++        while (left > perTile)
++        {
++            left -= perTile;
++            whole++;
++        }
++        for (u32 i = 2; i < whole; i++)
++            SetSpriteFrame(ids[i], TAG_HP_BAR, 8);
++        frame = perTile ? (left * 6) / perTile : 0;
++        SetSpriteFrame(ids[whole], TAG_HP_BAR, frame);
++        for (u32 i = whole + 1; i < 8; i++)
++            SetSpriteFrame(ids[i], TAG_HP_BAR, 0);
++    }
++    SetSpriteFrame(ids[0], TAG_HP_BAR, 9);
++    SetSpriteFrame(ids[1], TAG_HP_BAR, 10);
++    SetSpriteFrame(ids[8], TAG_HP_BAR, 11);
++}
++
++static void SetupExpBar(void)
++{
++    struct Pokemon *mon = CurMon();
++    u32 level = GetMonData(mon, MON_DATA_LEVEL);
++    u32 growth = gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].growthRate;
++    u8 *ids = sSummary->expBarSpriteIds;
++
++    for (u32 i = 2; i < 10; i++)
++        SetSpriteFrame(ids[i], TAG_EXP_BAR, 0);
++    if (level < MAX_LEVEL)
++    {
++        u32 total = gExperienceTables[growth][level + 1] - gExperienceTables[growth][level];
++        u32 cur = GetMonData(mon, MON_DATA_EXP) - gExperienceTables[growth][level];
++        u32 perTile = (total * 4) / 8, left = cur * 4, whole = 2;
++
++        while (left > perTile && whole < 10)
++        {
++            left -= perTile;
++            whole++;
++        }
++        for (u32 i = 2; i < whole; i++)
++            SetSpriteFrame(ids[i], TAG_EXP_BAR, 8);
++        if (whole < 10)
++            SetSpriteFrame(ids[whole], TAG_EXP_BAR, perTile ? (left * 8) / perTile : 0);
++    }
++    SetSpriteFrame(ids[0], TAG_EXP_BAR, 9);
++    SetSpriteFrame(ids[1], TAG_EXP_BAR, 10);
++    SetSpriteFrame(ids[10], TAG_EXP_BAR, 11);
++}
++
++// The status icon's picture: poisoned, paralysed, asleep, frozen, burned,
++// Pokerus, fainted; -1 for none.
++static s32 GetStatusIcon(struct Pokemon *mon)
++{
++    u32 status = GetMonData(mon, MON_DATA_STATUS);
++
++    if (GetMonData(mon, MON_DATA_HP) == 0)
++        return 6;
++    if (status & STATUS1_PSN_ANY)
++        return 0;
++    if (status & STATUS1_PARALYSIS)
++        return 1;
++    if (status & STATUS1_SLEEP)
++        return 2;
++    if (status & (STATUS1_FREEZE | STATUS1_FROSTBITE))
++        return 3;
++    if (status & STATUS1_BURN)
++        return 4;
++    if (ShouldPokemonShowActivePokerus(mon))
++        return 5;
++    return -1;
++}
++
++static void PrintRightAligned(u8 windowId, const u8 *str, u32 right, u32 y, const u8 *color)
++{
++    AddTextPrinterParameterized3(windowId, FONT_NORMAL, right - GetStringWidth(FONT_NORMAL, str, 0), y, color, TEXT_SKIP_DRAW, str);
++}
++
++// Prints str's lines (split at newlines) `spacing` pixels apart.
++static void PrintLines(u8 windowId, u32 fontId, u32 x, u32 y, u32 spacing, const u8 *color, const u8 *str)
++{
++    u8 *line = gStringVar4, *p;
++
++    if (str != gStringVar4)
++        StringCopy(gStringVar4, str);
++    for (p = line; ; p++)
++    {
++        bool32 end = (*p == EOS);
++
++        if (*p == CHAR_NEWLINE || end)
++        {
++            *p = EOS;
++            AddTextPrinterParameterized3(windowId, fontId, x, y, color, TEXT_SKIP_DRAW, line);
++            if (end)
++                break;
++            line = p + 1;
++            y += spacing;
++        }
++    }
++}
++
++// Copies str to gStringVar4 with its lines rewrapped to fit `width`; returns
++// how many lines that makes.
++static u32 WrapText(const u8 *str, u32 fontId, u32 width)
++{
++    u8 *lineStart = gStringVar4, *lastSpace = NULL, *p;
++    u32 lines = 1;
++
++    StringCopy(gStringVar4, str);
++    for (p = gStringVar4; ; p++)
++    {
++        u8 c = *p;
++
++        if (c == CHAR_NEWLINE)
++            c = *p = CHAR_SPACE;
++        if (c == CHAR_SPACE || c == EOS)
++        {
++            *p = EOS;
++            if (GetStringWidth(fontId, lineStart, 0) > width && lastSpace != NULL)
++            {
++                *lastSpace = CHAR_NEWLINE;
++                lineStart = lastSpace + 1;
++                lines++;
++            }
++            *p = c;
++            if (c == EOS)
++                break;
++            lastSpace = p;
++        }
++    }
++    return lines;
++}
++
++static void DrawHeader(void)
++{
++    struct Pokemon *mon = CurMon();
++    u16 species = GetMonData(mon, MON_DATA_SPECIES);
++    u8 *win = sSummary->windows;
++    u32 width;
++
++    FillWindowPixelBuffer(win[WIN_TITLE], PIXEL_FILL(0));
++    AddTextPrinterParameterized3(win[WIN_TITLE], FONT_NORMAL, 4, 1, sColor_Title, TEXT_SKIP_DRAW, sPageTitles[sSummary->page]);
++    FillWindowPixelBuffer(win[WIN_INSTRUCTIONS], PIXEL_FILL(0));
++    width = GetStringWidth(FONT_SMALL, sPageInstructions[sSummary->page], 0);
++    AddTextPrinterParameterized3(win[WIN_INSTRUCTIONS], FONT_SMALL, 0x54 - width, 0, sColor_Title, TEXT_SKIP_DRAW, sPageInstructions[sSummary->page]);
++
++    FillWindowPixelBuffer(win[WIN_NAME], PIXEL_FILL(0));
++    GetMonNickname(mon, gStringVar1);
++    AddTextPrinterParameterized3(win[WIN_NAME], FONT_NORMAL, 0, 2, sColor_Dark, TEXT_SKIP_DRAW, gStringVar1);
++    if (species != SPECIES_NIDORAN_M && species != SPECIES_NIDORAN_F)
++    {
++        switch (GetMonGender(mon))
++        {
++        case MON_FEMALE:
++            AddTextPrinterParameterized3(win[WIN_NAME], FONT_NORMAL, 62, 2, sColor_RedOnLight, TEXT_SKIP_DRAW, gText_FemaleSymbol);
++            break;
++        case MON_MALE:
++            AddTextPrinterParameterized3(win[WIN_NAME], FONT_NORMAL, 62, 2, sColor_BlueOnLight, TEXT_SKIP_DRAW, gText_MaleSymbol);
++            break;
++        }
++    }
++    if (sSummary->page == PAGE_MOVE_INFO)
++    {
++        BlitMenuInfoIcon(win[WIN_NAME], GetSpeciesType(species, 0) + 1, 6, 16);
++        if (GetSpeciesType(species, 0) != GetSpeciesType(species, 1))
++            BlitMenuInfoIcon(win[WIN_NAME], GetSpeciesType(species, 1) + 1, 38, 16);
++    }
++    else
++    {
++        u8 *end = StringCopy(gStringVar2, gText_Lv);
++        ConvertIntToDecimalStringN(end, GetMonData(mon, MON_DATA_LEVEL), STR_CONV_MODE_LEFT_ALIGN, 3);
++        AddTextPrinterParameterized3(win[WIN_NAME], FONT_NORMAL, 0, 14, sColor_Dark, TEXT_SKIP_DRAW, gStringVar2);
++    }
++    for (u32 i = WIN_TITLE; i <= WIN_NAME; i++)
++    {
++        PutWindowTilemap(win[i]);
++        CopyWindowToVram(win[i], COPYWIN_GFX);
++    }
++}
++
++static void DrawInfoPage(void)
++{
++    struct Pokemon *mon = CurMon();
++    u16 species = GetMonData(mon, MON_DATA_SPECIES);
++    u8 a = sSummary->windows[WIN_PAGE_A], b = sSummary->windows[WIN_PAGE_B];
++    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
++    u32 dexNum = SpeciesToNationalPokedexNum(species);
++    static const u8 *const labels[] =
++    {
++        COMPOUND_STRING("Dex No."), COMPOUND_STRING("Name"), COMPOUND_STRING("Type"),
++        COMPOUND_STRING("OT"), COMPOUND_STRING("ID No."), COMPOUND_STRING("Item"),
++    };
++
++    for (u32 i = 0; i < ARRAY_COUNT(labels); i++)
++        AddTextPrinterParameterized3(a, FONT_NORMAL, 10, 7 + 12 * i, sColor_White, TEXT_SKIP_DRAW, labels[i]);
++    ConvertIntToDecimalStringN(gStringVar1, dexNum, STR_CONV_MODE_LEADING_ZEROS, dexNum > 999 ? 4 : 3);
++    AddTextPrinterParameterized3(a, FONT_NORMAL, 80, 8, IsMonShiny(mon) ? sColor_RedOnLight : sColor_Dark, TEXT_SKIP_DRAW, gStringVar1);
++    AddTextPrinterParameterized3(a, FONT_NORMAL, 80, 20, sColor_Dark, TEXT_SKIP_DRAW, GetSpeciesName(species));
++    BlitMenuInfoIcon(a, GetSpeciesType(species, 0) + 1, 78, 33);
++    if (GetSpeciesType(species, 0) != GetSpeciesType(species, 1))
++        BlitMenuInfoIcon(a, GetSpeciesType(species, 1) + 1, 110, 33);
++    GetMonData(mon, MON_DATA_OT_NAME, gStringVar1);
++    AddTextPrinterParameterized3(a, FONT_NORMAL, 80, 44, gSaveBlock2Ptr->playerGender == FEMALE ? sColor_RedOnLight : sColor_BlueOnLight, TEXT_SKIP_DRAW, gStringVar1);
++    ConvertIntToDecimalStringN(gStringVar1, GetMonData(mon, MON_DATA_OT_ID) & 0xFFFF, STR_CONV_MODE_LEADING_ZEROS, 5);
++    AddTextPrinterParameterized3(a, FONT_NORMAL, 80, 56, sColor_Dark, TEXT_SKIP_DRAW, gStringVar1);
++    AddTextPrinterParameterized3(a, FONT_NORMAL, 80, 68, sColor_Dark, TEXT_SKIP_DRAW, item == ITEM_NONE ? gText_None : GetItemName(item));
++
++    // The memo: the nature, and where the team came from.
++    AddTextPrinterParameterized3(b, FONT_NORMAL, 6, 0, sColor_White, TEXT_SKIP_DRAW, COMPOUND_STRING("Trainer Memo"));
++    StringCopy(gStringVar1, gNaturesInfo[GetNature(mon)].name);
++    ConvertIntToDecimalStringN(gStringVar2, GetMonData(mon, MON_DATA_LEVEL), STR_CONV_MODE_LEFT_ALIGN, 3);
++    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("{STR_VAR_1} nature.\nMet on MT. SILVER\nat Lv. {STR_VAR_2}."));
++    PrintLines(b, FONT_NORMAL, 16, 12, 12, sColor_Dark, gStringVar4);
++}
++
++static void DrawSkillsPage(void)
++{
++    struct Pokemon *mon = CurMon();
++    u8 a = sSummary->windows[WIN_PAGE_A], c = sSummary->windows[WIN_PAGE_C];
++    u8 nature = GetNature(mon);
++    u16 species = GetMonData(mon, MON_DATA_SPECIES);
++    u32 level = GetMonData(mon, MON_DATA_LEVEL);
++    enum Ability ability = GetMonAbility(mon);
++    static const u8 sStats[] = {STAT_ATK, STAT_DEF, STAT_SPATK, STAT_SPDEF, STAT_SPEED};
++    static const u8 sStatData[] = {[STAT_ATK] = MON_DATA_ATK, [STAT_DEF] = MON_DATA_DEF, [STAT_SPATK] = MON_DATA_SPATK,
++                                   [STAT_SPDEF] = MON_DATA_SPDEF, [STAT_SPEED] = MON_DATA_SPEED};
++    static const u8 *const sStatNames[] = {[STAT_ATK] = COMPOUND_STRING("Attack"), [STAT_DEF] = COMPOUND_STRING("Defense"),
++                                           [STAT_SPATK] = COMPOUND_STRING("Sp. Atk"), [STAT_SPDEF] = COMPOUND_STRING("Sp. Def."),
++                                           [STAT_SPEED] = COMPOUND_STRING("Speed")};
++    u8 *end;
++
++    AddTextPrinterParameterized3(a, FONT_NORMAL, 44, 0, sColor_White, TEXT_SKIP_DRAW, COMPOUND_STRING("HP"));
++    end = ConvertIntToDecimalStringN(gStringVar1, GetMonData(mon, MON_DATA_HP), STR_CONV_MODE_LEFT_ALIGN, 3);
++    end = StringCopy(end, gText_Slash);
++    ConvertIntToDecimalStringN(end, GetMonData(mon, MON_DATA_MAX_HP), STR_CONV_MODE_LEFT_ALIGN, 3);
++    PrintRightAligned(a, gStringVar1, 68 + 63, 0, sColor_Dark);
++    for (u32 i = 0; i < ARRAY_COUNT(sStats); i++)
++    {
++        u8 stat = sStats[i];
++        const u8 *color = sColor_White;
++
++        if (gNaturesInfo[nature].statUp != gNaturesInfo[nature].statDown)
++        {
++            if (stat == gNaturesInfo[nature].statUp)
++                color = sColor_Red;
++            else if (stat == gNaturesInfo[nature].statDown)
++                color = sColor_Blue;
++        }
++        AddTextPrinterParameterized3(a, FONT_NORMAL, 10, 19 + 12 * i, color, TEXT_SKIP_DRAW, sStatNames[stat]);
++        ConvertIntToDecimalStringN(gStringVar1, GetMonData(mon, sStatData[stat]), STR_CONV_MODE_LEFT_ALIGN, 3);
++        PrintRightAligned(a, gStringVar1, 90 + 27, 20 + 12 * i, sColor_Dark);
++    }
++    AddTextPrinterParameterized3(a, FONT_NORMAL, 10, 79, sColor_White, TEXT_SKIP_DRAW, COMPOUND_STRING("Exp. Points"));
++    AddTextPrinterParameterized3(a, FONT_NORMAL, 10, 91, sColor_White, TEXT_SKIP_DRAW, COMPOUND_STRING("To Next Lv."));
++    ConvertIntToDecimalStringN(gStringVar1, GetMonData(mon, MON_DATA_EXP), STR_CONV_MODE_LEFT_ALIGN, 7);
++    PrintRightAligned(a, gStringVar1, 55 + 63, 80, sColor_Dark);
++    if (level < MAX_LEVEL)
++        ConvertIntToDecimalStringN(gStringVar1, gExperienceTables[gSpeciesInfo[species].growthRate][level + 1] - GetMonData(mon, MON_DATA_EXP),
++                                   STR_CONV_MODE_LEFT_ALIGN, 7);
++    else
++        StringCopy(gStringVar1, COMPOUND_STRING("0"));
++    PrintRightAligned(a, gStringVar1, 55 + 63, 92, sColor_Dark);
++
++    AddTextPrinterParameterized3(c, FONT_NORMAL, 11, 4, sColor_White, TEXT_SKIP_DRAW, COMPOUND_STRING("Ability"));
++    AddTextPrinterParameterized3(c, FONT_NORMAL, 60, 4, sColor_Dark, TEXT_SKIP_DRAW, gAbilitiesInfo[ability].name);
++    AddTextPrinterParameterized3(c, FONT_NORMAL, 20, 23, sColor_Dark, TEXT_SKIP_DRAW, gAbilitiesInfo[ability].description);
++}
++
++static void DrawMovesPage(void)
++{
++    struct Pokemon *mon = CurMon();
++    u8 a = sSummary->windows[WIN_PAGE_A], b = sSummary->windows[WIN_PAGE_B], c = sSummary->windows[WIN_PAGE_C];
++    u8 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
++
++    for (u32 i = 0; i < MAX_MON_MOVES; i++)
++    {
++        u16 move = GetMonData(mon, MON_DATA_MOVE1 + i);
++        u32 pp, maxPP;
++        const u8 *color = sColor_White;
++
++        if (move == MOVE_NONE)
++        {
++            AddTextPrinterParameterized3(a, FONT_NORMAL, 3, MOVE_ROW_Y(i), sColor_White, TEXT_SKIP_DRAW, gText_OneDash);
++            continue;
++        }
++        pp = GetMonData(mon, MON_DATA_PP1 + i);
++        maxPP = CalculatePPWithBonus(move, ppBonuses, i);
++        if (pp == 0)
++            color = sColor_Red;
++        else if (pp <= maxPP / 2)
++            color = sColor_Orange;
++        BlitMenuInfoIcon(c, GetMoveType(move) + 1, 8, MOVE_ROW_Y(i));
++        AddTextPrinterParameterized3(a, FONT_NORMAL, 3, MOVE_ROW_Y(i), sColor_White, TEXT_SKIP_DRAW, GetMoveName(move));
++        AddTextPrinterParameterized3(a, FONT_NORMAL, 20, i * 28 + 16, color, TEXT_SKIP_DRAW, COMPOUND_STRING("PP"));
++        ConvertIntToDecimalStringN(gStringVar1, pp, STR_CONV_MODE_LEFT_ALIGN, 3);
++        PrintRightAligned(a, gStringVar1, 52, i * 28 + 16, color);
++        AddTextPrinterParameterized3(a, FONT_NORMAL, 52, i * 28 + 16, color, TEXT_SKIP_DRAW, gText_Slash);
++        ConvertIntToDecimalStringN(gStringVar1, maxPP, STR_CONV_MODE_LEFT_ALIGN, 3);
++        PrintRightAligned(a, gStringVar1, 70, i * 28 + 16, color);
++    }
++
++    if (sSummary->page != PAGE_MOVE_INFO)
++        return;
++    AddTextPrinterParameterized3(a, FONT_NORMAL, 3, MAX_MON_MOVES * 28 + 5, sColor_White, TEXT_SKIP_DRAW, gText_Cancel);
++    if (sSummary->moveCursor < MAX_MON_MOVES)
++    {
++        u16 move = GetMonData(mon, MON_DATA_MOVE1 + sSummary->moveCursor);
++
++        if (move == MOVE_NONE)
++            return;
++        AddTextPrinterParameterized3(b, FONT_NORMAL, 14, 2, sColor_White, TEXT_SKIP_DRAW, COMPOUND_STRING("Category"));
++        AddTextPrinterParameterized3(b, FONT_NORMAL, 14, 17, sColor_White, TEXT_SKIP_DRAW, COMPOUND_STRING("Power"));
++        AddTextPrinterParameterized3(b, FONT_NORMAL, 14, 32, sColor_White, TEXT_SKIP_DRAW, COMPOUND_STRING("Accuracy"));
++        AddTextPrinterParameterized3(b, FONT_NORMAL, 10, 48, sColor_White, TEXT_SKIP_DRAW, COMPOUND_STRING("Effect"));
++        PrintRightAligned(b, sCategoryNames[GetMoveCategory(move)], 116, 3, sColor_Dark);
++        if (GetMovePower(move) <= 1)
++            StringCopy(gStringVar1, gText_ThreeDashes);
++        else
++            ConvertIntToDecimalStringN(gStringVar1, GetMovePower(move), STR_CONV_MODE_LEFT_ALIGN, 3);
++        PrintRightAligned(b, gStringVar1, 116, 18, sColor_Dark);
++        if (GetMoveAccuracy(move) == 0)
++            StringCopy(gStringVar1, gText_ThreeDashes);
++        else
++            ConvertIntToDecimalStringN(gStringVar1, GetMoveAccuracy(move), STR_CONV_MODE_LEFT_ALIGN, 3);
++        PrintRightAligned(b, gStringVar1, 116, 33, sColor_Dark);
++        if (WrapText(GetMoveDescription(move), FONT_NORMAL, 110) <= 4)
++            PrintLines(b, FONT_NORMAL, 7, 64, 12, sColor_Dark, gStringVar4);
++        else
++        {
++            WrapText(GetMoveDescription(move), FONT_SMALL, 110);
++            PrintLines(b, FONT_SMALL, 7, 63, 10, sColor_Dark, gStringVar4);
++        }
++    }
++}
++
++// The page's panel, its windows and which sprites show.
++static void ShowPage(void)
++{
++    u32 page = sSummary->page;
++    u32 windowsPage = page == PAGE_MOVE_INFO ? PAGE_MOVES : page;
++    bool32 moveInfo = page == PAGE_MOVE_INFO;
++    s32 status = GetStatusIcon(CurMon());
++
++    for (u32 i = WIN_PAGE_A; i <= WIN_PAGE_C; i++)
++    {
++        if (sSummary->windows[i] != WINDOW_NONE)
++        {
++            ClearWindowTilemap(sSummary->windows[i]);
++            RemoveWindow(sSummary->windows[i]);
++            sSummary->windows[i] = WINDOW_NONE;
++        }
++    }
++    FillBgTilemapBufferRect_Palette0(BG_TEXT, 0, 0, 2, 32, 18);
++    for (u32 i = 0; i < 3; i++)
++    {
++        if (sPageWindows[windowsPage][i].width != 0)
++        {
++            sSummary->windows[WIN_PAGE_A + i] = AddWindow(&sPageWindows[windowsPage][i]);
++            FillWindowPixelBuffer(sSummary->windows[WIN_PAGE_A + i], PIXEL_FILL(0));
++        }
++    }
++
++    switch (page)
++    {
++    case PAGE_INFO:
++        LoadBgTilemap(BG_PAGE, sMap_Info, sizeof(sMap_Info), PAGE_MAP_OFFSET);
++        HideBg(BG_MOVES);
++        DrawInfoPage();
++        break;
++    case PAGE_SKILLS:
++        LoadBgTilemap(BG_PAGE, sMap_Skills, sizeof(sMap_Skills), PAGE_MAP_OFFSET);
++        HideBg(BG_MOVES);
++        DrawSkillsPage();
++        SetupHpBar();
++        SetupExpBar();
++        break;
++    case PAGE_MOVES:
++    case PAGE_MOVE_INFO:
++        LoadBgTilemap(BG_PAGE, moveInfo ? sMap_MoveInfo : sMap_KnownMoves, sizeof(sMap_KnownMoves), PAGE_MAP_OFFSET);
++        LoadBgTilemap(BG_MOVES, sMap_Moves, sizeof(sMap_Moves), 0);
++        ShowBg(BG_MOVES);
++        DrawMovesPage();
++        break;
++    }
++    DrawHeader();
++    for (u32 i = WIN_PAGE_A; i <= WIN_PAGE_C; i++)
++    {
++        if (sSummary->windows[i] != WINDOW_NONE)
++        {
++            PutWindowTilemap(sSummary->windows[i]);
++            CopyWindowToVram(sSummary->windows[i], COPYWIN_GFX);
++        }
++    }
++    CopyBgTilemapBufferToVram(BG_TEXT);
++
++    for (u32 i = 0; i < HP_BAR_TILES; i++)
++        gSprites[sSummary->hpBarSpriteIds[i]].invisible = page != PAGE_SKILLS;
++    for (u32 i = 0; i < EXP_BAR_TILES; i++)
++        gSprites[sSummary->expBarSpriteIds[i]].invisible = page != PAGE_SKILLS;
++    for (u32 i = 0; i < 2; i++)
++    {
++        gSprites[sSummary->cursorSpriteIds[i]].invisible = !moveInfo;
++        gSprites[sSummary->cursorSpriteIds[i]].y = sSummary->moveCursor * 28 + 34;
++    }
++    gSprites[sSummary->monSpriteId].invisible = moveInfo;
++    gSprites[sSummary->ballSpriteId].invisible = moveInfo;
++    gSprites[sSummary->iconSpriteId].invisible = !moveInfo;
++    gSprites[sSummary->shinySpriteId].invisible = !IsMonShiny(CurMon());
++    gSprites[sSummary->shinySpriteId].x = moveInfo ? 126 : 166;
++    gSprites[sSummary->shinySpriteId].y = moveInfo ? 20 : 50;
++    gSprites[sSummary->statusSpriteId].invisible = status < 0;
++    if (status >= 0)
++        SetSpriteFrame(sSummary->statusSpriteId, TAG_STATUS, status * 4);
++    gSprites[sSummary->statusSpriteId].x = moveInfo ? 16 : 214;
++    gSprites[sSummary->statusSpriteId].y = moveInfo ? 45 : 38;
++}
++
++static void ShowMon(bool8 playCry)
++{
++    struct Pokemon *mon = CurMon();
++    u16 species = GetMonData(mon, MON_DATA_SPECIES);
++    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
++    enum PokeBall ballId = ItemIdToBallId(GetMonData(mon, MON_DATA_POKEBALL));
++
++    // The expansion tags the picture's palette with the species.
++    sSummary->monSpriteId = CreateMonPicSprite(species, IsMonShiny(mon), personality, TRUE, 204, 78, 0, species);
++    gSprites[sSummary->monSpriteId].oam.priority = 0;
++    LoadBallGfx(ballId);
++    sSummary->ballSpriteId = CreateSprite(&gPokeBalls[ballId].spriteTemplate, 232, 39, 0);
++    gSprites[sSummary->ballSpriteId].callback = SpriteCallbackDummy;
++    gSprites[sSummary->ballSpriteId].oam.priority = 0;
++    LoadMonIconPalette(species);
++    sSummary->iconSpriteId = CreateMonIcon(species, SpriteCallbackDummy, 140, 28, 0, personality);
++    gSprites[sSummary->iconSpriteId].oam.priority = 0;
++    if (playCry)
++        PlayCry_Normal(species, 0);
++}
++
++static void HideMon(void)
++{
++    u16 species = GetMonData(CurMon(), MON_DATA_SPECIES);
++
++    FreeAndDestroyMonPicSprite(sSummary->monSpriteId);
++    DestroySprite(&gSprites[sSummary->ballSpriteId]);
++    FreeAndDestroyMonIconSprite(&gSprites[sSummary->iconSpriteId]);
++    FreeMonIconPalette(species);
++}
++
++static void Task_SummaryInput(u8 taskId)
++{
++    switch (sSummary->loadStep)
++    {
++    case 0:
++        InitDisplay();
++        for (u32 i = 0; i < WIN_COUNT; i++)
++            sSummary->windows[i] = WINDOW_NONE;
++        for (u32 i = WIN_TITLE; i <= WIN_NAME; i++)
++            sSummary->windows[i] = AddWindow(&sHeaderWindows[i]);
++        LoadGraphics();
++        CreateFixedSprites();
++        ShowMon(FALSE);
++        ShowPage();
++        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
++        SetVBlankCallback(VBlankCB_Summary);
++        sSummary->loadStep++;
++        return;
++    case 1:
++        if (!gPaletteFade.active)
++        {
++            PlayCry_Normal(GetMonData(CurMon(), MON_DATA_SPECIES), 0);
++            sSummary->loadStep++;
++        }
++        return;
++    }
++
++    if (sSummary->exiting)
++    {
++        if (gPaletteFade.active)
++            return;
++        if (IsCryPlayingOrClearCrySongs())
++            StopCryAndClearCrySongs();
++        gLastViewedMonIndex = sSummary->curMon;
++        DestroyTask(taskId);
++        FreeAllWindowBuffers();
++        SetMainCallback2(sSummary->savedCallback);
++        FREE_AND_SET_NULL(sSummary);
++        return;
++    }
++
++    if (sSummary->page == PAGE_MOVE_INFO)
++    {
++        if (JOY_NEW(DPAD_UP | DPAD_DOWN))
++        {
++            if (JOY_NEW(DPAD_UP))
++                sSummary->moveCursor = sSummary->moveCursor == 0 ? MOVE_ROWS - 1 : sSummary->moveCursor - 1;
++            else
++                sSummary->moveCursor = sSummary->moveCursor == MOVE_ROWS - 1 ? 0 : sSummary->moveCursor + 1;
++            PlaySE(SE_SELECT);
++            ShowPage();
++        }
++        else if (JOY_NEW(B_BUTTON) || (JOY_NEW(A_BUTTON) && sSummary->moveCursor == MAX_MON_MOVES))
++        {
++            PlaySE(SE_SELECT);
++            sSummary->page = PAGE_MOVES;
++            ShowPage();
++        }
++        return;
++    }
++
++    if (JOY_NEW(DPAD_LEFT) && sSummary->page > PAGE_INFO)
++    {
++        PlaySE(SE_SELECT);
++        sSummary->page--;
++        ShowPage();
++    }
++    else if (JOY_NEW(DPAD_RIGHT) && sSummary->page < PAGE_MOVES)
++    {
++        PlaySE(SE_SELECT);
++        sSummary->page++;
++        ShowPage();
++    }
++    else if (JOY_NEW(DPAD_UP | DPAD_DOWN) && sSummary->lastIdx > 0)
++    {
++        u8 next = sSummary->curMon;
++
++        if (JOY_NEW(DPAD_UP))
++            next = next == 0 ? sSummary->lastIdx : next - 1;
++        else
++            next = next == sSummary->lastIdx ? 0 : next + 1;
++        HideMon();
++        sSummary->curMon = next;
++        ShowMon(TRUE);
++        ShowPage();
++    }
++    else if (JOY_NEW(A_BUTTON) && sSummary->page == PAGE_MOVES)
++    {
++        PlaySE(SE_SELECT);
++        sSummary->page = PAGE_MOVE_INFO;
++        sSummary->moveCursor = 0;
++        ShowPage();
++    }
++    else if (JOY_NEW(B_BUTTON) || (JOY_NEW(A_BUTTON) && sSummary->page == PAGE_INFO))
++    {
++        PlaySE(SE_SELECT);
++        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
++        sSummary->exiting = TRUE;
++    }
++}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
 index 00000000..6952feb4
@@ -16161,6 +17397,30 @@ index 82017777..ab204db6 100644
          case TRAINER_CLASS_AQUA_LEADER:
          case TRAINER_CLASS_MAGMA_LEADER:
              return MUS_VS_AQUA_MAGMA_LEADER;
+diff --git a/src/pokemon_summary_screen.c b/src/pokemon_summary_screen.c
+index 801dfe07..6bc81c22 100644
+--- a/src/pokemon_summary_screen.c
++++ b/src/pokemon_summary_screen.c
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "main.h"
+ #include "battle.h"
+ #include "battle_anim.h"
+@@ -1191,6 +1192,13 @@ u32 GetAdjustedIvData(struct Pokemon *mon, u32 stat)
+ 
+ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void))
+ {
++    // Daily Red: the party's summary is the BW-style one (src/dailyred_summary.c);
++    // teaching a move still uses this one.
++    if ((mode == SUMMARY_MODE_NORMAL || mode == SUMMARY_MODE_LOCK_MOVES) && monIndex != PC_MON_CHOSEN)
++    {
++        DailyRed_ShowSummary(mons, monIndex, maxMonIndex, callback);
++        return;
++    }
+     sMonSummaryScreen = AllocZeroed(sizeof(*sMonSummaryScreen));
+     sMonSummaryScreen->mode = mode;
+     if (monIndex == PC_MON_CHOSEN)
 diff --git a/src/start_menu.c b/src/start_menu.c
 index 648fa837..2fc9b5c6 100644
 --- a/src/start_menu.c

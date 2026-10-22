@@ -122,6 +122,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | RED's team, built each run | `src/dailyred_red.c` from the sets in `src/dailyred_sets.c` (see [RED's team](#reds-team)); used by `CreateNPCTrainerParty` in `src/battle_setup.c` |
 | Win / battle counters | `VAR_DAILYRED_WINS` and `VAR_DAILYRED_BATTLES` in `include/constants/vars_frlg.h` |
 | Menus: POKéMON / OPTION / EXIT; party: SUMMARY / SWITCH / CANCEL | `src/start_menu.c`, `src/party_menu.c` |
+| Start menu as a shelf of icons; the BW-style Options, EV/IV screen and summary, in red | `src/start_menu.c`, `src/option_menu.c`, `src/dailyred_eviv.c`, `src/dailyred_summary.c` (hooked from `ShowPokemonSummaryScreen`); see [Menus](#menus) |
 | No debug menus | `include/config/debug.h` |
 
 The battle itself is a standard trainer battle. The map script starts it as an
@@ -393,6 +394,28 @@ game's files; run it again after changing the art:
   game's text windows. The action menu and move list print on their own copy
   of the text palette in those colours, and the cursor is erased
   with the box's inside (`DAILYRED_BATTLE_*` in `include/dailyred.h`).
+- <a id="menus"></a>**Menus.** `scripts/graphics/make-ui.py` builds them from
+  `art/` into `graphics/dailyred/` (and FireRed's font and window frame 1 over
+  the expansion's), recolouring the originals red: greys stay neutral, warm
+  colours stay, everything else turns to RED's red.
+  - The start menu is a shelf of icons sliding up from the bottom, from a
+    start menu patch for FireRed (`MENU_START_MI_PARCHE_REPUNTEADO`, author
+    unknown), rebuilt with Daily Red's icons (`art/start-menu/`).
+  - Options: CompuMaxx's BW-style option menu, as released by
+    [Shiny-Miner/FR-OptionMenu](https://github.com/Shiny-Miner/FR-OptionMenu)
+    (`art/bw-option-menu/`); Battle Style stays locked on SET.
+  - EV/IV screen (from the shelf): after
+    [Shiny-Miner/Gender-based-EV-IV-Display](https://github.com/Shiny-Miner/Gender-based-EV-IV-Display)
+    by Acimut, Shiny Miner and Tio Terry (`art/ev-iv/`).
+  - Summary: the BW summary screen from
+    [Shiny-Miner/New-BW-summary-screen](https://github.com/Shiny-Miner/New-BW-summary-screen)
+    (CompuMaxx's design, Zake's FireRed port, on Acimut's template),
+    rewritten for the expansion in `src/dailyred_summary.c` with the same
+    pages, layout and controls (`art/bw-summary/`). Teaching a move still uses
+    the expansion's summary.
+  - Text uses FireRed's font (`art/firered-font/`, from pret/pokefirered),
+    with its glyph widths in `src/fonts.c`. Window frame 1 (the menus'
+    message box) has red sides instead of blue.
 - `art/leaf-hgss.png`: an HGSS-style LEAF for the VS transition (her battle
   back sprite is still FireRed's). She's 70 pixels tall and 21 colours, so 6
   rows go from her legs and 6 colours are merged: her bag's highlight first,

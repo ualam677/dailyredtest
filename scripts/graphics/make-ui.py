@@ -251,6 +251,37 @@ def ev_iv():
     print('EV/IV screen -> %s' % os.path.relpath(out, ROOT))
 
 
+# --- Summary screen ----------------------------------------------------------------
+
+# art/bw-summary/ is New-BW-summary-screen's (CompuMaxx's BW-style summary,
+# ported by Zake): the page tiles and tilemaps (the scrolling grid, a panel
+# per page, the move list's frames), the HP and EXP bars, status icons, the
+# shiny star and the move cursor. The tiles' palette and the cursor's are
+# recoloured (their teal grid and purple frames become red); the bars keep
+# their green, yellow and red.
+SUMMARY_RECOLOUR = ['tiles.png', 'cursor_left.png', 'cursor_right.png']
+SUMMARY_COPY = ['bg.bin', 'bg_pokemon_info.bin', 'bg_pokemon_skills.bin', 'bg_known_moves.bin', 'bg_moves.bin',
+                'bg_moves_info.bin', 'title.pal', 'hp_bar.png', 'exp_bar.png', 'hp_bar_0.pal', 'hp_bar_1.pal',
+                'hp_bar_2.pal', 'icon_status.png', 'shiny_indicator_gfx.png']
+
+
+def summary():
+    from PIL import Image
+    src = os.path.join(ART, 'bw-summary')
+    out = os.path.join(OUT, 'summary')
+    os.makedirs(out, exist_ok=True)
+    for name in SUMMARY_RECOLOUR:
+        img = Image.open(os.path.join(src, name))
+        pal = img.getpalette()[:48]
+        colours = [tuple(pal[i:i + 3]) for i in range(0, 48, 3)]
+        colours = [colours[0]] + [redden(c) for c in colours[1:]]
+        img.putpalette([v for c in colours for v in c])
+        img.save(os.path.join(out, name))
+    for name in SUMMARY_COPY:
+        copy(os.path.join(src, name), os.path.join(out, name))
+    print('summary screen -> %s' % os.path.relpath(out, ROOT))
+
+
 # --- FireRed's font ----------------------------------------------------------------
 
 # art/firered-font/ is FireRed's Latin text (pret/pokefirered's
@@ -292,3 +323,4 @@ if __name__ == '__main__':
     firered_font()
     start_menu()
     ev_iv()
+    summary()
