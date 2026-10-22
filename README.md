@@ -122,7 +122,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | RED's team, built each run | `src/dailyred_red.c` from the sets in `src/dailyred_sets.c` (see [RED's team](#reds-team)); used by `CreateNPCTrainerParty` in `src/battle_setup.c` |
 | Win / battle counters | `VAR_DAILYRED_WINS` and `VAR_DAILYRED_BATTLES` in `include/constants/vars_frlg.h` |
 | Menus: POKéMON / OPTION / EXIT; party: SUMMARY / SWITCH / CANCEL | `src/start_menu.c`, `src/party_menu.c` |
-| Start menu as a shelf of icons; the BW-style Options, EV/IV screen and summary, in red | `src/start_menu.c`, `src/option_menu.c`, `src/dailyred_eviv.c`, `src/dailyred_summary.c` (hooked from `ShowPokemonSummaryScreen`); see [Menus](#menus) |
+| Start menu as a shelf of icons; the BW-style Options, EV/IV screen and summary and the HGSS-style party screen, in red | `src/start_menu.c`, `src/option_menu.c`, `src/dailyred_eviv.c`, `src/dailyred_summary.c` (hooked from `ShowPokemonSummaryScreen`), `src/party_menu.c` and `src/data/party_menu.h`; see [Menus](#menus) |
 | No debug menus | `include/config/debug.h` |
 
 The battle itself is a standard trainer battle. The map script starts it as an
@@ -413,6 +413,16 @@ game's files; run it again after changing the art:
     rewritten for the expansion in `src/dailyred_summary.c` with the same
     pages, layout and controls (`art/bw-summary/`). Teaching a move still uses
     the expansion's summary.
+  - Party screen: the HGSS-style one from "Pokémon Party Screen Patches"
+    (`BPRE_HGSS.ips`; its author isn't named in the archive), rebuilt in
+    the expansion's party menu: six equal boxes in two columns (the window
+    templates, text and sprite positions in `src/data/party_menu.h`; every
+    box uses the 14x5 box tilemaps), up/down move a row and left/right step
+    through the slots, and a switch slides each box out to its own side.
+    Its tiles, backdrop and Poke Balls are in `art/hgss-party/`. The teal
+    backdrop becomes dark maroon and the green boxes red; the box under the
+    cursor is brighter with a white outline, one picked to switch is
+    charcoal, and fainted ones are grey.
   - Text uses FireRed's font (`art/firered-font/`, from pret/pokefirered),
     with its glyph widths in `src/fonts.c`. Window frame 1 (the menus'
     message box) has red sides instead of blue.

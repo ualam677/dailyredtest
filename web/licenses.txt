@@ -34,6 +34,8 @@ Graphics in the ROM
   (https://github.com/Shiny-Miner/Gender-based-EV-IV-Display).
   The summary screen: the BW summary by CompuMaxx, ported to FireRed by Zake
   on Acimut's template (https://github.com/Shiny-Miner/New-BW-summary-screen).
+  The party screen: the HGSS-style one from "Pokémon Party Screen Patches"
+  (BPRE_HGSS.ips; author not named in the release).
   These are recoloured red for Daily Red.
   The text font: Pokémon FireRed's, from pret/pokefirered.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Builds the menus' graphics for the expansion from the art in art/: the
 BW-style option menu, the start menu's shelf of icons, the BW-style summary
-screen and the EV/IV screen (community FireRed hacks, see README.md), each
+screen, the EV/IV screen and the HGSS-style party screen (community FireRed hacks, see README.md), each
 recoloured to Daily Red's red UI: their teal, cyan and blue tones become
 reds of the same lightness, and their tinted greys the battle boxes'
 neutral, slightly blue greys.
@@ -282,6 +282,74 @@ def summary():
     print('summary screen -> %s' % os.path.relpath(out, ROOT))
 
 
+# --- Party screen ------------------------------------------------------------------
+
+# art/hgss-party/ is the HGSS-style party screen from "Pokémon Party Screen
+# Patches" (BPRE_HGSS.ips, extracted from a patched FireRed): six equal boxes
+# in two columns over a teal backdrop, its tiles and 11 palettes, the
+# backdrop's tilemap, the boxes' tilemaps (with and without HP; an empty box
+# is the backdrop's) and the menu's Poke Balls.
+#
+# The palettes follow FireRed's party menu: 0-2 are the backdrop, 3-8 the
+# boxes' windows, and each box's colours are picked out of all 11 by state
+# (sPartyBox*PalIds in src/data/party_menu.h). Recoloured: the teal backdrop
+# becomes a dark maroon (like the summary's grid), the green boxes red, and
+# the states stay apart: the cursor's box is a brighter red with a white
+# outline, the one picked to switch is charcoal with a red outline, and
+# fainted ones are grey. HP bar and gender colours are left alone.
+def dark_maroon(c):
+    r, g, b = (v / 255 for v in c)
+    v = colorsys.rgb_to_hsv(r, g, b)[2]
+    r, g, b = colorsys.hsv_to_rgb(RED_HUE, 0.55, 0.06 + 0.45 * v)
+    return gba((r * 255, g * 255, b * 255))
+
+
+PARTY_BACKDROP = [0 * 16 + 4, 0 * 16 + 5, 0 * 16 + 6] + [p * 16 + i for p in (1, 2) for i in range(1, 8)]
+PARTY_KEEP = [3 * 16 + 9, 3 * 16 + 10, 4 * 16 + 9, 4 * 16 + 10, 5 * 16 + 9, 5 * 16 + 10,  # HP bar
+              3 * 16 + 11, 3 * 16 + 12, 4 * 16 + 11, 4 * 16 + 12,                        # gender
+              3 * 16 + 15]
+PARTY_STATES = {
+    # the cursor's box (sPartyBoxCurrSelectionPalIds2): white outline
+    6 * 16 + 1: (248, 248, 248), 6 * 16 + 7: (248, 248, 248), 6 * 16 + 8: (248, 248, 248),
+    # picked to switch (sPartyBoxSelectedForActionPalIds1/2): charcoal, red outline
+    6 * 16 + 4: (72, 72, 80), 6 * 16 + 5: (56, 56, 64), 6 * 16 + 6: (40, 40, 48),
+    10 * 16 + 1: (216, 40, 48), 10 * 16 + 7: (216, 40, 48), 10 * 16 + 8: (216, 40, 48),
+    # fainted (sPartyBoxFaintedPalIds1/2): grey
+    5 * 16 + 1: (40, 40, 48), 5 * 16 + 4: (112, 112, 120), 5 * 16 + 5: (96, 96, 104),
+    5 * 16 + 6: (80, 80, 88), 5 * 16 + 7: (152, 152, 160), 5 * 16 + 8: (128, 128, 136),
+    # fainted under the cursor (sPartyBoxCurrSelectionFaintedPalIds): light grey
+    9 * 16 + 4: (168, 168, 176), 9 * 16 + 5: (152, 152, 160), 9 * 16 + 6: (136, 136, 144),
+}
+
+
+def party_menu():
+    from PIL import Image
+    src = os.path.join(ART, 'hgss-party')
+    out = os.path.join(OUT, 'party_menu')
+    os.makedirs(out, exist_ok=True)
+    img = Image.open(os.path.join(src, 'bg.png'))
+    pal = img.getpalette()[:176 * 3]
+    colours = [tuple(pal[i:i + 3]) for i in range(0, len(pal), 3)]
+    new = [redden(c) for c in colours]
+    for i in PARTY_BACKDROP:
+        new[i] = dark_maroon(colours[i])
+    for i in PARTY_KEEP:
+        new[i] = colours[i]
+    for i, c in PARTY_STATES.items():
+        new[i] = c
+    img.putpalette([v for c in new for v in c])
+    img.save(os.path.join(out, 'bg.png'))
+    for name in ('pokeball.png', 'pokeball_small.png'):
+        ball = Image.open(os.path.join(src, name))
+        pal = ball.getpalette()[:48]
+        colours = [tuple(pal[i:i + 3]) for i in range(0, 48, 3)]
+        ball.putpalette([v for c in [colours[0]] + [redden(c) for c in colours[1:]] for v in c])
+        ball.save(os.path.join(out, name))
+    for name in ('bg.bin', 'slot_hp.bin', 'slot_nohp.bin', 'slot_empty.bin'):
+        copy(os.path.join(src, name), os.path.join(out, name))
+    print('party screen -> %s' % os.path.relpath(out, ROOT))
+
+
 # --- FireRed's font ----------------------------------------------------------------
 
 # art/firered-font/ is FireRed's Latin text (pret/pokefirered's
@@ -324,3 +392,4 @@ if __name__ == '__main__':
     start_menu()
     ev_iv()
     summary()
+    party_menu()
