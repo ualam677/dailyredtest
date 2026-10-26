@@ -3435,10 +3435,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..6773e379
+index 00000000..c6f8caf6
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,125 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -3497,6 +3497,7 @@ index 00000000..6773e379
 +// src/dailyred_red.c
 +u16 DailyRed_GenerateRedTeam(u32 *rngState);
 +void DailyRed_CreateRedParty(struct Pokemon *party);
++extern struct Pokemon gDailyRedRedParty[];
 +void DailyRed_QueueRedTotemBoost(void);
 +struct Sprite;
 +void DailyRed_AnimateTrainerSprite(struct Sprite *sprite, u16 trainerPicId);
@@ -18268,10 +18269,10 @@ index 00000000..0edfcc08
 +}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..4e1073b0
+index 00000000..06c7c0ab
 --- /dev/null
 +++ b/src/dailyred_team.c
-@@ -0,0 +1,553 @@
+@@ -0,0 +1,567 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "data.h"
@@ -18292,8 +18293,8 @@ index 00000000..4e1073b0
 +//     it's any of the nine.
 +//   - Five fully evolved Pokemon in Daily Red's species scope (see
 +//     DailyRed_IsSpeciesInScope), never holding a Mega Stone or Z-Crystal.
-+//     1 team in LEGENDARY_TEAM_ODDS has exactly one legendary among them; the
-+//     rest have none.
++//     LEGENDARY_TEAM_ODDS% of teams have exactly one legendary among them
++//     (never RED's legendary that day, in any forme); the rest have none.
 +//   - On MIRROR_RED_ODDS% of days the team mirrors RED's instead: the starter,
 +//     a shiny Pikachu (level 100, Light Ball and Volt Tackle, like his), a
 +//     legendary for sure, and three more.
@@ -18322,7 +18323,7 @@ index 00000000..4e1073b0
 +// predicts it).
 +
 +#define MIRROR_RED_ODDS 5 // percent of days
-+#define LEGENDARY_TEAM_ODDS 8
++#define LEGENDARY_TEAM_ODDS 20 // percent of teams
 +#define MEGA_SWAP_ODDS 25 // percent of the days when another Pokemon can Mega Evolve
 +
 +// Minimum combined base stat total of the six. RED's original team adds up to
@@ -18602,7 +18603,21 @@ index 00000000..4e1073b0
 +    AddMember(team, list, LEVEL_STARTER, FALSE, rng);
 +}
 +
-+// A random legendary that fits the team (practically always the first try).
++// Whether RED has this legendary today (any forme: his Galarian Moltres rules
++// out Moltres). His team is built before the player's.
++static bool32 IsRedsLegendary(u16 species)
++{
++    u32 i;
++    for (i = 0; i < PARTY_SIZE; i++)
++    {
++        if (GET_BASE_SPECIES_ID(GetMonData(&gDailyRedRedParty[i], MON_DATA_SPECIES)) == GET_BASE_SPECIES_ID(species))
++            return TRUE;
++    }
++    return FALSE;
++}
++
++// A random legendary that fits the team and isn't RED's (practically always
++// the first try or two).
 +static void AddLegendary(struct Team *team, u32 *rng)
 +{
 +    u32 attempt;
@@ -18611,7 +18626,7 @@ index 00000000..4e1073b0
 +    {
 +        u16 species = sLegendaries[TeamRandom(rng) % ARRAY_COUNT(sLegendaries)];
 +        const struct DailyRedSetList *list = DailyRed_FindSetList(species, DAILYRED_SETS_NORMAL);
-+        if (list != NULL && CanAdd(team, species, DailyRed_GetTypeMask(species), list))
++        if (list != NULL && !IsRedsLegendary(species) && CanAdd(team, species, DailyRed_GetTypeMask(species), list))
 +        {
 +            AddMember(team, list, list->level, FALSE, rng);
 +            return;
@@ -18669,7 +18684,7 @@ index 00000000..4e1073b0
 +        AddMember(team, DailyRed_FindSetList(SPECIES_PIKACHU, DAILYRED_SETS_NORMAL), LEVEL_PIKACHU, TRUE, rng);
 +        AddLegendary(team, rng);
 +    }
-+    else if (TeamRandom(rng) % LEGENDARY_TEAM_ODDS == 0)
++    else if (TeamRandom(rng) % 100 < LEGENDARY_TEAM_ODDS)
 +    {
 +        // Decided once per team, before the minimum, so the minimum can't
 +        // make legendaries more likely.

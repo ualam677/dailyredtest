@@ -228,6 +228,9 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
   const legendaries = mons.filter((m) => LEGENDARY_LIST.includes(m.species));
   if (legendaries.length > 1) problems.push(`${legendaries.length} legendaries`);
   if (mirror && legendaries.length !== 1) problems.push('a mirror day without its legendary');
+  // Never RED's legendary (in any forme).
+  const redBases = new Set((redParty ?? []).filter(Boolean).map((m) => baseSpecies(m.species)));
+  for (const m of legendaries) if (redBases.has(baseSpecies(m.species))) problems.push(`${m.speciesName}: RED has it too`);
 
   // The other Pokemon.
   for (const m of mons) {

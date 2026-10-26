@@ -256,8 +256,10 @@ right after RED's (his starter decides yours), from the seed:
   STAB type; Typhlosion keeps its Firium Z). The Mega's types must still fit
   the type limit below.
 - **Five fully evolved Pokémon** from Daily Red's species scope (below), never
-  holding a Mega Stone or a Z-Crystal. **Legendaries are a 1-in-8 roll**
-  (`LEGENDARY_TEAM_ODDS`): 1 team in 8 has exactly one, the rest none.
+  holding a Mega Stone or a Z-Crystal. **Legendaries are a 20% roll**
+  (`LEGENDARY_TEAM_ODDS`): 1 team in 5 has exactly one, the rest none. It's
+  never the legendary RED has that day, in any forme (his Galarian Moltres
+  rules out Moltres).
 - **5% of days mirror RED's team** (`MIRROR_RED_ODDS`): the starter, a
   **shiny Pikachu** (level 100, Light Ball and Volt Tackle, like his), a
   legendary for sure, and three more.
