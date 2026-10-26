@@ -36,11 +36,15 @@ export function redCaseSeeds() {
   const found = [];
   // And a mirror-RED day for your team against each of his starters.
   for (const starter of ['VENUSAUR', 'CHARIZARD', 'BLASTOISE']) wanted.add(`mirror ${starter}`);
+  // And a capped-Pikachu day for each starter, and one with Mega Mewtwo.
+  for (const starter of ['VENUSAUR', 'CHARIZARD', 'BLASTOISE']) wanted.add(`cap ${starter}`);
+  wanted.add('cap megaMewtwo');
   for (let seed = 1; wanted.size && seed < 5_000_000; seed++) {
     const r = predictRolls(seed);
     const key = r.original ? 'original' : `${r.starter} ${r.legendary}`;
     const mirrorKey = !r.original && predictPlayerRolls(seed).mirror ? `mirror ${r.starter}` : null;
-    if (wanted.delete(key) | (mirrorKey !== null && wanted.delete(mirrorKey))) found.push(seed);
+    const capKeys = r.cap ? [`cap ${r.starter}`, ...(r.legendary === 'megaMewtwo' ? ['cap megaMewtwo'] : [])] : [];
+    if (wanted.delete(key) | (mirrorKey !== null && wanted.delete(mirrorKey)) | capKeys.map((k) => wanted.delete(k)).some(Boolean)) found.push(seed);
   }
   return found;
 }
@@ -78,7 +82,7 @@ for (const seed of seeds) {
   const redCheck = validateRed(red, rolls);
   if (problems.length || redCheck.problems.length) invalid++;
   player.party.forEach((m) => m && species.add(m.speciesName));
-  const label = rolls.original ? 'original team' : `${rolls.starter.toLowerCase()}, ${rolls.legendary}`;
+  const label = rolls.original ? 'original team' : `${rolls.starter.toLowerCase()}, ${rolls.legendary}${rolls.cap ? ', capped Pikachu' : ''}`;
   redKinds.set(label, (redKinds.get(label) ?? 0) + 1);
   const mirror = predictPlayerRolls(seed).mirror;
   if (mirror) mirrorDays++;

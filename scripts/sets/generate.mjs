@@ -22,9 +22,11 @@
 //           already has its Z-Move user). Every species has one.
 //   MEGA    the sets of a Mega Evolution (Charizard-Mega-X...): the species to
 //           create is the base form, holding the stone.
-//   ZMOVE   always a Z-Crystal: the Kanto starters' (original-team days; when
-//           the set has none, the one for its strongest STAB type), your
-//           Typhlosion's, and RED's Pikachu's (Pikanium Z and Volt Tackle).
+//   ZMOVE   Z-Crystals: RED's legendaries' (Showdown's odds); the starters'
+//           always hold one (RED's Kanto starters; yours, when another of your
+//           Pokemon Mega Evolves, and Typhlosion, which has no Mega): when the
+//           set has none, the one for its strongest STAB type. RED's capped
+//           Pikachu's: a Pikanium Z and Volt Tackle.
 //   TERA    Gen 9 sets with their Tera type, for the Kanto starters.
 //
 // The ROM gives every Pokemon perfect stats (all IVs maxed by hyper training),
@@ -74,14 +76,15 @@ const CHAMPIONS = 'champions';
 generators.set(CHAMPIONS, Teams.getGenerator('gen9championsrandombattle', SEED));
 dexes.set(CHAMPIONS, Dex.forGen(9));
 
-// RED's legendaries (their NORMAL lists: his Pikachu has his Z-Move).
+// RED's legendaries: their sets may hold a Z-Crystal (see dailyred_red.c).
 const RED_LEGENDARIES = ['articuno', 'zapdos', 'moltres', 'raikou', 'entei', 'suicune', 'mewtwo', 'mew',
   'deoxys', 'deoxysattack', 'deoxysdefense', 'deoxysspeed'];
 const KANTO_STARTERS = ['venusaur', 'charizard', 'blastoise'];
 // The player's starter, picked to counter RED's (see dailyred_team.c): Megas
-// with their stone, and Typhlosion (no Mega) with a Firium Z.
+// with their stone, or a Z-Crystal when another of the team Mega Evolves
+// (Typhlosion, which has no Mega, always).
 const LATER_MEGAS = ['meganiummega', 'feraligatrmega'];
-const Z_STARTERS = ['typhlosion'];
+const Z_STARTERS = ['meganium', 'typhlosion', 'feraligatr', 'sceptile', 'blaziken', 'swampert'];
 
 // Every final-stage starter of Generations 1-9 (their whole families are left
 // out of RED's random pick).
@@ -267,9 +270,10 @@ for (const { species, sources } of normalSources.values()) {
   if (!use.length) use = sources.map((src) => ({ ...src, allowDynamaxSets: true }));
   const list = { id: species.id, gen: use[0].gen, kind: 'NORMAL', species, details: { zMove: 1 }, sources: use };
   lists.push(list);
-  // RED's Pikachu: the same sets, holding a Pikanium Z.
+  // RED's capped Pikachu: the same sets, holding a Pikanium Z.
   if (species.id === 'pikachu') lists.push({ ...list, kind: 'ZMOVE', pikaniumZ: true });
 }
+for (const id of RED_LEGENDARIES) lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, sources: [{ gen: 7, id }] });
 for (const id of KANTO_STARTERS) {
   lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, forceZ: true, sources: [{ gen: 7, id }] });
   lists.push({ id, gen: 9, kind: 'TERA', species: dexes.get(9).species.get(id), details: {}, sources: [{ gen: 9, id }] });
@@ -364,9 +368,9 @@ function addZCrystal(dex, set) {
 }
 
 // Pikachu always knows Volt Tackle (in place of its other Electric attack, or
-// its last move) and holds a Light Ball (RED's original team, your mirror-day
-// Pikachu) or, in its ZMOVE list (RED's usual Pikachu), a Pikanium Z, which
-// turns Volt Tackle into Catastropika. Gen 8 and 9 give Pikachu a random cap
+// its last move) and holds a Light Ball (RED's and your mirror-day Pikachu)
+// or, in its ZMOVE list (RED's capped Pikachu), a Pikanium Z, which turns
+// Volt Tackle into Catastropika. Gen 8 and 9 give Pikachu a random cap
 // (Pikachu-Unova...): it's the regular Pikachu here.
 function forcePikachu(dex, set, list) {
   if (dex.species.get(set.species).baseSpecies !== 'Pikachu' || dex.species.get(set.species).battleOnly) return set;

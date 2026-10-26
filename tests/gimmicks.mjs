@@ -37,9 +37,15 @@ const CASES = [
     gimmick: 'MEGA',
   },
   {
-    what: "RED's Pikachu uses Catastropika (its Pikanium Z)",
-    seed: findSeed((r) => !r.original && r.legendary === 'bird'),
-    lead: (m) => m.species === id('SPECIES', 'PIKACHU'),
+    what: 'on a Mega Mewtwo day the starter uses its Z-Move',
+    seed: findSeed((r) => !r.original && r.legendary === 'megaMewtwo' && !r.cap),
+    lead: (m) => holdEffect(m.heldItem) === 'Z_CRYSTAL',
+    gimmick: 'Z_MOVE',
+  },
+  {
+    what: "RED's capped Pikachu uses Catastropika (its Pikanium Z)",
+    seed: findSeed((r) => !r.original && r.cap),
+    lead: (m) => m.heldItem === id('ITEM', 'PIKANIUM_Z'),
     gimmick: 'Z_MOVE',
   },
   {

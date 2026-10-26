@@ -195,17 +195,21 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
   const starters = mons.filter((m) => allowed.includes(m.species) && m.level === LEVEL_STARTER);
   if (starters.length !== 1) problems.push(`${starters.length} starters for RED's ${redStarters.map((sp) => species(sp).name).join('/') || '?'}`);
   const starter = starters[0];
+  // Another Pokemon Mega Evolving (MEGA_SWAP_ODDS% of the days one can): the
+  // starter holds a Z-Crystal instead.
+  const otherMegas = mons.filter((m) => m !== starter && isMegaStone(m.heldItem));
+  if (otherMegas.length > 1) problems.push(`${otherMegas.length} Pokemon besides the starter hold Mega Stones`);
   if (starter) {
     const tag = starter.speciesName;
     const megas = species(starter.species).formChanges.filter((f) => f.method === 'BATTLE_MEGA_EVOLUTION_ITEM');
-    if (megas.length) {
+    const crystal = starter.heldItem ? item(starter.heldItem) : null;
+    if (megas.length && !otherMegas.length) {
       const mega = megaFormeFor(starter);
       if (!mega) problems.push(`${tag} doesn't hold its Mega Stone`);
       else matchesList(starter, listFor(mega, 'MEGA'), problems, tag);
     } else {
-      const crystal = starter.heldItem ? item(starter.heldItem) : null;
       if (!isZCrystal(starter.heldItem) || !species(starter.species).types.includes(crystal.secondaryId)) {
-        problems.push(`${tag} (no Mega) doesn't hold its type's Z-Crystal`);
+        problems.push(`${tag} doesn't hold its type's Z-Crystal${otherMegas.length ? ` (${otherMegas[0].speciesName} Mega Evolves)` : ''}`);
       }
       matchesList(starter, listFor(starter.species, 'ZMOVE'), problems, tag);
     }
@@ -233,8 +237,8 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
     if (m === starter || m === pikachu) continue;
     if (!isEligibleSpecies(m.species)) problems.push(`${tag}: not an in-scope species`);
     if (!isFinalStage(m.species)) problems.push(`${tag}: not fully evolved`);
-    if (isMegaStone(m.heldItem) || isZCrystal(m.heldItem)) problems.push(`${tag} holds ${item(m.heldItem).name}`);
-    const list = listFor(m.species, 'NORMAL');
+    if (isZCrystal(m.heldItem)) problems.push(`${tag} holds ${item(m.heldItem).name}`);
+    const list = isMegaStone(m.heldItem) ? listFor(megaFormeFor(m), 'MEGA') : listFor(m.species, 'NORMAL');
     matchesList(m, list, problems, tag);
     if (list && m.level !== list.level) problems.push(`${tag}: level ${m.level}, its tier's is ${list.level}`);
     if (m.level < 95 || m.level > 98) problems.push(`${tag}: level ${m.level} outside 95-98`);

@@ -1,3 +1,48 @@
+diff --git a/data/battle_scripts_1.s b/data/battle_scripts_1.s
+index 4745ed0f..7d44ceb3 100644
+--- a/data/battle_scripts_1.s
++++ b/data/battle_scripts_1.s
+@@ -4480,7 +4480,8 @@ BattleScript_AbilityPopUpTarget::
+ BattleScript_AbilityPopUp::
+ 	tryactivateabilityshield BS_ABILITY_BATTLER
+ 	showabilitypopup
+-	pause B_WAIT_TIME_SHORT
++	@ Daily Red: no pause, so the pop-up slides in while the ability's
++	@ animation and message play (it slides out on its own).
+ 	recordability BS_ABILITY_BATTLER
+ 	sethword sABILITY_OVERWRITE, 0
+ 	return
+@@ -4505,24 +4506,24 @@ BattleScript_ItemPopUp_Attacker::
+ 	flushtextbox
+ BattleScript_ItemPopUp_AttackerNoFlush::
+ 	showitempopup BS_ATTACKER
+-	pause B_WAIT_TIME_LONG
+-	destroyitempopup
++	@ Daily Red: no waiting for the pop-up to come and go: it shows while
++	@ the item's animation plays, and slides out on its own.
+ 	return
+ 
+ BattleScript_ItemPopUp_Scripting::
+ 	flushtextbox
+ BattleScript_ItemPopUp_ScriptingNoFlush::
+ 	showitempopup BS_SCRIPTING
+-	pause B_WAIT_TIME_LONG
+-	destroyitempopup
++	@ Daily Red: no waiting for the pop-up to come and go: it shows while
++	@ the item's animation plays, and slides out on its own.
+ 	return
+ 
+ BattleScript_ItemPopUp_Target::
+ 	flushtextbox
+ BattleScript_ItemPopUp_TargetNoFlush::
+ 	showitempopup BS_TARGET
+-	pause B_WAIT_TIME_LONG
+-	destroyitempopup
++	@ Daily Red: no waiting for the pop-up to come and go: it shows while
++	@ the item's animation plays, and slides out on its own.
+ 	return
+ 
+ @ Can't compare directly to a value, have to compare to value at pointer
 diff --git a/data/event_scripts.s b/data/event_scripts.s
 index bc9688b6..9a07413b 100644
 --- a/data/event_scripts.s
@@ -3390,10 +3435,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..19ed3b34
+index 00000000..6773e379
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,120 @@
+@@ -0,0 +1,124 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -3440,6 +3485,10 @@ index 00000000..19ed3b34
 +#define DAILYRED_BATTLE_BOX_FILL RGB(5, 5, 6)
 +#define DAILYRED_BATTLE_TEXT RGB(31, 31, 31)
 +#define DAILYRED_BATTLE_TEXT_SHADOW RGB(11, 11, 12)
++
++// How many frames a battle HP bar takes to drain (or fill) completely; a hit
++// takes its share of that (src/battle_interface.c). Higher is slower.
++#define DAILYRED_HP_BAR_FULL_FRAMES 40
 +
 +// src/dailyred_team.c
 +void DailyRed_GenerateTeam(struct Pokemon *party, u32 *rngState, u16 redStarter);
@@ -7149,10 +7198,16 @@ index 1873a02a..d40347d3 100644
  
  const struct CompressedSpriteSheet gSpriteSheet_EnemyShadow =
 diff --git a/src/battle_interface.c b/src/battle_interface.c
-index 69099bc4..24d55cf3 100644
+index 69099bc4..0be0a9e9 100644
 --- a/src/battle_interface.c
 +++ b/src/battle_interface.c
-@@ -36,6 +36,9 @@
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "malloc.h"
+ #include "battle.h"
+ #include "pokemon.h"
+@@ -36,6 +37,9 @@
  #include "caps.h"
  
  #define HEALTHBOX_BG_INDEX 2
@@ -7162,7 +7217,7 @@ index 69099bc4..24d55cf3 100644
  
  enum
  {   // Corresponds to gHealthboxElementsGfxTable (and the tables after it) in graphics.c
-@@ -1089,7 +1092,7 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp
+@@ -1089,7 +1093,7 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp
      {
          if (IsOnPlayerSide(battler)) // Player
          {
@@ -7171,7 +7226,7 @@ index 69099bc4..24d55cf3 100644
          }
          else // Opponent
          {
-@@ -1123,7 +1126,7 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, u32 maxOrCur
+@@ -1123,7 +1127,7 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, u32 maxOrCur
      {
          if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
          {
@@ -7180,7 +7235,7 @@ index 69099bc4..24d55cf3 100644
              // Clears the end of the healthbar gfx.
              CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_PLAYER_FRAME_END),
                            (void *)(OBJ_VRAM0 + 0x680) + (gSprites[healthboxSpriteId].oam.tileNum * TILE_SIZE_4BPP),
-@@ -1926,7 +1929,12 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
+@@ -1926,7 +1930,12 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
      }
      else
      {
@@ -7194,7 +7249,19 @@ index 69099bc4..24d55cf3 100644
  
          for (i = 0; i < 3; i++)
              CpuCopy32(statusGfxPtr, (void *)(OBJ_VRAM0 + (gSprites[healthboxSpriteId].oam.tileNum + tileNumAdder + i) * TILE_SIZE_4BPP), 32);
-@@ -2468,10 +2476,14 @@ static void FillHealthboxObject(void *dest, u32 valMult, u32 numTiles)
+@@ -2150,7 +2159,10 @@ s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar, u8
+ 
+     if (whichBar == HEALTH_BAR) // health bar
+     {
+-        u16 hpFraction = B_FAST_HP_DRAIN == FALSE ? 1 : max(gBattleSpritesDataPtr->battleBars[battler].maxValue / (B_HEALTHBAR_PIXELS / 2), 1);
++        // Daily Red: HP drains at a steady pace, a full bar in
++        // DAILYRED_HP_BAR_FULL_FRAMES frames (B_FAST_HP_DRAIN's is 24, FireRed's
++        // 1 HP a frame is about 300 at level 100).
++        u16 hpFraction = max(gBattleSpritesDataPtr->battleBars[battler].maxValue / DAILYRED_HP_BAR_FULL_FRAMES, 1);
+         currentBarValue = CalcNewBarValue(gBattleSpritesDataPtr->battleBars[battler].maxValue,
+                     gBattleSpritesDataPtr->battleBars[battler].oldValue,
+                     gBattleSpritesDataPtr->battleBars[battler].receivedValue,
+@@ -2468,10 +2480,14 @@ static void FillHealthboxObject(void *dest, u32 valMult, u32 numTiles)
  #define sBattlerId      data[4]
  #define sIsMain         data[5]
  
@@ -7210,7 +7277,7 @@ index 69099bc4..24d55cf3 100644
      .shadow = 1,
      .accent = 0,
  };
-@@ -2479,8 +2491,8 @@ static const union TextColor sBattlerTextColor =
+@@ -2479,8 +2495,8 @@ static const union TextColor sBattlerTextColor =
  static const union TextColor sAbilityTextColor =
  {
      .background = 0,
@@ -7220,6 +7287,46 @@ index 69099bc4..24d55cf3 100644
 +    .shadow = 2,
      .accent = 0,
  };
+ 
+@@ -2643,6 +2659,23 @@ bool32 IsAnyAbilityPopUpActive(void)
+     return activeAbilityPopUps;
+ }
+ 
++// Daily Red: pop-ups no longer hold up the battle script, so a battler's
++// next pop-up can come while its last one is still showing: that one goes
++// at once (without clearing the battler's active flag, which the new one
++// keeps).
++static void RemoveShowingPopUp(enum BattlerId battler)
++{
++    u8 *spriteIds = gBattleStruct->abilityPopUpSpriteIds[battler];
++
++    if (!gBattleStruct->battlerState[battler].activeAbilityPopUps)
++        return;
++    for (u32 i = 0; i < 2; i++)
++    {
++        if (gSprites[spriteIds[i]].inUse && gSprites[spriteIds[i]].callback == SpriteCb_AbilityPopUp)
++            DestroySprite(&gSprites[spriteIds[i]]);
++    }
++}
++
+ void CreateAbilityPopUp(enum BattlerId battler, enum Ability ability, bool32 isDoubleBattle)
+ {
+     u8 *spriteIds;
+@@ -2661,6 +2694,7 @@ void CreateAbilityPopUp(enum BattlerId battler, enum Ability ability, bool32 isD
+             return;
+     }
+ 
++    RemoveShowingPopUp(battler); // Daily Red
+     if (!IsAnyAbilityPopUpActive())
+         LoadSpritePalette(&sSpritePalette_AbilityPopUp);
+ 
+@@ -2819,6 +2853,7 @@ void CreateItemPopUp(enum BattlerId battler)
+             return;
+     }
+ 
++    RemoveShowingPopUp(battler); // Daily Red
+     if (!IsAnyAbilityPopUpActive())
+         LoadSpritePalette(&sSpritePalette_AbilityPopUp);
  
 diff --git a/src/battle_main.c b/src/battle_main.c
 index 46af80f3..72617a03 100644
@@ -7404,6 +7511,26 @@ index 85523e06..79fe93ec 100644
                  if (!(gBattleWeather & B_WEATHER_ICY_ANY))
                  {
                      if (B_OVERWORLD_SNOW >= GEN_9)
+diff --git a/src/battle_z_move.c b/src/battle_z_move.c
+index 4a0a3bc2..1ea2736c 100644
+--- a/src/battle_z_move.c
++++ b/src/battle_z_move.c
+@@ -90,6 +90,15 @@ static const struct SignatureZMove sSignatureZMoves[] =
+     {SPECIES_NECROZMA_ULTRA,          ITEM_ULTRANECROZIUM_Z,     MOVE_PHOTON_GEYSER,       MOVE_LIGHT_THAT_BURNS_THE_SKY},
+     {SPECIES_MEW,                     ITEM_MEWNIUM_Z,            MOVE_PSYCHIC,             MOVE_GENESIS_SUPERNOVA},
+     {SPECIES_PIKACHU,                 ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
++    // Daily Red: RED's capped Pikachu holds a Pikanium Z for Catastropika.
++    {SPECIES_PIKACHU_ORIGINAL,        ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
++    {SPECIES_PIKACHU_HOENN,           ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
++    {SPECIES_PIKACHU_SINNOH,          ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
++    {SPECIES_PIKACHU_UNOVA,           ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
++    {SPECIES_PIKACHU_KALOS,           ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
++    {SPECIES_PIKACHU_ALOLA,           ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
++    {SPECIES_PIKACHU_PARTNER,         ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
++    {SPECIES_PIKACHU_WORLD,           ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
+     {SPECIES_EEVEE,                   ITEM_EEVIUM_Z,             MOVE_LAST_RESORT,         MOVE_EXTREME_EVOBOOST},
+     {SPECIES_SNORLAX,                 ITEM_SNORLIUM_Z,           MOVE_GIGA_IMPACT,         MOVE_PULVERIZING_PANCAKE},
+ };
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
 index 00000000..be87e427
@@ -8406,10 +8533,10 @@ index 00000000..a8af713b
 +}
 diff --git a/src/dailyred_red.c b/src/dailyred_red.c
 new file mode 100644
-index 00000000..cffa6736
+index 00000000..5631724d
 --- /dev/null
 +++ b/src/dailyred_red.c
-@@ -0,0 +1,562 @@
+@@ -0,0 +1,625 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "battle.h"
@@ -8436,27 +8563,35 @@ index 00000000..cffa6736
 +// On most days (see "RED's team" in the project README):
 +//   - A Kanto starter: Venusaur, Charizard or Blastoise, holding its Mega
 +//     Stone (Charizard X or Y), level 99.
-+//   - Pikachu with a Pikanium Z and Volt Tackle (Catastropika), level 100. He
-+//     always leads with it, and its totem aura raises all five of its stats
-+//     by one stage as the battle starts (DailyRed_QueueRedTotemBoost).
++//   - Pikachu with a Light Ball and Volt Tackle, level 100. On
++//     CAP_PIKACHU_ODDS% of these days it's a Pikachu in one of Ash's caps
++//     instead, holding a Pikanium Z (Catastropika) and leading, and its
++//     totem aura raises all five of its stats by one stage as the battle
++//     starts (DailyRed_QueueRedTotemBoost).
 +//   - A legendary, level 99, picked by the starter: usually its bird
 +//     (Venusaur: Moltres, Charizard: Articuno, Blastoise: Zapdos), sometimes
 +//     the Galarian bird, the Johto dog (Entei, Suicune, Raikou), Mewtwo
 +//     (level 100), Deoxys (any forme), Mew (sometimes shiny), or, rarest,
 +//     Mega Mewtwo X or Y (level 100). On a Mega Mewtwo day the starter holds
-+//     a regular item instead of its Mega Stone. Pikachu has his Z-Move, so
-+//     nothing else holds a Z-Crystal.
++//     a Z-Crystal instead of its Mega Stone. Any legendary but Mega Mewtwo
++//     and the Galarian birds (Gen 8, no Z-Moves) may hold a Z-Crystal if its
++//     set does. On capped-Pikachu days Pikachu has his one Z-Move, so the
++//     legendary never holds a Z-Crystal, and the Mega Mewtwo day starter
++//     gets a regular set.
 +//   - Two of sRedPool and one fully evolved Pokemon from a Gen 1 family
 +//     (gDailyRedPickGroups: Gen 1 Pokemon and their later evolutions, no
 +//     starters, Pikachu's family, legendaries or mythicals), level 96, never
 +//     holding a Mega Stone or Z-Crystal. No two of these three share a type,
 +//     and the team has at most one Eeveelution.
++//   - He leads with Pikachu or one of those three: one that sets entry
++//     hazards (Stealth Rock, Spikes...) if any does, otherwise at random (his
++//     capped Pikachu always leads).
 +// On ORIGINAL_TEAM_ODDS% of days he has his original team instead, all level
-+// 100: Pikachu (his HGSS one: Light Ball, no totem aura), Espeon or Lapras,
-+// Snorlax, Venusaur, Charizard and Blastoise. The three starters share out a
-+// Mega Evolution, a Z-Crystal and a Tera type at random, each with that
-+// gimmick's sets (Gen 7 for Mega and Z, Gen 9 for Tera). He leads with
-+// Pikachu, Espeon/Lapras or Snorlax.
++// 100: Pikachu (never capped), Espeon or Lapras, Snorlax, Venusaur, Charizard
++// and Blastoise. The three starters share out a Mega Evolution, a Z-Crystal
++// and a Tera type at random, each with that gimmick's sets (Gen 7 for Mega and
++// Z, Gen 9 for Tera). He leads with Pikachu, Espeon/Lapras or Snorlax (a
++// hazard setter if there is one).
 +//
 +// Every day the team limits apply (DailyRed_ItemFits and DailyRed_TypesFit,
 +// for both teams): one item may be held by two of his six and every other by
@@ -8470,8 +8605,9 @@ index 00000000..cffa6736
 +// can Terastallize; nothing Dynamaxes.
 +//
 +// It draws from its own RNG state (see dailyred.c), so a seed always gives the
-+// same RED. Its first three draws are always the day's original-team roll, the
-+// starter and the legendary roll (tests/red.mjs predicts them).
++// same RED. Its first four draws are always the day's original-team roll, the
++// starter, the legendary roll and the capped-Pikachu roll (tests/red.mjs
++// predicts them).
 +
 +// Odds, in percent. Raise or lower them to taste; the legendary ones must add
 +// up to at most 100 (the rest is the starter's own bird).
@@ -8483,6 +8619,7 @@ index 00000000..cffa6736
 +#define MEWTWO_ODDS        10
 +#define GALARIAN_BIRD_ODDS 15
 +#define JOHTO_DOG_ODDS     20
++#define CAP_PIKACHU_ODDS   10 // of the days with his usual team
 +
 +#define LEVEL_PIKACHU       100
 +#define LEVEL_STARTER       99
@@ -8549,6 +8686,18 @@ index 00000000..cffa6736
 +
 +static const u16 sFemaleSpecies[] = {SPECIES_LAPRAS, SPECIES_GYARADOS}; // and the Eeveelutions
 +
++// Pikachu in Ash's caps, for his capped-Pikachu days.
++static const u16 sCapPikachus[] =
++{
++    SPECIES_PIKACHU_ORIGINAL, SPECIES_PIKACHU_HOENN, SPECIES_PIKACHU_SINNOH, SPECIES_PIKACHU_UNOVA,
++    SPECIES_PIKACHU_KALOS, SPECIES_PIKACHU_ALOLA, SPECIES_PIKACHU_PARTNER, SPECIES_PIKACHU_WORLD,
++};
++
++static const u16 sHazardMoves[] =
++{
++    MOVE_STEALTH_ROCK, MOVE_SPIKES, MOVE_TOXIC_SPIKES, MOVE_STICKY_WEB, MOVE_STONE_AXE, MOVE_CEASELESS_EDGE,
++};
++
 +// Original-team days: which starter gets which gimmick.
 +static const u8 sGimmickOrders[][NUM_STARTERS] =
 +{
@@ -8563,6 +8712,7 @@ index 00000000..cffa6736
 +struct RedMember
 +{
 +    const struct DailyRedSet *set;
++    u16 species;   // the species to create: the set's, or a capped Pikachu
 +    u32 typeMask;  // its types, and its Mega forme's
 +    u16 baseSpecies;
 +    u8 level;
@@ -8637,6 +8787,7 @@ index 00000000..cffa6736
 +    member->set = DailyRed_PickFittingSet(list, items, count, rng);
 +    if (member->set == NULL)
 +        member->set = PickSet(list, rng);
++    member->species = member->set->species;
 +    member->typeMask = GetTypeMask(list->species) | GetTypeMask(member->set->species);
 +    member->baseSpecies = GET_BASE_SPECIES_ID(member->set->species);
 +    member->level = level;
@@ -8732,13 +8883,35 @@ index 00000000..cffa6736
 +    }
 +}
 +
-+// Picks the lead among members firstLead to lastLead, at random, and the
-+// order of the others.
++static bool32 SetsHazards(const struct DailyRedSet *set)
++{
++    u32 i;
++    for (i = 0; i < MAX_MON_MOVES; i++)
++    {
++        if (IsInList(set->moves[i], sHazardMoves, ARRAY_COUNT(sHazardMoves)))
++            return TRUE;
++    }
++    return FALSE;
++}
++
++// Picks the lead among members firstLead to lastLead (a hazard setter if
++// there is one), and the order of the others.
 +static void OrderTeam(struct RedTeam *team, u8 firstLead, u8 lastLead, u8 *order, u32 *rng)
 +{
-+    u8 i, j, temp;
++    u8 candidates[PARTY_SIZE] = {0};
++    u8 count = 0, i, j, temp;
 +
-+    order[0] = firstLead + RedRandom(rng) % (lastLead - firstLead + 1);
++    for (i = firstLead; i <= lastLead; i++)
++    {
++        if (SetsHazards(team->members[i].set))
++            candidates[count++] = i;
++    }
++    if (count == 0)
++    {
++        for (i = firstLead; i <= lastLead; i++)
++            candidates[count++] = i;
++    }
++    order[0] = candidates[RedRandom(rng) % count];
 +    for (i = 0, j = 1; i < team->count; i++)
 +    {
 +        if (i != order[0])
@@ -8764,11 +8937,16 @@ index 00000000..cffa6736
 +
 +static void CreateRedMon(struct Pokemon *mon, const struct RedMember *member, struct TrainerGenerator *trainerGen)
 +{
-+    DailyRed_CreateSetMon(mon, member->set, member->level, GetRedGender(member->set->species), member->shiny, trainerGen);
++    struct DailyRedSet set = *member->set;
++
++    set.species = member->species; // a capped Pikachu
++    DailyRed_CreateSetMon(mon, &set, member->level, GetRedGender(set.species), member->shiny, trainerGen);
 +}
 +
-+static void BuildUsualTeam(struct RedTeam *team, u32 starter, u32 legendaryRoll, u32 *rng)
++static void BuildUsualTeam(struct RedTeam *team, u32 starter, u32 legendaryRoll, bool32 capPikachu, u32 *rng)
 +{
++    // His Z-Move: the capped Pikachu's, or the legendary's (or starter's) sets may have one.
++    u8 zKind = capPikachu ? DAILYRED_SETS_NORMAL : DAILYRED_SETS_ZMOVE;
 +    const struct RedStarter *info = &sRedStarters[starter];
 +    u32 legendary;
 +    u16 species;
@@ -8790,7 +8968,7 @@ index 00000000..cffa6736
 +
 +    // The starter Mega Evolves, unless Mewtwo does.
 +    if (legendary == LEGENDARY_MEGA_MEWTWO)
-+        AddMember(team, FindSetList(info->species, DAILYRED_SETS_NORMAL), LEVEL_STARTER, FALSE, rng);
++        AddMember(team, FindSetList(info->species, zKind), LEVEL_STARTER, FALSE, rng);
 +    else
 +        AddMember(team, FindSetList(info->megas[RedRandom(rng) % 2], DAILYRED_SETS_MEGA), LEVEL_STARTER, FALSE, rng);
 +
@@ -8801,29 +8979,38 @@ index 00000000..cffa6736
 +        AddMember(team, FindSetList(species, DAILYRED_SETS_MEGA), LEVEL_MEWTWO, FALSE, rng);
 +        break;
 +    case LEGENDARY_MEWTWO:
-+        AddMember(team, FindSetList(SPECIES_MEWTWO, DAILYRED_SETS_NORMAL), LEVEL_MEWTWO, FALSE, rng);
++        AddMember(team, FindSetList(SPECIES_MEWTWO, zKind), LEVEL_MEWTWO, FALSE, rng);
 +        break;
 +    case LEGENDARY_MEW:
 +    case LEGENDARY_SHINY_MEW:
-+        AddMember(team, FindSetList(SPECIES_MEW, DAILYRED_SETS_NORMAL), LEVEL_LEGENDARY, legendary == LEGENDARY_SHINY_MEW, rng);
++        AddMember(team, FindSetList(SPECIES_MEW, zKind), LEVEL_LEGENDARY, legendary == LEGENDARY_SHINY_MEW, rng);
 +        break;
 +    case LEGENDARY_DEOXYS:
 +        species = sDeoxysFormes[RedRandom(rng) % ARRAY_COUNT(sDeoxysFormes)];
-+        AddMember(team, FindSetList(species, DAILYRED_SETS_NORMAL), LEVEL_LEGENDARY, FALSE, rng);
++        AddMember(team, FindSetList(species, zKind), LEVEL_LEGENDARY, FALSE, rng);
 +        break;
 +    case LEGENDARY_GALARIAN_BIRD:
 +        AddMember(team, FindSetList(info->galarianBird, DAILYRED_SETS_NORMAL), LEVEL_LEGENDARY, FALSE, rng);
 +        break;
 +    case LEGENDARY_JOHTO_DOG:
-+        AddMember(team, FindSetList(info->johtoDog, DAILYRED_SETS_NORMAL), LEVEL_LEGENDARY, FALSE, rng);
++        AddMember(team, FindSetList(info->johtoDog, zKind), LEVEL_LEGENDARY, FALSE, rng);
 +        break;
 +    default:
-+        AddMember(team, FindSetList(info->bird, DAILYRED_SETS_NORMAL), LEVEL_LEGENDARY, FALSE, rng);
++        AddMember(team, FindSetList(info->bird, zKind), LEVEL_LEGENDARY, FALSE, rng);
 +        break;
 +    }
 +
-+    // Pikachu, with its Pikanium Z: the lead (member 2).
-+    AddMember(team, FindSetList(SPECIES_PIKACHU, DAILYRED_SETS_ZMOVE), LEVEL_PIKACHU, FALSE, rng);
++    // Members from here on can lead. Pikachu is member 2: in a cap, with its
++    // Pikanium Z, on capped-Pikachu days.
++    if (capPikachu)
++    {
++        AddMember(team, FindSetList(SPECIES_PIKACHU, DAILYRED_SETS_ZMOVE), LEVEL_PIKACHU, FALSE, rng);
++        team->members[team->count - 1].species = sCapPikachus[RedRandom(rng) % ARRAY_COUNT(sCapPikachus)];
++    }
++    else
++    {
++        AddMember(team, FindSetList(SPECIES_PIKACHU, DAILYRED_SETS_NORMAL), LEVEL_PIKACHU, FALSE, rng);
++    }
 +    AddPoolPicks(team, rng);
 +    AddAnyPick(team, rng);
 +}
@@ -8860,18 +9047,21 @@ index 00000000..cffa6736
 +    bool32 originalTeam = RedRandom(rng) % 100 < ORIGINAL_TEAM_ODDS;
 +    u32 starter = RedRandom(rng) % NUM_STARTERS;
 +    u32 legendaryRoll = RedRandom(rng) % 100;
++    bool32 capPikachu = RedRandom(rng) % 100 < CAP_PIKACHU_ODDS && !originalTeam;
 +
 +    if (originalTeam)
 +        BuildOriginalTeam(&team, rng);
 +    else
-+        BuildUsualTeam(&team, starter, legendaryRoll, rng);
++        BuildUsualTeam(&team, starter, legendaryRoll, capPikachu, rng);
 +
-+    // His usual Pikachu always leads; on original-team days Pikachu,
-+    // Espeon/Lapras or Snorlax (members 3 to 5) does.
++    // The starter and the legendary (or the three starters) never lead; the
++    // capped Pikachu (member 2) always does.
 +    if (originalTeam)
 +        OrderTeam(&team, NUM_STARTERS, NUM_STARTERS + 2, order, rng);
-+    else
++    else if (capPikachu)
 +        OrderTeam(&team, 2, 2, order, rng);
++    else
++        OrderTeam(&team, 2, team.count - 1, order, rng);
 +
 +    MakeTrainerGenerator(&trainerGen, GetTrainerStructFromId(TRAINER_DAILYRED_RED));
 +    trainerGen.localRngState = LocalRandomSeed(RedRandom32(rng));
@@ -8882,7 +9072,7 @@ index 00000000..cffa6736
 +}
 +
 +// Called as RED's battle starts (DailyRed_OnBattleStart, before the map
-+// script's trainerbattle): when his lead is his usual Pikachu (holding its
++// script's trainerbattle): when his lead is his capped Pikachu (holding its
 +// Pikanium Z), its totem aura flares as the battle starts, raising Attack,
 +// Defense, Speed, Sp. Atk and Sp. Def by one stage (the expansion's totem
 +// boost, as the settotemboost script command queues it).
@@ -8891,7 +9081,7 @@ index 00000000..cffa6736
 +    struct QueuedStatBoost *boost = &gQueuedStatBoosts[B_POSITION_OPPONENT_LEFT];
 +    enum Stat stat;
 +
-+    if (GetMonData(&gDailyRedRedParty[0], MON_DATA_SPECIES) != SPECIES_PIKACHU
++    if (GET_BASE_SPECIES_ID(GetMonData(&gDailyRedRedParty[0], MON_DATA_SPECIES)) != SPECIES_PIKACHU
 +     || GetMonData(&gDailyRedRedParty[0], MON_DATA_HELD_ITEM) != ITEM_PIKANIUM_Z)
 +        return;
 +    for (stat = STAT_ATK; stat <= STAT_SPDEF; stat++)
@@ -8974,10 +9164,10 @@ index 00000000..cffa6736
 +}
 diff --git a/src/dailyred_sets.c b/src/dailyred_sets.c
 new file mode 100644
-index 00000000..77a58f48
+index 00000000..dda39f0a
 --- /dev/null
 +++ b/src/dailyred_sets.c
-@@ -0,0 +1,8056 @@
+@@ -0,0 +1,8180 @@
 +// Generated by scripts/sets/generate.mjs. Don't edit by hand: change the
 +// script's options and run it again.
 +//
@@ -8988,7 +9178,7 @@ index 00000000..77a58f48
 +// (25% of a list). 400 randomSet() calls per generation, sets under
 +// 2% dropped, at most 10 per generation.
 +// Gimmick sets left out (gimmickReason in the script): built for Dynamax (Max Moves); Tera Blast without a Tera type; status Z-Move.
-+// 6364 sets in 773 lists; 81 species for RED's random pick.
++// 6454 sets in 790 lists; 81 species for RED's random pick.
 +
 +#include "global.h"
 +#include "data.h"
@@ -16093,15 +16283,91 @@ index 00000000..77a58f48
 +    SET(PECHARUNT, LEFTOVERS, POISON_PUPPETEER, MALIGNANT_CHAIN, NASTY_PLOT, RECOVER, SHADOW_BALL, MODEST, EVS(252, 0, 0, 252, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Bulky Attacker, Gen 9, 51%
 +    SET(PECHARUNT, LEFTOVERS, POISON_PUPPETEER, MALIGNANT_CHAIN, PARTING_SHOT, RECOVER, SHADOW_BALL, MODEST, EVS(252, 0, 0, 252, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 136), // Bulky Attacker, Gen 9, 27%
 +    SET(PECHARUNT, ROCKY_HELMET, POISON_PUPPETEER, MALIGNANT_CHAIN, PARTING_SHOT, RECOVER, SHADOW_BALL, MODEST, EVS(252, 0, 0, 252, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 114), // Bulky Attacker, Gen 9, 23%
++    // Articuno, ZMOVE (Gen 7)
++    SET(ARTICUNO, LEFTOVERS, PRESSURE, FREEZE_DRY, ROOST, SUBSTITUTE, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Staller, Gen 7, 49%
++    SET(ARTICUNO, LEFTOVERS, PRESSURE, FREEZE_DRY, HURRICANE, ROOST, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 134), // Bulky Support, Gen 7, 26%
++    SET(ARTICUNO, LEFTOVERS, PRESSURE, FREEZE_DRY, HURRICANE, ROOST, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 131), // Bulky Support, Gen 7, 25%
++    // Zapdos, ZMOVE (Gen 7)
++    SET(ZAPDOS, LEFTOVERS, STATIC, DEFOG, DISCHARGE, HEAT_WAVE, ROOST, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Bulky Support, Gen 7, 27%
++    SET(ZAPDOS, LEFTOVERS, STATIC, DEFOG, DISCHARGE, HIDDEN_POWER, ROOST, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 30, 31, 31, 31), NONE, 255, 248), // Bulky Support, Gen 7, 27%
++    SET(ZAPDOS, LEFTOVERS, STATIC, DEFOG, DISCHARGE, ROOST, U_TURN, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 220), // Bulky Support, Gen 7, 24%
++    SET(ZAPDOS, LEFTOVERS, STATIC, DEFOG, DISCHARGE, ROOST, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 213), // Bulky Support, Gen 7, 23%
++    // Moltres, ZMOVE (Gen 7)
++    SET(MOLTRES, LEFTOVERS, FLAME_BODY, FIRE_BLAST, HURRICANE, ROOST, WILL_O_WISP, MODEST, EVS(252, 0, 0, 252, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Bulky Attacker, Gen 7, 26%
++    SET(MOLTRES, LEFTOVERS, FLAME_BODY, DEFOG, FIRE_BLAST, HURRICANE, ROOST, MODEST, EVS(252, 0, 0, 252, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 253), // Bulky Attacker, Gen 7, 26%
++    SET(MOLTRES, LEFTOVERS, FLAME_BODY, FIRE_BLAST, HURRICANE, ROOST, U_TURN, MILD, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 243), // Bulky Attacker, Gen 7, 25%
++    SET(MOLTRES, LEFTOVERS, FLAME_BODY, FIRE_BLAST, HURRICANE, ROOST, TOXIC, MODEST, EVS(252, 0, 0, 252, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 221), // Bulky Attacker, Gen 7, 23%
++    // Raikou, ZMOVE (Gen 7)
++    SET(RAIKOU, CHOICE_SPECS, PRESSURE, AURA_SPHERE, HIDDEN_POWER, THUNDERBOLT, VOLT_SWITCH, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 30, 31, 31, 31), NONE, 255, 255), // Fast Attacker, Gen 7, 50%
++    SET(RAIKOU, LEFTOVERS, PRESSURE, AURA_SPHERE, CALM_MIND, HIDDEN_POWER, THUNDERBOLT, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 30, 31, 31, 31), NONE, 255, 138), // Bulky Setup, Gen 7, 27%
++    SET(RAIKOU, LEFTOVERS, PRESSURE, CALM_MIND, HIDDEN_POWER, SUBSTITUTE, THUNDERBOLT, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 30, 31, 31, 31), NONE, 255, 119), // Bulky Setup, Gen 7, 23%
++    // Entei, ZMOVE (Gen 7)
++    SET(ENTEI, CHOICE_BAND, INNER_FOCUS, EXTREME_SPEED, FLARE_BLITZ, SACRED_FIRE, STOMPING_TANTRUM, ADAMANT, EVS(252, 252, 0, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Wallbreaker, Gen 7, 52%
++    SET(ENTEI, CHOICE_BAND, INNER_FOCUS, EXTREME_SPEED, FLARE_BLITZ, SACRED_FIRE, STONE_EDGE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 240), // Fast Attacker, Gen 7, 49%
++    // Suicune, ZMOVE (Gen 7)
++    SET(SUICUNE, LEFTOVERS, PRESSURE, CALM_MIND, REST, SCALD, SLEEP_TALK, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Bulky Attacker, Gen 7, 37%
++    SET(SUICUNE, LEFTOVERS, PRESSURE, CALM_MIND, PROTECT, SCALD, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 226), // Staller, Gen 7, 33%
++    SET(SUICUNE, LEFTOVERS, PRESSURE, CALM_MIND, ICE_BEAM, SCALD, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 106), // Bulky Setup, Gen 7, 16%
++    SET(SUICUNE, CHESTO_BERRY, PRESSURE, CALM_MIND, ICE_BEAM, REST, SCALD, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 98), // Bulky Setup, Gen 7, 14%
++    // Mewtwo, ZMOVE (Gen 7)
++    SET(MEWTWO, CHOICE_SPECS, UNNERVE, AURA_SPHERE, FIRE_BLAST, PSYSTRIKE, SIGNAL_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Fast Attacker, Gen 7, 14%
++    SET(MEWTWO, LIFE_ORB, UNNERVE, AURA_SPHERE, FIRE_BLAST, PSYSTRIKE, RECOVER, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 219), // Fast Attacker, Gen 7, 12%
++    SET(MEWTWO, LIFE_ORB, UNNERVE, AURA_SPHERE, CALM_MIND, FIRE_BLAST, PSYSTRIKE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 215), // Fast Attacker, Gen 7, 12%
++    SET(MEWTWO, LIFE_ORB, UNNERVE, AURA_SPHERE, CALM_MIND, PSYSTRIKE, SIGNAL_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 215), // Fast Attacker, Gen 7, 12%
++    SET(MEWTWO, LIFE_ORB, UNNERVE, FIRE_BLAST, PSYSTRIKE, RECOVER, SIGNAL_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 215), // Fast Attacker, Gen 7, 12%
++    SET(MEWTWO, LIFE_ORB, UNNERVE, CALM_MIND, FIRE_BLAST, PSYSTRIKE, SIGNAL_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 201), // Fast Attacker, Gen 7, 11%
++    SET(MEWTWO, LIFE_ORB, UNNERVE, AURA_SPHERE, PSYSTRIKE, RECOVER, SIGNAL_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 166), // Fast Attacker, Gen 7, 9.3%
++    SET(MEWTWO, LIFE_ORB, UNNERVE, AURA_SPHERE, CALM_MIND, PSYSTRIKE, RECOVER, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 121), // Fast Attacker, Gen 7, 6.8%
++    SET(MEWTWO, LIFE_ORB, UNNERVE, CALM_MIND, FIRE_BLAST, PSYSTRIKE, RECOVER, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 98), // Fast Attacker, Gen 7, 5.5%
++    SET(MEWTWO, LIFE_ORB, UNNERVE, CALM_MIND, PSYSTRIKE, RECOVER, SIGNAL_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 85), // Fast Attacker, Gen 7, 4.8%
++    // Mew, ZMOVE (Gen 7)
++    SET(MEW, LIFE_ORB, SYNCHRONIZE, EARTHQUAKE, LEECH_LIFE, SWORDS_DANCE, ZEN_HEADBUTT, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Fast Attacker, Gen 7, 43%
++    SET(MEW, MEWNIUM_Z, SYNCHRONIZE, AURA_SPHERE, EARTH_POWER, NASTY_PLOT, PSYCHIC, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 70), // Z-Move user, Gen 7, 12%
++    SET(MEW, MEWNIUM_Z, SYNCHRONIZE, AURA_SPHERE, FIRE_BLAST, NASTY_PLOT, PSYCHIC, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 49), // Z-Move user, Gen 7, 8.3%
++    SET(MEW, MEWNIUM_Z, SYNCHRONIZE, EARTH_POWER, FIRE_BLAST, NASTY_PLOT, PSYCHIC, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 45), // Z-Move user, Gen 7, 7.6%
++    SET(MEW, MEWNIUM_Z, SYNCHRONIZE, FIRE_BLAST, NASTY_PLOT, PSYCHIC, ROOST, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 35), // Z-Move user, Gen 7, 5.9%
++    SET(MEW, LEFTOVERS, SYNCHRONIZE, PSYCHIC, ROOST, STEALTH_ROCK, U_TURN, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 33), // Staller, Gen 7, 5.6%
++    SET(MEW, MEWNIUM_Z, SYNCHRONIZE, EARTH_POWER, NASTY_PLOT, PSYCHIC, ROOST, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 27), // Z-Move user, Gen 7, 4.6%
++    SET(MEW, LEFTOVERS, SYNCHRONIZE, PSYCHIC, ROOST, TAUNT, WILL_O_WISP, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 27), // Staller, Gen 7, 4.6%
++    SET(MEW, LEFTOVERS, SYNCHRONIZE, PSYCHIC, ROOST, U_TURN, WILL_O_WISP, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 25), // Staller, Gen 7, 4.3%
++    SET(MEW, LEFTOVERS, SYNCHRONIZE, KNOCK_OFF, PSYCHIC, ROOST, TAUNT, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 23), // Staller, Gen 7, 4.0%
++    // Deoxys, ZMOVE (Gen 7)
++    SET(DEOXYS, LIFE_ORB, PRESSURE, ICE_BEAM, KNOCK_OFF, PSYCHO_BOOST, SUPERPOWER, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Fast Attacker, Gen 7, 52%
++    SET(DEOXYS, LIFE_ORB, PRESSURE, EXTREME_SPEED, KNOCK_OFF, PSYCHO_BOOST, SUPERPOWER, ADAMANT, EVS(252, 252, 4, 0, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 240), // Wallbreaker, Gen 7, 49%
++    // Deoxys-Attack, ZMOVE (Gen 7)
++    SET(DEOXYS_ATTACK, LIFE_ORB, PRESSURE, EXTREME_SPEED, KNOCK_OFF, PSYCHO_BOOST, SUPERPOWER, ADAMANT, EVS(252, 252, 4, 0, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Wallbreaker, Gen 7, 55%
++    SET(DEOXYS_ATTACK, LIFE_ORB, PRESSURE, ICE_BEAM, KNOCK_OFF, PSYCHO_BOOST, SUPERPOWER, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 213), // Fast Attacker, Gen 7, 46%
++    // Deoxys-Defense, ZMOVE (Gen 7)
++    SET(DEOXYS_DEFENSE, ROCKY_HELMET, PRESSURE, KNOCK_OFF, RECOVER, SEISMIC_TOSS, TOXIC, IMPISH, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Bulky Support, Gen 7, 13%
++    SET(DEOXYS_DEFENSE, LEFTOVERS, PRESSURE, KNOCK_OFF, RECOVER, SEISMIC_TOSS, STEALTH_ROCK, IMPISH, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 246), // Bulky Support, Gen 7, 12%
++    SET(DEOXYS_DEFENSE, LEFTOVERS, PRESSURE, RECOVER, SEISMIC_TOSS, SPIKES, STEALTH_ROCK, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 237), // Bulky Support, Gen 7, 12%
++    SET(DEOXYS_DEFENSE, ROCKY_HELMET, PRESSURE, RECOVER, SEISMIC_TOSS, SPIKES, TAUNT, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 211), // Bulky Support, Gen 7, 10%
++    SET(DEOXYS_DEFENSE, ROCKY_HELMET, PRESSURE, RECOVER, SEISMIC_TOSS, SPIKES, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 202), // Bulky Support, Gen 7, 10%
++    SET(DEOXYS_DEFENSE, LEFTOVERS, PRESSURE, RECOVER, SEISMIC_TOSS, TAUNT, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 185), // Bulky Support, Gen 7, 9.1%
++    SET(DEOXYS_DEFENSE, ROCKY_HELMET, PRESSURE, KNOCK_OFF, RECOVER, SEISMIC_TOSS, SPIKES, IMPISH, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 176), // Bulky Support, Gen 7, 8.7%
++    SET(DEOXYS_DEFENSE, LEFTOVERS, PRESSURE, KNOCK_OFF, RECOVER, SEISMIC_TOSS, TAUNT, IMPISH, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 176), // Bulky Support, Gen 7, 8.7%
++    SET(DEOXYS_DEFENSE, ROCKY_HELMET, PRESSURE, KNOCK_OFF, RECOVER, SEISMIC_TOSS, STEALTH_ROCK, IMPISH, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 167), // Bulky Support, Gen 7, 8.3%
++    SET(DEOXYS_DEFENSE, ROCKY_HELMET, PRESSURE, KNOCK_OFF, RECOVER, SEISMIC_TOSS, TAUNT, IMPISH, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 167), // Bulky Support, Gen 7, 8.3%
++    // Deoxys-Speed, ZMOVE (Gen 7)
++    SET(DEOXYS_SPEED, PSYCHIUM_Z, PRESSURE, DARK_PULSE, FOCUS_BLAST, NASTY_PLOT, PSYCHO_BOOST, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Z-Move user, Gen 7, 55%
++    SET(DEOXYS_SPEED, LEFTOVERS, PRESSURE, PSYCHO_BOOST, SPIKES, STEALTH_ROCK, SUPERPOWER, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 29), // Fast Support, Gen 7, 6.2%
++    SET(DEOXYS_SPEED, LEFTOVERS, PRESSURE, KNOCK_OFF, PSYCHO_BOOST, SPIKES, STEALTH_ROCK, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 28), // Fast Support, Gen 7, 5.9%
++    SET(DEOXYS_SPEED, LEFTOVERS, PRESSURE, KNOCK_OFF, PSYCHO_BOOST, SPIKES, TAUNT, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 28), // Fast Support, Gen 7, 5.9%
++    SET(DEOXYS_SPEED, LIFE_ORB, PRESSURE, KNOCK_OFF, PSYCHO_BOOST, SUPERPOWER, TAUNT, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 26), // Fast Support, Gen 7, 5.7%
++    SET(DEOXYS_SPEED, LEFTOVERS, PRESSURE, PSYCHO_BOOST, SPIKES, STEALTH_ROCK, TAUNT, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 23), // Fast Support, Gen 7, 4.9%
++    SET(DEOXYS_SPEED, LIFE_ORB, PRESSURE, KNOCK_OFF, PSYCHO_BOOST, STEALTH_ROCK, SUPERPOWER, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 22), // Fast Support, Gen 7, 4.7%
++    SET(DEOXYS_SPEED, LEFTOVERS, PRESSURE, PSYCHO_BOOST, SPIKES, SUPERPOWER, TAUNT, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 20), // Fast Support, Gen 7, 4.4%
++    SET(DEOXYS_SPEED, LEFTOVERS, PRESSURE, PSYCHO_BOOST, STEALTH_ROCK, SUPERPOWER, TAUNT, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 19), // Fast Support, Gen 7, 4.1%
++    SET(DEOXYS_SPEED, LIFE_ORB, PRESSURE, KNOCK_OFF, PSYCHO_BOOST, SPIKES, SUPERPOWER, NAIVE, EVS(0, 252, 0, 4, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 16), // Fast Support, Gen 7, 3.4%
 +    // Venusaur, ZMOVE (Gen 7)
-+    SET(VENUSAUR, POISONIUM_Z, OVERGROW, GIGA_DRAIN, LEECH_SEED, SLUDGE_BOMB, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Staller, Gen 7, 27%
-+    SET(VENUSAUR, POISONIUM_Z, CHLOROPHYLL, LEECH_SEED, SLEEP_POWDER, SLUDGE_BOMB, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 222), // Staller, Gen 7, 24%
-+    SET(VENUSAUR, GRASSIUM_Z, OVERGROW, EARTHQUAKE, ENERGY_BALL, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 119), // Bulky Attacker, Gen 7, 13%
-+    SET(VENUSAUR, POISONIUM_Z, CHLOROPHYLL, EARTHQUAKE, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, NAUGHTY, EVS(252, 252, 0, 4, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 96), // Bulky Attacker, Gen 7, 10%
-+    SET(VENUSAUR, GRASSIUM_Z, OVERGROW, ENERGY_BALL, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 94), // Bulky Attacker, Gen 7, 10%
-+    SET(VENUSAUR, POISONIUM_Z, CHLOROPHYLL, KNOCK_OFF, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 56), // Bulky Attacker, Gen 7, 6.0%
-+    SET(VENUSAUR, POISONIUM_Z, CHLOROPHYLL, EARTHQUAKE, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 47), // Bulky Attacker, Gen 7, 5.0%
-+    SET(VENUSAUR, GRASSIUM_Z, OVERGROW, ENERGY_BALL, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 47), // Bulky Attacker, Gen 7, 5.0%
++    SET(VENUSAUR, POISONIUM_Z, OVERGROW, GIGA_DRAIN, LEECH_SEED, SLUDGE_BOMB, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Staller, Gen 7, 23%
++    SET(VENUSAUR, POISONIUM_Z, CHLOROPHYLL, LEECH_SEED, SLEEP_POWDER, SLUDGE_BOMB, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 238), // Staller, Gen 7, 22%
++    SET(VENUSAUR, GRASSIUM_Z, OVERGROW, EARTHQUAKE, ENERGY_BALL, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 133), // Bulky Attacker, Gen 7, 12%
++    SET(VENUSAUR, POISONIUM_Z, CHLOROPHYLL, EARTHQUAKE, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, NAUGHTY, EVS(252, 252, 0, 4, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 128), // Bulky Attacker, Gen 7, 12%
++    SET(VENUSAUR, GRASSIUM_Z, OVERGROW, ENERGY_BALL, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 111), // Bulky Attacker, Gen 7, 10%
++    SET(VENUSAUR, GRASSIUM_Z, OVERGROW, ENERGY_BALL, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 91), // Bulky Attacker, Gen 7, 8.3%
++    SET(VENUSAUR, POISONIUM_Z, CHLOROPHYLL, EARTHQUAKE, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 89), // Bulky Attacker, Gen 7, 8.0%
++    SET(VENUSAUR, POISONIUM_Z, CHLOROPHYLL, KNOCK_OFF, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 64), // Bulky Attacker, Gen 7, 5.8%
 +    // Venusaur, TERA (Gen 9)
 +    SET(VENUSAUR, LEFTOVERS, CHLOROPHYLL, LEECH_SEED, SLEEP_POWDER, SLUDGE_BOMB, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), WATER, 255, 255), // Bulky Support, Gen 9, 18%
 +    SET(VENUSAUR, LEFTOVERS, CHLOROPHYLL, LEECH_SEED, SLEEP_POWDER, SLUDGE_BOMB, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), STEEL, 255, 241), // Bulky Support, Gen 9, 17%
@@ -16114,8 +16380,8 @@ index 00000000..77a58f48
 +    SET(VENUSAUR, LEFTOVERS, CHLOROPHYLL, EARTH_POWER, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), STEEL, 255, 72), // Bulky Attacker, Gen 9, 5.1%
 +    SET(VENUSAUR, LEFTOVERS, OVERGROW, ENERGY_BALL, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), STEEL, 255, 63), // Bulky Attacker, Gen 9, 4.4%
 +    // Charizard, ZMOVE (Gen 7)
-+    SET(CHARIZARD, FIRIUM_Z, BLAZE, AIR_SLASH, FIRE_BLAST, ROOST, WILL_O_WISP, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Bulky Attacker, Gen 7, 56%
-+    SET(CHARIZARD, FIRIUM_Z, BLAZE, AIR_SLASH, EARTHQUAKE, FIRE_BLAST, ROOST, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 202), // Bulky Attacker, Gen 7, 44%
++    SET(CHARIZARD, FIRIUM_Z, BLAZE, AIR_SLASH, EARTHQUAKE, FIRE_BLAST, ROOST, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Bulky Attacker, Gen 7, 54%
++    SET(CHARIZARD, FIRIUM_Z, BLAZE, AIR_SLASH, FIRE_BLAST, ROOST, WILL_O_WISP, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 221), // Bulky Attacker, Gen 7, 46%
 +    // Charizard, TERA (Gen 9)
 +    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, DRAGON_DANCE, EARTHQUAKE, FLARE_BLITZ, OUTRAGE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 255), // Setup Sweeper, Gen 9, 17%
 +    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_BLITZ, OUTRAGE, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 226), // Setup Sweeper, Gen 9, 15%
@@ -16128,12 +16394,12 @@ index 00000000..77a58f48
 +    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLAMETHROWER, FOCUS_BLAST, HURRICANE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), DRAGON, 255, 86), // Fast Attacker, Gen 9, 5.8%
 +    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, FLAMETHROWER, FOCUS_BLAST, HURRICANE, WILL_O_WISP, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), DRAGON, 255, 86), // Fast Attacker, Gen 9, 5.8%
 +    // Blastoise, ZMOVE (Gen 7)
-+    SET(BLASTOISE, WATERIUM_Z, TORRENT, ICE_BEAM, RAPID_SPIN, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Bulky Support, Gen 7, 19%
-+    SET(BLASTOISE, WATERIUM_Z, TORRENT, ICE_BEAM, RAPID_SPIN, ROAR, SCALD, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 248), // Bulky Support, Gen 7, 18%
-+    SET(BLASTOISE, WATERIUM_Z, TORRENT, ICE_BEAM, PROTECT, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 241), // Staller, Gen 7, 18%
-+    SET(BLASTOISE, WATERIUM_Z, TORRENT, PROTECT, RAPID_SPIN, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 227), // Staller, Gen 7, 17%
-+    SET(BLASTOISE, WATERIUM_Z, TORRENT, HAZE, PROTECT, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 214), // Staller, Gen 7, 16%
-+    SET(BLASTOISE, WATERIUM_Z, TORRENT, RAPID_SPIN, ROAR, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 193), // Bulky Support, Gen 7, 14%
++    SET(BLASTOISE, WATERIUM_Z, TORRENT, ICE_BEAM, PROTECT, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255), // Staller, Gen 7, 18%
++    SET(BLASTOISE, WATERIUM_Z, TORRENT, ICE_BEAM, RAPID_SPIN, ROAR, SCALD, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 244), // Bulky Support, Gen 7, 17%
++    SET(BLASTOISE, WATERIUM_Z, TORRENT, RAPID_SPIN, ROAR, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 244), // Bulky Support, Gen 7, 17%
++    SET(BLASTOISE, WATERIUM_Z, TORRENT, ICE_BEAM, RAPID_SPIN, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 241), // Bulky Support, Gen 7, 17%
++    SET(BLASTOISE, WATERIUM_Z, TORRENT, HAZE, PROTECT, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 223), // Staller, Gen 7, 16%
++    SET(BLASTOISE, WATERIUM_Z, TORRENT, PROTECT, RAPID_SPIN, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 209), // Staller, Gen 7, 15%
 +    // Blastoise, TERA (Gen 9)
 +    SET(BLASTOISE, WHITE_HERB, TORRENT, HYDRO_PUMP, ICE_BEAM, SHELL_SMASH, TERA_BLAST, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), ELECTRIC, 255, 255), // Tera Blast user, Gen 9, 24%
 +    SET(BLASTOISE, WHITE_HERB, TORRENT, HYDRO_PUMP, ICE_BEAM, SHELL_SMASH, TERA_BLAST, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), GRASS, 255, 250), // Tera Blast user, Gen 9, 23%
@@ -16145,9 +16411,40 @@ index 00000000..77a58f48
 +    // Feraligatr-Mega, MEGA (Champions)
 +    SET(FERALIGATR, FERALIGITE, SHEER_FORCE, AQUA_JET, DOUBLE_EDGE, DRAGON_DANCE, LIQUIDATION, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Setup Sweeper, Champions, 53%
 +    SET(FERALIGATR, FERALIGITE, SHEER_FORCE, DOUBLE_EDGE, DRAGON_DANCE, FACADE, LIQUIDATION, ADAMANT, EVS(252, 252, 0, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 231), // Bulky Setup, Champions, 48%
++    // Meganium, ZMOVE (Gen 7)
++    SET(MEGANIUM, GRASSIUM_Z, OVERGROW, EARTHQUAKE, ENERGY_BALL, SYNTHESIS, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Staller, Gen 7, 26%
++    SET(MEGANIUM, GRASSIUM_Z, OVERGROW, DRAGON_TAIL, ENERGY_BALL, SYNTHESIS, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 253), // Staller, Gen 7, 26%
++    SET(MEGANIUM, GRASSIUM_Z, OVERGROW, ENERGY_BALL, LEECH_SEED, SYNTHESIS, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 253), // Staller, Gen 7, 26%
++    SET(MEGANIUM, GRASSIUM_Z, OVERGROW, AROMATHERAPY, ENERGY_BALL, SYNTHESIS, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 230), // Staller, Gen 7, 23%
 +    // Typhlosion, ZMOVE (Gen 7)
-+    SET(TYPHLOSION, FIRIUM_Z, FLASH_FIRE, ERUPTION, FIRE_BLAST, FOCUS_BLAST, HIDDEN_POWER, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 30, 31, 30, 30), NONE, 255, 255), // Fast Attacker, Gen 7, 56%
-+    SET(TYPHLOSION, FIRIUM_Z, FLASH_FIRE, ERUPTION, FIRE_BLAST, FOCUS_BLAST, HIDDEN_POWER, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(30, 0, 31, 30, 31, 31), NONE, 255, 204), // Fast Attacker, Gen 7, 45%
++    SET(TYPHLOSION, FIRIUM_Z, FLASH_FIRE, ERUPTION, FIRE_BLAST, FOCUS_BLAST, HIDDEN_POWER, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(30, 0, 31, 30, 31, 31), NONE, 255, 255), // Fast Attacker, Gen 7, 50%
++    SET(TYPHLOSION, FIRIUM_Z, FLASH_FIRE, ERUPTION, FIRE_BLAST, FOCUS_BLAST, HIDDEN_POWER, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 30, 31, 30, 30), NONE, 255, 255), // Fast Attacker, Gen 7, 50%
++    // Feraligatr, ZMOVE (Gen 7)
++    SET(FERALIGATR, WATERIUM_Z, SHEER_FORCE, DRAGON_DANCE, EARTHQUAKE, ICE_PUNCH, LIQUIDATION, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Setup Sweeper, Gen 7, 51%
++    SET(FERALIGATR, WATERIUM_Z, SHEER_FORCE, CRUNCH, DRAGON_DANCE, ICE_PUNCH, LIQUIDATION, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 245), // Setup Sweeper, Gen 7, 49%
++    // Sceptile, ZMOVE (Gen 7)
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, GIGA_DRAIN, HIDDEN_POWER, LEECH_SEED, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 30, 31, 30), NONE, 255, 255), // Staller, Gen 7, 34%
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, GIGA_DRAIN, HIDDEN_POWER, LEECH_SEED, SUBSTITUTE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 30, 31, 31, 31), NONE, 255, 228), // Staller, Gen 7, 30%
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, EARTHQUAKE, FOCUS_BLAST, HIDDEN_POWER, LEAF_STORM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 30, 30, 31, 31, 31), NONE, 255, 50), // Fast Attacker, Gen 7, 6.5%
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, EARTHQUAKE, FOCUS_BLAST, HIDDEN_POWER, LEAF_STORM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 30, 31, 30, 31, 30), NONE, 255, 36), // Fast Attacker, Gen 7, 4.7%
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, EARTHQUAKE, HIDDEN_POWER, LEAF_STORM, ROCK_SLIDE, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 30, 31, 30, 31, 30), NONE, 255, 34), // Fast Attacker, Gen 7, 4.5%
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, FOCUS_BLAST, HIDDEN_POWER, LEAF_STORM, ROCK_SLIDE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 30, 31, 30, 31, 30), NONE, 255, 34), // Fast Attacker, Gen 7, 4.5%
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, EARTHQUAKE, FOCUS_BLAST, GIGA_DRAIN, HIDDEN_POWER, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 30, 30, 31, 31, 31), NONE, 255, 32), // Fast Attacker, Gen 7, 4.2%
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, EARTHQUAKE, GIGA_DRAIN, HIDDEN_POWER, ROCK_SLIDE, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 30, 30, 31, 31, 31), NONE, 255, 32), // Fast Attacker, Gen 7, 4.2%
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, FOCUS_BLAST, HIDDEN_POWER, LEAF_STORM, ROCK_SLIDE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 30, 30, 31, 31, 31), NONE, 255, 32), // Fast Attacker, Gen 7, 4.2%
++    SET(SCEPTILE, GRASSIUM_Z, OVERGROW, EARTHQUAKE, HIDDEN_POWER, LEAF_STORM, ROCK_SLIDE, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 30, 30, 31, 31, 31), NONE, 255, 29), // Fast Attacker, Gen 7, 3.9%
++    // Blaziken, ZMOVE (Gen 7)
++    SET(BLAZIKEN, FIGHTINIUM_Z, SPEED_BOOST, FLARE_BLITZ, HIGH_JUMP_KICK, PROTECT, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Setup Sweeper, Gen 7, 36%
++    SET(BLAZIKEN, FIGHTINIUM_Z, SPEED_BOOST, FLARE_BLITZ, HIGH_JUMP_KICK, KNOCK_OFF, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 227), // Setup Sweeper, Gen 7, 32%
++    SET(BLAZIKEN, FIGHTINIUM_Z, SPEED_BOOST, FLARE_BLITZ, HIGH_JUMP_KICK, STONE_EDGE, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 222), // Setup Sweeper, Gen 7, 32%
++    // Swampert, ZMOVE (Gen 7)
++    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, PROTECT, SCALD, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255), // Staller, Gen 7, 47%
++    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, ICE_BEAM, ROAR, SCALD, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 61), // Bulky Attacker, Gen 7, 11%
++    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, ROAR, SCALD, TOXIC, NAUGHTY, EVS(252, 252, 0, 4, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 53), // Bulky Attacker, Gen 7, 9.8%
++    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, ICE_BEAM, SCALD, TOXIC, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 46), // Bulky Attacker, Gen 7, 8.5%
++    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, ROAR, SCALD, STEALTH_ROCK, NAUGHTY, EVS(252, 252, 0, 4, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 46), // Bulky Attacker, Gen 7, 8.5%
++    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, SCALD, STEALTH_ROCK, TOXIC, NAUGHTY, EVS(252, 252, 0, 4, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 43), // Bulky Attacker, Gen 7, 8.0%
++    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, ICE_BEAM, SCALD, STEALTH_ROCK, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 38), // Bulky Attacker, Gen 7, 7.0%
 +};
 +
 +#undef SET
@@ -16923,15 +17220,32 @@ index 00000000..77a58f48
 +    [761] = {.species = SPECIES_IRON_CROWN, .firstSet = 6309, .numSets = 2, .kind = DAILYRED_SETS_NORMAL, .level = 95}, // Iron Crown, Gen 9 UUBL
 +    [762] = {.species = SPECIES_TERAPAGOS, .firstSet = 6311, .numSets = 4, .kind = DAILYRED_SETS_NORMAL, .level = 95}, // Terapagos, Gen 9 Uber
 +    [763] = {.species = SPECIES_PECHARUNT, .firstSet = 6315, .numSets = 3, .kind = DAILYRED_SETS_NORMAL, .level = 95}, // Pecharunt, Gen 9 OU
-+    [764] = {.species = SPECIES_VENUSAUR, .firstSet = 6318, .numSets = 8, .kind = DAILYRED_SETS_ZMOVE, .level = 97}, // Venusaur, Gen 7 RU
-+    [765] = {.species = SPECIES_VENUSAUR, .firstSet = 6326, .numSets = 10, .kind = DAILYRED_SETS_TERA, .level = 97}, // Venusaur, Gen 7 RU
-+    [766] = {.species = SPECIES_CHARIZARD, .firstSet = 6336, .numSets = 2, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Charizard, Gen 7 PUBL
-+    [767] = {.species = SPECIES_CHARIZARD, .firstSet = 6338, .numSets = 10, .kind = DAILYRED_SETS_TERA, .level = 98}, // Charizard, Gen 7 PUBL
-+    [768] = {.species = SPECIES_BLASTOISE, .firstSet = 6348, .numSets = 6, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Blastoise, Gen 7 NU
-+    [769] = {.species = SPECIES_BLASTOISE, .firstSet = 6354, .numSets = 5, .kind = DAILYRED_SETS_TERA, .level = 98}, // Blastoise, Gen 7 NU
-+    [770] = {.species = SPECIES_MEGANIUM_MEGA, .firstSet = 6359, .numSets = 1, .kind = DAILYRED_SETS_MEGA, .level = 98}, // Meganium-Mega, Gen 9 Illegal
-+    [771] = {.species = SPECIES_FERALIGATR_MEGA, .firstSet = 6360, .numSets = 2, .kind = DAILYRED_SETS_MEGA, .level = 98}, // Feraligatr-Mega, Gen 9 Illegal
-+    [772] = {.species = SPECIES_TYPHLOSION, .firstSet = 6362, .numSets = 2, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Typhlosion, Gen 7 NU
++    [764] = {.species = SPECIES_ARTICUNO, .firstSet = 6318, .numSets = 3, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Articuno, Gen 7 PU
++    [765] = {.species = SPECIES_ZAPDOS, .firstSet = 6321, .numSets = 4, .kind = DAILYRED_SETS_ZMOVE, .level = 95}, // Zapdos, Gen 7 OU
++    [766] = {.species = SPECIES_MOLTRES, .firstSet = 6325, .numSets = 4, .kind = DAILYRED_SETS_ZMOVE, .level = 96}, // Moltres, Gen 7 UU
++    [767] = {.species = SPECIES_RAIKOU, .firstSet = 6329, .numSets = 3, .kind = DAILYRED_SETS_ZMOVE, .level = 97}, // Raikou, Gen 7 RU
++    [768] = {.species = SPECIES_ENTEI, .firstSet = 6332, .numSets = 2, .kind = DAILYRED_SETS_ZMOVE, .level = 96}, // Entei, Gen 7 RUBL
++    [769] = {.species = SPECIES_SUICUNE, .firstSet = 6334, .numSets = 4, .kind = DAILYRED_SETS_ZMOVE, .level = 96}, // Suicune, Gen 7 UU
++    [770] = {.species = SPECIES_MEWTWO, .firstSet = 6338, .numSets = 10, .kind = DAILYRED_SETS_ZMOVE, .level = 95}, // Mewtwo, Gen 7 Uber
++    [771] = {.species = SPECIES_MEW, .firstSet = 6348, .numSets = 10, .kind = DAILYRED_SETS_ZMOVE, .level = 96}, // Mew, Gen 7 UU
++    [772] = {.species = SPECIES_DEOXYS, .firstSet = 6358, .numSets = 2, .kind = DAILYRED_SETS_ZMOVE, .level = 95}, // Deoxys, Gen 7 Uber
++    [773] = {.species = SPECIES_DEOXYS_ATTACK, .firstSet = 6360, .numSets = 2, .kind = DAILYRED_SETS_ZMOVE, .level = 95}, // Deoxys-Attack, Gen 7 Uber
++    [774] = {.species = SPECIES_DEOXYS_DEFENSE, .firstSet = 6362, .numSets = 10, .kind = DAILYRED_SETS_ZMOVE, .level = 95}, // Deoxys-Defense, Gen 7 Uber
++    [775] = {.species = SPECIES_DEOXYS_SPEED, .firstSet = 6372, .numSets = 10, .kind = DAILYRED_SETS_ZMOVE, .level = 95}, // Deoxys-Speed, Gen 7 Uber
++    [776] = {.species = SPECIES_VENUSAUR, .firstSet = 6382, .numSets = 8, .kind = DAILYRED_SETS_ZMOVE, .level = 97}, // Venusaur, Gen 7 RU
++    [777] = {.species = SPECIES_VENUSAUR, .firstSet = 6390, .numSets = 10, .kind = DAILYRED_SETS_TERA, .level = 97}, // Venusaur, Gen 7 RU
++    [778] = {.species = SPECIES_CHARIZARD, .firstSet = 6400, .numSets = 2, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Charizard, Gen 7 PUBL
++    [779] = {.species = SPECIES_CHARIZARD, .firstSet = 6402, .numSets = 10, .kind = DAILYRED_SETS_TERA, .level = 98}, // Charizard, Gen 7 PUBL
++    [780] = {.species = SPECIES_BLASTOISE, .firstSet = 6412, .numSets = 6, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Blastoise, Gen 7 NU
++    [781] = {.species = SPECIES_BLASTOISE, .firstSet = 6418, .numSets = 5, .kind = DAILYRED_SETS_TERA, .level = 98}, // Blastoise, Gen 7 NU
++    [782] = {.species = SPECIES_MEGANIUM_MEGA, .firstSet = 6423, .numSets = 1, .kind = DAILYRED_SETS_MEGA, .level = 98}, // Meganium-Mega, Gen 9 Illegal
++    [783] = {.species = SPECIES_FERALIGATR_MEGA, .firstSet = 6424, .numSets = 2, .kind = DAILYRED_SETS_MEGA, .level = 98}, // Feraligatr-Mega, Gen 9 Illegal
++    [784] = {.species = SPECIES_MEGANIUM, .firstSet = 6426, .numSets = 4, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Meganium, Gen 7 ZU
++    [785] = {.species = SPECIES_TYPHLOSION, .firstSet = 6430, .numSets = 2, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Typhlosion, Gen 7 NU
++    [786] = {.species = SPECIES_FERALIGATR, .firstSet = 6432, .numSets = 2, .kind = DAILYRED_SETS_ZMOVE, .level = 96}, // Feraligatr, Gen 7 UU
++    [787] = {.species = SPECIES_SCEPTILE, .firstSet = 6434, .numSets = 10, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Sceptile, Gen 7 NU
++    [788] = {.species = SPECIES_BLAZIKEN, .firstSet = 6444, .numSets = 3, .kind = DAILYRED_SETS_ZMOVE, .level = 95}, // Blaziken, Gen 7 Uber
++    [789] = {.species = SPECIES_SWAMPERT, .firstSet = 6447, .numSets = 7, .kind = DAILYRED_SETS_ZMOVE, .level = 96}, // Swampert, Gen 7 UU
 +};
 +
 +const u16 gDailyRedNumSetLists = ARRAY_COUNT(gDailyRedSetLists);
@@ -17954,13 +18268,14 @@ index 00000000..0edfcc08
 +}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..3ffa5197
+index 00000000..4e1073b0
 --- /dev/null
 +++ b/src/dailyred_team.c
-@@ -0,0 +1,460 @@
+@@ -0,0 +1,553 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "data.h"
++#include "item.h"
 +#include "pokemon.h"
 +#include "random.h"
 +#include "string_util.h"
@@ -17995,6 +18310,11 @@ index 00000000..3ffa5197
 +//     table in dailyred_sets.c) with perfect stats, like RED's. The starter
 +//     (and the mirror Pikachu) are level 100; the others are 95 to 98 by their
 +//     Showdown tier (the list's .level): the stronger the tier, the lower.
++//   - On MEGA_SWAP_ODDS% of the days when another of the six can Mega Evolve
++//     (one of the five, or the legendary: Mewtwo, Latias, Latios...), it
++//     holds its Mega Stone and the starter a Z-Crystal instead of its own
++//     (Typhlosion keeps its Firium Z), as long as the Mega's types keep the
++//     team within the type limit.
 +//   - The party order is random (the player can reorder it).
 +//
 +// It draws from its own RNG state (see dailyred.c), so a seed always gives the
@@ -18003,6 +18323,7 @@ index 00000000..3ffa5197
 +
 +#define MIRROR_RED_ODDS 5 // percent of days
 +#define LEGENDARY_TEAM_ODDS 8
++#define MEGA_SWAP_ODDS 25 // percent of the days when another Pokemon can Mega Evolve
 +
 +// Minimum combined base stat total of the six. RED's original team adds up to
 +// 2974 (Pikachu 320, Espeon 525, Snorlax 540, Venusaur 525, Charizard 534,
@@ -18378,6 +18699,91 @@ index 00000000..3ffa5197
 +    *team = best;
 +}
 +
++// The Mega Evolution lists (not Primal Reversion) of a species; returns how
++// many (Mewtwo and Charizard have two).
++static u32 GetMegaLists(u16 species, const struct DailyRedSetList **lists)
++{
++    u32 i, count = 0;
++
++    for (i = 0; i < gDailyRedNumSetLists && count < 2; i++)
++    {
++        const struct DailyRedSetList *list = &gDailyRedSetLists[i];
++        if (list->kind == DAILYRED_SETS_MEGA && gSpeciesInfo[list->species].isMegaEvolution
++         && GET_BASE_SPECIES_ID(list->species) == species)
++            lists[count++] = list;
++    }
++    return count;
++}
++
++// Whether the team's types (each member's typeMask, with member `swapped`
++// taking newMask instead) keep to the type limit: no type on three, one
++// shared at most.
++static bool32 TypesWithinLimit(const struct Team *team, u32 swapped, u32 newMask, u32 starterMask)
++{
++    u8 counts[NUMBER_OF_MON_TYPES] = {0};
++    u32 i, type, shared = 0;
++
++    for (i = 0; i < team->count; i++)
++    {
++        u32 mask = (i == swapped) ? newMask : (i == 0) ? starterMask : team->members[i].typeMask;
++        for (type = 0; type < NUMBER_OF_MON_TYPES; type++)
++        {
++            if (mask & (1u << type))
++                counts[type]++;
++        }
++    }
++    for (type = 0; type < NUMBER_OF_MON_TYPES; type++)
++    {
++        if (counts[type] > 2)
++            return FALSE;
++        if (counts[type] == 2)
++            shared++;
++    }
++    return shared <= 1;
++}
++
++// See MEGA_SWAP_ODDS at the top: another Pokemon Mega Evolves, the starter
++// gets a Z-Crystal.
++static void TryMegaSwap(struct Team *team, u32 *rng)
++{
++    struct TeamMember *starter = &team->members[0];
++    const struct DailyRedSetList *options[PARTY_SIZE * 2];
++    u8 optionMembers[PARTY_SIZE * 2];
++    bool32 starterMegas = (GetItemHoldEffect(starter->set->item) == HOLD_EFFECT_MEGA_STONE);
++    u32 starterMask = starterMegas ? DailyRed_GetTypeMask(starter->baseSpecies) : starter->typeMask;
++    u32 i, j, count = 0;
++
++    for (i = 1; i < team->count; i++)
++    {
++        const struct DailyRedSetList *megas[2];
++        u32 numMegas = GetMegaLists(team->members[i].baseSpecies, megas);
++        for (j = 0; j < numMegas; j++)
++        {
++            u32 mask = DailyRed_GetTypeMask(team->members[i].baseSpecies) | DailyRed_GetTypeMask(megas[j]->species);
++            if (TypesWithinLimit(team, i, mask, starterMask))
++            {
++                options[count] = megas[j];
++                optionMembers[count++] = i;
++            }
++        }
++    }
++    if (count == 0 || TeamRandom(rng) % 100 >= MEGA_SWAP_ODDS)
++        return;
++
++    i = TeamRandom(rng) % count;
++    {
++        struct TeamMember *member = &team->members[optionMembers[i]];
++        member->set = DailyRed_PickSet(options[i], rng);
++        member->typeMask = DailyRed_GetTypeMask(member->baseSpecies) | DailyRed_GetTypeMask(options[i]->species);
++        member->level = options[i]->level;
++    }
++    if (starterMegas)
++    {
++        starter->set = DailyRed_PickSet(DailyRed_FindSetList(starter->baseSpecies, DAILYRED_SETS_ZMOVE), rng);
++        starter->typeMask = starterMask;
++    }
++}
++
 +void DailyRed_GenerateTeam(struct Pokemon *party, u32 *rng, u16 redStarter)
 +{
 +    struct Team team = {0};
@@ -18388,6 +18794,7 @@ index 00000000..3ffa5197
 +    u32 i, j;
 +
 +    BuildTeam(&team, redStarter, rng);
++    TryMegaSwap(&team, rng);
 +
 +    // A random party order.
 +    for (i = 0; i < team.count; i++)
