@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import {
   GAME_DIR, symbol, layout, value, field, readBits, id, constName, species, move, item,
 } from './game.mjs';
-import { listFor, matchesList, checkStats, isZCrystal, isMegaStone, baseSpecies, typesOf, megaFormeFor } from './sets.mjs';
+import { listFor, matchesList, checkStats, isZCrystal, isMegaStone, baseSpecies, typesOf, megaFormeFor, checkTeamLimits } from './sets.mjs';
 
 const NATURES = ['Hardy', 'Lonely', 'Brave', 'Adamant', 'Naughty', 'Bold', 'Docile', 'Relaxed', 'Impish', 'Lax',
   'Timid', 'Hasty', 'Serious', 'Jolly', 'Naive', 'Modest', 'Mild', 'Quiet', 'Bashful', 'Rash', 'Calm', 'Gentle',
@@ -249,10 +249,8 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
   const eeveelutionCount = mons.filter((m) => EEVEELUTIONS.includes(baseSpecies(m.species))).length;
   if (eeveelutionCount > 1) problems.push(`${eeveelutionCount} Eeveelutions`);
 
-  // No type on more than two of the six.
-  const typeCounts = new Map();
-  for (const m of mons) for (const t of typesOf(m)) typeCounts.set(t, (typeCounts.get(t) ?? 0) + 1);
-  for (const [t, n] of typeCounts) if (n > 2) problems.push(`${n} ${t}-type Pokemon`);
+  // One item held twice at most, one type shared at most.
+  checkTeamLimits(mons, problems);
   return problems;
 }
 

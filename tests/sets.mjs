@@ -74,6 +74,22 @@ export function typesOf(mon) {
   return new Set([...species(mon.species).types, ...(mega ? species(mega).types : [])]);
 }
 
+// The team limits, the same for both teams: one item may be held by two
+// Pokemon and every other by one at most; one type may be shared by two
+// Pokemon and no other type (a Mega's types count with its base form's).
+export function checkTeamLimits(mons, problems) {
+  const itemCounts = new Map();
+  for (const m of mons) if (m.heldItem) itemCounts.set(m.heldItem, (itemCounts.get(m.heldItem) ?? 0) + 1);
+  const heldTwice = [...itemCounts].filter(([, n]) => n >= 2);
+  for (const [it, n] of itemCounts) if (n > 2) problems.push(`${n} Pokemon hold ${item(it).name}`);
+  if (heldTwice.length > 1) problems.push(`more than one item held twice (${heldTwice.map(([it]) => item(it).name).join(', ')})`);
+  const typeCounts = new Map();
+  for (const m of mons) for (const t of typesOf(m)) typeCounts.set(t, (typeCounts.get(t) ?? 0) + 1);
+  const shared = [...typeCounts].filter(([, n]) => n >= 2);
+  for (const [t, n] of typeCounts) if (n > 2) problems.push(`${n} ${t}-type Pokemon`);
+  if (shared.length > 1) problems.push(`more than one shared type (${shared.map(([t]) => t).join(', ')})`);
+}
+
 const sameMoves = (a, b) => a.filter(Boolean).slice().sort().join() === b.filter(Boolean).slice().sort().join();
 
 // Whether a Pokemon carries one of the sets of its list (moves, item, ability,
