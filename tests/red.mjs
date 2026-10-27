@@ -24,6 +24,7 @@ export const ODDS = {
   mewtwo: define('MEWTWO_ODDS'),
   galarianBird: define('GALARIAN_BIRD_ODDS'),
   johtoDog: define('JOHTO_DOG_ODDS'),
+  paradoxDog: define('PARADOX_DOG_ODDS'),
   cap: define('CAP_PIKACHU_ODDS'),
 };
 export const LEVELS = {
@@ -41,9 +42,9 @@ export const POOL = [...redSource.match(/sRedPool\[\] =\s*\{([^}]*)\}/)[1].match
 
 // The starters, with what they pair with (as the spec states it).
 const STARTERS = [
-  { name: 'VENUSAUR', stones: ['VENUSAURITE'], bird: 'MOLTRES', galarianBird: 'MOLTRES_GALAR', dog: 'ENTEI', z: 'GRASSIUM_Z' },
-  { name: 'CHARIZARD', stones: ['CHARIZARDITE_X', 'CHARIZARDITE_Y'], bird: 'ARTICUNO', galarianBird: 'ARTICUNO_GALAR', dog: 'SUICUNE', z: 'FIRIUM_Z' },
-  { name: 'BLASTOISE', stones: ['BLASTOISINITE'], bird: 'ZAPDOS', galarianBird: 'ZAPDOS_GALAR', dog: 'RAIKOU', z: 'WATERIUM_Z' },
+  { name: 'VENUSAUR', stones: ['VENUSAURITE'], bird: 'MOLTRES', galarianBird: 'MOLTRES_GALAR', dog: 'ENTEI', paradoxDog: 'GOUGING_FIRE', z: 'GRASSIUM_Z' },
+  { name: 'CHARIZARD', stones: ['CHARIZARDITE_X', 'CHARIZARDITE_Y'], bird: 'ARTICUNO', galarianBird: 'ARTICUNO_GALAR', dog: 'SUICUNE', paradoxDog: 'WALKING_WAKE', z: 'FIRIUM_Z' },
+  { name: 'BLASTOISE', stones: ['BLASTOISINITE'], bird: 'ZAPDOS', galarianBird: 'ZAPDOS_GALAR', dog: 'RAIKOU', paradoxDog: 'RAGING_BOLT', z: 'WATERIUM_Z' },
 ];
 const MEGA_FORMES = new Map([
   ['VENUSAURITE', 'VENUSAUR_MEGA'], ['CHARIZARDITE_X', 'CHARIZARD_MEGA_X'], ['CHARIZARDITE_Y', 'CHARIZARD_MEGA_Y'],
@@ -61,7 +62,7 @@ const CAPS = ['ORIGINAL', 'HOENN', 'SINNOH', 'UNOVA', 'KALOS', 'ALOLA', 'PARTNER
 
 export function legendaryKind(roll) {
   const order = [['megaMewtwo', ODDS.megaMewtwo], ['mew', ODDS.mew], ['deoxys', ODDS.deoxys], ['mewtwo', ODDS.mewtwo],
-    ['galarianBird', ODDS.galarianBird], ['johtoDog', ODDS.johtoDog]];
+    ['galarianBird', ODDS.galarianBird], ['johtoDog', ODDS.johtoDog], ['paradoxDog', ODDS.paradoxDog]];
   for (const [kind, odds] of order) {
     if (roll < odds) return kind === 'mew' && roll < ODDS.shinyMew ? 'shinyMew' : kind;
     roll -= odds;
@@ -176,7 +177,9 @@ export function validateRed(party, rolls = null) {
     if (pikachu && pikachu.level !== LEVELS.pikachu) problems.push(`Pikachu: level ${pikachu.level}`);
 
     // The legendary.
-    const legendaries = mons.filter((m) => species(m.species).legendary);
+    // The paradox dogs aren't legendary in the game data, but are his legendary.
+    const PARADOX_DOGS = STARTERS.map((st) => S(st.paradoxDog));
+    const legendaries = mons.filter((m) => species(m.species).legendary || PARADOX_DOGS.includes(m.species));
     if (legendaries.length !== 1) problems.push(`${legendaries.length} legendaries`);
     const legend = legendaries[0];
     if (info && legend) {
@@ -184,6 +187,7 @@ export function validateRed(party, rolls = null) {
       if (sp === S(info.bird)) kind = 'bird';
       else if (sp === S(info.galarianBird)) kind = 'galarianBird';
       else if (sp === S(info.dog)) kind = 'johtoDog';
+      else if (sp === S(info.paradoxDog)) kind = 'paradoxDog';
       else if (sp === S('MEWTWO')) kind = MEGA_FORMES.has(legend.heldItem) ? 'megaMewtwo' : 'mewtwo';
       else if (DEOXYS.includes(sp)) kind = 'deoxys';
       else if (sp === S('MEW')) kind = legend.shiny ? 'shinyMew' : 'mew';
@@ -194,8 +198,9 @@ export function validateRed(party, rolls = null) {
       if (legend.level !== wantLevel) problems.push(`${legend.speciesName}: level ${legend.level}, expected ${wantLevel}`);
       if (kind === 'megaMewtwo') {
         matchesList(legend, listFor(MEGA_FORMES.get(legend.heldItem), 'MEGA'), problems, 'Mega Mewtwo');
-      } else if (kind === 'galarianBird' || capped) {
-        // The Galarian birds' sets are Gen 8 (no Z-Moves); a capped Pikachu has his Z-Move.
+      } else if (kind === 'galarianBird' || kind === 'paradoxDog' || capped) {
+        // The Galarian birds' sets are Gen 8 and the paradox dogs' Gen 9 (no
+        // Z-Moves); a capped Pikachu has his Z-Move.
         matchesList(legend, listFor(sp, 'NORMAL'), problems, legend.speciesName);
         if (isMegaStone(legend.heldItem) || isZCrystal(legend.heldItem)) problems.push(`${legend.speciesName} holds ${item(legend.heldItem).name}`);
       } else if (kind) {

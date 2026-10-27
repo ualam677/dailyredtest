@@ -8863,10 +8863,10 @@ index 00000000..a8af713b
 +}
 diff --git a/src/dailyred_red.c b/src/dailyred_red.c
 new file mode 100644
-index 00000000..70b6a825
+index 00000000..ec4147f5
 --- /dev/null
 +++ b/src/dailyred_red.c
-@@ -0,0 +1,626 @@
+@@ -0,0 +1,635 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "battle.h"
@@ -8900,12 +8900,13 @@ index 00000000..70b6a825
 +//     starts (DailyRed_QueueRedTotemBoost).
 +//   - A legendary, level 99, picked by the starter: usually its bird
 +//     (Venusaur: Moltres, Charizard: Articuno, Blastoise: Zapdos), sometimes
-+//     the Galarian bird, the Johto dog (Entei, Suicune, Raikou), Mewtwo,
-+//     Deoxys (any forme), Mew (sometimes shiny), or, rarest, Mega Mewtwo X
-+//     or Y. On a Mega Mewtwo day the starter holds
-+//     a Z-Crystal instead of its Mega Stone. Any legendary but Mega Mewtwo
-+//     and the Galarian birds (Gen 8, no Z-Moves) may hold a Z-Crystal if its
-+//     set does. On capped-Pikachu days Pikachu has his one Z-Move, so the
++//     the Galarian bird, the Johto dog (Entei, Suicune, Raikou), its
++//     paradox (Gouging Fire, Walking Wake, Raging Bolt), Mewtwo, Deoxys (any
++//     forme), Mew (sometimes shiny), or, rarest, Mega Mewtwo X or Y. On a
++//     Mega Mewtwo day the starter holds a Z-Crystal instead of its Mega
++//     Stone. Any legendary but Mega Mewtwo, the Galarian birds (Gen 8) and
++//     the paradox dogs (Gen 9: no Z-Moves) may hold a Z-Crystal if its set
++//     does. On capped-Pikachu days Pikachu has his one Z-Move, so the
 +//     legendary never holds a Z-Crystal, and the Mega Mewtwo day starter
 +//     gets a regular set.
 +//   - Two of sRedPool and one fully evolved Pokemon from a Gen 1 family
@@ -8949,6 +8950,7 @@ index 00000000..70b6a825
 +#define MEWTWO_ODDS        10
 +#define GALARIAN_BIRD_ODDS 15
 +#define JOHTO_DOG_ODDS     20
++#define PARADOX_DOG_ODDS    2 // the Johto dog's paradox; the rest (41%) is his bird
 +#define CAP_PIKACHU_ODDS   10 // of the days with his usual team
 +
 +#define LEVEL_PIKACHU       100
@@ -8973,6 +8975,7 @@ index 00000000..70b6a825
 +    LEGENDARY_BIRD,
 +    LEGENDARY_GALARIAN_BIRD,
 +    LEGENDARY_JOHTO_DOG,
++    LEGENDARY_PARADOX_DOG,
 +    LEGENDARY_MEWTWO,
 +    LEGENDARY_DEOXYS,
 +    LEGENDARY_MEW,
@@ -8987,13 +8990,14 @@ index 00000000..70b6a825
 +    u16 bird;
 +    u16 galarianBird;
 +    u16 johtoDog;
++    u16 paradoxDog; // the Johto dog's paradox
 +};
 +
 +static const struct RedStarter sRedStarters[NUM_STARTERS] =
 +{
-+    [STARTER_VENUSAUR]  = {SPECIES_VENUSAUR,  {SPECIES_VENUSAUR_MEGA,    SPECIES_VENUSAUR_MEGA},    SPECIES_MOLTRES,  SPECIES_MOLTRES_GALAR,  SPECIES_ENTEI},
-+    [STARTER_CHARIZARD] = {SPECIES_CHARIZARD, {SPECIES_CHARIZARD_MEGA_X, SPECIES_CHARIZARD_MEGA_Y}, SPECIES_ARTICUNO, SPECIES_ARTICUNO_GALAR, SPECIES_SUICUNE},
-+    [STARTER_BLASTOISE] = {SPECIES_BLASTOISE, {SPECIES_BLASTOISE_MEGA,   SPECIES_BLASTOISE_MEGA},   SPECIES_ZAPDOS,   SPECIES_ZAPDOS_GALAR,   SPECIES_RAIKOU},
++    [STARTER_VENUSAUR]  = {SPECIES_VENUSAUR,  {SPECIES_VENUSAUR_MEGA,    SPECIES_VENUSAUR_MEGA},    SPECIES_MOLTRES,  SPECIES_MOLTRES_GALAR,  SPECIES_ENTEI,   SPECIES_GOUGING_FIRE},
++    [STARTER_CHARIZARD] = {SPECIES_CHARIZARD, {SPECIES_CHARIZARD_MEGA_X, SPECIES_CHARIZARD_MEGA_Y}, SPECIES_ARTICUNO, SPECIES_ARTICUNO_GALAR, SPECIES_SUICUNE, SPECIES_WALKING_WAKE},
++    [STARTER_BLASTOISE] = {SPECIES_BLASTOISE, {SPECIES_BLASTOISE_MEGA,   SPECIES_BLASTOISE_MEGA},   SPECIES_ZAPDOS,   SPECIES_ZAPDOS_GALAR,   SPECIES_RAIKOU,  SPECIES_RAGING_BOLT},
 +};
 +
 +static const u16 sDeoxysFormes[] = {SPECIES_DEOXYS_NORMAL, SPECIES_DEOXYS_ATTACK, SPECIES_DEOXYS_DEFENSE, SPECIES_DEOXYS_SPEED};
@@ -9293,6 +9297,8 @@ index 00000000..70b6a825
 +        legendary = LEGENDARY_GALARIAN_BIRD;
 +    else if ((legendaryRoll -= GALARIAN_BIRD_ODDS) < JOHTO_DOG_ODDS)
 +        legendary = LEGENDARY_JOHTO_DOG;
++    else if ((legendaryRoll -= JOHTO_DOG_ODDS) < PARADOX_DOG_ODDS)
++        legendary = LEGENDARY_PARADOX_DOG;
 +    else
 +        legendary = LEGENDARY_BIRD;
 +
@@ -9321,6 +9327,9 @@ index 00000000..70b6a825
 +        break;
 +    case LEGENDARY_GALARIAN_BIRD:
 +        AddMember(team, FindSetList(info->galarianBird, DAILYRED_SETS_NORMAL), LEVEL_LEGENDARY, FALSE, rng);
++        break;
++    case LEGENDARY_PARADOX_DOG: // Gen 9 sets: no Z-Moves
++        AddMember(team, FindSetList(info->paradoxDog, DAILYRED_SETS_NORMAL), LEVEL_LEGENDARY, FALSE, rng);
 +        break;
 +    case LEGENDARY_JOHTO_DOG:
 +        AddMember(team, FindSetList(info->johtoDog, zKind), LEVEL_LEGENDARY, FALSE, rng);
@@ -18603,10 +18612,10 @@ index 00000000..fbaea555
 +}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..4cdd35ad
+index 00000000..7d28e473
 --- /dev/null
 +++ b/src/dailyred_team.c
-@@ -0,0 +1,567 @@
+@@ -0,0 +1,581 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "data.h"
@@ -18629,6 +18638,8 @@ index 00000000..4cdd35ad
 +//     DailyRed_IsSpeciesInScope), never holding a Mega Stone or Z-Crystal.
 +//     LEGENDARY_TEAM_ODDS% of teams have exactly one legendary among them
 +//     (never RED's legendary that day, in any forme); the rest have none.
++//     The legendary is one of sLegendaries, or on PARADOX_DOG_ODDS% of picks
++//     one of the Johto dogs' paradoxes (sParadoxDogs, from outside the scope).
 +//   - On MIRROR_RED_ODDS% of days the team mirrors RED's instead: the starter,
 +//     a shiny Pikachu (level 100, Light Ball and Volt Tackle, like his), a
 +//     legendary for sure, and three more.
@@ -18658,6 +18669,7 @@ index 00000000..4cdd35ad
 +
 +#define MIRROR_RED_ODDS 5 // percent of days
 +#define LEGENDARY_TEAM_ODDS 20 // percent of teams
++#define PARADOX_DOG_ODDS 6 // percent of legendary picks (2% each)
 +#define MEGA_SWAP_ODDS 25 // percent of the days when another Pokemon can Mega Evolve
 +
 +// Minimum combined base stat total of the six. RED's original team adds up to
@@ -18678,6 +18690,13 @@ index 00000000..4cdd35ad
 +    SPECIES_RAIKOU, SPECIES_ENTEI, SPECIES_SUICUNE, SPECIES_LUGIA, SPECIES_HO_OH, SPECIES_CELEBI,
 +    SPECIES_REGIROCK, SPECIES_REGICE, SPECIES_REGISTEEL, SPECIES_LATIAS, SPECIES_LATIOS,
 +    SPECIES_KYOGRE, SPECIES_GROUDON, SPECIES_RAYQUAZA, SPECIES_JIRACHI, SPECIES_DEOXYS,
++};
++
++// The Johto dogs' paradoxes: on PARADOX_DOG_ODDS% of legendary picks one of
++// these instead (so each is rarer than any of sLegendaries).
++static const u16 sParadoxDogs[] =
++{
++    SPECIES_GOUGING_FIRE, SPECIES_WALKING_WAKE, SPECIES_RAGING_BOLT,
 +};
 +
 +// RED's starter -> the three that counter it.
@@ -18958,7 +18977,11 @@ index 00000000..4cdd35ad
 +
 +    for (attempt = 0; attempt < 100; attempt++)
 +    {
-+        u16 species = sLegendaries[TeamRandom(rng) % ARRAY_COUNT(sLegendaries)];
++        u16 species;
++        if (TeamRandom(rng) % 100 < PARADOX_DOG_ODDS)
++            species = sParadoxDogs[TeamRandom(rng) % ARRAY_COUNT(sParadoxDogs)];
++        else
++            species = sLegendaries[TeamRandom(rng) % ARRAY_COUNT(sLegendaries)];
 +        const struct DailyRedSetList *list = DailyRed_FindSetList(species, DAILYRED_SETS_NORMAL);
 +        if (list != NULL && !IsRedsLegendary(species) && CanAdd(team, species, DailyRed_GetTypeMask(species), list))
 +        {

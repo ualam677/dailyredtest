@@ -261,7 +261,10 @@ right after RED's (his starter decides yours), from the seed:
   holding a Mega Stone or a Z-Crystal. **Legendaries are a 20% roll**
   (`LEGENDARY_TEAM_ODDS`): 1 team in 5 has exactly one, the rest none. It's
   never the legendary RED has that day, in any forme (his Galarian Moltres
-  rules out Moltres).
+  rules out Moltres). It's one of the Gen 1–3 legendaries (`sLegendaries`),
+  or on 6% of picks (`PARADOX_DOG_ODDS`) one of the Johto dogs' paradoxes,
+  Gouging Fire, Walking Wake or Raging Bolt (2% each, against about 4.5% for
+  each Gen 1–3 legendary).
 - **5% of days mirror RED's team** (`MIRROR_RED_ODDS`): the starter, a
   **shiny Pikachu** (level 100, Light Ball and Volt Tackle, like his), a
   legendary for sure, and three more.
@@ -334,8 +337,9 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 
 | Legendary roll | Odds | Venusaur | Charizard | Blastoise |
 |---|---|---|---|---|
-| His bird | 43% | Moltres | Articuno | Zapdos |
+| His bird | 41% | Moltres | Articuno | Zapdos |
 | Johto dog | 20% | Entei | Suicune | Raikou |
+| Paradox dog (`PARADOX_DOG_ODDS`) | 2% | Gouging Fire | Walking Wake | Raging Bolt |
 | Galarian bird | 15% | Galarian Moltres | Galarian Articuno | Galarian Zapdos |
 | Mewtwo | 10% | | | |
 | Deoxys (any forme) | 5% | | | |
@@ -345,7 +349,8 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 - On a Mega Mewtwo day Mewtwo holds the Mega Stone and the starter holds a
   Z-Crystal instead (its set's, or the one for its strongest STAB move).
   Otherwise the legendary may hold a Z-Crystal when its set has one (not the
-  Galarian birds: their sets are from Gen 8, which has no Z-Moves). So RED has
+  Galarian birds or the paradox dogs: their sets are from Gen 8 and Gen 9,
+  which have no Z-Moves). So RED has
   at most one Mega Evolution and one Z-Move.
 - **The capped Pikachu** (any of the Original, Hoenn, Sinnoh, Unova, Kalos,
   Alola, Partner and World caps; never on original-team days) has his one

@@ -127,9 +127,10 @@ export const MIRROR_RED_ODDS = define('MIRROR_RED_ODDS');
 const LEVEL_STARTER = define('LEVEL_STARTER');
 const LEVEL_PIKACHU = define('LEVEL_PIKACHU');
 const listIn = (pattern, prefix) => [...teamSource.match(pattern)[1].matchAll(new RegExp(`\\b${prefix}_(\\w+)`, 'g'))].map((m) => m[1]);
-export const LEGENDARY_LIST = listIn(/sLegendaries\[\] =\s*\{([^}]*)\}/, 'SPECIES').map((n) => id('SPECIES', n));
+export const PARADOX_DOG_LIST = listIn(/sParadoxDogs\[\] =\s*\{([^}]*)\}/, 'SPECIES').map((n) => id('SPECIES', n));
+export const LEGENDARY_LIST = [...listIn(/sLegendaries\[\] =\s*\{([^}]*)\}/, 'SPECIES').map((n) => id('SPECIES', n)), ...PARADOX_DOG_LIST];
 
-export const isLegendary = (mon) => species(mon.species).legendary;
+export const isLegendary = (mon) => species(mon.species).legendary || PARADOX_DOG_LIST.includes(mon.species);
 export const teamBaseStatTotal = (party) => party.filter(Boolean).reduce((sum, m) => sum + species(m.species).bst, 0);
 
 // Daily Red's species scope, rebuilt from the ROM's evolution tables
@@ -238,7 +239,8 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
     checkStats(m, problems);
     if (!m.fateful || m.metLocation !== value('METLOC_FATEFUL_ENCOUNTER')) problems.push(`${tag}: not marked as an event Pokemon`);
     if (m === starter || m === pikachu) continue;
-    if (!isEligibleSpecies(m.species)) problems.push(`${tag}: not an in-scope species`);
+    // The paradox dogs come from outside the scope, as legendaries (sParadoxDogs).
+    if (!isEligibleSpecies(m.species) && !PARADOX_DOG_LIST.includes(m.species)) problems.push(`${tag}: not an in-scope species`);
     if (!isFinalStage(m.species)) problems.push(`${tag}: not fully evolved`);
     if (isZCrystal(m.heldItem)) problems.push(`${tag} holds ${item(m.heldItem).name}`);
     const list = canMegaEvolve(m) ? listFor(megaFormeFor(m), 'MEGA') : listFor(m.species, 'NORMAL');
