@@ -111,7 +111,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | New game data: the player is named Blue (on FireRed's female player, LEAF's sprites) and RED is named Red, fast text | `StartNewGame` in `src/dailyred.c`, then vanilla `CB2_NewGame` |
 | Team + warp to the summit instead of the bedroom | `src/new_game.c` → `DailyRed_InitNewGame` |
 | The summit: an open peak with no exits; stairs up to RED, who faces the drop | `data/maps/DailyRed_Summit/`, `data/layouts/DailyRed_Summit/` |
-| Snow on the summit, as scenery only: it doesn't start Snow in RED's battle | `data/maps/DailyRed_Summit/map.json`; the battle check in `src/battle_util.c` |
+| Snow on the summit, which carries into RED's battle as the Snow weather (for the whole battle, until a Pokémon changes the weather) | `data/maps/DailyRed_Summit/map.json`; overworld snow starts Snow in `TryFieldEffects` (`src/battle_util.c`, unchanged) |
 | Talking to RED → "…" → battle (he says "…!" if he loses, "…" if he wins) → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
 | RED's "…" in his own box: a red frame and red text, so it reads as him speaking rather than a game message | `DailyRed_UseRedMessageBox` (`src/dailyred.c`), read by `GetOverworldTextboxPalettePtr` (`src/text_window.c`); `{COLOR RED}` in his line |
 | After a win, as in HGSS: a cut to black with the exit sound, and RED is gone when the screen comes back (he returns next run) | `data/maps/DailyRed_Summit/scripts.inc` |
@@ -655,8 +655,8 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
   each Pokémon's Showdown sets (from the table in the ROM), perfect stats,
   genders, the item, type and Eeveelution limits, the capped Pikachu and the
   lead; the same seed gives
-  the same RED; he battles with that team; and the summit's snow doesn't
-  start any battle weather.
+  the same RED; he battles with that team; and the summit's snow starts the
+  battle with weather (Snow, unless a lead's ability replaces it).
 - the player starts with a Mega Ring and a Z-Power Ring; affection and
   friendship boosts are off in the build, and a team at max friendship (five
   hearts in battle) never hangs on to a knockout blow: 20 tries at 1 HP with

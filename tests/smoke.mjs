@@ -249,7 +249,8 @@ try {
   checkRed('in battle (seed 424242)', red.party, predictRolls(424242));
   const redLead = red.party[0].species;
   await waitForActionMenu(page);
-  check((await getStatus(page)).mem.read(symbol('gBattleWeather'), 2).readUInt16LE(0) === 0, "the summit's snow doesn't start any battle weather");
+  // The summit's snow starts Snow, unless a lead's ability (Drought, Drizzle...) replaced it.
+  check((await getStatus(page)).mem.read(symbol('gBattleWeather'), 2).readUInt16LE(0) !== 0, "the summit's snow starts the battle with weather (Snow)");
   await screenshot(page, `${OUT}/09-battle.png`);
 
   // KO RED's lead while the rest of his team is healthy. In SHIFT style the

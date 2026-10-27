@@ -1,5 +1,5 @@
 diff --git a/data/battle_scripts_1.s b/data/battle_scripts_1.s
-index 4745ed0f..7d44ceb3 100644
+index 4745ed0f..076a2874 100644
 --- a/data/battle_scripts_1.s
 +++ b/data/battle_scripts_1.s
 @@ -4480,7 +4480,8 @@ BattleScript_AbilityPopUpTarget::
@@ -43,6 +43,17 @@ index 4745ed0f..7d44ceb3 100644
  	return
  
  @ Can't compare directly to a value, have to compare to value at pointer
+@@ -5427,6 +5428,10 @@ BattleScript_ItemHealHP_Ret::
+ 	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
+ 	healthbarupdate BS_ATTACKER
+ 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
++	@ Daily Red: say what healed it (Leftovers, Black Sludge, Shell Bell),
++	@ like Gen 5 onwards, instead of only the pop-up.
++	printstring STRINGID_PKMNSITEMRESTOREDHPALITTLE
++	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_SelectingNotAllowedMoveChoiceItem::
 diff --git a/data/event_scripts.s b/data/event_scripts.s
 index bc9688b6..9a07413b 100644
 --- a/data/event_scripts.s
@@ -7205,7 +7216,7 @@ index 7553ca61..85513d22 100644
      CopyToBgTilemapBufferRect_ChangePalette(0, src, 7 * (cursorPosition & 1) + 16, 35 + (cursorPosition & 2), 1, 2, 0x11);
      CopyBgTilemapBufferToVram(0);
 diff --git a/src/battle_controllers.c b/src/battle_controllers.c
-index 63c899bc..92531a9f 100644
+index 63c899bc..d33a27e4 100644
 --- a/src/battle_controllers.c
 +++ b/src/battle_controllers.c
 @@ -1,4 +1,5 @@
@@ -7246,7 +7257,67 @@ index 63c899bc..92531a9f 100644
  }
  
  static inline bool32 IsControllerPlayer(enum BattlerId battler)
-@@ -2509,6 +2511,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
+@@ -2243,6 +2245,59 @@ void Controller_WaitForString(enum BattlerId battler)
+         BtlController_Complete(battler);
+ }
+ 
++// Daily Red: a move's animation starts as its name appears in "X used Y!",
++// while the rest of the line is still printing. The message gets its own copy
++// of the text (gDisplayedStringBattle is reused by the next message), and the
++// next message waits until it has finished, plus a moment to read it.
++#define USED_MOVE_READ_FRAMES B_WAIT_TIME_SHORT
++
++static EWRAM_DATA u8 sUsedMoveText[128] = {0};
++static EWRAM_DATA const u8 *sUsedMoveName = NULL;  // where the move's name starts in sUsedMoveText
++static EWRAM_DATA bool8 sUsedMovePrinting = FALSE; // "X used Y!" is still printing after its controller finished
++static EWRAM_DATA u8 sReadTimer = 0;
++
++// The move name's start in the printed message (its last occurrence: the
++// attacker's name comes first), or NULL.
++static const u8 *FindMoveName(const u8 *text, const u8 *name)
++{
++    const u8 *found = NULL;
++    u32 len = StringLength(name);
++
++    if (len == 0)
++        return NULL;
++    for (; *text != EOS; text++)
++    {
++        if (memcmp(text, name, len) == 0)
++            found = text;
++    }
++    return found;
++}
++
++static void Controller_WaitForMoveName(enum BattlerId battler)
++{
++    const u8 *current = GetTextPrinterCurrentCharOnWindow(B_WIN_MSG);
++
++    if (current == NULL)
++    {
++        BtlController_Complete(battler);
++    }
++    else if (current > sUsedMoveName)
++    {
++        sUsedMovePrinting = TRUE;
++        BtlController_Complete(battler);
++    }
++}
++
++static void Controller_WaitToPrintString(enum BattlerId battler)
++{
++    if (IsTextPrinterActiveOnWindow(B_WIN_MSG))
++        return;
++    if (++sReadTimer < USED_MOVE_READ_FRAMES)
++        return;
++    sUsedMovePrinting = FALSE;
++    BtlController_HandlePrintString(battler);
++}
++
+ static void Controller_WaitForPartyStatusSummary(enum BattlerId battler)
+ {
+     if (gBattleSpritesDataPtr->healthBoxesData[battler].partyStatusDelayTimer++ > 92)
+@@ -2509,6 +2564,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSpawn;
      else
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSlideIn;
@@ -7255,6 +7326,55 @@ index 63c899bc..92531a9f 100644
  
      gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
  }
+@@ -2660,6 +2717,18 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+ {
+     u16 *stringId;
+ 
++    // Daily Red: "X used Y!" may still be printing (see Controller_WaitForMoveName).
++    if (sUsedMovePrinting)
++    {
++        if (IsTextPrinterActiveOnWindow(B_WIN_MSG) && !gTestRunnerEnabled)
++        {
++            sReadTimer = 0;
++            gBattlerControllerFuncs[battler] = Controller_WaitToPrintString;
++            return;
++        }
++        sUsedMovePrinting = FALSE;
++    }
++
+     gBattle_BG0_X = 0;
+     gBattle_BG0_Y = 0;
+     stringId = (u16 *)(&gBattleResources->bufferA[battler][2]);
+@@ -2679,7 +2748,17 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+     // if (BattleStringShouldBeColored(*stringId))
+     //     BattlePutTextOnWindow(gDisplayedStringBattle, (B_WIN_MSG | B_TEXT_FLAG_NPC_CONTEXT_FONT));
+     // else
++    sUsedMoveName = NULL;
++    if (*stringId == STRINGID_USEDMOVE && StringLength(gDisplayedStringBattle) < ARRAY_COUNT(sUsedMoveText))
++    {
++        StringCopy(sUsedMoveText, gDisplayedStringBattle);
++        sUsedMoveName = FindMoveName(sUsedMoveText, gBattleTextBuff3);
++        BattlePutTextOnWindow(sUsedMoveText, B_WIN_MSG);
++    }
++    else
++    {
+         BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
++    }
+ 
+     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
+     {
+@@ -2694,7 +2773,10 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+         }
+     }
+ 
+-    gBattlerControllerFuncs[battler] = Controller_WaitForString;
++    if (*stringId == STRINGID_USEDMOVE && sUsedMoveName != NULL)
++        gBattlerControllerFuncs[battler] = Controller_WaitForMoveName;
++    else
++        gBattlerControllerFuncs[battler] = Controller_WaitForString;
+     if (ShouldUpdateTvData(battler))
+         BattleTv_SetDataBasedOnString(*stringId);
+     if (IsControllerPlayer(battler)
 diff --git a/src/battle_gfx_sfx_util.c b/src/battle_gfx_sfx_util.c
 index 1873a02a..d40347d3 100644
 --- a/src/battle_gfx_sfx_util.c
@@ -7412,7 +7532,7 @@ index 46af80f3..72617a03 100644
      [TRAINER_CLASS_TEAM_AQUA] = { _("TEAM AQUA") },
      [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} BREEDER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
 diff --git a/src/battle_message.c b/src/battle_message.c
-index 680ea2d1..86ca5aaa 100644
+index 680ea2d1..97a86803 100644
 --- a/src/battle_message.c
 +++ b/src/battle_message.c
 @@ -1,4 +1,6 @@
@@ -7422,7 +7542,17 @@ index 680ea2d1..86ca5aaa 100644
  #include "battle.h"
  #include "battle_anim.h"
  #include "battle_ai_record.h"
-@@ -3928,10 +3930,22 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+@@ -3919,6 +3921,9 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+         gTextFlags.canABSpeedUpPrint = 0;
+     }
+ 
++    // Daily Red: "X used Y!" can still be printing while its move's animation
++    // plays (see Controller_WaitForMoveName); new text replaces it.
++    StopTextPrintersOnWindow(windowId);
+     AddTextPrinter(&printerTemplate, speed, NULL);
+ 
+     if (copyToVram)
+@@ -3928,10 +3933,22 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
      }
  }
  
@@ -7446,7 +7576,7 @@ index 680ea2d1..86ca5aaa 100644
      u8 var;
  
      if (!gBattleStruct->zmove.viewing)
-@@ -3940,11 +3954,12 @@ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
+@@ -3940,11 +3957,12 @@ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
      else
          var = 3;
  
@@ -7559,29 +7689,6 @@ index abe49bd2..d0cbb51b 100644
      task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender),
                                                  DISPLAY_WIDTH + 32,
                                                  106,
-diff --git a/src/battle_util.c b/src/battle_util.c
-index 85523e06..79fe93ec 100644
---- a/src/battle_util.c
-+++ b/src/battle_util.c
-@@ -55,6 +55,7 @@
- #include "constants/weather.h"
- #include "constants/pokemon.h"
- #include "test/battle.h"
-+#include "dailyred.h" // Daily Red
- 
- static bool32 TryRemoveScreens(enum BattlerId battler);
- static bool32 IsUnnerveAbilityOnOpposingSide(enum BattlerId battler);
-@@ -2941,6 +2942,10 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
-                 }
-                 break;
-             case WEATHER_SNOW:
-+                // Daily Red: the summit's snow is only scenery; RED's battle
-+                // starts without weather, as it always has.
-+                if (DailyRed_IsOnSummit())
-+                    break;
-                 if (!(gBattleWeather & B_WEATHER_ICY_ANY))
-                 {
-                     if (B_OVERWORLD_SNOW >= GEN_9)
 diff --git a/src/battle_z_move.c b/src/battle_z_move.c
 index 4a0a3bc2..1ea2736c 100644
 --- a/src/battle_z_move.c
@@ -21350,3 +21457,57 @@ index 57e9da2e..a3a86bc3 100644
              DestroyTask(FindTaskIdByFunc(Task_TitleScreenMain));
          }
          break;
+diff --git a/src/text.c b/src/text.c
+index 6f512609..fd08e28f 100644
+--- a/src/text.c
++++ b/src/text.c
+@@ -614,6 +614,36 @@ bool32 IsTextPrinterActiveOnWindow(u32 windowId)
+     return FALSE;
+ }
+ 
++// Daily Red: where the active printer on a window has got to in its string
++// (the next character it will draw), or NULL if none is printing there.
++const u8 *GetTextPrinterCurrentCharOnWindow(u32 windowId)
++{
++    struct TextPrinter *currentPrinter;
++
++    for (currentPrinter = sFirstTextPrinter; currentPrinter != NULL; currentPrinter = currentPrinter->nextPrinter)
++    {
++        if (currentPrinter->printerTemplate.type == WINDOW_TEXT_PRINTER
++         && currentPrinter->printerTemplate.windowId == windowId
++         && currentPrinter->active)
++            return currentPrinter->printerTemplate.currentChar;
++    }
++    return NULL;
++}
++
++// Daily Red: stops any printer still drawing on a window (before new text
++// replaces it).
++void StopTextPrintersOnWindow(u32 windowId)
++{
++    struct TextPrinter *currentPrinter;
++
++    for (currentPrinter = sFirstTextPrinter; currentPrinter != NULL; currentPrinter = currentPrinter->nextPrinter)
++    {
++        if (currentPrinter->printerTemplate.type == WINDOW_TEXT_PRINTER
++         && currentPrinter->printerTemplate.windowId == windowId)
++            currentPrinter->active = FALSE;
++    }
++}
++
+ bool32 IsTextPrinterActiveOnSprite(u32 spriteId)
+ {
+     struct TextPrinter *currentPrinter = sFirstTextPrinter;
+diff --git a/include/text.h b/include/text.h
+index 9d08ac81..98da5a5a 100644
+--- a/include/text.h
++++ b/include/text.h
+@@ -195,6 +195,8 @@ void AddSpriteTextPrinterParameterized6(u8 spriteId, u8 fontId, u8 left, u8 top,
+ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
+ void RunTextPrinters(void);
+ bool32 IsTextPrinterActiveOnWindow(u32 windowId);
++const u8 *GetTextPrinterCurrentCharOnWindow(u32 windowId);
++void StopTextPrintersOnWindow(u32 windowId);
+ bool32 IsTextPrinterActiveOnSprite(u32 spriteId);
+ void GenerateFontHalfRowLookupTable(union TextColor color);
+ union TextColor SaveTextColors(void);
