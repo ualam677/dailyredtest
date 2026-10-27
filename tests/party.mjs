@@ -244,7 +244,7 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
     const list = isMegaStone(m.heldItem) ? listFor(megaFormeFor(m), 'MEGA') : listFor(m.species, 'NORMAL');
     matchesList(m, list, problems, tag);
     if (list && m.level !== list.level) problems.push(`${tag}: level ${m.level}, its tier's is ${list.level}`);
-    if (m.level < 95 || m.level > 98) problems.push(`${tag}: level ${m.level} outside 95-98`);
+    if (m.level < 94 || m.level > 99) problems.push(`${tag}: level ${m.level} outside 94-99`);
   }
 
   // At most one starter (the counter-starter: the five never add another)

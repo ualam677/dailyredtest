@@ -123,6 +123,7 @@ function checkBrowser() {
 function stopEmulator() {
   clearInterval(pollTimer);
   pollTimer = null;
+  readGame?.stop();
   readGame = null;
   if (emu) {
     try {

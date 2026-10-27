@@ -285,9 +285,10 @@ right after RED's (his starter decides yours), from the seed:
   sets from the same table as RED's (see [Sets](#sets)), with perfect stats
   (every IV maxed by hyper training) and the set's competitive nature and
   EVs (see [Sets](#sets)).
-- **Levels by Showdown tier**, so strong Pokémon are a little lower: 95 for OU
-  and up (Ubers, OU), 96 UU, 97 RU, 98 NU and below. A "BL" tier (banned to
-  the tier above) counts as the tier above (UUBL 95, RUBL 96, NUBL 97). The
+- **Levels by Showdown tier**, so strong Pokémon are a little lower: 94 for
+  Ubers, 95 OU, 96 UU, 97 RU, 98 NU, 99 PU and below. A "BL" tier (banned to
+  the tier above) counts as the tier above (UUBL 95, RUBL 96, NUBL 97, PUBL
+  98). The
   tier is Gen 7's, or Gen 8's / Gen 9's for Pokémon Gen 7 doesn't have
   (Kleavor, Ursaluna, Annihilape…). The starter and the mirror Pikachu are
   level 100.
@@ -627,7 +628,7 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
   independently of the C code) for each seed and after each run: a starter
   that counters RED's (read from his party) with its Mega Stone, or Typhlosion
   with a Firium Z; the others fully evolved, in scope, holding no Mega Stone
-  or Z-Crystal, at their tier's level (95–98); at most one legendary; one of
+  or Z-Crystal, at their tier's level (94–99); at most one legendary; one of
   each Pokémon's Showdown sets; perfect stats; no type on more than two and
   no species twice; a base stat total of at least 2700; and mirror-RED days
   exactly when the seed's roll (predicted in JavaScript) says so, checked on a

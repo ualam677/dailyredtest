@@ -286,11 +286,13 @@ for (const id of Z_STARTERS) lists.push({ id, gen: 7, kind: 'ZMOVE', species: de
 // lower the level. A "BL" tier (banned to the tier above) counts as the tier
 // above.
 const TIER_LEVELS = [
-  [['AG', 'Uber', '(Uber)', 'OU', '(OU)', 'UUBL'], 95],
+  [['AG', 'Uber', '(Uber)'], 94],
+  [['OU', '(OU)', 'UUBL'], 95],
   [['UU', '(UU)', 'RUBL'], 96],
   [['RU', '(RU)', 'NUBL'], 97],
+  [['NU', '(NU)', 'PUBL'], 98],
 ];
-const LOWEST_TIER_LEVEL = 98; // NU and below (PUBL counts as NU's "tier above" but stays here)
+const LOWEST_TIER_LEVEL = 99; // PU and below
 const UNTIERED = ['Illegal', 'Unreleased', 'CAP', 'CAP NFE', 'CAP LC', ''];
 function tierOf(species) {
   for (const gen of GENS) {
@@ -713,8 +715,8 @@ lines.push(`#undef SET`);
 lines.push(`#undef EVS`);
 lines.push(`#undef IVS`);
 lines.push(``);
-lines.push(`// .level: the player's level for the species, from its Showdown tier (95 for`);
-lines.push(`// OU and up, 96 UU, 97 RU, 98 NU and below; "BL" tiers count as the tier above).`);
+lines.push(`// .level: the player's level for the species, from its Showdown tier (94 for`);
+lines.push(`// Ubers, 95 OU, 96 UU, 97 RU, 98 NU, 99 PU and below; "BL" tiers count as the tier above).`);
 lines.push(``);
 lines.push(`const struct DailyRedSetList gDailyRedSetLists[] =`);
 lines.push(`{`);
