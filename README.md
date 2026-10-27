@@ -113,6 +113,8 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | The summit: an open peak with no exits; stairs up to RED, who faces the drop | `data/maps/DailyRed_Summit/`, `data/layouts/DailyRed_Summit/` |
 | Snow on the summit, as scenery only: it doesn't start Snow in RED's battle | `data/maps/DailyRed_Summit/map.json`; the battle check in `src/battle_util.c` |
 | Talking to RED → "…" → battle (he says "…!" if he loses, "…" if he wins) → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
+| RED's "…" in his own box: a red frame and red text, so it reads as him speaking rather than a game message | `DailyRed_UseRedMessageBox` (`src/dailyred.c`), read by `GetOverworldTextboxPalettePtr` (`src/text_window.c`); `{COLOR RED}` in his line |
+| After a win, as in HGSS: a cut to black with the exit sound, and RED is gone when the screen comes back (he returns next run) | `data/maps/DailyRed_Summit/scripts.inc` |
 | RED's battle theme | `MUS_DAILYRED_VS_RED`, picked by his trainer class in `GetBattleBGM` (`src/pokemon.c`); see [RED's battle theme](#reds-battle-theme) |
 | The summit's howling wind instead of music | `MUS_DAILYRED_MT_SILVER_WIND`, the summit map's music; see [The summit's wind](#the-summits-wind) |
 | Mt. Silver's HGSS-style battle background on the summit | `BattleSetup_GetEnvironmentId` in `src/battle_setup.c` picks `BATTLE_ENVIRONMENT_SNOW`, whose graphics are in `src/data/battle_environment.h`; see [Graphics](#graphics) |
@@ -364,12 +366,12 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
   Pokémon already share a type (Pikachu and Zapdos or Raikou are both
   Electric), his three picks can't share any type with the rest.
 
-**5% of days, his original team** from HeartGold/SoulSilver, all level 100:
-Pikachu (never capped), Espeon or
-Lapras (50/50), Snorlax, Venusaur, Charizard and Blastoise. The three starters share out Mega Evolution, a Z-Move and
+**5% of days ("HGSS days"), his original team** from HeartGold/SoulSilver, all level 100:
+Pikachu (never capped), Espeon or Lapras (50/50), Snorlax, Venusaur, Charizard and
+Blastoise. The three starters share out Mega Evolution, a Z-Move and
 Terastallization at random, each with that gimmick's sets (Gen 7 for Mega and
-Z, Gen 9 for Tera, including its Tera type). He leads with Pikachu, Espeon or
-Lapras, or Snorlax (a hazard setter if one of them is). Nothing on his team ever Dynamaxes, and only that Tera
+Z, Gen 9 for Tera, including its Tera type). Pikachu always leads, as in
+HGSS. Nothing on his team ever Dynamaxes, and only that Tera
 starter can Terastallize.
 
 All of RED's Pokémon are male, except the Eeveelutions, Lapras and Gyarados

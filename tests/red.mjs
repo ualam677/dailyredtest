@@ -166,7 +166,7 @@ export function validateRed(party, rolls = null) {
       matchesList(m, listFor(m.species, 'NORMAL'), problems, m.speciesName);
       if (isMegaStone(m.heldItem) || isZCrystal(m.heldItem)) problems.push(`${m.speciesName} holds ${item(m.heldItem).name}`);
     }
-    leaders = [pikachu, second, snorlax].filter(Boolean);
+    leaders = [pikachu].filter(Boolean); // HGSS days: Pikachu always leads
   } else {
     if (starters.length !== 1) problems.push(`${starters.length} Kanto starters`);
     const starter = starters[0];
