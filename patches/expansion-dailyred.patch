@@ -8664,7 +8664,7 @@ index 00000000..a8af713b
 +}
 diff --git a/src/dailyred_red.c b/src/dailyred_red.c
 new file mode 100644
-index 00000000..97fc28a4
+index 00000000..70b6a825
 --- /dev/null
 +++ b/src/dailyred_red.c
 @@ -0,0 +1,626 @@
@@ -8701,9 +8701,9 @@ index 00000000..97fc28a4
 +//     starts (DailyRed_QueueRedTotemBoost).
 +//   - A legendary, level 99, picked by the starter: usually its bird
 +//     (Venusaur: Moltres, Charizard: Articuno, Blastoise: Zapdos), sometimes
-+//     the Galarian bird, the Johto dog (Entei, Suicune, Raikou), Mewtwo
-+//     (level 100), Deoxys (any forme), Mew (sometimes shiny), or, rarest,
-+//     Mega Mewtwo X or Y (level 100). On a Mega Mewtwo day the starter holds
++//     the Galarian bird, the Johto dog (Entei, Suicune, Raikou), Mewtwo,
++//     Deoxys (any forme), Mew (sometimes shiny), or, rarest, Mega Mewtwo X
++//     or Y. On a Mega Mewtwo day the starter holds
 +//     a Z-Crystal instead of its Mega Stone. Any legendary but Mega Mewtwo
 +//     and the Galarian birds (Gen 8, no Z-Moves) may hold a Z-Crystal if its
 +//     set does. On capped-Pikachu days Pikachu has his one Z-Move, so the
@@ -8755,7 +8755,7 @@ index 00000000..97fc28a4
 +#define LEVEL_PIKACHU       100
 +#define LEVEL_STARTER       99
 +#define LEVEL_LEGENDARY     99
-+#define LEVEL_MEWTWO        100 // Mewtwo and Mega Mewtwo
++#define LEVEL_MEWTWO        99  // Mewtwo and Mega Mewtwo
 +#define LEVEL_PICK          96
 +#define LEVEL_ORIGINAL_TEAM 100
 +

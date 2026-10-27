@@ -328,7 +328,7 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 |---|---|---|
 | Kanto starter | Venusaur, Charizard or Blastoise, holding its Mega Stone (Charizard: X or Y) | 99 |
 | Pikachu | always; Light Ball and Volt Tackle in every set. 10% of these days (`CAP_PIKACHU_ODDS`) it's a Pikachu in one of Ash's caps instead, holding a Pikanium Z (Catastropika), leading, and with a totem aura: +1 Attack, Defense, Sp. Atk, Sp. Def and Speed as the battle starts | 100 |
-| Legendary | picked by the starter, see below | 99 (Mewtwo 100) |
+| Legendary | picked by the starter, see below | 99 |
 | Two from his pool | Poliwrath, Gyarados, Aerodactyl, Lapras, Snorlax, Vaporeon, Jolteon, Flareon, Espeon, Umbreon, Leafeon, Glaceon, Sylveon, Hitmonlee, Kabutops, Victreebel, Machamp, Arcanine, Gengar | 96 |
 | One from a Gen 1 family | any fully evolved Pokémon of the Gen 1 Pokédex, or a later Pokémon that evolves from one (Crobat, Scizor, Kingdra, Blissey, Magnezone, Kleavor, Annihilape…), except starters, Pikachu's family, legendaries and mythicals; no regional forms or their evolutions (no Sirfetch'd or Mr. Rime), and "fully evolved" by today's evolutions, so no Magneton or Scyther (81 species) | 96 |
 
@@ -337,10 +337,10 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 | His bird | 43% | Moltres | Articuno | Zapdos |
 | Johto dog | 20% | Entei | Suicune | Raikou |
 | Galarian bird | 15% | Galarian Moltres | Galarian Articuno | Galarian Zapdos |
-| Mewtwo (level 100) | 10% | | | |
+| Mewtwo | 10% | | | |
 | Deoxys (any forme) | 5% | | | |
 | Mew (1% of days a shiny one) | 5% | | | |
-| Mega Mewtwo X or Y (level 100) | 2% | | | |
+| Mega Mewtwo X or Y | 2% | | | |
 
 - On a Mega Mewtwo day Mewtwo holds the Mega Stone and the starter holds a
   Z-Crystal instead (its set's, or the one for its strongest STAB move).
