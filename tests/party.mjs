@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import {
   GAME_DIR, symbol, layout, value, field, readBits, id, constName, species, move, item,
 } from './game.mjs';
-import { listFor, matchesList, checkStats, isZCrystal, isMegaStone, baseSpecies, typesOf, megaFormeFor, checkTeamLimits } from './sets.mjs';
+import { listFor, matchesList, checkStats, isZCrystal, isMegaStone, canMegaEvolve, baseSpecies, typesOf, megaFormeFor, checkTeamLimits } from './sets.mjs';
 
 const NATURES = ['Hardy', 'Lonely', 'Brave', 'Adamant', 'Naughty', 'Bold', 'Docile', 'Relaxed', 'Impish', 'Lax',
   'Timid', 'Hasty', 'Serious', 'Jolly', 'Naive', 'Modest', 'Mild', 'Quiet', 'Bashful', 'Rash', 'Calm', 'Gentle',
@@ -197,8 +197,8 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
   const starter = starters[0];
   // Another Pokemon Mega Evolving (MEGA_SWAP_ODDS% of the days one can): the
   // starter holds a Z-Crystal instead.
-  const otherMegas = mons.filter((m) => m !== starter && isMegaStone(m.heldItem));
-  if (otherMegas.length > 1) problems.push(`${otherMegas.length} Pokemon besides the starter hold Mega Stones`);
+  const otherMegas = mons.filter((m) => m !== starter && canMegaEvolve(m));
+  if (otherMegas.length > 1) problems.push(`${otherMegas.length} Pokemon besides the starter can Mega Evolve`);
   if (starter) {
     const tag = starter.speciesName;
     const megas = species(starter.species).formChanges.filter((f) => f.method === 'BATTLE_MEGA_EVOLUTION_ITEM');
@@ -241,7 +241,7 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
     if (!isEligibleSpecies(m.species)) problems.push(`${tag}: not an in-scope species`);
     if (!isFinalStage(m.species)) problems.push(`${tag}: not fully evolved`);
     if (isZCrystal(m.heldItem)) problems.push(`${tag} holds ${item(m.heldItem).name}`);
-    const list = isMegaStone(m.heldItem) ? listFor(megaFormeFor(m), 'MEGA') : listFor(m.species, 'NORMAL');
+    const list = canMegaEvolve(m) ? listFor(megaFormeFor(m), 'MEGA') : listFor(m.species, 'NORMAL');
     matchesList(m, list, problems, tag);
     if (list && m.level !== list.level) problems.push(`${tag}: level ${m.level}, its tier's is ${list.level}`);
     if (m.level < 94 || m.level > 99) problems.push(`${tag}: level ${m.level} outside 94-99`);

@@ -60,13 +60,16 @@ export const isZCrystal = (it) => holdEffect(it) === 'Z_CRYSTAL';
 export const isMegaStone = (it) => holdEffect(it) === 'MEGA_STONE';
 export const baseSpecies = (sp) => species(sp).forms[0] ?? sp;
 
-// The Mega forme a held stone turns a Pokemon into (from the species' form
-// change table in the ROM), or null.
+// The Mega forme a Pokemon turns into (from the species' form change table in
+// the ROM), or null: by its held Mega Stone, or, for Rayquaza, by knowing
+// Dragon Ascent (it holds no stone).
 export function megaFormeFor(mon) {
-  if (!isMegaStone(mon.heldItem)) return null;
-  const change = species(mon.species).formChanges.find((f) => f.method === 'BATTLE_MEGA_EVOLUTION_ITEM' && f.param1 === mon.heldItem);
+  const change = species(mon.species).formChanges.find((f) =>
+    (f.method === 'BATTLE_MEGA_EVOLUTION_ITEM' && isMegaStone(mon.heldItem) && f.param1 === mon.heldItem)
+    || (f.method === 'BATTLE_MEGA_EVOLUTION_MOVE' && mon.moves.includes(f.param1)));
   return change ? change.target : null;
 }
+export const canMegaEvolve = (mon) => megaFormeFor(mon) !== null;
 
 // A Pokemon's types, and its Mega forme's.
 export function typesOf(mon) {
