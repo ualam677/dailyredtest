@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { GAME_DIR, symbol, layout, value, field, rom, romOffset, id, constName, species, move, item } from './game.mjs';
 import { decodeMon } from './party.mjs';
-import { setLists, listFor, matchesList, checkStats, perfectStats, isZCrystal, isMegaStone, baseSpecies, typesOf } from './sets.mjs';
+import { setLists, listFor, matchesList, checkStats, perfectStats, isZCrystal, isMegaStone, baseSpecies, typesOf, checkTeamLimits } from './sets.mjs';
 
 export { setLists, perfectStats };
 
@@ -24,6 +24,7 @@ export const ODDS = {
   mewtwo: define('MEWTWO_ODDS'),
   galarianBird: define('GALARIAN_BIRD_ODDS'),
   johtoDog: define('JOHTO_DOG_ODDS'),
+  cap: define('CAP_PIKACHU_ODDS'),
 };
 export const LEVELS = {
   pikachu: define('LEVEL_PIKACHU'),
@@ -52,10 +53,11 @@ const DEOXYS = ['DEOXYS_NORMAL', 'DEOXYS_ATTACK', 'DEOXYS_DEFENSE', 'DEOXYS_SPEE
 const EEVEELUTIONS = ['VAPOREON', 'JOLTEON', 'FLAREON', 'ESPEON', 'UMBREON', 'LEAFEON', 'GLACEON', 'SYLVEON'].map(S);
 const FEMALE = [...EEVEELUTIONS, S('LAPRAS'), S('GYARADOS')];
 const HAZARDS = ['STEALTH_ROCK', 'SPIKES', 'TOXIC_SPIKES', 'STICKY_WEB', 'STONE_AXE', 'CEASELESS_EDGE'].map(M);
+const CAPS = ['ORIGINAL', 'HOENN', 'SINNOH', 'UNOVA', 'KALOS', 'ALOLA', 'PARTNER', 'WORLD'].map((c) => S(`PIKACHU_${c}`));
 
 // --- Predicting a seed's rolls -----------------------------------------------------
-// The first three draws of RED's RNG (ISO_RANDOMIZE1, upper 16 bits) after
-// boot: original team, starter, legendary roll.
+// The first four draws of RED's RNG (ISO_RANDOMIZE1, upper 16 bits) after
+// boot: original team, starter, legendary roll, capped Pikachu.
 
 export function legendaryKind(roll) {
   const order = [['megaMewtwo', ODDS.megaMewtwo], ['mew', ODDS.mew], ['deoxys', ODDS.deoxys], ['mewtwo', ODDS.mewtwo],
@@ -76,7 +78,8 @@ export function predictRolls(seed) {
   const original = next() % 100 < ODDS.original;
   const starter = next() % 3;
   const legendary = legendaryKind(next() % 100);
-  return { original, starter: STARTERS[starter].name, legendary };
+  const cap = next() % 100 < ODDS.cap && !original;
+  return { original, starter: STARTERS[starter].name, legendary, cap };
 }
 
 // --- Reading -----------------------------------------------------------------------
@@ -120,16 +123,23 @@ export function validateRed(party, rolls = null) {
   const teraCount = mons.filter((m) => m.teraType !== value('TYPE_MYSTERY')).length;
 
   const starters = mons.filter((m) => STARTERS.some((s) => S(s.name) === m.species));
-  const pikachu = mons.find((m) => m.species === S('PIKACHU'));
+  const pikachu = mons.find((m) => base(m.species) === S('PIKACHU'));
+  const original = starters.length === 3;
+  // A capped Pikachu (CAP_PIKACHU_ODDS% of his usual days) holds a Pikanium
+  // Z and leads; otherwise Pikachu holds a Light Ball.
+  const capped = Boolean(pikachu && CAPS.includes(pikachu.species));
+  if (rolls && pikachu && rolls.cap !== capped) problems.push(`capped Pikachu ${capped}, the seed's roll says ${rolls.cap}`);
   if (!pikachu) problems.push('no Pikachu');
   else {
-    if (pikachu.heldItem !== I('LIGHT_BALL')) problems.push('Pikachu has no Light Ball');
+    if (original && capped) problems.push('a capped Pikachu on an original-team day');
+    if (pikachu.species !== S('PIKACHU') && !capped) problems.push(`Pikachu is ${pikachu.speciesName}`);
+    const wantItem = capped ? 'PIKANIUM_Z' : 'LIGHT_BALL';
+    if (pikachu.heldItem !== I(wantItem)) problems.push(`Pikachu doesn't hold a ${wantItem}`);
     if (!pikachu.moves.includes(M('VOLT_TACKLE'))) problems.push('Pikachu has no Volt Tackle');
     if (pikachu.shiny) problems.push('Pikachu is shiny');
-    matchesList(pikachu, listFor(S('PIKACHU'), 'NORMAL'), problems, 'Pikachu');
+    matchesList({ ...pikachu, species: S('PIKACHU') }, listFor(S('PIKACHU'), capped ? 'ZMOVE' : 'NORMAL'), problems, 'Pikachu');
   }
 
-  const original = starters.length === 3;
   if (rolls && rolls.original !== original) problems.push(`original team ${original}, the seed's roll says ${rolls.original}`);
   let leaders;
   let kind;
@@ -184,18 +194,23 @@ export function validateRed(party, rolls = null) {
       if (legend.level !== wantLevel) problems.push(`${legend.speciesName}: level ${legend.level}, expected ${wantLevel}`);
       if (kind === 'megaMewtwo') {
         matchesList(legend, listFor(MEGA_FORMES.get(legend.heldItem), 'MEGA'), problems, 'Mega Mewtwo');
-      } else if (kind === 'galarianBird') {
+      } else if (kind === 'galarianBird' || capped) {
+        // The Galarian birds' sets are Gen 8 (no Z-Moves); a capped Pikachu has his Z-Move.
         matchesList(legend, listFor(sp, 'NORMAL'), problems, legend.speciesName);
+        if (isMegaStone(legend.heldItem) || isZCrystal(legend.heldItem)) problems.push(`${legend.speciesName} holds ${item(legend.heldItem).name}`);
       } else if (kind) {
         matchesList(legend, listFor(sp, 'ZMOVE'), problems, legend.speciesName);
         if (isMegaStone(legend.heldItem)) problems.push(`${legend.speciesName} holds a Mega Stone`);
       }
     }
 
-    // The starter: its Mega Stone, or a Z-Crystal when Mewtwo Mega Evolves.
+    // The starter: its Mega Stone, or a regular set when Mewtwo Mega Evolves.
     if (starter) {
       if (starter.level !== LEVELS.starter) problems.push(`${starter.speciesName}: level ${starter.level}, expected ${LEVELS.starter}`);
-      if (kind === 'megaMewtwo') {
+      if (kind === 'megaMewtwo' && capped) {
+        if (isZCrystal(starter.heldItem) || isMegaStone(starter.heldItem)) problems.push(`${starter.speciesName} holds ${item(starter.heldItem).name} on a Mega Mewtwo, capped-Pikachu day`);
+        matchesList(starter, listFor(starter.species, 'NORMAL'), problems, starter.speciesName);
+      } else if (kind === 'megaMewtwo') {
         if (!isZCrystal(starter.heldItem)) problems.push(`${starter.speciesName} doesn't hold a Z-Crystal on a Mega Mewtwo day`);
         matchesList(starter, listFor(starter.species, 'ZMOVE'), problems, starter.speciesName);
       } else {
@@ -221,7 +236,7 @@ export function validateRed(party, rolls = null) {
       const tag = anyPick.speciesName;
       if (info2.legendary || info2.ultraBeast || info2.paradox) problems.push(`${tag}: legendary, Ultra Beast or Paradox`);
       if (info2.evolutions.length) problems.push(`${tag}: not fully evolved`);
-      if (!isGen1to3Regular(anyPick.species)) problems.push(`${tag}: not in the Gen 1-3 Pokedex`);
+      if (!isGen1Family(anyPick.species)) problems.push(`${tag}: not from a Gen 1 family`);
       if ([S('RAICHU'), S('PIKACHU')].includes(base(anyPick.species))) problems.push(`${tag}: Pikachu's family`);
     }
     for (let i = 0; i < picks.length; i++) {
@@ -231,13 +246,11 @@ export function validateRed(party, rolls = null) {
       }
     }
     if (picks.filter((m) => EEVEELUTIONS.includes(m.species)).length > 1) problems.push('more than one Eeveelution');
-    leaders = [pikachu, ...picks].filter(Boolean);
+    leaders = (capped ? [pikachu] : [pikachu, ...picks]).filter(Boolean); // the capped Pikachu always leads
   }
 
-  // No type on more than two of the six.
-  const typeCounts = new Map();
-  for (const m of mons) for (const t of typesOf(m)) typeCounts.set(t, (typeCounts.get(t) ?? 0) + 1);
-  for (const [t, n] of typeCounts) if (n > 2) problems.push(`${n} ${t}-type Pokemon`);
+  // One item held twice at most, one type shared at most.
+  checkTeamLimits(mons, problems);
 
   // The lead.
   const lead = party[0];
@@ -248,15 +261,35 @@ export function validateRed(party, rolls = null) {
   return { kind, problems };
 }
 
-// The Gen 1-3 Pokedex in regular form: national dex 1-386, not a regional
-// or other alternate form.
-export function isGen1to3Regular(sp) {
+// A regular form (not a regional or other alternate form).
+const isRegularForm = (sp) => {
   const info = species(sp);
-  return info.natDexNum >= 1 && info.natDexNum <= 386 && !info.regional && !info.battleOnly && (info.forms.length === 0 || info.forms[0] === sp);
+  return !info.regional && !info.battleOnly && (info.forms.length === 0 || info.forms[0] === sp);
+};
+let prevos = null;
+function prevoOf(sp) {
+  if (!prevos) {
+    prevos = new Map();
+    for (let s = 1; s < value('NUM_SPECIES'); s++) {
+      for (const e of species(s).evolutions) if (!prevos.has(e.target)) prevos.set(e.target, s);
+    }
+  }
+  return prevos.get(sp);
 }
 
-// RED's random pick (gDailyRedPickGroups in the ROM): every entry from the
-// Gen 1-3 Pokedex, fully evolved and none a starter (any generation's family),
+// From a Gen 1 family: a regular-form Pokemon of the Gen 1 Pokedex (national
+// dex 1-151), or one that evolves from one (Crobat, Scizor, Kleavor...).
+export function isGen1Family(sp) {
+  for (let s = sp, i = 0; s && i < 5; s = prevoOf(s), i++) {
+    if (!isRegularForm(s)) return false;
+    const n = species(s).natDexNum;
+    if (n >= 1 && n <= 151) return true;
+  }
+  return false;
+}
+
+// RED's random pick (gDailyRedPickGroups in the ROM): every entry from a Gen 1
+// family, fully evolved and none a starter (any generation's family),
 // Pikachu's family, legendary, mythical, Ultra Beast or Paradox Pokemon.
 // Returns { count, problems }.
 const STARTER_ROOTS = ['BULBASAUR', 'CHARMANDER', 'SQUIRTLE', 'CHIKORITA', 'CYNDAQUIL', 'TOTODILE', 'TREECKO', 'TORCHIC',
@@ -290,7 +323,7 @@ export function validatePickGroups() {
       if (info.legendary || info.ultraBeast || info.paradox) problems.push(`${tag}: legendary, Ultra Beast or Paradox`);
       if (info.evolutions.length) problems.push(`${tag}: not fully evolved`);
       if (info.battleOnly) problems.push(`${tag}: a battle-only forme`);
-      if (!isGen1to3Regular(list.species)) problems.push(`${tag}: not in the Gen 1-3 Pokedex`);
+      if (!isGen1Family(list.species)) problems.push(`${tag}: not from a Gen 1 family`);
       if (roots.has(root(list.species))) problems.push(`${tag}: a starter or Pikachu's family`);
     }
   }

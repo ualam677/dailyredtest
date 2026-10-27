@@ -151,6 +151,16 @@ changes:
 - **Terastallization and Dynamax:** the player has neither a Tera Orb nor a
   Dynamax Band. RED never Dynamaxes, and only Terastallizes on original-team
   days (see [RED's team](#reds-team)).
+- **HP bars drain at a steady pace:** a full bar in 40 frames, about two
+  thirds of a second (`DAILYRED_HP_BAR_FULL_FRAMES` in `include/dailyred.h`),
+  slower than the expansion's fast drain (24) and much faster than FireRed's
+  one HP a frame (about 300 frames for a full bar at level 100).
+- **Ability and item pop-ups don't hold up the battle:** they slide in while
+  the ability's or item's animation and message play, and slide out on their
+  own (`BattleScript_AbilityPopUp` and `BattleScript_ItemPopUp_*` in
+  `data/battle_scripts_1.s`; a battler's new pop-up replaces one still
+  showing). Before, the battle waited for an item pop-up to come and go
+  before its animation.
 
 Every vanilla file that was changed has a `Daily Red:` comment at the change:
 
@@ -238,20 +248,37 @@ right after RED's (his starter decides yours), from the seed:
   Dragonize) and gets one of that Mega's sets. Typhlosion has no Mega, so it
   holds a Firium Z. On RED's original-team days (he has all three Kanto
   starters) it's any of the nine.
+- **Sometimes another Pokémon Mega Evolves instead:** when one of your other
+  five can Mega Evolve (Gengar, Gyarados, Aerodactyl, Mewtwo, Latias…), 25%
+  of those days (`MEGA_SWAP_ODDS`) it gets one of its Mega's sets, holding
+  its Mega Stone (at its Mega's tier level), and your starter holds a
+  Z-Crystal instead (one of its Z-Move sets, the crystal for its strongest
+  STAB type; Typhlosion keeps its Firium Z). The Mega's types must still fit
+  the type limit below.
 - **Five fully evolved Pokémon** from Daily Red's species scope (below), never
-  holding a Mega Stone or a Z-Crystal. **Legendaries are a 1-in-8 roll**
-  (`LEGENDARY_TEAM_ODDS`): 1 team in 8 has exactly one, the rest none.
+  holding a Mega Stone or a Z-Crystal. **Legendaries are a 20% roll**
+  (`LEGENDARY_TEAM_ODDS`): 1 team in 5 has exactly one, the rest none. It's
+  never the legendary RED has that day, in any forme (his Galarian Moltres
+  rules out Moltres).
 - **5% of days mirror RED's team** (`MIRROR_RED_ODDS`): the starter, a
   **shiny Pikachu** (level 100, Light Ball and Volt Tackle, like his), a
   legendary for sure, and three more.
 - **At most one starter and one Eeveelution:** the counter-starter is the
   only one of the nine final Gen 1–3 starters, and the five can't add a
   second (or a second Eeveelution).
-- **No species twice, no type on more than two** of the six (a Mega's types
-  count with its base form's), and the six's **base stats add up to at least
-  2700** (`MIN_TEAM_BASE_STAT_TOTAL`; RED's original team totals 2974). The
-  rest of the team is redrawn until it meets the minimum, so every qualifying
-  team is equally likely.
+- **No species twice**, and the six's **base stats add up to at least 2700**
+  (`MIN_TEAM_BASE_STAT_TOTAL`; RED's original team totals 2974). The rest of
+  the team is redrawn until it meets the minimum, so every qualifying team is
+  equally likely.
+- **Team limits** (the same for RED's team):
+  - **Items:** one item can be held by two of the six, and every other item
+    by one at most. Once two Pokémon hold Life Orbs, say, nothing else on
+    the team can double up. A set whose item doesn't fit gives way to
+    another of that Pokémon's sets; a Pokémon with none that fits isn't
+    drawn.
+  - **Types:** one type can be shared by two of the six, and every other type
+    is on one at most. So Butterfree and Beautifly (both Bug/Flying) can't
+    be on one team. A Mega's types count with its base form's.
 - **Sets and stats:** every Pokémon gets one of its Showdown Random Battle
   sets from the same table as RED's (see [Sets](#sets)), with perfect stats
   (every IV maxed by hyper training) and the set's competitive nature and
@@ -297,10 +324,10 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 | Slot | Pokémon | Level |
 |---|---|---|
 | Kanto starter | Venusaur, Charizard or Blastoise, holding its Mega Stone (Charizard: X or Y) | 99 |
-| Pikachu | always; Light Ball and Volt Tackle in every set | 100 |
+| Pikachu | always; Light Ball and Volt Tackle in every set. 10% of these days (`CAP_PIKACHU_ODDS`) it's a Pikachu in one of Ash's caps instead, holding a Pikanium Z (Catastropika), leading, and with a totem aura: +1 Attack, Defense, Sp. Atk, Sp. Def and Speed as the battle starts | 100 |
 | Legendary | picked by the starter, see below | 99 (Mewtwo 100) |
 | Two from his pool | Poliwrath, Gyarados, Aerodactyl, Lapras, Snorlax, Vaporeon, Jolteon, Flareon, Espeon, Umbreon, Leafeon, Glaceon, Sylveon, Hitmonlee, Kabutops, Victreebel, Machamp, Arcanine, Gengar | 96 |
-| One from Gens 1–3 | any fully evolved Pokémon of the Gen 1–3 Pokédex (no later-generation evolutions or regional forms; "fully evolved" by today's evolutions, so no Magneton or Scyther) except starters, Pikachu's family, legendaries and mythicals (159 species) | 96 |
+| One from a Gen 1 family | any fully evolved Pokémon of the Gen 1 Pokédex, or a later Pokémon that evolves from one (Crobat, Scizor, Kingdra, Blissey, Magnezone, Kleavor, Annihilape…), except starters, Pikachu's family, legendaries and mythicals; no regional forms or their evolutions (no Sirfetch'd or Mr. Rime), and "fully evolved" by today's evolutions, so no Magneton or Scyther (81 species) | 96 |
 
 | Legendary roll | Odds | Venusaur | Charizard | Blastoise |
 |---|---|---|---|---|
@@ -317,21 +344,32 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
   Otherwise the legendary may hold a Z-Crystal when its set has one (not the
   Galarian birds: their sets are from Gen 8, which has no Z-Moves). So RED has
   at most one Mega Evolution and one Z-Move.
-- The pool picks and the Gen 1–3 pick never hold a Mega Stone or a
-  Z-Crystal. No two of those three share a type, no type is on more than two
-  of RED's six (a Mega's types count with its base form's), and he has at most
-  one Eeveelution.
+- **The capped Pikachu** (any of the Original, Hoenn, Sinnoh, Unova, Kalos,
+  Alola, Partner and World caps; never on original-team days) has his one
+  Z-Move: that day his legendary never holds a Z-Crystal and a Mega Mewtwo
+  day's starter gets a regular set. The expansion only gives Catastropika to
+  plain and Cosplay Pikachu, so `sSignatureZMoves` (`src/battle_z_move.c`)
+  adds the capped ones. Its totem aura is the expansion's totem boost ("The
+  opposing Pikachu's aura flared to life!"), queued as his battle starts
+  (`DailyRed_QueueRedTotemBoost`, called by the `DailyRed_OnBattleStart`
+  special). It lasts until Pikachu switches out, like any stat change.
 - He leads with Pikachu or one of the three picks: one that sets entry
   hazards (Stealth Rock, Spikes, Toxic Spikes, Sticky Web, Stone Axe,
   Ceaseless Edge) if any does, otherwise at random. The starter and the
-  legendary never lead.
+  legendary never lead, and the capped Pikachu always does.
+- The pool picks and the Gen 1 pick never hold a Mega Stone or a Z-Crystal.
+  No two of those three share a type, and he has at most one Eeveelution.
+- The team limits apply to his six too (see [Your team](#your-team)): one
+  item held twice at most, one type shared at most. On days when his fixed
+  Pokémon already share a type (Pikachu and Zapdos or Raikou are both
+  Electric), his three picks can't share any type with the rest.
 
 **5% of days, his original team** from HeartGold/SoulSilver, all level 100:
-Pikachu, Espeon or Lapras (50/50), Snorlax, Venusaur, Charizard and
-Blastoise. The three starters share out Mega Evolution, a Z-Move and
+Pikachu (never capped), Espeon or
+Lapras (50/50), Snorlax, Venusaur, Charizard and Blastoise. The three starters share out Mega Evolution, a Z-Move and
 Terastallization at random, each with that gimmick's sets (Gen 7 for Mega and
 Z, Gen 9 for Tera, including its Tera type). He leads with Pikachu, Espeon or
-Lapras, or Snorlax. Nothing on his team ever Dynamaxes, and only that Tera
+Lapras, or Snorlax (a hazard setter if one of them is). Nothing on his team ever Dynamaxes, and only that Tera
 starter can Terastallize.
 
 All of RED's Pokémon are male, except the Eeveelutions, Lapras and Gyarados
@@ -441,12 +479,26 @@ from Pokémon Showdown's own Random Battle generators (pinned in
 cd scripts/sets && npm install && node generate.mjs
 ```
 
-It calls Showdown's `randomSet()` 400 times per species and keeps up to 10 of
-the sets it produced (those that came up at least 2% of the time), with
-Showdown's odds. Sets come from Gen 7 Random Battles (the last generation with
-Mega Evolution and Z-Moves); species Gen 7 doesn't have (Galarian forms, Gen
-8–9 species) come from Gen 8, then Gen 9, and Mega Meganium and Mega
-Feraligatr from Showdown's Pokémon Champions Random Battles. Random Battle
+For each generation it calls Showdown's `randomSet()` 400 times per species
+and keeps up to 10 of the sets it produced (those that came up at least 2% of
+the time), with Showdown's odds. A species' regular list mixes the sets of
+every Random Battles generation from 7 to 9 that has it, each generation an
+equal share (Gen 7 is the last with Mega Evolution and Z-Moves; Gen 8 and 9
+bring newer items and moves: Heavy-Duty Boots, Assault Vest sets…). Mega and
+Z-Move lists come from Gen 7, Tera lists from Gen 9, and Mega Meganium and
+Mega Feraligatr from Showdown's Pokémon Champions Random Battles.
+
+**Lead sets.** Showdown's generators hardly make lead sets (a lead
+Aerodactyl gets a Focus Sash about 5% of the time), so
+`scripts/sets/lead-sets.mjs` adds hand-written ones after Smogon's analyses:
+entry hazard leads (Focus Sash Aerodactyl with Stealth Rock and Taunt, Sticky
+Web Smeargle, Ariados, Masquerain and Shuckle, Spikes Froslass, Qwilfish,
+Glalie, Cloyster, Omastar and Delibird, Toxic Spikes Roserade, Weezing and
+Nidoqueen…), suicide leads (Destiny Bond Gengar and Mismagius, Memento
+Dugtrio, Explosion Electrode), sleep and Fake Out leads, dual screens (Espeon,
+Mr. Mime) and weather setters (Drizzle Politoed, Drought Ninetales), 34 sets
+in all. Together they get 25% of their species' list (`LEAD_SHARE`). The
+script checks each one's moves against Showdown's learnsets. Random Battle
 sets have a neutral nature and the same EVs in every stat, so every set gets a
 competitive spread instead (`competitiveSpread`): from Showdown's role for the
 set, its attacks and its base stats, a fast attacker gets +Speed and 252
@@ -457,9 +509,10 @@ defence's expense (Naive, Lonely…), a defensive one +the defence it needs and
 sets give up Speed (Brave, Quiet, Relaxed, Sassy). Each list also has your level
 for the species, from its Showdown tier (see [Your team](#your-team)). Each species has a list per kind:
 `NORMAL` (no Mega Stone or Z-Crystal: Showdown's sets for a team that already
-has its Z-Move user), `MEGA` (a Mega Evolution's sets), `ZMOVE` (Z-Crystals
-allowed, for RED's legendaries; for his starters on Mega Mewtwo days and your
-Typhlosion it's always the crystal for their strongest STAB type) and
+has its Z-Move user), `MEGA` (a Mega Evolution's sets), `ZMOVE` (always a
+Z-Crystal: RED's legendaries' with Showdown's odds; his capped Pikachu's
+Pikanium Z; and for his starters and yours the crystal for their strongest
+STAB type) and
 `TERA` (Gen 9 sets with their Tera type, for the starters). Gimmick sets are
 left out: status Z-Moves (a Normalium Z for Hold Hands, Celebrate, Happy Hour
 or Conversion), Splash, Gen 8 sets built for Dynamax (unless a Gen 8 species
@@ -587,16 +640,18 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
   "Will Blue change POKéMON?" prompt.
 - RED's AI flags in the ROM are Smart Trainer and Prediction, his battle
   opens with the VS mugshot transition on his red band and uses his HGSS sprite;
-  every entry of his Gen 1–3 pick is in the Gen 1–3 Pokédex, fully evolved
-  and not a starter, legendary or mythical; all of Pikachu's sets have a Light Ball and
-  Volt Tackle; no `NORMAL` set holds a Mega Stone or Z-Crystal; and there are
+  every entry of his Gen 1 pick is from a Gen 1 family, fully evolved and
+  not a starter, legendary or mythical; all of Pikachu's regular sets have a
+  Light Ball and Volt Tackle and all of his Z-Move sets (the capped
+  Pikachu's) a Pikanium Z and Volt Tackle; no `NORMAL` set holds a Mega Stone or Z-Crystal; and there are
   no gimmick sets (every Z-Crystal powers up one of its set's attacks).
 - RED's team follows his rules (`validateRed` in `tests/red.mjs`, written
   independently of the C code) for each seed and after each run: the right
   starter, legendary and original-team day for the seed's rolls (predicted in
   JavaScript from his RNG), levels, Mega Stone / Z-Crystal / Tera rules, one of
   each Pokémon's Showdown sets (from the table in the ROM), perfect stats,
-  genders, the type and Eeveelution limits and the lead; the same seed gives
+  genders, the item, type and Eeveelution limits, the capped Pikachu and the
+  lead; the same seed gives
   the same RED; he battles with that team; and the summit's snow doesn't
   start any battle weather.
 - the player starts with a Mega Ring and a Z-Power Ring; affection and

@@ -116,7 +116,7 @@ check(value('B_AFFECTION_MECHANICS') === 0 && value('B_FRIENDSHIP_BOOST') === 0,
   const mugshot = readBits(rom(), at, layout('Trainer').mugshotColor);
   check(mugshot === value('MUGSHOT_COLOR_RED'), `RED's battle opens with the VS mugshot transition, in his red (got color ${mugshot})`);
   const picks = validatePickGroups();
-  check(picks.problems.length === 0, `RED's third pick has ${picks.count} species, all from the Gen 1-3 Pokedex, fully evolved and none a starter, legendary or mythical${picks.problems.length ? ': ' + picks.problems.join('; ') : ''}`);
+  check(picks.problems.length === 0, `RED's third pick has ${picks.count} species, all from a Gen 1 family, fully evolved and none a starter, legendary or mythical${picks.problems.length ? ': ' + picks.problems.join('; ') : ''}`);
   const redPic = field(rom(), at, 'Trainer', 'trainerPic');
   check(redPic === value('TRAINER_PIC_DAILYRED_RED'), `RED's battle sprite is his HGSS one (TRAINER_PIC_DAILYRED_RED; got ${redPic})`);
   const snow = romOffset(symbol('gBattleEnvironmentInfo')) + value('BATTLE_ENVIRONMENT_SNOW') * layout('BattleEnvironment').size;
@@ -124,7 +124,9 @@ check(value('B_AFFECTION_MECHANICS') === 0 && value('B_FRIENDSHIP_BOOST') === 0,
     "the snow battle environment has Mt. Silver's background");
   const lists = setLists();
   const pikachu = lists.find((l) => l.species === id('SPECIES', 'PIKACHU') && l.kind === 'NORMAL');
-  check(pikachu.sets.every((st) => st.item === id('ITEM', 'LIGHT_BALL') && st.moves.includes(id('MOVE', 'VOLT_TACKLE'))), `every one of Pikachu's ${pikachu.sets.length} sets has a Light Ball and Volt Tackle`);
+  check(pikachu.sets.every((st) => st.item === id('ITEM', 'LIGHT_BALL') && st.moves.includes(id('MOVE', 'VOLT_TACKLE'))), `every one of Pikachu's ${pikachu.sets.length} NORMAL sets has a Light Ball and Volt Tackle`);
+  const pikachuZ = lists.find((l) => l.species === id('SPECIES', 'PIKACHU') && l.kind === 'ZMOVE');
+  check(pikachuZ && pikachuZ.sets.every((st) => st.item === id('ITEM', 'PIKANIUM_Z') && st.moves.includes(id('MOVE', 'VOLT_TACKLE'))), `every one of RED's Pikachu's ${pikachuZ?.sets.length} ZMOVE sets has a Pikanium Z and Volt Tackle`);
   // No gimmick sets: every Z-Crystal powers up one of the set's attacks (a
   // type Z-Crystal: an attack of its type), and no gimmick moves.
   const gimmickMoves = new Set(['HOLD_HANDS', 'CELEBRATE', 'HAPPY_HOUR', 'SPLASH', 'CONVERSION'].map((n) => id('MOVE', n)));

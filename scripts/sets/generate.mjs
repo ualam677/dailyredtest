@@ -10,18 +10,23 @@
 // the way its Random Battle team builder does, and keeps the distinct sets
 // with how often they came up.
 //
-// Which generation's sets a species uses: Gen 7 Random Battles first (the last
-// generation with Mega Evolution and Z-Moves); species Gen 7 doesn't have
-// (Gen 8+ species and forms, e.g. Galarian Moltres) come from Gen 8, then Gen 9.
+// Which generations' sets a species uses: its NORMAL list mixes the sets of
+// every Random Battles generation from 7 to 9 that has the species (Gen 7: the
+// last generation with Mega Evolution and Z-Moves; Gen 8 and 9 add newer items
+// and moves), each generation an equal share of the list, plus the
+// hand-written lead sets in lead-sets.mjs (LEAD_SHARE of the list, when the
+// species has any).
 //
 // The table has one list of sets per species and kind (DAILYRED_SETS_*):
 //   NORMAL  no Z-Crystal and no Mega Stone (Showdown's sets for a team that
 //           already has its Z-Move user). Every species has one.
 //   MEGA    the sets of a Mega Evolution (Charizard-Mega-X...): the species to
 //           create is the base form, holding the stone.
-//   ZMOVE   Z-Crystals allowed (Showdown's odds), for RED's legendaries. The
-//           Kanto starters' ZMOVE lists always hold a Z-Crystal: when the set
-//           has none, the one for its strongest STAB type.
+//   ZMOVE   Z-Crystals: RED's legendaries' (Showdown's odds); the starters'
+//           always hold one (RED's Kanto starters; yours, when another of your
+//           Pokemon Mega Evolves, and Typhlosion, which has no Mega): when the
+//           set has none, the one for its strongest STAB type. RED's capped
+//           Pikachu's: a Pikanium Z and Volt Tackle.
 //   TERA    Gen 9 sets with their Tera type, for the Kanto starters.
 //
 // The ROM gives every Pokemon perfect stats (all IVs maxed by hyper training),
@@ -41,6 +46,8 @@ import { createRequire } from 'node:module';
 import { dirname, join, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { LEAD_SETS, LEAD_SHARE } from './lead-sets.mjs';
+
 const require = createRequire(import.meta.url);
 const { Teams, Dex } = require('pokemon-showdown');
 const PS_VERSION = require('pokemon-showdown/package.json').version;
@@ -54,7 +61,7 @@ const option = (name, fallback) => {
 
 const SAMPLES = Number(option('samples', 400)); // randomSet() calls per list
 const MIN_SHARE = Number(option('min-share', 0.02)); // drop sets rarer than this
-const MAX_SETS = Number(option('max-sets', 10)); // per list, most common first
+const MAX_SETS = Number(option('max-sets', 10)); // per generation in a list, most common first
 const SEED = [0x4441, 0x494c, 0x5952, 0x4544]; // "DAILYRED"
 const GAME = resolve(HERE, option('game', '../../expansion'));
 const OUT = resolve(HERE, option('out', join(GAME, 'src/dailyred_sets.c')));
@@ -74,9 +81,10 @@ const RED_LEGENDARIES = ['articuno', 'zapdos', 'moltres', 'raikou', 'entei', 'su
   'deoxys', 'deoxysattack', 'deoxysdefense', 'deoxysspeed'];
 const KANTO_STARTERS = ['venusaur', 'charizard', 'blastoise'];
 // The player's starter, picked to counter RED's (see dailyred_team.c): Megas
-// with their stone, and Typhlosion (no Mega) with a Firium Z.
+// with their stone, or a Z-Crystal when another of the team Mega Evolves
+// (Typhlosion, which has no Mega, always).
 const LATER_MEGAS = ['meganiummega', 'feraligatrmega'];
-const Z_STARTERS = ['typhlosion'];
+const Z_STARTERS = ['meganium', 'typhlosion', 'feraligatr', 'sceptile', 'blaziken', 'swampert'];
 
 // Every final-stage starter of Generations 1-9 (their whole families are left
 // out of RED's random pick).
@@ -238,33 +246,40 @@ function familyRoot(dex, species) {
 }
 
 const lists = [];
-const covered = new Set(); // Showdown species ids that already have a NORMAL list
+// Every generation's Showdown entries for each species, for its NORMAL list.
+const normalSources = new Map(); // Showdown species id -> { species, sources }
 for (const gen of GENS) {
   const dex = dexes.get(gen);
   for (const id of entriesOf(gen)) {
     const species = dex.species.get(id);
     if (gen > 7 && species.name.endsWith('-Gmax')) continue; // no Dynamax in Daily Red
     if (species.isMega || species.isPrimal) {
-      if (gen === 7) lists.push({ id, gen, kind: 'MEGA', species, details: {} });
+      if (gen === 7) lists.push({ id, gen, kind: 'MEGA', species, details: {}, sources: [{ gen, id }] });
       continue;
     }
-    if (covered.has(species.id)) continue;
-    // Gen 8 species whose only sets are built for Dynamax: Gen 9's sets if it
-    // has the species, otherwise those (as plain sets: their moves are fine
-    // without Dynamax).
     const onlyDynamax = generators.get(gen).randomSets[id].sets?.every((st) => st.role === 'Dynamax User');
-    if (onlyDynamax && gen < 9 && entriesOf(9).includes(id)) continue;
-    covered.add(species.id);
-    lists.push({ id, gen, kind: 'NORMAL', species, details: { zMove: 1 }, allowDynamaxSets: onlyDynamax });
+    if (!normalSources.has(species.id)) normalSources.set(species.id, { species, sources: [] });
+    normalSources.get(species.id).sources.push({ gen, id, onlyDynamax });
   }
 }
-for (const id of RED_LEGENDARIES) lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {} });
-for (const id of KANTO_STARTERS) {
-  lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, forceZ: true });
-  lists.push({ id, gen: 9, kind: 'TERA', species: dexes.get(9).species.get(id), details: {} });
+for (const { species, sources } of normalSources.values()) {
+  // A Gen 8 entry whose only sets are built for Dynamax is left out when
+  // another generation has the species; otherwise its sets are used as plain
+  // sets (their moves are fine without Dynamax).
+  let use = sources.filter((src) => !src.onlyDynamax);
+  if (!use.length) use = sources.map((src) => ({ ...src, allowDynamaxSets: true }));
+  const list = { id: species.id, gen: use[0].gen, kind: 'NORMAL', species, details: { zMove: 1 }, sources: use };
+  lists.push(list);
+  // RED's capped Pikachu: the same sets, holding a Pikanium Z.
+  if (species.id === 'pikachu') lists.push({ ...list, kind: 'ZMOVE', pikaniumZ: true });
 }
-for (const id of LATER_MEGAS) lists.push({ id, gen: CHAMPIONS, kind: 'MEGA', species: Dex.species.get(id), details: {} });
-for (const id of Z_STARTERS) lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, forceZ: true });
+for (const id of RED_LEGENDARIES) lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, sources: [{ gen: 7, id }] });
+for (const id of KANTO_STARTERS) {
+  lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, forceZ: true, sources: [{ gen: 7, id }] });
+  lists.push({ id, gen: 9, kind: 'TERA', species: dexes.get(9).species.get(id), details: {}, sources: [{ gen: 9, id }] });
+}
+for (const id of LATER_MEGAS) lists.push({ id, gen: CHAMPIONS, kind: 'MEGA', species: Dex.species.get(id), details: {}, sources: [{ gen: CHAMPIONS, id }] });
+for (const id of Z_STARTERS) lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, forceZ: true, sources: [{ gen: 7, id }] });
 
 // The player's level for each species, from its Gen 7 Showdown tier (Gen 8,
 // then Gen 9, for species Gen 7 doesn't have): the stronger the tier, the
@@ -289,17 +304,27 @@ function tierLevel(tier) {
   return LOWEST_TIER_LEVEL;
 }
 
-// RED's random pick: a Pokemon of the Gen 1-3 Pokedex (national dex 1-386,
-// regular form: no later-generation evolutions or regional forms), fully
-// evolved, and not a starter (nor Pikachu's family), legendary or mythical.
-// "Fully evolved" is judged with the latest generation's data, so a Pokemon
-// that gained an evolution later (Magneton, Scyther, Ursaring...) is out.
-const RANDOM_PICK_LAST_DEX = 386;
+// RED's random pick: a fully evolved Pokemon from a Gen 1 family, in its
+// regular form: a Pokemon of the Gen 1 Pokedex (national dex 1-151), or a
+// later Pokemon that evolves from one (Crobat, Scizor, Blissey, Magnezone,
+// Kleavor, Annihilape...; not from a regional form, so no Sirfetch'd or Mr.
+// Rime). Not a starter (nor Pikachu's family), legendary or mythical. "Fully
+// evolved" is judged with the latest generation's data, so a Pokemon that
+// gained an evolution later (Magneton, Scyther, Electabuzz...) is out.
+const RANDOM_PICK_LAST_DEX = 151;
+function isFromGen1Family(species) {
+  for (let s = species, guard = 0; s && guard < 5; guard++) {
+    if (s.forme) return false; // a regional (or other) form, or evolved from one
+    if (s.num >= 1 && s.num <= RANDOM_PICK_LAST_DEX) return true;
+    s = s.prevo ? Dex.species.get(s.prevo) : null;
+  }
+  return false;
+}
 function isRandomPick(list) {
   if (list.kind !== 'NORMAL') return false;
   const dex = Dex;
   const species = Dex.species.get(list.species.name);
-  if (species.num < 1 || species.num > RANDOM_PICK_LAST_DEX || species.forme) return false;
+  if (species.forme || !isFromGen1Family(species)) return false;
   if (species.nfe || species.battleOnly) return false;
   if (species.tags.some((t) => NOT_RANDOM_TAGS.includes(t))) return false;
   if (STARTER_ROOTS.has(familyRoot(dex, species))) return false;
@@ -342,16 +367,19 @@ function addZCrystal(dex, set) {
   return { ...set, item: crystal.name };
 }
 
-// RED's Pikachu always holds a Light Ball and knows Volt Tackle (in place of
-// its other Electric attack, or its last move).
-function forcePikachu(dex, set) {
-  if (set.species !== 'Pikachu') return set;
+// Pikachu always knows Volt Tackle (in place of its other Electric attack, or
+// its last move) and holds a Light Ball (RED's and your mirror-day Pikachu)
+// or, in its ZMOVE list (RED's capped Pikachu), a Pikanium Z, which turns
+// Volt Tackle into Catastropika. Gen 8 and 9 give Pikachu a random cap
+// (Pikachu-Unova...): it's the regular Pikachu here.
+function forcePikachu(dex, set, list) {
+  if (dex.species.get(set.species).baseSpecies !== 'Pikachu' || dex.species.get(set.species).battleOnly) return set;
   const moves = [...set.moves];
   if (!moves.includes('volttackle')) {
     const electric = moves.findIndex((m) => dex.moves.get(m).type === 'Electric' && dex.moves.get(m).category !== 'Status');
     moves[electric >= 0 ? electric : moves.length - 1] = 'volttackle';
   }
-  return { ...set, item: 'Light Ball', moves };
+  return { ...set, species: 'Pikachu', item: list.pikaniumZ ? 'Pikanium Z' : 'Light Ball', moves };
 }
 
 // Gimmick sets Daily Red leaves out (Showdown plays them, but they're odd in
@@ -473,32 +501,93 @@ function competitiveSpread(dex, set) {
   return { ...set, nature: NATURES[up][down], evs };
 }
 
-const startTime = Date.now();
-for (const list of lists) {
-  const generator = generators.get(list.gen);
-  const dex = dexes.get(list.gen);
+// Lead sets: the hand-written ones (lead-sets.mjs), in the same shape as
+// Showdown's, checked against Showdown's learnsets (any generation, the
+// species' pre-evolutions included).
+const toID = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, '');
+function canLearn(speciesName, moveId) {
+  if (toID(speciesName) === 'smeargle') return !Dex.moves.get(moveId).flags.nosketch; // Sketch
+  for (let s = Dex.species.get(speciesName), guard = 0; s?.exists && guard < 5; guard++) {
+    const learnset = Dex.species.getLearnsetData(s.id)?.learnset ?? Dex.species.getLearnsetData(toID(s.baseSpecies))?.learnset;
+    if (learnset?.[moveId]) return true;
+    s = s.prevo ? Dex.species.get(s.prevo) : null;
+  }
+  return false;
+}
+const leadSetsBySpecies = new Map();
+for (const lead of LEAD_SETS) {
+  const species = Dex.species.get(lead.species);
+  if (!species.exists) { problems.push(`lead set: no species "${lead.species}" in Showdown`); continue; }
+  const moves = lead.moves.map(toID);
+  moves.forEach((m, i) => {
+    if (!Dex.moves.get(m).exists) problems.push(`lead set ${lead.species}: no move "${lead.moves[i]}" in Showdown`);
+    else if (!canLearn(lead.species, m)) problems.push(`lead set ${lead.species}: can't learn ${lead.moves[i]}`);
+  });
+  if (!Dex.items.get(lead.item).exists) problems.push(`lead set ${lead.species}: no item "${lead.item}" in Showdown`);
+  if (!Object.values(species.abilities).includes(lead.ability)) problems.push(`lead set ${lead.species}: can't have ${lead.ability}`);
+  const evTotal = Object.values(lead.evs).reduce((a, b) => a + b, 0);
+  if (evTotal > 510) problems.push(`lead set ${lead.species}: ${evTotal} EVs`);
+  const ivs = { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 };
+  const c = canonicalSet(dexes.get(9), { ...lead, species: species.name, moves, ivs });
+  if (!leadSetsBySpecies.has(species.id)) leadSetsBySpecies.set(species.id, []);
+  leadSetsBySpecies.get(species.id).push({ set: c, gen: 9, role: lead.role, handWritten: true });
+}
+const leadsUsed = new Set();
+
+// One generation's sets for a list: Showdown's randomSet() SAMPLES times,
+// rare sets dropped, the MAX_SETS most common kept, each with its share of
+// that generation's samples.
+function sampleSource(list, source) {
+  const generator = generators.get(source.gen);
+  const dex = dexes.get(source.gen);
   const counts = new Map();
+  let distinct = 0;
   for (let i = 0; i < SAMPLES; i++) {
-    let set = generator.randomSet(list.id, { ...list.details }, false);
-    const reason = gimmickReason(dex, list, set);
+    let set = generator.randomSet(source.id, { ...list.details }, false);
+    const reason = gimmickReason(dex, { ...list, allowDynamaxSets: source.allowDynamaxSets }, set);
     if (reason) {
       dropped.set(reason, (dropped.get(reason) ?? 0) + 1);
       continue;
     }
     if (list.forceZ) set = addZCrystal(dex, set);
-    set = forcePikachu(dex, set);
+    set = forcePikachu(dex, set, list);
     set = competitiveSpread(dex, set);
     const item = dex.items.get(set.item);
     if (list.kind === 'NORMAL' && (item.zMove || item.megaStone)) throw new Error(`${list.id}: NORMAL set holds ${set.item}`);
     if (list.kind !== 'TERA') set = { ...set, teraType: undefined };
     const c = canonicalSet(dex, set);
     const key = JSON.stringify(c);
-    if (!counts.has(key)) counts.set(key, { set: c, count: 0, role: set.role });
+    if (!counts.has(key)) { counts.set(key, { set: c, count: 0, role: set.role, gen: source.gen }); distinct++; }
     counts.get(key).count++;
   }
   let sets = [...counts.values()];
-  const total = sets.reduce((n, s) => n + s.count, 0);
-  if (!total) {
+  const total = sets.reduce((n, st) => n + st.count, 0);
+  if (!total) return { sets: [], distinct };
+  sets = sets.filter((st) => st.count / total >= MIN_SHARE);
+  if (!sets.length) sets = [...counts.values()]; // every set is rare: keep them all
+  sets.sort((a, b) => b.count - a.count || (a.set.moves.join() < b.set.moves.join() ? -1 : 1));
+  sets = sets.slice(0, MAX_SETS);
+  const kept = sets.reduce((n, st) => n + st.count, 0);
+  return { sets: sets.map((st) => ({ ...st, share: st.count / kept })), distinct };
+}
+
+const startTime = Date.now();
+for (const list of lists) {
+  // Each generation an equal share of the list; the lead sets LEAD_SHARE.
+  const sampled = list.sources.map((source) => sampleSource(list, source)).filter((r) => r.sets.length);
+  const leads = list.kind === 'NORMAL' ? leadSetsBySpecies.get(list.species.id) ?? [] : [];
+  if (leads.length) leadsUsed.add(list.species.id);
+  const showdownShare = leads.length ? 1 - LEAD_SHARE : 1;
+  const merged = new Map();
+  const add = (entry, share) => {
+    const key = JSON.stringify(entry.set);
+    if (!merged.has(key)) merged.set(key, { set: entry.set, role: entry.role, gen: entry.gen, handWritten: entry.handWritten, share: 0 });
+    merged.get(key).share += share;
+  };
+  for (const r of sampled) for (const st of r.sets) add(st, (showdownShare * st.share) / sampled.length);
+  for (const lead of leads) add(lead, (sampled.length ? LEAD_SHARE : 1) / leads.length);
+  list.distinct = sampled.reduce((n, r) => n + r.distinct, 0) + leads.length;
+  if (!merged.size) {
     // Every set is a gimmick one (Magikarp's Splash...): no list, so no team uses the species.
     if (list.kind !== 'NORMAL' || RED_LEGENDARIES.includes(list.id) || KANTO_STARTERS.includes(list.id)) {
       throw new Error(`${list.id} (Gen ${list.gen}, ${list.kind}) has no sets left`);
@@ -506,13 +595,10 @@ for (const list of lists) {
     list.sets = [];
     continue;
   }
-  sets = sets.filter((s) => s.count / total >= MIN_SHARE);
-  if (!sets.length) sets = [...counts.values()]; // every set is rare: keep them all
-  sets.sort((a, b) => b.count - a.count || (a.set.moves.join() < b.set.moves.join() ? -1 : 1));
-  list.sets = sets.slice(0, MAX_SETS);
-  list.total = total;
-  list.distinct = counts.size;
+  list.sets = [...merged.values()].sort((a, b) => b.share - a.share || (a.set.moves.join() < b.set.moves.join() ? -1 : 1));
+  list.gens = [...new Set(sampled.map((r) => r.sets[0].gen))];
 }
+for (const id of leadSetsBySpecies.keys()) if (!leadsUsed.has(id)) problems.push(`lead sets for ${id}, which has no NORMAL list`);
 const sampleSeconds = (Date.now() - startTime) / 1000;
 
 // --- Converting to the expansion's constants -----------------------------------------
@@ -521,11 +607,11 @@ const outLists = [];
 const outSets = [];
 const noSets = lists.filter((l) => !l.sets.length).map((l) => l.species.name);
 for (const list of lists.filter((l) => l.sets.length)) {
-  const dex = dexes.get(list.gen);
   const key = speciesConst(list.species.name);
   const firstSet = outSets.length;
-  const maxCount = Math.max(...list.sets.map((s) => s.count));
-  for (const { set, count, role } of list.sets) {
+  const maxShare = Math.max(...list.sets.map((st) => st.share));
+  for (const { set, share, role, gen, handWritten } of list.sets) {
+    const dex = dexes.get(gen);
     const abilityKey = abilityConst(set.ability);
     const createKey = speciesConst(set.species);
     outSets.push({
@@ -538,13 +624,14 @@ for (const list of lists.filter((l) => l.sets.length)) {
       ivs: set.ivs,
       teraType: typeConst(set.teraType),
       friendship: set.moves.includes('frustration') ? 0 : 255,
-      weight: Math.max(1, Math.round((count * 255) / maxCount)),
-      comment: `${role ? `${role}, ` : ''}${Math.round((100 * count) / list.total)}%`,
+      weight: Math.max(1, Math.round((share * 255) / maxShare)),
+      comment: `${role ? `${role}, ` : ''}${handWritten ? 'hand-written' : gen === CHAMPIONS ? 'Champions' : `Gen ${gen}`}, ${(100 * share).toFixed(share < 0.1 ? 1 : 0)}%`,
     });
   }
   outLists.push({
     name: list.species.name,
     gen: list.gen,
+    gens: list.gens,
     kind: list.kind,
     species: key,
     base: list.species.baseSpecies,
@@ -581,9 +668,11 @@ lines.push(`// Generated by scripts/sets/generate.mjs. Don't edit by hand: chang
 lines.push(`// script's options and run it again.`);
 lines.push(`//`);
 lines.push(`// Source: Pokémon Showdown ${PS_VERSION} (MIT license), Random Battle sets from`);
-lines.push(`// Gen 7 (Gen 8, then Gen 9, for species Gen 7 doesn't have; Pokémon Champions for`);
-lines.push(`// Mega Meganium and Mega Feraligatr). ${SAMPLES} randomSet()`);
-lines.push(`// calls per list, sets under ${MIN_SHARE * 100}% dropped, at most ${MAX_SETS} per list.`);
+lines.push(`// Gens 7, 8 and 9, each an equal share of a species' list (Mega and Z-Move lists`);
+lines.push(`// Gen 7, Tera lists Gen 9, Pokémon Champions for Mega Meganium and Mega`);
+lines.push(`// Feraligatr), and the hand-written lead sets of scripts/sets/lead-sets.mjs`);
+lines.push(`// (${LEAD_SHARE * 100}% of a list). ${SAMPLES} randomSet() calls per generation, sets under`);
+lines.push(`// ${MIN_SHARE * 100}% dropped, at most ${MAX_SETS} per generation.`);
 lines.push(`// Gimmick sets left out (gimmickReason in the script): ${[...dropped.keys()].join('; ')}.`);
 lines.push(`// ${outSets.length} sets in ${outLists.length} lists; ${pickGroups.size} species for RED's random pick.`);
 lines.push(``);
@@ -609,7 +698,7 @@ lines.push(``);
 lines.push(`const struct DailyRedSet gDailyRedSets[] =`);
 lines.push(`{`);
 for (const l of outLists) {
-  lines.push(`    // ${l.name}, ${l.kind} (${l.gen === CHAMPIONS ? 'Champions' : `Gen ${l.gen}`})`);
+  lines.push(`    // ${l.name}, ${l.kind} (${(l.gens ?? [l.gen]).map((g) => (g === CHAMPIONS ? 'Champions' : `Gen ${g}`)).join(', ')})`);
   for (let i = 0; i < l.numSets; i++) {
     const s = outSets[l.firstSet + i];
     const moves = [...s.moves, 'MOVE_NONE', 'MOVE_NONE', 'MOVE_NONE'].slice(0, 4).map((m) => strip('MOVE_', m));
@@ -660,7 +749,7 @@ const droppedTotal = [...dropped.values()].reduce((a, b) => a + b, 0);
 console.log(`Gimmick samples dropped: ${droppedTotal} (${[...dropped].map(([r, n]) => `${r}: ${n}`).join('; ')})`
   + `${noSets.length ? `; no sets left for ${noSets.join(', ')}` : ''}.`);
 const distinct = lists.filter((l) => l.sets.length).reduce((a, l) => a + l.distinct, 0);
-const byGen = [...GENS, CHAMPIONS].map((g) => `${g === CHAMPIONS ? 'Champions' : `Gen ${g}`}: ${outLists.filter((l) => l.gen === g).length}`).join(', ');
+const byGen = [...GENS, CHAMPIONS].map((g) => `${g === CHAMPIONS ? 'Champions' : `Gen ${g}`}: ${outLists.filter((l) => (l.gens ?? [l.gen]).includes(g)).length}`).join(', ');
 console.log(`Wrote ${relative(process.cwd(), OUT)}: ${outSets.length} sets (of ${distinct} distinct generated) in `
   + `${outLists.length} lists (${byGen}), ${pickGroups.size} species for RED's random pick `
   + `(sampling took ${sampleSeconds.toFixed(1)}s).`);
