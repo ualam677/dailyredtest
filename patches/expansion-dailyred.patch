@@ -1,8 +1,40 @@
 diff --git a/data/battle_scripts_1.s b/data/battle_scripts_1.s
-index 4745ed0f..076a2874 100644
+index 4745ed0f..ace66163 100644
 --- a/data/battle_scripts_1.s
 +++ b/data/battle_scripts_1.s
-@@ -4480,7 +4480,8 @@ BattleScript_AbilityPopUpTarget::
+@@ -3164,7 +3164,9 @@ BattleScript_OrichalcumPulseActivatesInSun::
+ 
+ BattleScript_WeatherContinues::
+ 	printfromtable gWeatherTurnStringIds
+-	waitmessage B_WAIT_TIME_LONG
++	@ Daily Red: the animation starts as the message's last word prints
++	@ (was a pause of B_WAIT_TIME_LONG after the whole message).
++	waitmessage 1
+ 	playanimation_var BS_ATTACKER, sB_ANIM_ARG1
+ 	setbyte gBattleCommunication, 0
+ 	call BattleScript_ActivateWeatherAbilities
+@@ -3212,14 +3214,18 @@ BattleScript_OverworldStatusStarts_TryActivations:
+ 
+ BattleScript_OverworldWeatherStarts::
+ 	printfromtable gWeatherStartsStringIds
+-	waitmessage B_WAIT_TIME_LONG
++	@ Daily Red: the animation starts as the message's last word prints
++	@ (was a pause of B_WAIT_TIME_LONG after the whole message).
++	waitmessage 1
+ 	playanimation_var BS_BATTLER_0, sB_ANIM_ARG1
+ 	call BattleScript_ActivateWeatherAbilities
+ 	end3
+ 
+ BattleScript_OverworldSSWeatherStarts::
+ 	printfromtable gMoveWeatherChangeStringIds
+-	waitmessage B_WAIT_TIME_LONG
++	@ Daily Red: the animation starts as the message's last word prints
++	@ (was a pause of B_WAIT_TIME_LONG after the whole message).
++	waitmessage 1
+ 	playanimation_var BS_BATTLER_0, sB_ANIM_ARG1
+ 	call BattleScript_ActivateWeatherAbilities
+ 	end3
+@@ -4480,7 +4486,8 @@ BattleScript_AbilityPopUpTarget::
  BattleScript_AbilityPopUp::
  	tryactivateabilityshield BS_ABILITY_BATTLER
  	showabilitypopup
@@ -12,7 +44,7 @@ index 4745ed0f..076a2874 100644
  	recordability BS_ABILITY_BATTLER
  	sethword sABILITY_OVERWRITE, 0
  	return
-@@ -4505,24 +4506,24 @@ BattleScript_ItemPopUp_Attacker::
+@@ -4505,24 +4512,24 @@ BattleScript_ItemPopUp_Attacker::
  	flushtextbox
  BattleScript_ItemPopUp_AttackerNoFlush::
  	showitempopup BS_ATTACKER
@@ -43,7 +75,7 @@ index 4745ed0f..076a2874 100644
  	return
  
  @ Can't compare directly to a value, have to compare to value at pointer
-@@ -5427,6 +5428,10 @@ BattleScript_ItemHealHP_Ret::
+@@ -5427,6 +5434,10 @@ BattleScript_ItemHealHP_Ret::
  	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
  	healthbarupdate BS_ATTACKER
  	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
@@ -7216,7 +7248,7 @@ index 7553ca61..85513d22 100644
      CopyToBgTilemapBufferRect_ChangePalette(0, src, 7 * (cursorPosition & 1) + 16, 35 + (cursorPosition & 2), 1, 2, 0x11);
      CopyBgTilemapBufferToVram(0);
 diff --git a/src/battle_controllers.c b/src/battle_controllers.c
-index 63c899bc..d33a27e4 100644
+index 63c899bc..0b43dfc3 100644
 --- a/src/battle_controllers.c
 +++ b/src/battle_controllers.c
 @@ -1,4 +1,5 @@
@@ -7257,7 +7289,7 @@ index 63c899bc..d33a27e4 100644
  }
  
  static inline bool32 IsControllerPlayer(enum BattlerId battler)
-@@ -2243,6 +2245,59 @@ void Controller_WaitForString(enum BattlerId battler)
+@@ -2243,6 +2245,106 @@ void Controller_WaitForString(enum BattlerId battler)
          BtlController_Complete(battler);
  }
  
@@ -7289,6 +7321,53 @@ index 63c899bc..d33a27e4 100644
 +    return found;
 +}
 +
++// The start of the message's last word (after its last space or line break).
++static const u8 *FindLastWord(const u8 *text)
++{
++    const u8 *word = text;
++
++    for (; *text != EOS; text++)
++    {
++        if ((*text == CHAR_SPACE || *text == CHAR_NEWLINE || *text == CHAR_PROMPT_SCROLL || *text == CHAR_PROMPT_CLEAR) && text[1] != EOS)
++            word = text + 1;
++    }
++    return word;
++}
++
++// Daily Red: weather messages whose weather animation follows straight after
++// ("It's snowing!", "Snow continues to fall."...): it starts as the last word
++// prints, like a move's as its name does.
++static bool32 IsWeatherAnimString(u16 stringId)
++{
++    switch (stringId)
++    {
++    case STRINGID_STARTEDTORAIN:
++    case STRINGID_DOWNPOURSTARTED:
++    case STRINGID_SANDSTORMBREWED:
++    case STRINGID_SUNLIGHTGOTBRIGHT:
++    case STRINGID_STARTEDHAIL:
++    case STRINGID_STARTEDSNOW:
++    case STRINGID_FOGCREPTUP:
++    case STRINGID_EXTREMELYHARSHSUNLIGHT:
++    case STRINGID_HEAVYRAIN:
++    case STRINGID_RAINCONTINUES:
++    case STRINGID_DOWNPOURCONTINUES:
++    case STRINGID_SUNLIGHTSTRONG:
++    case STRINGID_SANDSTORMRAGES:
++    case STRINGID_HAILCONTINUES:
++    case STRINGID_SNOWCONTINUES:
++    case STRINGID_FOGISDEEP:
++    case STRINGID_ITISRAINING:
++    case STRINGID_ITISSNOWING:
++    case STRINGID_ITISHAILING:
++    case STRINGID_SANDSTORMISRAGING:
++    case STRINGID_SUNLIGHTISHARSH:
++        return TRUE;
++    default:
++        return FALSE;
++    }
++}
++
 +static void Controller_WaitForMoveName(enum BattlerId battler)
 +{
 +    const u8 *current = GetTextPrinterCurrentCharOnWindow(B_WIN_MSG);
@@ -7317,7 +7396,7 @@ index 63c899bc..d33a27e4 100644
  static void Controller_WaitForPartyStatusSummary(enum BattlerId battler)
  {
      if (gBattleSpritesDataPtr->healthBoxesData[battler].partyStatusDelayTimer++ > 92)
-@@ -2509,6 +2564,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
+@@ -2509,6 +2611,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSpawn;
      else
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSlideIn;
@@ -7326,7 +7405,7 @@ index 63c899bc..d33a27e4 100644
  
      gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
  }
-@@ -2660,6 +2717,18 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2660,6 +2764,18 @@ void BtlController_HandlePrintString(enum BattlerId battler)
  {
      u16 *stringId;
  
@@ -7345,15 +7424,19 @@ index 63c899bc..d33a27e4 100644
      gBattle_BG0_X = 0;
      gBattle_BG0_Y = 0;
      stringId = (u16 *)(&gBattleResources->bufferA[battler][2]);
-@@ -2679,7 +2748,17 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2679,7 +2795,21 @@ void BtlController_HandlePrintString(enum BattlerId battler)
      // if (BattleStringShouldBeColored(*stringId))
      //     BattlePutTextOnWindow(gDisplayedStringBattle, (B_WIN_MSG | B_TEXT_FLAG_NPC_CONTEXT_FONT));
      // else
 +    sUsedMoveName = NULL;
-+    if (*stringId == STRINGID_USEDMOVE && StringLength(gDisplayedStringBattle) < ARRAY_COUNT(sUsedMoveText))
++    if ((*stringId == STRINGID_USEDMOVE || IsWeatherAnimString(*stringId))
++     && StringLength(gDisplayedStringBattle) < ARRAY_COUNT(sUsedMoveText))
 +    {
 +        StringCopy(sUsedMoveText, gDisplayedStringBattle);
-+        sUsedMoveName = FindMoveName(sUsedMoveText, gBattleTextBuff3);
++        if (*stringId == STRINGID_USEDMOVE)
++            sUsedMoveName = FindMoveName(sUsedMoveText, gBattleTextBuff3);
++        else
++            sUsedMoveName = FindLastWord(sUsedMoveText);
 +        BattlePutTextOnWindow(sUsedMoveText, B_WIN_MSG);
 +    }
 +    else
@@ -7363,12 +7446,12 @@ index 63c899bc..d33a27e4 100644
  
      if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
      {
-@@ -2694,7 +2773,10 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2694,7 +2824,10 @@ void BtlController_HandlePrintString(enum BattlerId battler)
          }
      }
  
 -    gBattlerControllerFuncs[battler] = Controller_WaitForString;
-+    if (*stringId == STRINGID_USEDMOVE && sUsedMoveName != NULL)
++    if (sUsedMoveName != NULL)
 +        gBattlerControllerFuncs[battler] = Controller_WaitForMoveName;
 +    else
 +        gBattlerControllerFuncs[battler] = Controller_WaitForString;
