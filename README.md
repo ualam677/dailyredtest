@@ -126,6 +126,10 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Menus: POKéMON / OPTION / EXIT; party: SUMMARY / SWITCH / CANCEL | `src/start_menu.c`, `src/party_menu.c` |
 | Start menu as a shelf of icons; the BW-style Options, EV/IV screen and summary and the HGSS-style party screen, in red | `src/start_menu.c`, `src/option_menu.c`, `src/dailyred_eviv.c`, `src/dailyred_summary.c` (hooked from `ShowPokemonSummaryScreen`), `src/party_menu.c` and `src/data/party_menu.h`; see [Menus](#menus) |
 | No debug menus | `include/config/debug.h` |
+| Battle pacing: a move's animation starts as its name prints in "X used Y!", weather animations as their message's last word prints, the Poké Ball throw and recall as "Go! X!" / "X, come back!" finish; the HP bar fills while "restored a little HP using its Leftovers!" prints; ability pop-ups come up with their message, no pauses around them | `Controller_WaitForMoveName` and `GetEarlyStart` in `src/battle_controllers.c`; `data/battle_scripts_1.s` |
+| Shorter waits: pauses after messages are 40% shorter (`B_WAIT_TIME_MULTIPLIER` 10, was 16); the Snow weather's animation is about 1.25 s (was about 2.8 s; the Snowscape move keeps the long one); a switched-in Pokémon's cry no longer holds up the battle | `include/config/battle.h`; `gBattleAnimGeneral_Snow` in `data/battle_anim_scripts.s`; `BtlController_HandleSwitchInSoundAndEnd` |
+| Faster battle engine: battle scripts run several commands a frame until one has to wait (it ran one a frame), and get another pass in the same frame when a controller finishes at once | `RunBattleScriptCommands` and `BattleMainCB1` in `src/battle_main.c` |
+| Every move shows its current type in battle and in the summary (Hidden Power, Weather Ball, -ate abilities…) | `P_SHOW_DYNAMIC_TYPES` in `include/config/pokemon.h`; `MoveTypeShown` in `src/dailyred_summary.c` |
 
 The battle itself is a standard trainer battle. The map script starts it as an
 "early rival" battle with `RIVAL_BATTLE_HEAL_AFTER`, the mode FireRed uses for

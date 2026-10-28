@@ -88,11 +88,12 @@ async function finishBattle(page, battlesBefore) {
 }
 
 // RED's lines and the record messages, read from the ROM.
-check(textAt('DailyRed_Summit_Text_RedIntro') === '…', `RED's intro is "…" (got "${textAt('DailyRed_Summit_Text_RedIntro')}")`);
+// The intro is in red ({COLOR RED}{SHADOW LIGHT_RED}, three control bytes each), then "…".
+check(textAt('DailyRed_Summit_Text_RedIntro').endsWith('…') && textAt('DailyRed_Summit_Text_RedIntro').length === 7, `RED's intro is a red "…" (got "${textAt('DailyRed_Summit_Text_RedIntro')}")`);
 check(textAt('DailyRed_Summit_Text_RedVictory') === '…', `RED's win line is "…" (got "${textAt('DailyRed_Summit_Text_RedVictory')}")`);
 check(textAt('DailyRed_Summit_Text_RedDefeat') === '…!', `RED's loss line is "…!" (got "${textAt('DailyRed_Summit_Text_RedDefeat')}")`);
 check(textAt('DailyRed_Summit_Text_RecordWin').endsWith('Play again tomorrow!') && textAt('DailyRed_Summit_Text_RecordLoss').endsWith('Try again tomorrow.')
-  && textAt('DailyRed_Summit_Text_NextRun').includes('Climb back up and face RED!'), 'the record and come-back-tomorrow messages are kept');
+  && textAt('DailyRed_Summit_Text_NextRun').includes('Climb back up and face Red!'), 'the record and come-back-tomorrow messages are kept');
 
 // The vs Red theme: in the song table under MUS_DAILYRED_VS_RED, with its own
 // voicegroup, and every track loops back (mid2agb turned the MIDI's loop
@@ -197,7 +198,11 @@ try {
   await bootGame(page, server.url, { seed: 424242 });
   let s = await waitFor(page, (st) => st.inOverworld, { what: 'overworld' });
   check(s.x === START[0] && s.y === START[1], `player starts at ${START} (got ${s.x},${s.y})`);
-  check(redFacing(s.mem) === value('DIR_NORTH'), 'RED faces away from the player, out over the drop');
+  // RED is off-screen from the start (the game only spawns objects near the
+  // camera), so this checks the summit's map: he faces up, out over the drop.
+  const summitMap = JSON.parse(readFileSync(join(GAME_DIR, 'data/maps/DailyRed_Summit/map.json'), 'utf8'));
+  const redObject = summitMap.object_events.find((o) => o.local_id === 'LOCALID_DAILYRED_RED');
+  check(redObject?.movement_type === 'MOVEMENT_TYPE_FACE_UP', 'RED faces away from the player, out over the drop');
   check(optionsBattleStyle(s.mem) === STYLE_SET, 'battle style starts as SET');
   const saveBlock1 = s.mem.read(symbol('gSaveBlock1Ptr'), 4).readUInt32LE(0);
   const keyItems = layout('SaveBlock1').bag_keyItems;
@@ -288,7 +293,7 @@ try {
   check(teamKey(team2.party) !== teamKey(team1.party), 'a new team is generated after the win');
   checkRed('after a win', red2);
   check(redKey(red2) !== redKey(red.party), 'RED gets a new team after the win');
-  check(redFacing(s.mem) === value('DIR_NORTH'), 'RED faces the drop again for the next run');
+  // (RED leaves after a win and comes back from the map's template, facing the drop.)
   await screenshot(page, `${OUT}/11-after-win.png`);
 
   // 4. Battle again, with the whole team at max friendship (and battle

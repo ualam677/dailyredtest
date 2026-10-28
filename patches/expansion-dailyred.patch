@@ -1,8 +1,116 @@
 diff --git a/data/battle_scripts_1.s b/data/battle_scripts_1.s
-index 4745ed0f..ace66163 100644
+index 4745ed0f..a18f5495 100644
 --- a/data/battle_scripts_1.s
 +++ b/data/battle_scripts_1.s
-@@ -3164,7 +3164,9 @@ BattleScript_OrichalcumPulseActivatesInSun::
+@@ -222,7 +222,6 @@ BattleScript_ConsumableItemStatRaise::
+ 	return
+ 
+ BattleScript_MirrorArmorReflect::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE | STAT_CHANGE_IGNORE_MIRROR_ARMOR
+ 	return
+@@ -1476,7 +1475,6 @@ BattleScript_TerrainPrevents::
+ 
+ BattleScript_ImmunityProtectedRet::
+ 	call BattleScript_AbilityPopUp
+-	pause B_WAIT_TIME_SHORT
+ 	printstring STRINGID_ITDOESNTAFFECT
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+@@ -1496,14 +1494,12 @@ BattleScript_MistyTerrainPrevents::
+ 	goto BattleScript_MoveEnd
+ 
+ BattleScript_FlowerVeilProtectsRet::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_FLOWERVEILPROTECTED
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_FlowerVeilProtects::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_FLOWERVEILPROTECTEDTARGET
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -1511,7 +1507,6 @@ BattleScript_FlowerVeilProtects::
+ 	goto BattleScript_MoveEnd
+ 
+ BattleScript_SweetVeilProtectsRet::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_FLOWERVEILPROTECTED
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -1523,7 +1518,6 @@ BattleScript_SweetVeilProtects:
+ 	goto BattleScript_MoveEnd
+ 
+ BattleScript_AromaVeilProtectsRet::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_AROMAVEILPROTECTED
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -1535,7 +1529,6 @@ BattleScript_AromaVeilProtects:
+ 	goto BattleScript_MoveEnd
+ 
+ BattleScript_AbilityProtectsDoesntAffectRet::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_ITDOESNTAFFECT
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -1547,7 +1540,6 @@ BattleScript_AbilityProtectsDoesntAffect::
+ 	goto BattleScript_MoveEnd
+ 
+ BattleScript_InsomniaProtects::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_PKMNSTAYEDAWAKEUSING
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -2244,12 +2236,10 @@ BattleScript_MegaSolActivatesHealing::
+ 	attackanimation
+ 	waitanimation
+ 	call BattleScript_AbilityPopUp
+-	pause B_WAIT_TIME_SHORT
+ 	goto BattleScript_HealTargetContinue
+ 
+ BattleScript_MegaSolActivatesTwoTurnMove::
+ 	call BattleScript_AbilityPopUpScripting
+-	pause B_WAIT_TIME_SHORT
+ 	return
+ 
+ BattleScript_EffectWeather::
+@@ -2408,7 +2398,6 @@ BattleScript_NotAffected::
+ 	goto BattleScript_MoveEnd
+ 
+ BattleScript_NotAffectedAbilityPopUp::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	resultmessage
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -2617,7 +2606,6 @@ BattleScript_MoveEffectYawnFoe::
+ 	return
+ 
+ BattleScript_PrintAbilityMadeIneffective::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_PKMNSXMADEITINEFFECTIVE
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -3128,7 +3116,6 @@ BattleScript_LearnMoveReturn::
+ 	return
+ 
+ BattleScript_WeatherAbilityActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	jumpifability BS_SCRIPTING, ABILITY_SAND_SPIT, BattleScript_SandSpitActivates
+ 	printfromtable gAbilityWeatherChangeStringId
+@@ -3156,7 +3143,6 @@ BattleScript_OrichalcumPulseActivates::
+ 	return
+ 
+ BattleScript_OrichalcumPulseActivatesInSun::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_ORICHALCUMPULSEACTIVATESINSUN
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -3164,7 +3150,9 @@ BattleScript_OrichalcumPulseActivatesInSun::
  
  BattleScript_WeatherContinues::
  	printfromtable gWeatherTurnStringIds
@@ -13,7 +121,7 @@ index 4745ed0f..ace66163 100644
  	playanimation_var BS_ATTACKER, sB_ANIM_ARG1
  	setbyte gBattleCommunication, 0
  	call BattleScript_ActivateWeatherAbilities
-@@ -3212,14 +3214,18 @@ BattleScript_OverworldStatusStarts_TryActivations:
+@@ -3212,14 +3200,18 @@ BattleScript_OverworldStatusStarts_TryActivations:
  
  BattleScript_OverworldWeatherStarts::
  	printfromtable gWeatherStartsStringIds
@@ -34,17 +142,129 @@ index 4745ed0f..ace66163 100644
  	playanimation_var BS_BATTLER_0, sB_ANIM_ARG1
  	call BattleScript_ActivateWeatherAbilities
  	end3
-@@ -4480,7 +4486,8 @@ BattleScript_AbilityPopUpTarget::
+@@ -3542,7 +3534,6 @@ BattleScript_GulpMissileNoSecondEffectGulping:
+ 	return
+ 
+ BattleScript_SeedSowerActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_TERRAINBECOMESGRASSY
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -3560,7 +3551,6 @@ BattleScript_WindPowerActivates::
+ 
+ BattleScript_ToxicDebrisActivates::
+ 	call BattleScript_AbilityPopUp
+-	pause B_WAIT_TIME_SHORT
+ 	settoxicspikes BattleScript_ToxicDebrisRet
+ 	printstring STRINGID_POISONSPIKESSCATTERED
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -3571,7 +3561,6 @@ BattleScript_ToxicDebrisRet:
+ 
+ BattleScript_EarthEaterActivates::
+ 	call BattleScript_AbilityPopUp
+-	pause B_WAIT_TIME_LONG
+ 	tryhealquarterhealth BS_TARGET, BattleScript_EarthEaterRet
+ 	healthbarupdate BS_TARGET
+ 	datahpupdate BS_TARGET, ASSURANCE_DOUBLE
+@@ -3827,7 +3816,6 @@ BattleScript_GrudgeTakesPP::
+ 	return
+ 
+ BattleScript_MagicBounce::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_PKMNMOVEBOUNCEDABILITY
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -3860,7 +3848,6 @@ BattleScript_EnduredMsg::
+ 	return
+ 
+ BattleScript_SturdiedMsg::
+-	pause B_WAIT_TIME_SHORTEST
+ 	call BattleScript_AbilityPopUpTarget
+ 	printstring STRINGID_PKMNENDUREDHIT
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -3953,7 +3940,6 @@ BattleScript_UltraBurst::
+ 	end3
+ 
+ BattleScript_BattlerFormChange::
+-	pause 5
+ 	call BattleScript_AbilityPopUpScripting
+ 	flushtextbox
+ BattleScript_BattlerFormChangeNoPopup::
+@@ -3980,7 +3966,6 @@ BattleScript_ZenMode::
+ 
+ BattleScript_BattlerFormChangeDisguise::
+ 	call BattleScript_AbilityPopUpScripting
+-	pause B_WAIT_TIME_LONG
+ 	handleformchange BS_SCRIPTING, 0
+ 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE_DISGUISE
+ 	waitanimation
+@@ -3990,7 +3975,6 @@ BattleScript_BattlerFormChangeDisguise::
+ 	return
+ 
+ BattleScript_BattlerFormChangeWithString::
+-	pause 5
+ 	call BattleScript_AbilityPopUpScripting
+ 	flushtextbox
+ 	handleformchange BS_SCRIPTING, 0
+@@ -4020,7 +4004,6 @@ BattleScript_BallFetch::
+ 	return
+ 
+ BattleScript_CudChewActivates::
+-	pause B_WAIT_TIME_SHORTEST
+ 	call BattleScript_AbilityPopUp
+ 	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
+ 	consumeberry BS_ATTACKER, FALSE
+@@ -4043,13 +4026,11 @@ BattleScript_TargetFormChangeNoPopup:
+ 	return
+ 
+ BattleScript_TargetFormChange::
+-	pause 5
+ 	call BattleScript_AbilityPopUpTarget
+ 	call BattleScript_TargetFormChangeNoPopup
+ 	return
+ 
+ BattleScript_TargetFormChangeWithString::
+-	pause 5
+ 	call BattleScript_AbilityPopUpTarget
+ BattleScript_TargetFormChangeWithStringNoPopup::
+ 	call BattleScript_TargetFormChangeNoPopup
+@@ -4073,14 +4054,12 @@ BattleScript_IllusionOff::
+ 	return
+ 
+ BattleScript_AnticipationActivates::
+-	pause 5
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_ANTICIPATIONACTIVATES
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_AftermathDmg::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUpScripting
+ 	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_AftermathDmgRet
+ 	healthbarupdate BS_ATTACKER
+@@ -4090,7 +4069,6 @@ BattleScript_AftermathDmgRet:
+ 	return
+ 
+ BattleScript_DampPreventsAftermath::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	pause 40
+ 	copybyte gBattlerAbility, sBATTLER
+@@ -4480,7 +4458,11 @@ BattleScript_AbilityPopUpTarget::
  BattleScript_AbilityPopUp::
  	tryactivateabilityshield BS_ABILITY_BATTLER
  	showabilitypopup
 -	pause B_WAIT_TIME_SHORT
 +	@ Daily Red: no pause, so the pop-up slides in while the ability's
 +	@ animation and message play (it slides out on its own).
++	@ Daily Red: the scripts that call this don't pause before or after it
++	@ either (they did, 20-32 frames each), except where a second pop-up
++	@ follows.
  	recordability BS_ABILITY_BATTLER
  	sethword sABILITY_OVERWRITE, 0
  	return
-@@ -4505,24 +4512,24 @@ BattleScript_ItemPopUp_Attacker::
+@@ -4505,24 +4487,24 @@ BattleScript_ItemPopUp_Attacker::
  	flushtextbox
  BattleScript_ItemPopUp_AttackerNoFlush::
  	showitempopup BS_ATTACKER
@@ -75,17 +295,235 @@ index 4745ed0f..ace66163 100644
  	return
  
  @ Can't compare directly to a value, have to compare to value at pointer
-@@ -5427,6 +5434,10 @@ BattleScript_ItemHealHP_Ret::
+@@ -4530,9 +4512,7 @@ sZero:
+ .byte 0
+ 
+ BattleScript_EmergencyExit::
+-	pause 5
+ 	call BattleScript_AbilityPopUpScripting
+-	pause B_WAIT_TIME_LONG
+ 	playanimation BS_SCRIPTING, B_ANIM_SLIDE_OFFSCREEN
+ 	waitanimation
+ 	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_SwitchOutEffects
+@@ -4569,7 +4549,6 @@ BattleScript_QueuedSwitchRet:
+ 	return
+ 
+ BattleScript_TraceActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUpScripting
+ 	printstring STRINGID_PKMNTRACED
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4703,28 +4682,24 @@ BattleScript_RuinAbilityActivates::
+ 	return
+ 
+ BattleScript_SupremeOverlordActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_ATTACKERGAINEDSTRENGTHFROMTHEFALLEN
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_CostarActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_PKMNCOPIEDSTATCHANGES
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_ZeroToHeroActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUpScripting
+ 	printstring STRINGID_ZEROTOHEROTRANSFORMATION
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_CommanderActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_COMMANDERACTIVATES
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4732,7 +4707,6 @@ BattleScript_CommanderActivates::
+ 	return
+ 
+ BattleScript_HospitalityActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_HOSPITALITYRESTORATION
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4748,7 +4722,6 @@ BattleScript_AttackWeakenedByStrongWinds::
+ 	return
+ 
+ BattleScript_MimicryActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_BATTLERTYPECHANGEDTO
+ 	waitmessage B_WAIT_TIME_SHORT
+@@ -4774,7 +4747,6 @@ BattleScript_ActivateTerrainAbility:
+ 	return
+ 
+ BattleScript_ElectricSurgeActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_TERRAINBECOMESELECTRIC
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4783,7 +4755,6 @@ BattleScript_ElectricSurgeActivates::
+ 	return
+ 
+ BattleScript_HadronEngineActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_HADRONENGINEACTIVATES
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4792,14 +4763,12 @@ BattleScript_HadronEngineActivates::
+ 	return
+ 
+ BattleScript_HadronEngineActivatesInTerrain::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_HADRONENGINEACTIVATESINTERRAIN
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_MistySurgeActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_TERRAINBECOMESMISTY
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4808,7 +4777,6 @@ BattleScript_MistySurgeActivates::
+ 	return
+ 
+ BattleScript_GrassySurgeActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_TERRAINBECOMESGRASSY
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4817,7 +4785,6 @@ BattleScript_GrassySurgeActivates::
+ 	return
+ 
+ BattleScript_PsychicSurgeActivates::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_TERRAINBECOMESPSYCHIC
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4869,14 +4836,12 @@ BattleScript_TookAttack::
+ 	return
+ 
+ BattleScript_SturdyPreventsOHKO::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_ITDOESNTAFFECTSCR
+ 	pause B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_MoveHPDrain::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	healthbarupdate BS_SCRIPTING
+ 	datahpupdate BS_SCRIPTING, ASSURANCE_DOUBLE
+@@ -4885,20 +4850,17 @@ BattleScript_MoveHPDrain::
+ 	return
+ 
+ BattleScript_MoveStatDrain::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_NO_FLAGS
+ 	return
+ 
+ BattleScript_AbilityProtectedTarget::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_ITDOESNTAFFECTSCR
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_FlashFireBoost::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printfromtable gFlashFireStringIds
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4909,21 +4871,18 @@ BattleScript_AbilityPreventsPhasingOut::
+ 	goto BattleScript_MoveEnd
+ 
+ BattleScript_AbilityPreventsPhasingOutRet::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_PKMNANCHORSITSELFWITH
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_AbilityNoStatLoss::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_PKMNPREVENTSSTATLOSSWITH
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_AbilityNoSpecificStatLoss::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_PKMNSXPREVENTSYLOSS
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4940,7 +4899,6 @@ BattleScript_OwnTempoPrevents::
+ 	goto BattleScript_MoveEnd
+ 
+ BattleScript_OwnTempoPreventsRet::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	copybyte sBATTLER, gBattlerTarget
+ 	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
+@@ -4952,7 +4910,6 @@ BattleScript_IceFaceNullsDamage::
+ 	return
+ 
+ BattleScript_PokemonCannotUseMove::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_POKEMONCANNOTUSEMOVE
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -4977,7 +4934,6 @@ BattleScript_StickyHoldActivates::
+ 	goto BattleScript_MoveEnd
+ 
+ BattleScript_StickyHoldActivatesRet::
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUp
+ 	copybyte sBATTLER, gBattlerAbility
+ 	printstring STRINGID_PKMNSXMADEYINEFFECTIVE
+@@ -4991,14 +4947,12 @@ BattleScript_ColorChangeActivates::
+ 	return
+ 
+ BattleScript_ProteanActivates::
+-	pause B_WAIT_TIME_SHORTEST
+ 	call BattleScript_AbilityPopUp
+ 	printstring STRINGID_PKMNCHANGEDTYPE
+ 	waitmessage B_WAIT_TIME_LONG
+ 	return
+ 
+ BattleScript_TeraShellDistortingTypeMatchups::
+-	pause B_WAIT_TIME_SHORTEST
+ 	call BattleScript_AbilityPopUpScripting
+ 	printstring STRINGID_PKMNMADESHELLGLEAM
+ 	waitmessage B_WAIT_TIME_LONG
+@@ -5425,8 +5379,13 @@ BattleScript_ItemHealHP_Ret::
+ 	call BattleScript_ItemPopUp_Attacker
+ 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
  	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
++	@ Daily Red: say what healed it (Leftovers, Black Sludge, Shell Bell),
++	@ like Gen 5 onwards, instead of only the pop-up. The HP bar fills
++	@ while the message prints (it hands over as it starts).
++	printstring STRINGID_PKMNSITEMRESTOREDHPALITTLE
  	healthbarupdate BS_ATTACKER
  	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
-+	@ Daily Red: say what healed it (Leftovers, Black Sludge, Shell Bell),
-+	@ like Gen 5 onwards, instead of only the pop-up.
-+	printstring STRINGID_PKMNSITEMRESTOREDHPALITTLE
 +	waitmessage B_WAIT_TIME_LONG
  	return
  
  BattleScript_SelectingNotAllowedMoveChoiceItem::
+@@ -6300,7 +6259,6 @@ BattleScript_BerserkGene_SafeguardProtected::
+ 	waitmessage B_WAIT_TIME_LONG
+ 	goto BattleScript_BerserkGene_End
+ BattleScript_BerserkGene_OwnTempoPrevents:
+-	pause B_WAIT_TIME_SHORT
+ 	call BattleScript_AbilityPopUpScripting
+ 	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
+ 	waitmessage B_WAIT_TIME_LONG
 diff --git a/data/event_scripts.s b/data/event_scripts.s
 index bc9688b6..9a07413b 100644
 --- a/data/event_scripts.s
@@ -3334,7 +3772,7 @@ index fcfe42fd..206955b7 100644
  };
  
 diff --git a/include/config/battle.h b/include/config/battle.h
-index b29ee42a..29d06420 100644
+index b29ee42a..90d54bb4 100644
 --- a/include/config/battle.h
 +++ b/include/config/battle.h
 @@ -334,7 +334,7 @@
@@ -3346,6 +3784,15 @@ index b29ee42a..29d06420 100644
  
  // Terrain settings
  #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.
+@@ -354,7 +354,7 @@
+ #define B_SHOW_TARGETS                      TRUE       // If set to TRUE, all available targets will be shown before selecting a move in Double Battles.
+ #define B_SHOW_CATEGORY_ICON                TRUE       // If set to TRUE, an icon in the summary and move relearner will show a move's category.
+ #define B_HIDE_HEALTHBOX_IN_ANIMS           TRUE       // If set to TRUE, healthboxes will be hidden during move animations.
+-#define B_WAIT_TIME_MULTIPLIER              16         // This determines how long text pauses for in battle. Vanilla is 16. Lower values result in faster battles.
++#define B_WAIT_TIME_MULTIPLIER              10         // Daily Red: 10 (was 16): every pause after a message is about 40% shorter. // This determines how long text pauses for in battle. Vanilla is 16. Lower values result in faster battles.
+ #define B_QUICK_MOVE_CURSOR_TO_RUN          FALSE      // If set to TRUE, pushing B in the battle menu in a wild encounter will move the cursor to the Run option.
+ #define B_RUN_TRAINER_BATTLE                TRUE       // If set to TRUE, players can run from Trainer battles as in Gen9+. This is treated as a white out.
+ #define B_MOVE_DESCRIPTION_BUTTON           L_BUTTON   // If set to a button other than B_LAST_USED_BALL_BUTTON, pressing this button will open the move description menu.
 @@ -386,7 +386,7 @@
  // Other settings
  #define B_MULTI_BATTLE_WHITEOUT         GEN_LATEST // In Gen4+, Multi Battles end when the player as well as their partner don't have any Pokémon left.
@@ -7257,7 +7704,7 @@ index 7553ca61..85513d22 100644
      CopyToBgTilemapBufferRect_ChangePalette(0, src, 7 * (cursorPosition & 1) + 16, 35 + (cursorPosition & 2), 1, 2, 0x11);
      CopyBgTilemapBufferToVram(0);
 diff --git a/src/battle_controllers.c b/src/battle_controllers.c
-index 63c899bc..0b43dfc3 100644
+index 63c899bc..ab752d07 100644
 --- a/src/battle_controllers.c
 +++ b/src/battle_controllers.c
 @@ -1,4 +1,5 @@
@@ -7298,7 +7745,7 @@ index 63c899bc..0b43dfc3 100644
  }
  
  static inline bool32 IsControllerPlayer(enum BattlerId battler)
-@@ -2243,6 +2245,106 @@ void Controller_WaitForString(enum BattlerId battler)
+@@ -2243,6 +2245,117 @@ void Controller_WaitForString(enum BattlerId battler)
          BtlController_Complete(battler);
  }
  
@@ -7343,13 +7790,24 @@ index 63c899bc..0b43dfc3 100644
 +    return word;
 +}
 +
-+// Daily Red: weather messages whose weather animation follows straight after
-+// ("It's snowing!", "Snow continues to fall."...): it starts as the last word
-+// prints, like a move's as its name does.
-+static bool32 IsWeatherAnimString(u16 stringId)
++// Daily Red: messages whose animation (or HP bar) follows straight after,
++// and when it may start while the message is still printing:
++enum
++{
++    EARLY_NONE,
++    EARLY_AT_LAST_WORD, // "It's snowing!", "Snow continues to fall.", "Go! Blastoise!"...
++    EARLY_AT_START,     // "X restored a little HP using its Leftovers!": the HP bar fills meanwhile
++};
++
++static u32 GetEarlyStart(u16 stringId)
 +{
 +    switch (stringId)
 +    {
++    case STRINGID_SWITCHINMON:   // the Poke Ball throw
++    case STRINGID_RETURNMON:     // the recall
++        return EARLY_AT_LAST_WORD;
++    case STRINGID_PKMNSITEMRESTOREDHPALITTLE:
++        return EARLY_AT_START;
 +    case STRINGID_STARTEDTORAIN:
 +    case STRINGID_DOWNPOURSTARTED:
 +    case STRINGID_SANDSTORMBREWED:
@@ -7371,9 +7829,9 @@ index 63c899bc..0b43dfc3 100644
 +    case STRINGID_ITISHAILING:
 +    case STRINGID_SANDSTORMISRAGING:
 +    case STRINGID_SUNLIGHTISHARSH:
-+        return TRUE;
++        return EARLY_AT_LAST_WORD;
 +    default:
-+        return FALSE;
++        return EARLY_NONE;
 +    }
 +}
 +
@@ -7405,7 +7863,7 @@ index 63c899bc..0b43dfc3 100644
  static void Controller_WaitForPartyStatusSummary(enum BattlerId battler)
  {
      if (gBattleSpritesDataPtr->healthBoxesData[battler].partyStatusDelayTimer++ > 92)
-@@ -2509,6 +2611,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
+@@ -2509,6 +2622,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSpawn;
      else
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSlideIn;
@@ -7414,7 +7872,7 @@ index 63c899bc..0b43dfc3 100644
  
      gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
  }
-@@ -2660,6 +2764,18 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2660,6 +2775,18 @@ void BtlController_HandlePrintString(enum BattlerId battler)
  {
      u16 *stringId;
  
@@ -7433,17 +7891,19 @@ index 63c899bc..0b43dfc3 100644
      gBattle_BG0_X = 0;
      gBattle_BG0_Y = 0;
      stringId = (u16 *)(&gBattleResources->bufferA[battler][2]);
-@@ -2679,7 +2795,21 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2679,7 +2806,23 @@ void BtlController_HandlePrintString(enum BattlerId battler)
      // if (BattleStringShouldBeColored(*stringId))
      //     BattlePutTextOnWindow(gDisplayedStringBattle, (B_WIN_MSG | B_TEXT_FLAG_NPC_CONTEXT_FONT));
      // else
 +    sUsedMoveName = NULL;
-+    if ((*stringId == STRINGID_USEDMOVE || IsWeatherAnimString(*stringId))
++    if ((*stringId == STRINGID_USEDMOVE || GetEarlyStart(*stringId) != EARLY_NONE)
 +     && StringLength(gDisplayedStringBattle) < ARRAY_COUNT(sUsedMoveText))
 +    {
 +        StringCopy(sUsedMoveText, gDisplayedStringBattle);
 +        if (*stringId == STRINGID_USEDMOVE)
 +            sUsedMoveName = FindMoveName(sUsedMoveText, gBattleTextBuff3);
++        else if (GetEarlyStart(*stringId) == EARLY_AT_START)
++            sUsedMoveName = sUsedMoveText;
 +        else
 +            sUsedMoveName = FindLastWord(sUsedMoveText);
 +        BattlePutTextOnWindow(sUsedMoveText, B_WIN_MSG);
@@ -7455,7 +7915,7 @@ index 63c899bc..0b43dfc3 100644
  
      if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
      {
-@@ -2694,7 +2824,10 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2694,7 +2837,10 @@ void BtlController_HandlePrintString(enum BattlerId battler)
          }
      }
  
@@ -7467,6 +7927,34 @@ index 63c899bc..0b43dfc3 100644
      if (ShouldUpdateTvData(battler))
          BattleTv_SetDataBasedOnString(*stringId);
      if (IsControllerPlayer(battler)
+@@ -3185,15 +3331,25 @@ void BtlController_Intro_DelayAndEnd(enum BattlerId battler)
+     }
+ }
+ 
++// Daily Red: the battle goes on while the switched-in Pokemon's cry finishes
++// (it waited for the cry to end); the music comes back up when it does.
+ void BtlController_HandleSwitchInSoundAndEnd(enum BattlerId battler)
+ {
+-    if (!gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive && !IsCryPlayingOrClearCrySongs())
++    if (!gBattleSpritesDataPtr->healthBoxesData[battler].specialAnimActive)
+     {
+         if (gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy
+          || gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy_2
+          || IsOnPlayerSide(battler))
+         {
+-            m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
++            if (IsCryPlayingOrClearCrySongs())
++            {
++                if (!FuncIsActiveTask(Task_PlayerController_RestoreBgmAfterCry))
++                    CreateTask(Task_PlayerController_RestoreBgmAfterCry, 10);
++            }
++            else
++            {
++                m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
++            }
+             if (IsControllerPlayer(battler))
+                 HandleLowHpMusicChange(GetBattlerMon(battler), battler);
+             BtlController_Complete(battler);
 diff --git a/src/battle_gfx_sfx_util.c b/src/battle_gfx_sfx_util.c
 index 1873a02a..d40347d3 100644
 --- a/src/battle_gfx_sfx_util.c
@@ -7612,7 +8100,7 @@ index 69099bc4..0be0a9e9 100644
          LoadSpritePalette(&sSpritePalette_AbilityPopUp);
  
 diff --git a/src/battle_main.c b/src/battle_main.c
-index 46af80f3..72617a03 100644
+index 46af80f3..5030df33 100644
 --- a/src/battle_main.c
 +++ b/src/battle_main.c
 @@ -299,6 +299,7 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
@@ -7623,6 +8111,80 @@ index 46af80f3..72617a03 100644
      [TRAINER_CLASS_HIKER] = { _("HIKER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
      [TRAINER_CLASS_TEAM_AQUA] = { _("TEAM AQUA") },
      [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} BREEDER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
+@@ -2729,11 +2730,38 @@ void BeginBattleIntro(void)
+     gBattleMainFunc = DoBattleIntro;
+ }
+ 
++// Daily Red: while a battle script runs, a command that hands its controller
++// an instant job (GETMONDATA, SETMONDATA...) used to cost a frame before the
++// script could go on. When every controller is idle again (no exec flags: none
++// is mid-animation, mid-text or mid-HP bar), the script and the controllers
++// get another pass in the same frame, up to a few, as long as the script is
++// moving on.
++#define MAX_SCRIPT_PASSES_PER_FRAME 4
++
++static bool32 IsRunningBattleScript(void)
++{
++    return gBattleMainFunc == RunBattleScriptCommands
++        || gBattleMainFunc == RunBattleScriptCommands_PopCallbacksStack
++        || (gBattleMainFunc == RunTurnActionsFunctions && gCurrentActionFuncId == B_ACTION_EXEC_SCRIPT);
++}
++
+ static void BattleMainCB1(void)
+ {
+-    gBattleMainFunc();
+-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+-        gBattlerControllerFuncs[battler](battler);
++    u32 pass;
++
++    const u8 *instr = NULL;
++
++    for (pass = 0; pass < MAX_SCRIPT_PASSES_PER_FRAME; pass++)
++    {
++        // Another pass only if the script moved on: a command that waits by
++        // counting frames (pause, waitmessage) must run once a frame.
++        if (pass != 0 && (gBattleControllerExecFlags != 0 || !IsRunningBattleScript() || gBattlescriptCurrInstr == instr))
++            break;
++        instr = gBattlescriptCurrInstr;
++        gBattleMainFunc();
++        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
++            gBattlerControllerFuncs[battler](battler);
++    }
+ }
+ 
+ static void ClearSetBScriptingStruct(void)
+@@ -5461,10 +5489,29 @@ void RunBattleScriptCommands_PopCallbacksStack(void)
+     }
+ }
+ 
++// Daily Red: run commands until one has to wait, instead of one a frame.
++// A command waits by not moving on (a pause, waitmessage, waitstate...) or by
++// handing work to a battler's controller (gBattleControllerExecFlags: text,
++// animations, HP bars); the script ending (gBattleMainFunc or the turn action
++// changing) stops it too. Most commands (setbyte, jumpif..., call, return...)
++// finish at once, so a turn's scripts no longer spend a frame on each. Capped
++// at a few per frame so no frame gets long.
++#define MAX_SCRIPT_COMMANDS_PER_FRAME 16
++
+ void RunBattleScriptCommands(void)
+ {
+-    if (gBattleControllerExecFlags == 0)
+-        gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
++    u32 i;
++
++    for (i = 0; i < MAX_SCRIPT_COMMANDS_PER_FRAME && gBattleControllerExecFlags == 0; i++)
++    {
++        const u8 *instr = gBattlescriptCurrInstr;
++        void (*mainFunc)(void) = gBattleMainFunc;
++        u8 actionFuncId = gCurrentActionFuncId;
++
++        gBattleScriptingCommandsTable[instr[0]]();
++        if (gBattlescriptCurrInstr == instr || gBattleMainFunc != mainFunc || gCurrentActionFuncId != actionFuncId)
++            break;
++    }
+ }
+ 
+ enum Type TrySetAteType(enum Move move, enum BattlerId battlerAtk, enum Ability attackerAbility)
 diff --git a/src/battle_message.c b/src/battle_message.c
 index 680ea2d1..97a86803 100644
 --- a/src/battle_message.c
@@ -21658,3 +22220,31 @@ index 65fdec05..4db34a6d 100644
  #define P_BASE_HP_1_SHEDINJA_HANDLING    FALSE       // If TRUE, all species with 1 Base HP will have their handling match Shedinja's.
  
  // Learnset helper toggles
+diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
+index f514f23b..d2bfd8d0 100644
+--- a/data/battle_anim_scripts.s
++++ b/data/battle_anim_scripts.s
+@@ -28699,8 +28699,22 @@ gBattleAnimGeneral_Sandstorm::
+ gBattleAnimGeneral_Hail::
+ 	goto gBattleAnimMove_Hail
+ 
++@ Daily Red: the Snow weather's own, shorter animation ("It's snowing!",
++@ "Snow continues to fall." every turn): Snowscape's, with denser flakes for
++@ 54 frames instead of 120 and no trailing gust, about 75 frames in all
++@ (was about 170). The Snowscape move keeps the full one.
+ gBattleAnimGeneral_Snow::
+-	goto gBattleAnimMove_Snowscape
++	playsewithpan SE_M_GUST, SOUND_PAN_ATTACKER
++	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 1, 0, 4, RGB(11, 18, 22)
++	waitforvisualfinish
++	createvisualtask AnimTask_CreateSnowflakes, 2, 0, 2, 54
++	createvisualtask AnimTask_CreateSnowflakes, 2, 0, 2, 54
++	createvisualtask AnimTask_CreateSnowflakes, 2, 0, 2, 54
++	delay 54
++	waitforvisualfinish
++	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 1, 4, 0, RGB(11, 18, 22)
++	waitforvisualfinish
++	end
+ 
+ gBattleAnimGeneral_Fog::
+ 	goto gBattleAnimMove_Haze

@@ -198,7 +198,11 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
   const starter = starters[0];
   // Another Pokemon Mega Evolving (MEGA_SWAP_ODDS% of the days one can): the
   // starter holds a Z-Crystal instead.
-  const otherMegas = mons.filter((m) => m !== starter && canMegaEvolve(m));
+  // A Mega Stone, or Rayquaza on one of its Mega sets (its regular sets know
+  // Dragon Ascent too, without being the day's Mega).
+  const onMegaSet = (m) => { const p = []; matchesList(m, listFor(megaFormeFor(m), 'MEGA'), p, ''); return p.length === 0; };
+  const isTheMega = (m) => isMegaStone(m.heldItem) || (canMegaEvolve(m) && onMegaSet(m));
+  const otherMegas = mons.filter((m) => m !== starter && isTheMega(m));
   if (otherMegas.length > 1) problems.push(`${otherMegas.length} Pokemon besides the starter can Mega Evolve`);
   if (starter) {
     const tag = starter.speciesName;
@@ -243,7 +247,7 @@ export function validateTeam({ count, party }, redParty, rolls = null) {
     if (!isEligibleSpecies(m.species) && !PARADOX_DOG_LIST.includes(m.species)) problems.push(`${tag}: not an in-scope species`);
     if (!isFinalStage(m.species)) problems.push(`${tag}: not fully evolved`);
     if (isZCrystal(m.heldItem)) problems.push(`${tag} holds ${item(m.heldItem).name}`);
-    const list = canMegaEvolve(m) ? listFor(megaFormeFor(m), 'MEGA') : listFor(m.species, 'NORMAL');
+    const list = isTheMega(m) ? listFor(megaFormeFor(m), 'MEGA') : listFor(m.species, 'NORMAL');
     matchesList(m, list, problems, tag);
     if (list && m.level !== list.level) problems.push(`${tag}: level ${m.level}, its tier's is ${list.level}`);
     if (m.level < 94 || m.level > 99) problems.push(`${tag}: level ${m.level} outside 94-99`);
