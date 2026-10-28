@@ -1,5 +1,5 @@
 diff --git a/data/battle_scripts_1.s b/data/battle_scripts_1.s
-index 4745ed0f..a18f5495 100644
+index 4745ed0f..7cb7b284 100644
 --- a/data/battle_scripts_1.s
 +++ b/data/battle_scripts_1.s
 @@ -222,7 +222,6 @@ BattleScript_ConsumableItemStatRaise::
@@ -502,13 +502,14 @@ index 4745ed0f..a18f5495 100644
  	call BattleScript_AbilityPopUpScripting
  	printstring STRINGID_PKMNMADESHELLGLEAM
  	waitmessage B_WAIT_TIME_LONG
-@@ -5425,8 +5379,13 @@ BattleScript_ItemHealHP_Ret::
+@@ -5425,8 +5379,14 @@ BattleScript_ItemHealHP_Ret::
  	call BattleScript_ItemPopUp_Attacker
  	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
  	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
 +	@ Daily Red: say what healed it (Leftovers, Black Sludge, Shell Bell),
-+	@ like Gen 5 onwards, instead of only the pop-up. The HP bar fills
-+	@ while the message prints (it hands over as it starts).
++	@ like Gen 5 onwards, instead of only the pop-up. It starts halfway
++	@ through the sparkle (Controller_WaitForHealSparkleHalf), and the HP
++	@ bar fills while it prints (it hands over as it starts).
 +	printstring STRINGID_PKMNSITEMRESTOREDHPALITTLE
  	healthbarupdate BS_ATTACKER
  	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
@@ -516,7 +517,7 @@ index 4745ed0f..a18f5495 100644
  	return
  
  BattleScript_SelectingNotAllowedMoveChoiceItem::
-@@ -6300,7 +6259,6 @@ BattleScript_BerserkGene_SafeguardProtected::
+@@ -6300,7 +6260,6 @@ BattleScript_BerserkGene_SafeguardProtected::
  	waitmessage B_WAIT_TIME_LONG
  	goto BattleScript_BerserkGene_End
  BattleScript_BerserkGene_OwnTempoPrevents:
@@ -524,6 +525,22 @@ index 4745ed0f..a18f5495 100644
  	call BattleScript_AbilityPopUpScripting
  	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
  	waitmessage B_WAIT_TIME_LONG
+@@ -6353,9 +6312,15 @@ BattleScript_ForfeitBattleGaveMoney::
+ 	waitmessage B_WAIT_TIME_LONG
+ 	end
+ 
++@ Daily Red: the beats before "X used Y!" and between it and the animation,
++@ as they were before battle scripts ran several commands a frame (9 frames
++@ from choosing a move to the message, 6-9 from the message to the animation;
++@ each pause overlaps a frame or two the engine was waiting anyway).
+ BattleScript_Attackstring::
++	pause 3
+ 	printattackstring
+ 	waitmessage B_WAIT_TIME_SHORT
++	pause 5
+ 	return
+ 
+ BattleScript_SubmoveAttackstring::
 diff --git a/data/event_scripts.s b/data/event_scripts.s
 index bc9688b6..9a07413b 100644
 --- a/data/event_scripts.s
@@ -3772,7 +3789,7 @@ index fcfe42fd..206955b7 100644
  };
  
 diff --git a/include/config/battle.h b/include/config/battle.h
-index b29ee42a..90d54bb4 100644
+index b29ee42a..29d06420 100644
 --- a/include/config/battle.h
 +++ b/include/config/battle.h
 @@ -334,7 +334,7 @@
@@ -3784,15 +3801,6 @@ index b29ee42a..90d54bb4 100644
  
  // Terrain settings
  #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.
-@@ -354,7 +354,7 @@
- #define B_SHOW_TARGETS                      TRUE       // If set to TRUE, all available targets will be shown before selecting a move in Double Battles.
- #define B_SHOW_CATEGORY_ICON                TRUE       // If set to TRUE, an icon in the summary and move relearner will show a move's category.
- #define B_HIDE_HEALTHBOX_IN_ANIMS           TRUE       // If set to TRUE, healthboxes will be hidden during move animations.
--#define B_WAIT_TIME_MULTIPLIER              16         // This determines how long text pauses for in battle. Vanilla is 16. Lower values result in faster battles.
-+#define B_WAIT_TIME_MULTIPLIER              10         // Daily Red: 10 (was 16): every pause after a message is about 40% shorter. // This determines how long text pauses for in battle. Vanilla is 16. Lower values result in faster battles.
- #define B_QUICK_MOVE_CURSOR_TO_RUN          FALSE      // If set to TRUE, pushing B in the battle menu in a wild encounter will move the cursor to the Run option.
- #define B_RUN_TRAINER_BATTLE                TRUE       // If set to TRUE, players can run from Trainer battles as in Gen9+. This is treated as a white out.
- #define B_MOVE_DESCRIPTION_BUTTON           L_BUTTON   // If set to a button other than B_LAST_USED_BALL_BUTTON, pressing this button will open the move description menu.
 @@ -386,7 +386,7 @@
  // Other settings
  #define B_MULTI_BATTLE_WHITEOUT         GEN_LATEST // In Gen4+, Multi Battles end when the player as well as their partner don't have any Pokémon left.
@@ -3946,10 +3954,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..67a5eba0
+index 00000000..3f82e981
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,127 @@
+@@ -0,0 +1,131 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -4075,6 +4083,10 @@ index 00000000..67a5eba0
 +extern const struct DailyRedPickGroup gDailyRedPickGroups[];
 +extern const u16 gDailyRedNumPickGroups;
 +extern const u16 gDailyRedPickLists[];
++
++// A message that handed over early is still printing or being read: nothing may
++// replace or clear it yet (battle_controllers.c).
++bool32 DailyRed_IsBattleTextHeld(void);
 +
 +#endif // GUARD_DAILYRED_H
 diff --git a/include/graphics.h b/include/graphics.h
@@ -7704,7 +7716,7 @@ index 7553ca61..85513d22 100644
      CopyToBgTilemapBufferRect_ChangePalette(0, src, 7 * (cursorPosition & 1) + 16, 35 + (cursorPosition & 2), 1, 2, 0x11);
      CopyBgTilemapBufferToVram(0);
 diff --git a/src/battle_controllers.c b/src/battle_controllers.c
-index 63c899bc..ab752d07 100644
+index 63c899bc..abd54a56 100644
 --- a/src/battle_controllers.c
 +++ b/src/battle_controllers.c
 @@ -1,4 +1,5 @@
@@ -7745,36 +7757,58 @@ index 63c899bc..ab752d07 100644
  }
  
  static inline bool32 IsControllerPlayer(enum BattlerId battler)
-@@ -2243,6 +2245,117 @@ void Controller_WaitForString(enum BattlerId battler)
+@@ -2225,6 +2227,18 @@ static void Controller_WaitForBattleAnimation(enum BattlerId battler)
          BtlController_Complete(battler);
  }
  
-+// Daily Red: a move's animation starts as its name appears in "X used Y!",
-+// while the rest of the line is still printing. The message gets its own copy
-+// of the text (gDisplayedStringBattle is reused by the next message), and the
-+// next message waits until it has finished, plus a moment to read it.
-+#define USED_MOVE_READ_FRAMES B_WAIT_TIME_SHORT
++// Daily Red: the healing sparkle (B_ANIM_SIMPLE_HEAL) hands over halfway, so
++// what follows (Leftovers' message and HP bar, a berry's HP bar...) starts
++// while it finishes. Any next animation waits for it (gAnimScriptActive).
++#define HEAL_SPARKLE_HANDOVER_FRAMES 22 // of its ~43
++static EWRAM_DATA u16 sAnimFrames = 0;
 +
-+static EWRAM_DATA u8 sUsedMoveText[128] = {0};
-+static EWRAM_DATA const u8 *sUsedMoveName = NULL;  // where the move's name starts in sUsedMoveText
-+static EWRAM_DATA bool8 sUsedMovePrinting = FALSE; // "X used Y!" is still printing after its controller finished
-+static EWRAM_DATA u8 sReadTimer = 0;
-+
-+// The move name's start in the printed message (its last occurrence: the
-+// attacker's name comes first), or NULL.
-+static const u8 *FindMoveName(const u8 *text, const u8 *name)
++static void Controller_WaitForHealSparkleHalf(enum BattlerId battler)
 +{
-+    const u8 *found = NULL;
-+    u32 len = StringLength(name);
++    if (!gBattleSpritesDataPtr->healthBoxesData[battler].animFromTableActive || ++sAnimFrames >= HEAL_SPARKLE_HANDOVER_FRAMES)
++        BtlController_Complete(battler);
++}
 +
-+    if (len == 0)
-+        return NULL;
-+    for (; *text != EOS; text++)
+ static void Controller_WaitForStatusAnimation(enum BattlerId battler)
+ {
+     if (!gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive)
+@@ -2243,6 +2257,117 @@ void Controller_WaitForString(enum BattlerId battler)
+         BtlController_Complete(battler);
+ }
+ 
++// Daily Red: some messages hand over to what follows (a weather animation, the
++// Poke Ball throw, an HP bar) before they've finished printing, so the two
++// play together (GetEarlyStart). The message gets its own copy of the text
++// (gDisplayedStringBattle is reused by the next message), and nothing may
++// replace or clear it until it has finished printing and been on screen for a
++// moment (DailyRed_IsBattleTextHeld): the next message waits, and so does the
++// battle outside its scripts (the next turn, the action menu).
++#define EARLY_TEXT_READ_FRAMES B_WAIT_TIME_SHORT
++
++static EWRAM_DATA u8 sEarlyText[128] = {0};
++static EWRAM_DATA const u8 *sEarlyTextStart = NULL; // where in sEarlyText the hand-over happens
++static EWRAM_DATA bool8 sEarlyTextHeld = FALSE;     // a handed-over message is still printing or being read
++static EWRAM_DATA u32 sEarlyTextDoneAt = 0;         // gMain.vblankCounter1 when it finished printing (0: not yet)
++
++bool32 DailyRed_IsBattleTextHeld(void)
++{
++    if (!sEarlyTextHeld)
++        return FALSE;
++    if (IsTextPrinterActiveOnWindow(B_WIN_MSG))
 +    {
-+        if (memcmp(text, name, len) == 0)
-+            found = text;
++        sEarlyTextDoneAt = 0;
++        return TRUE;
 +    }
-+    return found;
++    if (sEarlyTextDoneAt == 0)
++        sEarlyTextDoneAt = gMain.vblankCounter1 | 1;
++    if (gMain.vblankCounter1 - sEarlyTextDoneAt < EARLY_TEXT_READ_FRAMES)
++        return TRUE;
++    sEarlyTextHeld = FALSE;
++    return FALSE;
 +}
 +
 +// The start of the message's last word (after its last space or line break).
@@ -7835,7 +7869,7 @@ index 63c899bc..ab752d07 100644
 +    }
 +}
 +
-+static void Controller_WaitForMoveName(enum BattlerId battler)
++static void Controller_WaitForEarlyStart(enum BattlerId battler)
 +{
 +    const u8 *current = GetTextPrinterCurrentCharOnWindow(B_WIN_MSG);
 +
@@ -7843,27 +7877,24 @@ index 63c899bc..ab752d07 100644
 +    {
 +        BtlController_Complete(battler);
 +    }
-+    else if (current > sUsedMoveName)
++    else if (current > sEarlyTextStart)
 +    {
-+        sUsedMovePrinting = TRUE;
++        sEarlyTextHeld = TRUE;
++        sEarlyTextDoneAt = 0;
 +        BtlController_Complete(battler);
 +    }
 +}
 +
 +static void Controller_WaitToPrintString(enum BattlerId battler)
 +{
-+    if (IsTextPrinterActiveOnWindow(B_WIN_MSG))
-+        return;
-+    if (++sReadTimer < USED_MOVE_READ_FRAMES)
-+        return;
-+    sUsedMovePrinting = FALSE;
-+    BtlController_HandlePrintString(battler);
++    if (!DailyRed_IsBattleTextHeld())
++        BtlController_HandlePrintString(battler);
 +}
 +
  static void Controller_WaitForPartyStatusSummary(enum BattlerId battler)
  {
      if (gBattleSpritesDataPtr->healthBoxesData[battler].partyStatusDelayTimer++ > 92)
-@@ -2509,6 +2622,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
+@@ -2509,6 +2634,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSpawn;
      else
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSlideIn;
@@ -7872,41 +7903,42 @@ index 63c899bc..ab752d07 100644
  
      gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
  }
-@@ -2660,6 +2775,18 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2637,6 +2764,8 @@ void BtlController_HandleBallThrowAnim(enum BattlerId battler)
+ 
+ void BtlController_HandleMoveAnimation(enum BattlerId battler)
+ {
++    if (gAnimScriptActive) // Daily Red: one animation at a time
++        return;
+     if (!IsBattleSEPlaying(battler))
+     {
+         u16 move = gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8);
+@@ -2660,6 +2789,13 @@ void BtlController_HandlePrintString(enum BattlerId battler)
  {
      u16 *stringId;
  
-+    // Daily Red: "X used Y!" may still be printing (see Controller_WaitForMoveName).
-+    if (sUsedMovePrinting)
++    // Daily Red: a handed-over message may still be printing or being read.
++    if (!gTestRunnerEnabled && DailyRed_IsBattleTextHeld())
 +    {
-+        if (IsTextPrinterActiveOnWindow(B_WIN_MSG) && !gTestRunnerEnabled)
-+        {
-+            sReadTimer = 0;
-+            gBattlerControllerFuncs[battler] = Controller_WaitToPrintString;
-+            return;
-+        }
-+        sUsedMovePrinting = FALSE;
++        gBattlerControllerFuncs[battler] = Controller_WaitToPrintString;
++        return;
 +    }
 +
      gBattle_BG0_X = 0;
      gBattle_BG0_Y = 0;
      stringId = (u16 *)(&gBattleResources->bufferA[battler][2]);
-@@ -2679,7 +2806,23 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2679,7 +2815,20 @@ void BtlController_HandlePrintString(enum BattlerId battler)
      // if (BattleStringShouldBeColored(*stringId))
      //     BattlePutTextOnWindow(gDisplayedStringBattle, (B_WIN_MSG | B_TEXT_FLAG_NPC_CONTEXT_FONT));
      // else
-+    sUsedMoveName = NULL;
-+    if ((*stringId == STRINGID_USEDMOVE || GetEarlyStart(*stringId) != EARLY_NONE)
-+     && StringLength(gDisplayedStringBattle) < ARRAY_COUNT(sUsedMoveText))
++    sEarlyTextStart = NULL;
++    if (GetEarlyStart(*stringId) != EARLY_NONE && StringLength(gDisplayedStringBattle) < ARRAY_COUNT(sEarlyText))
 +    {
-+        StringCopy(sUsedMoveText, gDisplayedStringBattle);
-+        if (*stringId == STRINGID_USEDMOVE)
-+            sUsedMoveName = FindMoveName(sUsedMoveText, gBattleTextBuff3);
-+        else if (GetEarlyStart(*stringId) == EARLY_AT_START)
-+            sUsedMoveName = sUsedMoveText;
++        StringCopy(sEarlyText, gDisplayedStringBattle);
++        if (GetEarlyStart(*stringId) == EARLY_AT_START)
++            sEarlyTextStart = sEarlyText;
 +        else
-+            sUsedMoveName = FindLastWord(sUsedMoveText);
-+        BattlePutTextOnWindow(sUsedMoveText, B_WIN_MSG);
++            sEarlyTextStart = FindLastWord(sEarlyText);
++        BattlePutTextOnWindow(sEarlyText, B_WIN_MSG);
 +    }
 +    else
 +    {
@@ -7915,19 +7947,56 @@ index 63c899bc..ab752d07 100644
  
      if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
      {
-@@ -2694,7 +2837,10 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2694,7 +2843,10 @@ void BtlController_HandlePrintString(enum BattlerId battler)
          }
      }
  
 -    gBattlerControllerFuncs[battler] = Controller_WaitForString;
-+    if (sUsedMoveName != NULL)
-+        gBattlerControllerFuncs[battler] = Controller_WaitForMoveName;
++    if (sEarlyTextStart != NULL)
++        gBattlerControllerFuncs[battler] = Controller_WaitForEarlyStart;
 +    else
 +        gBattlerControllerFuncs[battler] = Controller_WaitForString;
      if (ShouldUpdateTvData(battler))
          BattleTv_SetDataBasedOnString(*stringId);
      if (IsControllerPlayer(battler)
-@@ -3185,15 +3331,25 @@ void BtlController_Intro_DelayAndEnd(enum BattlerId battler)
+@@ -2765,6 +2917,8 @@ void BtlController_HandleStatusIconUpdate(enum BattlerId battler)
+ 
+ void BtlController_HandleStatusAnimation(enum BattlerId battler)
+ {
++    if (gAnimScriptActive) // Daily Red: one animation at a time
++        return;
+     if (!IsBattleSEPlaying(battler))
+     {
+         InitAndLaunchChosenStatusAnimation(battler, gBattleResources->bufferA[battler][1],
+@@ -3042,6 +3196,8 @@ void BtlController_HandleHidePartyStatusSummary(enum BattlerId battler)
+ 
+ void BtlController_HandleBattleAnimation(enum BattlerId battler)
+ {
++    if (gAnimScriptActive) // Daily Red: one animation at a time (see Controller_WaitForHealSparkleHalf)
++        return;
+     if ((gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL))
+         || IsControllerOakOldMan(battler)
+         || !IsBattleSEPlaying(battler))
+@@ -3052,9 +3208,18 @@ void BtlController_HandleBattleAnimation(enum BattlerId battler)
+         gAnimDisableStructPtr = (struct LinkBattleAnim *)&gBattleResources->bufferA[battler][4];
+ 
+         if (TryHandleLaunchBattleTableAnimation(battler, battler, battler, animationId, argument))
++        {
+             BtlController_Complete(battler);
++        }
++        else if (animationId == B_ANIM_SIMPLE_HEAL)
++        {
++            sAnimFrames = 0;
++            gBattlerControllerFuncs[battler] = Controller_WaitForHealSparkleHalf;
++        }
+         else
++        {
+             gBattlerControllerFuncs[battler] = Controller_WaitForBattleAnimation;
++        }
+ 
+         if (ShouldUpdateTvData(battler))
+             BattleTv_SetDataBasedOnAnimation(animationId);
+@@ -3185,15 +3350,25 @@ void BtlController_Intro_DelayAndEnd(enum BattlerId battler)
      }
  }
  
@@ -8100,10 +8169,16 @@ index 69099bc4..0be0a9e9 100644
          LoadSpritePalette(&sSpritePalette_AbilityPopUp);
  
 diff --git a/src/battle_main.c b/src/battle_main.c
-index 46af80f3..5030df33 100644
+index 46af80f3..047949e7 100644
 --- a/src/battle_main.c
 +++ b/src/battle_main.c
-@@ -299,6 +299,7 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h"
+ #include "battle.h"
+ #include "battle_anim.h"
+ #include "battle_ai_main.h"
+@@ -299,6 +300,7 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
  {
      [TRAINER_CLASS_PKMN_TRAINER_1] = { _("{PKMN} TRAINER") },
      [TRAINER_CLASS_PKMN_TRAINER_2] = { _("{PKMN} TRAINER") },
@@ -8111,7 +8186,7 @@ index 46af80f3..5030df33 100644
      [TRAINER_CLASS_HIKER] = { _("HIKER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
      [TRAINER_CLASS_TEAM_AQUA] = { _("TEAM AQUA") },
      [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} BREEDER"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
-@@ -2729,11 +2730,38 @@ void BeginBattleIntro(void)
+@@ -2729,11 +2731,43 @@ void BeginBattleIntro(void)
      gBattleMainFunc = DoBattleIntro;
  }
  
@@ -8146,14 +8221,19 @@ index 46af80f3..5030df33 100644
 +        if (pass != 0 && (gBattleControllerExecFlags != 0 || !IsRunningBattleScript() || gBattlescriptCurrInstr == instr))
 +            break;
 +        instr = gBattlescriptCurrInstr;
-+        gBattleMainFunc();
++        // A message that handed over early (a weather animation, the Poke Ball
++        // throw...) keeps the battle from moving on outside its scripts (the
++        // next turn clears the box; the action menu covers it) until it has
++        // printed and been read.
++        if (IsRunningBattleScript() || !DailyRed_IsBattleTextHeld())
++            gBattleMainFunc();
 +        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
 +            gBattlerControllerFuncs[battler](battler);
 +    }
  }
  
  static void ClearSetBScriptingStruct(void)
-@@ -5461,10 +5489,29 @@ void RunBattleScriptCommands_PopCallbacksStack(void)
+@@ -5461,10 +5495,29 @@ void RunBattleScriptCommands_PopCallbacksStack(void)
      }
  }
  
@@ -8186,7 +8266,7 @@ index 46af80f3..5030df33 100644
  
  enum Type TrySetAteType(enum Move move, enum BattlerId battlerAtk, enum Ability attackerAbility)
 diff --git a/src/battle_message.c b/src/battle_message.c
-index 680ea2d1..97a86803 100644
+index 680ea2d1..b5e6c55c 100644
 --- a/src/battle_message.c
 +++ b/src/battle_message.c
 @@ -1,4 +1,6 @@
@@ -8196,6 +8276,15 @@ index 680ea2d1..97a86803 100644
  #include "battle.h"
  #include "battle_anim.h"
  #include "battle_ai_record.h"
+@@ -3911,7 +3913,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+         else
+             speed = GetPlayerTextSpeedDelay();
+ 
+-        gTextFlags.canABSpeedUpPrint = 1;
++        gTextFlags.canABSpeedUpPrint = 0; // Daily Red: A/B don't hurry battle text (was 1)
+     }
+     else
+     {
 @@ -3919,6 +3921,9 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
          gTextFlags.canABSpeedUpPrint = 0;
      }
