@@ -7221,7 +7221,7 @@ index 49d91ce4..c25db9e1 100644
      case 6:
          LoadBattleMenuWindowGfx();
 diff --git a/src/battle_controller_player.c b/src/battle_controller_player.c
-index 7553ca61..85513d22 100644
+index 7553ca61..b8227fff 100644
 --- a/src/battle_controller_player.c
 +++ b/src/battle_controller_player.c
 @@ -1,4 +1,5 @@
@@ -7230,7 +7230,18 @@ index 7553ca61..85513d22 100644
  #include "battle.h"
  #include "battle_anim.h"
  #include "battle_arena.h"
-@@ -1813,8 +1814,10 @@ void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
+@@ -1727,6 +1728,10 @@ static void MoveSelectionDisplayMoveType(enum BattlerId battler)
+         || (IsGimmickSelected(battler, GIMMICK_TERA) && speciesId == SPECIES_TERAPAGOS_TERASTAL))
+             type = TYPE_STELLAR;
+     }
++    else if (effect == EFFECT_HIDDEN_POWER) // Daily Red: its type from the Pokemon's IVs, not Normal
++    {
++        type = CheckDynamicMoveType(GetBattlerMon(battler), move, battler, MON_IN_BATTLE);
++    }
+     else if (P_SHOW_DYNAMIC_TYPES) // Non-vanilla changes to battle UI showing dynamic types
+     {
+         struct Pokemon *mon = GetBattlerMon(battler);
+@@ -1813,8 +1818,10 @@ void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
  void MoveSelectionDestroyCursorAt(u8 cursorPosition)
  {
      u16 src[2];
@@ -7243,7 +7254,7 @@ index 7553ca61..85513d22 100644
  
      CopyToBgTilemapBufferRect_ChangePalette(0, src, 9 * (cursorPosition & 1) + 1, 55 + (cursorPosition & 2), 1, 2, 0x11);
      CopyBgTilemapBufferToVram(0);
-@@ -1833,8 +1836,10 @@ void ActionSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
+@@ -1833,8 +1840,10 @@ void ActionSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
  void ActionSelectionDestroyCursorAt(u8 cursorPosition)
  {
      u16 src[2];
@@ -17690,10 +17701,10 @@ index 00000000..1816abf6
 +};
 diff --git a/src/dailyred_summary.c b/src/dailyred_summary.c
 new file mode 100644
-index 00000000..fbaea555
+index 00000000..48c88ad4
 --- /dev/null
 +++ b/src/dailyred_summary.c
-@@ -0,0 +1,916 @@
+@@ -0,0 +1,920 @@
 +// Daily Red: the Pokemon summary, in the style of CompuMaxx's BW summary screen
 +// for FireRed (Shiny-Miner/New-BW-summary-screen, ported by Zake), redrawn here
 +// for the expansion's data and recoloured red (scripts/graphics/make-ui.py). Its
@@ -18349,7 +18360,11 @@ index 00000000..fbaea555
 +            color = sColor_Red;
 +        else if (pp <= maxPP / 2)
 +            color = sColor_Orange;
-+        BlitMenuInfoIcon(c, GetMoveType(move) + 1, 8, MOVE_ROW_Y(i));
++        // Hidden Power shows its type (from the Pokemon's IVs), not Normal.
++        if (GetMoveEffect(move) == EFFECT_HIDDEN_POWER)
++            BlitMenuInfoIcon(c, CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE) + 1, 8, MOVE_ROW_Y(i));
++        else
++            BlitMenuInfoIcon(c, GetMoveType(move) + 1, 8, MOVE_ROW_Y(i));
 +        AddTextPrinterParameterized3(a, FONT_NORMAL, 3, MOVE_ROW_Y(i), sColor_White, TEXT_SKIP_DRAW, GetMoveName(move));
 +        AddTextPrinterParameterized3(a, FONT_NORMAL, 20, i * 28 + 16, color, TEXT_SKIP_DRAW, COMPOUND_STRING("PP"));
 +        ConvertIntToDecimalStringN(gStringVar1, pp, STR_CONV_MODE_LEFT_ALIGN, 3);
