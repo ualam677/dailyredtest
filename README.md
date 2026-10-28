@@ -17,6 +17,7 @@ reimplemented in JavaScript.
 - [Quick start (macOS)](#quick-start-macos)
 - [How it works](#how-it-works)
 - [Your team](#your-team)
+  - [Mega Typhlosion (Pokémon Insurgence)](#mega-typhlosion-pokémon-insurgence)
 - [RED's team](#reds-team)
   - [Graphics](#graphics)
   - [Sets](#sets)
@@ -251,16 +252,16 @@ right after RED's (his starter decides yours), from the seed:
 
   It holds its Mega Stone (Charizard: X or Y at random; Meganium and
   Feraligatr have the Megas from Pokémon Legends: Z-A, with Mega Sol and
-  Dragonize) and gets one of that Mega's sets. Typhlosion has no Mega, so it
-  holds a Firium Z. On RED's original-team days (he has all three Kanto
-  starters) it's any of the nine.
+  Dragonize; Typhlosion has Pokémon Insurgence's, see
+  [Mega Typhlosion](#mega-typhlosion-pokémon-insurgence)) and gets one of that
+  Mega's sets. On RED's original-team days (he has all three Kanto starters)
+  it's any of the nine.
 - **Sometimes another Pokémon Mega Evolves instead:** when one of your other
   five can Mega Evolve (Gengar, Gyarados, Aerodactyl, Mewtwo, Latias…), 25%
   of those days (`MEGA_SWAP_ODDS`) it gets one of its Mega's sets, holding
   its Mega Stone (at its Mega's tier level), and your starter holds a
   Z-Crystal instead (one of its Z-Move sets, the crystal for its strongest
-  STAB type; Typhlosion keeps its Firium Z). The Mega's types must still fit
-  the type limit below.
+  STAB type). The Mega's types must still fit the type limit below.
 - **Five fully evolved Pokémon** from Daily Red's species scope (below), never
   holding a Mega Stone or a Z-Crystal. **Legendaries are a 20% roll**
   (`LEGENDARY_TEAM_ODDS`): 1 team in 5 has exactly one, the rest none. It's
@@ -318,6 +319,65 @@ against `sLaterEvolutions`.
 The generator uses its own RNG state, separate from the game's `Random()`, so
 teams depend only on the seed. The odds, levels and minimum are `#define`s at
 the top of `dailyred_team.c`.
+
+### Mega Typhlosion (Pokémon Insurgence)
+
+Typhlosion has no official Mega Evolution, so Daily Red adds the one from the
+fan game [Pokémon Insurgence](https://p-insurgence.com), as the
+[Insurgence wiki](https://wiki.p-insurgence.com/Typhlosion_(Pok%C3%A9mon))
+gives it (credits under [Copyright and licenses](#copyright-and-licenses)):
+
+| | Typhlosion | Mega Typhlosion |
+|---|---|---|
+| Type | Fire | Fire |
+| Ability | Blaze / Flash Fire | **Hubris**: Sp. Atk +1 when its attack knocks a Pokémon out |
+| HP / Atk / Def / SpA / SpD / Spe | 78 / 84 / 78 / 109 / 85 / 100 (534) | 78 / 89 / 88 / 159 / 110 / 110 (634) |
+| Mega Stone | | Typhlosionite |
+
+Its height, weight and Pokédex entry are Typhlosion's (Insurgence gives it
+none of its own), and so is its cry (there's no Mega cry for it).
+
+- **Where it appears:** your starter, when it's Typhlosion (RED has Venusaur,
+  or it's an original-team day), holds Typhlosionite like the other starters
+  hold their Mega Stones, at level 100 with one of the Mega's sets (see
+  [Sets](#sets)). On the days another of your Pokémon Mega Evolves instead, it
+  holds a Firium Z with one of its Z-Move sets. RED never has it.
+- **In the game:** `SPECIES_TYPHLOSION_MEGA` (the expansion's custom species
+  slot, in `include/constants/species.h`; its entry is in
+  `src/data/pokemon/species_info/gen_2_families.h`, its form tables in
+  `form_species_tables.h` and `form_change_tables.h`), `ITEM_TYPHLOSIONITE`
+  (`src/data/items.h`) and `ABILITY_HUBRIS` (`src/data/abilities.h`). Hubris
+  is Insurgence's special-attack Moxie, so it shares Grim Neigh's code
+  (`battle_util.c`), and the AI treats it like Moxie (`IsMoxieTypeAbility`).
+  `sStarterMegas` in `src/dailyred_team.c` gives your Typhlosion the stone.
+- **Graphics:** its front, shiny front and back are GBA sprites supplied by
+  the project's owner (`art/mega-typhlosion/front.png`, `front_shiny.png` and
+  `back.png`; red fur and blue flames when shiny). The back is FYTYNo1's
+  [Mega Typhlosion GBA sprite](https://www.deviantart.com/fytyno1/art/Mega-Typhlosion-GBA-sprite-687447672)
+  (after fan art by Tomycase) with the smoke extended up and out behind it.
+  `mega_typhlosion()` in `scripts/graphics/make-graphics.py` turns them into
+  `graphics/pokemon/typhlosion/mega/`. The GBA gives a Pokémon one
+  16-colour palette for front and back, plus a shiny palette with the same
+  slots, so:
+  - the front's 17 colours become 16: 3 pure black pixels join the outline
+    and 7 light-orange flame pixels the yellow, which frees a slot for the
+    smoke's dark grey (the back's; the front draws its dark smoke in the fur
+    colour, so there it turns a little greyer);
+  - the shiny palette takes, for each slot, the colour the shiny front shows
+    at most of its pixels, except that the smoke's dark grey stays dark grey,
+    so the shiny smoke keeps its shading (the shiny front's smoke is a
+    little darker than in `front_shiny.png`);
+  - the back's colours take the front's slots for the same parts (fur,
+    flames, smoke, tan neck), so it turns shiny the same way; its few shades
+    that differ by a hair from the front's (an orange, a red, the smoke's
+    greys) use the front's.
+
+  They're GBA-style, so a little flatter than the expansion's DS-style
+  sprites around them. Its party icon is Typhlosion's with the Mega's
+  charcoal fur, a flame on its lower back and smoke over its neck flames;
+  Typhlosionite's bag icon is the expansion's Feraligite (the Z-A Johto
+  starters' stone) in the Mega's colours, a charcoal stone with a flame and
+  cream swirl.
 
 ## RED's team
 
@@ -480,6 +540,8 @@ game's files; run it again after changing the art:
   back sprite is still FireRed's). She's 70 pixels tall and 21 colours, so 6
   rows go from her legs and 6 colours are merged: her bag's highlight first,
   then the closest pairs by eye, keeping her blouse's three blues.
+- `art/mega-typhlosion/`: Mega Typhlosion's front, shiny front and back, see
+  [Mega Typhlosion](#mega-typhlosion-pokémon-insurgence).
 
 ### Sets
 
@@ -498,7 +560,11 @@ every Random Battles generation from 7 to 9 that has it, each generation an
 equal share (Gen 7 is the last with Mega Evolution and Z-Moves; Gen 8 and 9
 bring newer items and moves: Heavy-Duty Boots, Assault Vest sets…). Mega and
 Z-Move lists come from Gen 7, Tera lists from Gen 9, and Mega Meganium and
-Mega Feraligatr from Showdown's Pokémon Champions Random Battles.
+Mega Feraligatr from Showdown's Pokémon Champions Random Battles. Mega
+Typhlosion, which Showdown doesn't have, gets Typhlosion's own Random Battle
+sets (Gen 7 and 9) holding Typhlosionite in place of their Choice Specs or
+Scarf (`INSURGENCE_MEGAS` in the script): Eruption, Fire Blast and Focus
+Blast with Scorching Sands or Hidden Power (Grass or Rock), Timid.
 
 **Lead sets.** Showdown's generators hardly make lead sets (a lead
 Aerodactyl gets a Focus Sash about 5% of the time), so
@@ -635,8 +701,8 @@ npm run music      # record RED's battle music to tests/output/vs-red.wav (~2 mi
 `npm run smoke` checks that:
 - your team follows its rules (`validateTeam` in `tests/party.mjs`, written
   independently of the C code) for each seed and after each run: a starter
-  that counters RED's (read from his party) with its Mega Stone, or Typhlosion
-  with a Firium Z; the others fully evolved, in scope, holding no Mega Stone
+  that counters RED's (read from his party) with its Mega Stone (Typhlosion's
+  Typhlosionite included); the others fully evolved, in scope, holding no Mega Stone
   or Z-Crystal, at their tier's level (94–99); at most one legendary; one of
   each Pokémon's Showdown sets; perfect stats; no type on more than two and
   no species twice; a base stat total of at least 2700; and mirror-RED days
@@ -751,9 +817,27 @@ summit's wind, `music/mt-silver-wind.ogg` (HGSS's, supplied by the project's
 owner, and the sample made from it in the patch), and the
 art in `art/` (and the graphics made from it in the patch): Mt. Silver's
 battle background is REKKA's, RED's battle sprite is HeartGold/SoulSilver's
-(ripped by ChrisX698), and LEAF's HGSS-style sprite, the Mt. Silver
+(ripped by ChrisX698), LEAF's HGSS-style sprite, the Mt. Silver
 summit tileset (HGSS-derived) and the HGSS screenshot the summit's clouds
-are cut from were supplied by the project's owner.
+are cut from were supplied by the project's owner, and so were Mega
+Typhlosion's sprites, its back built on FYTYNo1's (below).
+
+**Mega Typhlosion** is from [Pokémon Insurgence](https://p-insurgence.com), a
+free fan game by the Pokémon Insurgence team (lead developer
+1ofthe4rocketbros, previous lead developer TheSuzerain, programmer Deukhoofd,
+lead artist EchoTheThird, and its other artists): its design, types, base
+stats, its ability Hubris and its Mega Stone Typhlosionite are theirs, taken
+from the [Pokémon Insurgence wiki](https://wiki.p-insurgence.com/Typhlosion_(Pok%C3%A9mon)).
+Its sprites in `art/mega-typhlosion/` were supplied by the project's owner;
+the back is FYTYNo1's
+[Mega Typhlosion GBA sprite](https://www.deviantart.com/fytyno1/art/Mega-Typhlosion-GBA-sprite-687447672),
+which FYTYNo1 based on fan art by Tomycase, with its smoke extended and
+recoloured to share the front's palette. They're used with credit; Daily
+Red isn't affiliated with or endorsed by the Insurgence team or the artists.
+Mega Typhlosion's party icon is pokeemerald-expansion's Typhlosion icon, and
+Typhlosionite's icon its Feraligite icon (added to the expansion by
+kittenchilly, [rh-hideout/pokeemerald-expansion#9143](https://github.com/rh-hideout/pokeemerald-expansion/pull/9143)),
+both recoloured for Daily Red.
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page
@@ -791,7 +875,7 @@ scripts/fetch-vendor.sh              Nostalgist, mGBA core, font (pinned, checks
 scripts/serve.mjs                    local static server
 scripts/prepare-midi.mjs             Sappy MIDI dump → MIDI that mid2agb reads
 scripts/sets/generate.mjs            Showdown Random Battle sets → expansion/src/dailyred_sets.c
-scripts/graphics/make-graphics.py    art/ → Mt. Silver's battle background and the HGSS-style sprites
+scripts/graphics/make-graphics.py    art/ → Mt. Silver's battle background, the HGSS-style sprites and Mega Typhlosion's
 art/                                 source art (see Graphics)
 music/vs-red.mid                     RED's battle theme (source MIDI)
 music/mt-silver-wind.ogg             the summit's wind (source loop)
