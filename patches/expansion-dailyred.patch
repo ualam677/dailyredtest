@@ -1,5 +1,5 @@
 diff --git a/data/battle_scripts_1.s b/data/battle_scripts_1.s
-index 4745ed0f..7cb7b284 100644
+index 4745ed0f..b0da4667 100644
 --- a/data/battle_scripts_1.s
 +++ b/data/battle_scripts_1.s
 @@ -222,7 +222,6 @@ BattleScript_ConsumableItemStatRaise::
@@ -121,7 +121,15 @@ index 4745ed0f..7cb7b284 100644
  	playanimation_var BS_ATTACKER, sB_ANIM_ARG1
  	setbyte gBattleCommunication, 0
  	call BattleScript_ActivateWeatherAbilities
-@@ -3212,14 +3200,18 @@ BattleScript_OverworldStatusStarts_TryActivations:
+@@ -3178,7 +3166,6 @@ BattleScript_WeatherFaded::
+ 
+ BattleScript_DamagingWeather::
+ 	printfromtable gSandStormHailDmgStringIds
+-	waitmessage B_WAIT_TIME_LONG
+ 	effectivenesssound
+ 	hitanimation BS_ATTACKER
+ 	goto BattleScript_DoTurnDmg
+@@ -3212,14 +3199,18 @@ BattleScript_OverworldStatusStarts_TryActivations:
  
  BattleScript_OverworldWeatherStarts::
  	printfromtable gWeatherStartsStringIds
@@ -142,7 +150,7 @@ index 4745ed0f..7cb7b284 100644
  	playanimation_var BS_BATTLER_0, sB_ANIM_ARG1
  	call BattleScript_ActivateWeatherAbilities
  	end3
-@@ -3542,7 +3534,6 @@ BattleScript_GulpMissileNoSecondEffectGulping:
+@@ -3542,7 +3533,6 @@ BattleScript_GulpMissileNoSecondEffectGulping:
  	return
  
  BattleScript_SeedSowerActivates::
@@ -150,7 +158,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESGRASSY
  	waitmessage B_WAIT_TIME_LONG
-@@ -3560,7 +3551,6 @@ BattleScript_WindPowerActivates::
+@@ -3560,7 +3550,6 @@ BattleScript_WindPowerActivates::
  
  BattleScript_ToxicDebrisActivates::
  	call BattleScript_AbilityPopUp
@@ -158,7 +166,7 @@ index 4745ed0f..7cb7b284 100644
  	settoxicspikes BattleScript_ToxicDebrisRet
  	printstring STRINGID_POISONSPIKESSCATTERED
  	waitmessage B_WAIT_TIME_LONG
-@@ -3571,7 +3561,6 @@ BattleScript_ToxicDebrisRet:
+@@ -3571,7 +3560,6 @@ BattleScript_ToxicDebrisRet:
  
  BattleScript_EarthEaterActivates::
  	call BattleScript_AbilityPopUp
@@ -166,7 +174,7 @@ index 4745ed0f..7cb7b284 100644
  	tryhealquarterhealth BS_TARGET, BattleScript_EarthEaterRet
  	healthbarupdate BS_TARGET
  	datahpupdate BS_TARGET, ASSURANCE_DOUBLE
-@@ -3827,7 +3816,6 @@ BattleScript_GrudgeTakesPP::
+@@ -3827,7 +3815,6 @@ BattleScript_GrudgeTakesPP::
  	return
  
  BattleScript_MagicBounce::
@@ -174,7 +182,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_PKMNMOVEBOUNCEDABILITY
  	waitmessage B_WAIT_TIME_LONG
-@@ -3860,7 +3848,6 @@ BattleScript_EnduredMsg::
+@@ -3860,7 +3847,6 @@ BattleScript_EnduredMsg::
  	return
  
  BattleScript_SturdiedMsg::
@@ -182,7 +190,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUpTarget
  	printstring STRINGID_PKMNENDUREDHIT
  	waitmessage B_WAIT_TIME_LONG
-@@ -3953,7 +3940,6 @@ BattleScript_UltraBurst::
+@@ -3953,7 +3939,6 @@ BattleScript_UltraBurst::
  	end3
  
  BattleScript_BattlerFormChange::
@@ -190,7 +198,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUpScripting
  	flushtextbox
  BattleScript_BattlerFormChangeNoPopup::
-@@ -3980,7 +3966,6 @@ BattleScript_ZenMode::
+@@ -3980,7 +3965,6 @@ BattleScript_ZenMode::
  
  BattleScript_BattlerFormChangeDisguise::
  	call BattleScript_AbilityPopUpScripting
@@ -198,7 +206,7 @@ index 4745ed0f..7cb7b284 100644
  	handleformchange BS_SCRIPTING, 0
  	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE_DISGUISE
  	waitanimation
-@@ -3990,7 +3975,6 @@ BattleScript_BattlerFormChangeDisguise::
+@@ -3990,7 +3974,6 @@ BattleScript_BattlerFormChangeDisguise::
  	return
  
  BattleScript_BattlerFormChangeWithString::
@@ -206,7 +214,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUpScripting
  	flushtextbox
  	handleformchange BS_SCRIPTING, 0
-@@ -4020,7 +4004,6 @@ BattleScript_BallFetch::
+@@ -4020,7 +4003,6 @@ BattleScript_BallFetch::
  	return
  
  BattleScript_CudChewActivates::
@@ -214,7 +222,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
  	consumeberry BS_ATTACKER, FALSE
-@@ -4043,13 +4026,11 @@ BattleScript_TargetFormChangeNoPopup:
+@@ -4043,13 +4025,11 @@ BattleScript_TargetFormChangeNoPopup:
  	return
  
  BattleScript_TargetFormChange::
@@ -228,7 +236,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUpTarget
  BattleScript_TargetFormChangeWithStringNoPopup::
  	call BattleScript_TargetFormChangeNoPopup
-@@ -4073,14 +4054,12 @@ BattleScript_IllusionOff::
+@@ -4073,14 +4053,12 @@ BattleScript_IllusionOff::
  	return
  
  BattleScript_AnticipationActivates::
@@ -243,7 +251,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUpScripting
  	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_AftermathDmgRet
  	healthbarupdate BS_ATTACKER
-@@ -4090,7 +4069,6 @@ BattleScript_AftermathDmgRet:
+@@ -4090,7 +4068,6 @@ BattleScript_AftermathDmgRet:
  	return
  
  BattleScript_DampPreventsAftermath::
@@ -251,7 +259,61 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	pause 40
  	copybyte gBattlerAbility, sBATTLER
-@@ -4480,7 +4458,11 @@ BattleScript_AbilityPopUpTarget::
+@@ -4124,10 +4101,13 @@ BattleScript_MonWokeUpInUproar::
+ 	return
+ 
+ BattleScript_PoisonTurnDmg::
++	@ Daily Red: no pause after the message: its animation starts as the
++	@ message's last word prints (GetEarlyStart), then the HP bar drains.
+ 	printstring STRINGID_PKMNHURTBYPOISON
+-	waitmessage B_WAIT_TIME_LONG
+ BattleScript_DoStatusTurnDmg::
+ 	statusanimation BS_ATTACKER
++	goto BattleScript_DoTurnDmg
++
+ BattleScript_DoTurnDmg:
+ 	healthbarupdate BS_ATTACKER
+ 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+@@ -4149,12 +4129,10 @@ BattleScript_PoisonHealActivates::
+ 
+ BattleScript_BurnTurnDmg::
+ 	printstring STRINGID_PKMNHURTBYBURN
+-	waitmessage B_WAIT_TIME_LONG
+ 	goto BattleScript_DoStatusTurnDmg
+ 
+ BattleScript_FrostbiteTurnDmg::
+ 	printstring STRINGID_PKMNHURTBYFROSTBITE
+-	waitmessage B_WAIT_TIME_LONG
+ 	goto BattleScript_DoStatusTurnDmg
+ 
+ BattleScript_MoveUsedIsFrozen::
+@@ -4275,9 +4253,9 @@ BattleScript_PrintPayDayMoneyString::
+ 
+ BattleScript_WrapTurnDmg::
+ 	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_DoTurnDmgEnd
+-	playanimation BS_ATTACKER, B_ANIM_TURN_TRAP, sB_ANIM_ARG1
++	@ Daily Red: the message first, the animation from its last word.
+ 	printstring STRINGID_PKMNHURTBY
+-	waitmessage B_WAIT_TIME_LONG
++	playanimation BS_ATTACKER, B_ANIM_TURN_TRAP, sB_ANIM_ARG1
+ 	goto BattleScript_DoTurnDmg
+ 
+ BattleScript_WrapEnds::
+@@ -4298,13 +4276,11 @@ BattleScript_MoveUsedIsInLoveCantAttack::
+ 
+ BattleScript_NightmareTurnDmg::
+ 	printstring STRINGID_PKMNLOCKEDINNIGHTMARE
+-	waitmessage B_WAIT_TIME_LONG
+ 	volatileanimation BS_ATTACKER, VOLATILE_NIGHTMARE
+ 	goto BattleScript_DoTurnDmg
+ 
+ BattleScript_CurseTurnDmg::
+ 	printstring STRINGID_PKMNAFFLICTEDBYCURSE
+-	waitmessage B_WAIT_TIME_LONG
+ 	volatileanimation BS_ATTACKER, VOLATILE_CURSED
+ 	goto BattleScript_DoTurnDmg
+ 
+@@ -4480,7 +4456,11 @@ BattleScript_AbilityPopUpTarget::
  BattleScript_AbilityPopUp::
  	tryactivateabilityshield BS_ABILITY_BATTLER
  	showabilitypopup
@@ -264,7 +326,7 @@ index 4745ed0f..7cb7b284 100644
  	recordability BS_ABILITY_BATTLER
  	sethword sABILITY_OVERWRITE, 0
  	return
-@@ -4505,24 +4487,24 @@ BattleScript_ItemPopUp_Attacker::
+@@ -4505,24 +4485,24 @@ BattleScript_ItemPopUp_Attacker::
  	flushtextbox
  BattleScript_ItemPopUp_AttackerNoFlush::
  	showitempopup BS_ATTACKER
@@ -295,7 +357,7 @@ index 4745ed0f..7cb7b284 100644
  	return
  
  @ Can't compare directly to a value, have to compare to value at pointer
-@@ -4530,9 +4512,7 @@ sZero:
+@@ -4530,9 +4510,7 @@ sZero:
  .byte 0
  
  BattleScript_EmergencyExit::
@@ -305,7 +367,7 @@ index 4745ed0f..7cb7b284 100644
  	playanimation BS_SCRIPTING, B_ANIM_SLIDE_OFFSCREEN
  	waitanimation
  	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_SwitchOutEffects
-@@ -4569,7 +4549,6 @@ BattleScript_QueuedSwitchRet:
+@@ -4569,7 +4547,6 @@ BattleScript_QueuedSwitchRet:
  	return
  
  BattleScript_TraceActivates::
@@ -313,7 +375,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUpScripting
  	printstring STRINGID_PKMNTRACED
  	waitmessage B_WAIT_TIME_LONG
-@@ -4703,28 +4682,24 @@ BattleScript_RuinAbilityActivates::
+@@ -4703,28 +4680,24 @@ BattleScript_RuinAbilityActivates::
  	return
  
  BattleScript_SupremeOverlordActivates::
@@ -342,7 +404,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_COMMANDERACTIVATES
  	waitmessage B_WAIT_TIME_LONG
-@@ -4732,7 +4707,6 @@ BattleScript_CommanderActivates::
+@@ -4732,7 +4705,6 @@ BattleScript_CommanderActivates::
  	return
  
  BattleScript_HospitalityActivates::
@@ -350,7 +412,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_HOSPITALITYRESTORATION
  	waitmessage B_WAIT_TIME_LONG
-@@ -4748,7 +4722,6 @@ BattleScript_AttackWeakenedByStrongWinds::
+@@ -4748,7 +4720,6 @@ BattleScript_AttackWeakenedByStrongWinds::
  	return
  
  BattleScript_MimicryActivates::
@@ -358,7 +420,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_BATTLERTYPECHANGEDTO
  	waitmessage B_WAIT_TIME_SHORT
-@@ -4774,7 +4747,6 @@ BattleScript_ActivateTerrainAbility:
+@@ -4774,7 +4745,6 @@ BattleScript_ActivateTerrainAbility:
  	return
  
  BattleScript_ElectricSurgeActivates::
@@ -366,7 +428,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESELECTRIC
  	waitmessage B_WAIT_TIME_LONG
-@@ -4783,7 +4755,6 @@ BattleScript_ElectricSurgeActivates::
+@@ -4783,7 +4753,6 @@ BattleScript_ElectricSurgeActivates::
  	return
  
  BattleScript_HadronEngineActivates::
@@ -374,7 +436,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_HADRONENGINEACTIVATES
  	waitmessage B_WAIT_TIME_LONG
-@@ -4792,14 +4763,12 @@ BattleScript_HadronEngineActivates::
+@@ -4792,14 +4761,12 @@ BattleScript_HadronEngineActivates::
  	return
  
  BattleScript_HadronEngineActivatesInTerrain::
@@ -389,7 +451,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESMISTY
  	waitmessage B_WAIT_TIME_LONG
-@@ -4808,7 +4777,6 @@ BattleScript_MistySurgeActivates::
+@@ -4808,7 +4775,6 @@ BattleScript_MistySurgeActivates::
  	return
  
  BattleScript_GrassySurgeActivates::
@@ -397,7 +459,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESGRASSY
  	waitmessage B_WAIT_TIME_LONG
-@@ -4817,7 +4785,6 @@ BattleScript_GrassySurgeActivates::
+@@ -4817,7 +4783,6 @@ BattleScript_GrassySurgeActivates::
  	return
  
  BattleScript_PsychicSurgeActivates::
@@ -405,7 +467,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESPSYCHIC
  	waitmessage B_WAIT_TIME_LONG
-@@ -4869,14 +4836,12 @@ BattleScript_TookAttack::
+@@ -4869,14 +4834,12 @@ BattleScript_TookAttack::
  	return
  
  BattleScript_SturdyPreventsOHKO::
@@ -420,7 +482,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	healthbarupdate BS_SCRIPTING
  	datahpupdate BS_SCRIPTING, ASSURANCE_DOUBLE
-@@ -4885,20 +4850,17 @@ BattleScript_MoveHPDrain::
+@@ -4885,20 +4848,17 @@ BattleScript_MoveHPDrain::
  	return
  
  BattleScript_MoveStatDrain::
@@ -441,7 +503,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printfromtable gFlashFireStringIds
  	waitmessage B_WAIT_TIME_LONG
-@@ -4909,21 +4871,18 @@ BattleScript_AbilityPreventsPhasingOut::
+@@ -4909,21 +4869,18 @@ BattleScript_AbilityPreventsPhasingOut::
  	goto BattleScript_MoveEnd
  
  BattleScript_AbilityPreventsPhasingOutRet::
@@ -463,7 +525,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_PKMNSXPREVENTSYLOSS
  	waitmessage B_WAIT_TIME_LONG
-@@ -4940,7 +4899,6 @@ BattleScript_OwnTempoPrevents::
+@@ -4940,7 +4897,6 @@ BattleScript_OwnTempoPrevents::
  	goto BattleScript_MoveEnd
  
  BattleScript_OwnTempoPreventsRet::
@@ -471,7 +533,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	copybyte sBATTLER, gBattlerTarget
  	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
-@@ -4952,7 +4910,6 @@ BattleScript_IceFaceNullsDamage::
+@@ -4952,7 +4908,6 @@ BattleScript_IceFaceNullsDamage::
  	return
  
  BattleScript_PokemonCannotUseMove::
@@ -479,7 +541,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_POKEMONCANNOTUSEMOVE
  	waitmessage B_WAIT_TIME_LONG
-@@ -4977,7 +4934,6 @@ BattleScript_StickyHoldActivates::
+@@ -4977,7 +4932,6 @@ BattleScript_StickyHoldActivates::
  	goto BattleScript_MoveEnd
  
  BattleScript_StickyHoldActivatesRet::
@@ -487,7 +549,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUp
  	copybyte sBATTLER, gBattlerAbility
  	printstring STRINGID_PKMNSXMADEYINEFFECTIVE
-@@ -4991,14 +4947,12 @@ BattleScript_ColorChangeActivates::
+@@ -4991,14 +4945,12 @@ BattleScript_ColorChangeActivates::
  	return
  
  BattleScript_ProteanActivates::
@@ -502,7 +564,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUpScripting
  	printstring STRINGID_PKMNMADESHELLGLEAM
  	waitmessage B_WAIT_TIME_LONG
-@@ -5425,8 +5379,14 @@ BattleScript_ItemHealHP_Ret::
+@@ -5425,8 +5377,14 @@ BattleScript_ItemHealHP_Ret::
  	call BattleScript_ItemPopUp_Attacker
  	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
  	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
@@ -517,7 +579,15 @@ index 4745ed0f..7cb7b284 100644
  	return
  
  BattleScript_SelectingNotAllowedMoveChoiceItem::
-@@ -6300,7 +6260,6 @@ BattleScript_BerserkGene_SafeguardProtected::
+@@ -5989,7 +5947,6 @@ BattleScript_MoveEffectDamageNonTypes::
+ 
+ BattleScript_DamageNonTypesContinues::
+ 	printfromtable gDamageNonTypesDmgStringIds
+-	waitmessage B_WAIT_TIME_LONG
+ 	effectivenesssound
+ 	hitanimation BS_ATTACKER
+ 	goto BattleScript_DoTurnDmg
+@@ -6300,7 +6257,6 @@ BattleScript_BerserkGene_SafeguardProtected::
  	waitmessage B_WAIT_TIME_LONG
  	goto BattleScript_BerserkGene_End
  BattleScript_BerserkGene_OwnTempoPrevents:
@@ -525,7 +595,7 @@ index 4745ed0f..7cb7b284 100644
  	call BattleScript_AbilityPopUpScripting
  	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
  	waitmessage B_WAIT_TIME_LONG
-@@ -6353,9 +6312,15 @@ BattleScript_ForfeitBattleGaveMoney::
+@@ -6353,9 +6309,15 @@ BattleScript_ForfeitBattleGaveMoney::
  	waitmessage B_WAIT_TIME_LONG
  	end
  
@@ -7716,7 +7786,7 @@ index 7553ca61..85513d22 100644
      CopyToBgTilemapBufferRect_ChangePalette(0, src, 7 * (cursorPosition & 1) + 16, 35 + (cursorPosition & 2), 1, 2, 0x11);
      CopyBgTilemapBufferToVram(0);
 diff --git a/src/battle_controllers.c b/src/battle_controllers.c
-index 63c899bc..abd54a56 100644
+index 63c899bc..99e635ff 100644
 --- a/src/battle_controllers.c
 +++ b/src/battle_controllers.c
 @@ -1,4 +1,5 @@
@@ -7776,7 +7846,7 @@ index 63c899bc..abd54a56 100644
  static void Controller_WaitForStatusAnimation(enum BattlerId battler)
  {
      if (!gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive)
-@@ -2243,6 +2257,117 @@ void Controller_WaitForString(enum BattlerId battler)
+@@ -2243,6 +2257,131 @@ void Controller_WaitForString(enum BattlerId battler)
          BtlController_Complete(battler);
  }
  
@@ -7842,6 +7912,20 @@ index 63c899bc..abd54a56 100644
 +        return EARLY_AT_LAST_WORD;
 +    case STRINGID_PKMNSITEMRESTOREDHPALITTLE:
 +        return EARLY_AT_START;
++    // End-of-turn damage: the effect's animation starts as the last word prints.
++    case STRINGID_PKMNHURTBYPOISON:
++    case STRINGID_PKMNHURTBYBURN:
++    case STRINGID_PKMNHURTBYFROSTBITE:
++    case STRINGID_PKMNAFFLICTEDBYCURSE:
++    case STRINGID_PKMNLOCKEDINNIGHTMARE:
++    case STRINGID_PKMNHURTBY:
++    case STRINGID_PKMNBUFFETEDBYSANDSTORM:
++    case STRINGID_PKMNPELTEDBYHAIL:
++    case STRINGID_PKMNHURTBYVINES:
++    case STRINGID_PKMNHURTBYVORTEX:
++    case STRINGID_PKMNBURNINGUP:
++    case STRINGID_PKMNHURTBYROCKSTHROWN:
++        return EARLY_AT_LAST_WORD;
 +    case STRINGID_STARTEDTORAIN:
 +    case STRINGID_DOWNPOURSTARTED:
 +    case STRINGID_SANDSTORMBREWED:
@@ -7894,7 +7978,7 @@ index 63c899bc..abd54a56 100644
  static void Controller_WaitForPartyStatusSummary(enum BattlerId battler)
  {
      if (gBattleSpritesDataPtr->healthBoxesData[battler].partyStatusDelayTimer++ > 92)
-@@ -2509,6 +2634,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
+@@ -2509,6 +2648,8 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSpawn;
      else
          gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSlideIn;
@@ -7903,7 +7987,7 @@ index 63c899bc..abd54a56 100644
  
      gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
  }
-@@ -2637,6 +2764,8 @@ void BtlController_HandleBallThrowAnim(enum BattlerId battler)
+@@ -2637,6 +2778,8 @@ void BtlController_HandleBallThrowAnim(enum BattlerId battler)
  
  void BtlController_HandleMoveAnimation(enum BattlerId battler)
  {
@@ -7912,7 +7996,7 @@ index 63c899bc..abd54a56 100644
      if (!IsBattleSEPlaying(battler))
      {
          u16 move = gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8);
-@@ -2660,6 +2789,13 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2660,6 +2803,13 @@ void BtlController_HandlePrintString(enum BattlerId battler)
  {
      u16 *stringId;
  
@@ -7926,7 +8010,7 @@ index 63c899bc..abd54a56 100644
      gBattle_BG0_X = 0;
      gBattle_BG0_Y = 0;
      stringId = (u16 *)(&gBattleResources->bufferA[battler][2]);
-@@ -2679,7 +2815,20 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2679,7 +2829,20 @@ void BtlController_HandlePrintString(enum BattlerId battler)
      // if (BattleStringShouldBeColored(*stringId))
      //     BattlePutTextOnWindow(gDisplayedStringBattle, (B_WIN_MSG | B_TEXT_FLAG_NPC_CONTEXT_FONT));
      // else
@@ -7947,7 +8031,7 @@ index 63c899bc..abd54a56 100644
  
      if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
      {
-@@ -2694,7 +2843,10 @@ void BtlController_HandlePrintString(enum BattlerId battler)
+@@ -2694,7 +2857,10 @@ void BtlController_HandlePrintString(enum BattlerId battler)
          }
      }
  
@@ -7959,7 +8043,7 @@ index 63c899bc..abd54a56 100644
      if (ShouldUpdateTvData(battler))
          BattleTv_SetDataBasedOnString(*stringId);
      if (IsControllerPlayer(battler)
-@@ -2765,6 +2917,8 @@ void BtlController_HandleStatusIconUpdate(enum BattlerId battler)
+@@ -2765,6 +2931,8 @@ void BtlController_HandleStatusIconUpdate(enum BattlerId battler)
  
  void BtlController_HandleStatusAnimation(enum BattlerId battler)
  {
@@ -7968,7 +8052,7 @@ index 63c899bc..abd54a56 100644
      if (!IsBattleSEPlaying(battler))
      {
          InitAndLaunchChosenStatusAnimation(battler, gBattleResources->bufferA[battler][1],
-@@ -3042,6 +3196,8 @@ void BtlController_HandleHidePartyStatusSummary(enum BattlerId battler)
+@@ -3042,6 +3210,8 @@ void BtlController_HandleHidePartyStatusSummary(enum BattlerId battler)
  
  void BtlController_HandleBattleAnimation(enum BattlerId battler)
  {
@@ -7977,7 +8061,7 @@ index 63c899bc..abd54a56 100644
      if ((gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL))
          || IsControllerOakOldMan(battler)
          || !IsBattleSEPlaying(battler))
-@@ -3052,9 +3208,18 @@ void BtlController_HandleBattleAnimation(enum BattlerId battler)
+@@ -3052,9 +3222,18 @@ void BtlController_HandleBattleAnimation(enum BattlerId battler)
          gAnimDisableStructPtr = (struct LinkBattleAnim *)&gBattleResources->bufferA[battler][4];
  
          if (TryHandleLaunchBattleTableAnimation(battler, battler, battler, animationId, argument))
@@ -7996,7 +8080,7 @@ index 63c899bc..abd54a56 100644
  
          if (ShouldUpdateTvData(battler))
              BattleTv_SetDataBasedOnAnimation(animationId);
-@@ -3185,15 +3350,25 @@ void BtlController_Intro_DelayAndEnd(enum BattlerId battler)
+@@ -3185,15 +3364,25 @@ void BtlController_Intro_DelayAndEnd(enum BattlerId battler)
      }
  }
  
@@ -22243,10 +22327,21 @@ index 57e9da2e..a3a86bc3 100644
          }
          break;
 diff --git a/src/text.c b/src/text.c
-index 6f512609..fd08e28f 100644
+index 6f512609..948823cf 100644
 --- a/src/text.c
 +++ b/src/text.c
-@@ -614,6 +614,36 @@ bool32 IsTextPrinterActiveOnWindow(u32 windowId)
+@@ -548,6 +548,10 @@ void RunTextPrinters(void)
+         {
+             if (currentPrinter->active)
+             {
++                // Daily Red: the colour table is shared, and another printer
++                // (a pop-up, the HP numbers) may have changed it since this one
++                // last drew; battle text can now print alongside them.
++                GenerateFontHalfRowLookupTable(currentPrinter->printerTemplate.color);
+                 for (u32 repeat = 0; repeat < textRepeats || isInstantText; repeat++)
+                 {
+                     u32 renderState = RenderFont(currentPrinter);
+@@ -614,6 +618,36 @@ bool32 IsTextPrinterActiveOnWindow(u32 windowId)
      return FALSE;
  }
  
@@ -22337,3 +22432,20 @@ index f514f23b..d2bfd8d0 100644
  
  gBattleAnimGeneral_Fog::
  	goto gBattleAnimMove_Haze
+diff --git a/src/battle_script_commands.c b/src/battle_script_commands.c
+index 2d8de986..e4b0bd7c 100644
+--- a/src/battle_script_commands.c
++++ b/src/battle_script_commands.c
+@@ -1503,6 +1503,12 @@ static void Cmd_waitmessage(void)
+ {
+     CMD_ARGS(u16 time);
+ 
++    // Daily Red: a message that handed over early (Leftovers, poison...) may
++    // still be printing; the pause to read it starts once it has finished.
++    // ("waitmessage 1", as after weather messages, doesn't wait: there the
++    // animation is meant to play while the message finishes.)
++    if (cmd->time > 1 && IsTextPrinterActiveOnWindow(B_WIN_MSG) && !gTestRunnerHeadless)
++        return;
+     if (gBattleControllerExecFlags == 0)
+     {
+         if (gBattleCommunication[MSG_DISPLAY] == MSG_DISPLAY_CONTINUE)
