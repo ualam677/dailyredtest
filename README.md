@@ -334,7 +334,7 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 | Slot | Pokémon | Level |
 |---|---|---|
 | Kanto starter | Venusaur, Charizard or Blastoise, holding its Mega Stone (Charizard: X or Y) | 99 |
-| Pikachu | always; built physical or special (see below), in one of Ash's caps on 25% of these days (`CAP_PIKACHU_ODDS`). A Light Ball, or sometimes a Z-Crystal: then it leads, with a totem aura (+1 Attack, Defense, Sp. Atk, Sp. Def and Speed as the battle starts) | 100 |
+| Pikachu | always; built physical or special (see below), in one of Ash's caps on 25% of these days (`CAP_PIKACHU_ODDS`). A Light Ball, or on about 10% of these days a Z-Crystal: then it leads, with a totem aura (+1 Attack, Defense, Sp. Atk, Sp. Def and Speed as the battle starts) | 100 |
 | Legendary | picked by the starter, see below | 99 |
 | Two from his pool | Poliwrath, Gyarados, Aerodactyl, Lapras, Snorlax, Vaporeon, Jolteon, Flareon, Espeon, Umbreon, Leafeon, Glaceon, Sylveon, Hitmonlee, Kabutops, Victreebel, Machamp, Arcanine, Gengar | 96 |
 | One from a Gen 1 family | any fully evolved Pokémon of the Gen 1 Pokédex, or a later Pokémon that evolves from one (Crobat, Scizor, Kingdra, Blissey, Magnezone, Kleavor, Annihilape…), except starters, Pikachu's family, legendaries and mythicals; no regional forms or their evolutions (no Sirfetch'd or Mr. Rime), and "fully evolved" by today's evolutions, so no Magneton or Scyther (81 species) | 96 |
@@ -362,13 +362,13 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 
   | Build | Moves | Item |
   |---|---|---|
-  | Physical | Volt Tackle, Extreme Speed + 2 of Volt Switch, Electroweb, Knock Off, Iron Tail, Play Rough, Brick Break, Fake Out, Nuzzle, Thunder Wave | Light Ball; 25% a Pikanium Z (Catastropika) |
+  | Physical | Volt Tackle, Extreme Speed + 2 of Volt Switch, Electroweb, Knock Off, Iron Tail, Play Rough, Brick Break, Fake Out, Nuzzle, Thunder Wave | Light Ball; 20% a Pikanium Z (Catastropika: the only Pikachu that gets it) |
   | Special | Thunderbolt or Electro Ball, Volt Switch + 2 of Surf, Grass Knot, Focus Blast, Nasty Plot, Thunder Wave, Encore, Electroweb | Light Ball |
-  | Capped physical | Volt Tackle, Iron Tail, Quick Attack + 1 of Knock Off, Fly, Volt Switch, Thunder Wave, Brick Break, Electroweb | Light Ball; 25% a Pikanium Z |
-  | Capped special | Thunderbolt, Surf, Volt Switch + 1 of the special list | Light Ball; 50% a Pikashunium Z (10,000,000 Volt Thunderbolt) |
+  | Capped physical | Volt Tackle, Iron Tail, Quick Attack + 1 of Knock Off, Fly, Volt Switch, Thunder Wave, Brick Break, Electroweb | Light Ball |
+  | Capped special | Thunderbolt, Surf, Volt Switch + 1 of the special list | Light Ball; 20% a Pikashunium Z (10,000,000 Volt Thunderbolt) |
 
   The caps are the Original, Hoenn, Sinnoh, Unova, Kalos, Alola, Partner and
-  World caps. A Pikachu with a Z-Crystal has his one Z-Move (that day his
+  World caps. About 10% of his usual days his Pikachu holds a Z-Crystal (7.5% Pikanium Z, 2.5% Pikashunium Z). A Pikachu with a Z-Crystal has his one Z-Move (that day his
   legendary never holds a Z-Crystal and a Mega Mewtwo day's starter gets a
   regular set), always leads, and gets the totem aura: the expansion's totem
   boost ("The opposing Pikachu's aura flared to life!"), queued as his battle

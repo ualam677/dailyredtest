@@ -144,7 +144,7 @@ export function validateRed(party, rolls = null) {
       : (physical ? has('VOLT_TACKLE', 'EXTREME_SPEED') : (has('VOLT_SWITCH') && (has('THUNDERBOLT') || has('ELECTRO_BALL'))));
     if (!shape) problems.push(`Pikachu's moves (${pikachu.moveNames.join(', ')}) aren't a ${capped ? 'capped ' : ''}${physical ? 'physical' : 'special'} build`);
     if (new Set(pikachu.moves).size !== 4) problems.push('Pikachu has a move twice');
-    const items = ['LIGHT_BALL', ...(original ? [] : physical ? ['PIKANIUM_Z'] : capped ? ['PIKASHUNIUM_Z'] : [])].map(I);
+    const items = ['LIGHT_BALL', ...(original ? [] : physical && !capped ? ['PIKANIUM_Z'] : !physical && capped ? ['PIKASHUNIUM_Z'] : [])].map(I);
     if (!items.includes(pikachu.heldItem)) problems.push(`Pikachu holds ${item(pikachu.heldItem).name}`);
     if (pikachu.shiny) problems.push('Pikachu is shiny');
   }
