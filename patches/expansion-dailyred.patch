@@ -9712,7 +9712,7 @@ index 00000000..a8af713b
 +}
 diff --git a/src/dailyred_red.c b/src/dailyred_red.c
 new file mode 100644
-index 00000000..5e1d1d30
+index 00000000..ea17e11f
 --- /dev/null
 +++ b/src/dailyred_red.c
 @@ -0,0 +1,833 @@
@@ -9807,7 +9807,7 @@ index 00000000..5e1d1d30
 +#define PARADOX_DOG_ODDS    2 // the Johto dog's paradox; the rest (41%) is his bird
 +#define CAP_PIKACHU_ODDS   25 // of the days with his usual team
 +#define PIKANIUM_Z_ODDS    20 // of physical uncapped Pikachu on usual days (7.5% of days)
-+#define PIKASHUNIUM_Z_ODDS 20 // of special capped Pikachu on usual days (2.5% of days)
++#define PIKASHUNIUM_Z_ODDS 40 // of special capped Pikachu on usual days (5% of days)
 +#define STALL_WEIGHT_DIV   4  // stall sets' odds are cut to a quarter for RED
 +
 +#define LEVEL_PIKACHU       100
