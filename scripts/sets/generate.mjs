@@ -573,6 +573,14 @@ function sampleSource(list, source) {
   return { sets: sets.map((st) => ({ ...st, share: st.count / kept })), distinct };
 }
 
+// A stall set (RED takes at most one, see dailyred_red.c): Showdown's
+// staller and bulky support roles, and any set whose nature raises a defence
+// (its spread is built to take hits, not to attack).
+const DEFENSIVE_NATURES = new Set(['Bold', 'Impish', 'Lax', 'Relaxed', 'Calm', 'Careful', 'Gentle', 'Sassy']);
+function isStall(set, role) {
+  return role === 'Staller' || role === 'Bulky Support' || DEFENSIVE_NATURES.has(set.nature);
+}
+
 const startTime = Date.now();
 for (const list of lists) {
   // Each generation an equal share of the list; the lead sets LEAD_SHARE.
@@ -626,6 +634,7 @@ for (const list of lists.filter((l) => l.sets.length)) {
       ivs: set.ivs,
       teraType: typeConst(set.teraType),
       friendship: set.moves.includes('frustration') ? 0 : 255,
+      stall: isStall(set, role),
       weight: Math.max(1, Math.round((share * 255) / maxShare)),
       comment: `${role ? `${role}, ` : ''}${handWritten ? 'hand-written' : gen === CHAMPIONS ? 'Champions' : `Gen ${gen}`}, ${(100 * share).toFixed(share < 0.1 ? 1 : 0)}%`,
     });
@@ -689,11 +698,11 @@ lines.push(`#include "constants/species.h"`);
 lines.push(``);
 lines.push(`// species, item, ability, moves, nature, EVs (HP/Atk/Def/SpA/SpD/Spe), IVs`);
 lines.push(`// (same order; only Hidden Power's type uses them), Tera type, friendship,`);
-lines.push(`// weight within the list.`);
-lines.push(`#define SET(sp, it, ab, m1, m2, m3, m4, nat, evs_, ivs_, tera, fr, w) \\`);
+lines.push(`// weight within the list, and 1 for a stall set (RED takes at most one).`);
+lines.push(`#define SET(sp, it, ab, m1, m2, m3, m4, nat, evs_, ivs_, tera, fr, w, st) \\`);
 lines.push(`    {.species = SPECIES_##sp, .item = ITEM_##it, .ability = ABILITY_##ab, \\`);
 lines.push(`     .moves = {MOVE_##m1, MOVE_##m2, MOVE_##m3, MOVE_##m4}, .nature = NATURE_##nat, \\`);
-lines.push(`     .evs = evs_, .ivs = ivs_, .teraType = TYPE_##tera, .friendship = fr, .weight = w}`);
+lines.push(`     .evs = evs_, .ivs = ivs_, .teraType = TYPE_##tera, .friendship = fr, .weight = w, .stall = st}`);
 lines.push(`#define EVS(hp, atk, def, spa, spd, spe) {hp, atk, def, spa, spd, spe}`);
 lines.push(`#define IVS(hp, atk, def, spa, spd, spe) TRAINER_PARTY_IVS(hp, atk, def, spe, spa, spd)`);
 lines.push(``);
@@ -705,7 +714,7 @@ for (const l of outLists) {
     const s = outSets[l.firstSet + i];
     const moves = [...s.moves, 'MOVE_NONE', 'MOVE_NONE', 'MOVE_NONE'].slice(0, 4).map((m) => strip('MOVE_', m));
     const fields = [strip('SPECIES_', s.species), strip('ITEM_', s.item), strip('ABILITY_', s.ability), ...moves,
-      strip('NATURE_', s.nature), `EVS(${s.evs.join(', ')})`, `IVS(${s.ivs.join(', ')})`, strip('TYPE_', s.teraType), s.friendship, s.weight];
+      strip('NATURE_', s.nature), `EVS(${s.evs.join(', ')})`, `IVS(${s.ivs.join(', ')})`, strip('TYPE_', s.teraType), s.friendship, s.weight, s.stall ? 1 : 0];
     lines.push(`    SET(${fields.join(', ')}), // ${s.comment}`);
   }
 }

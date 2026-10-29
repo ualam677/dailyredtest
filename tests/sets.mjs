@@ -23,7 +23,7 @@ export function setLists() {
       const at = romOffset(symbol('gDailyRedSets')) + (r('firstSet') + j) * T.size;
       const s = (f) => field(rom(), at, 'DailyRedSet', f);
       sets.push({ species: s('species'), item: s('item'), ability: s('ability'), moves: s('moves'), evs: s('evs'),
-        nature: s('nature'), teraType: s('teraType'), ivs: s('ivs') });
+        nature: s('nature'), teraType: s('teraType'), ivs: s('ivs'), stall: s('stall') });
     }
     lists.push({ species: r('species'), kind: kinds[r('kind')], level: r('level'), sets });
   }
@@ -94,6 +94,14 @@ export function checkTeamLimits(mons, problems) {
 }
 
 const sameMoves = (a, b) => a.filter(Boolean).slice().sort().join() === b.filter(Boolean).slice().sort().join();
+
+// The set of its list a Pokemon carries, or undefined.
+export function setOf(mon, list) {
+  if (!list) return undefined;
+  const evs = [0, 1, 2, 4, 5, 3].map((i) => mon.evs[i]);
+  return list.sets.find((s) => s.species === mon.species && s.item === mon.heldItem && s.ability === mon.ability
+    && sameMoves(s.moves, mon.moves) && s.evs.join() === evs.join() && NATURES[s.nature] === mon.nature);
+}
 
 // Whether a Pokemon carries one of the sets of its list (moves, item, ability,
 // EVs, nature, Tera type); pushes a problem if not.

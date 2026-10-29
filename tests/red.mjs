@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { GAME_DIR, symbol, layout, value, field, rom, romOffset, id, constName, species, move, item } from './game.mjs';
 import { decodeMon } from './party.mjs';
-import { setLists, listFor, matchesList, checkStats, perfectStats, isZCrystal, isMegaStone, baseSpecies, typesOf, checkTeamLimits } from './sets.mjs';
+import { setOf, setLists, listFor, matchesList, checkStats, perfectStats, isZCrystal, isMegaStone, baseSpecies, typesOf, checkTeamLimits } from './sets.mjs';
 
 export { setLists, perfectStats };
 
@@ -126,19 +126,27 @@ export function validateRed(party, rolls = null) {
   const starters = mons.filter((m) => STARTERS.some((s) => S(s.name) === m.species));
   const pikachu = mons.find((m) => base(m.species) === S('PIKACHU'));
   const original = starters.length === 3;
-  // A capped Pikachu (CAP_PIKACHU_ODDS% of his usual days) holds a Pikanium
-  // Z and leads; otherwise Pikachu holds a Light Ball.
+  // Pikachu: capped on CAP_PIKACHU_ODDS% of his usual days; built physical
+  // or special from fixed moves; a Light Ball, or on his usual days
+  // sometimes a Z-Crystal (Pikanium Z: physical; Pikashunium Z: capped
+  // special), and then it leads with the totem aura.
   const capped = Boolean(pikachu && CAPS.includes(pikachu.species));
+  const pikachuZ = Boolean(pikachu && isZCrystal(pikachu.heldItem));
   if (rolls && pikachu && rolls.cap !== capped) problems.push(`capped Pikachu ${capped}, the seed's roll says ${rolls.cap}`);
   if (!pikachu) problems.push('no Pikachu');
   else {
-    if (original && capped) problems.push('a capped Pikachu on an original-team day');
+    const has = (...names) => names.every((n) => pikachu.moves.includes(M(n)));
+    if (original && (capped || pikachuZ)) problems.push('a capped or Z-Crystal Pikachu on an original-team day');
     if (pikachu.species !== S('PIKACHU') && !capped) problems.push(`Pikachu is ${pikachu.speciesName}`);
-    const wantItem = capped ? 'PIKANIUM_Z' : 'LIGHT_BALL';
-    if (pikachu.heldItem !== I(wantItem)) problems.push(`Pikachu doesn't hold a ${wantItem}`);
-    if (!pikachu.moves.includes(M('VOLT_TACKLE'))) problems.push('Pikachu has no Volt Tackle');
+    const physical = pikachu.moves.includes(M('VOLT_TACKLE'));
+    const shape = capped
+      ? (physical ? has('VOLT_TACKLE', 'IRON_TAIL', 'QUICK_ATTACK') : has('THUNDERBOLT', 'SURF', 'VOLT_SWITCH'))
+      : (physical ? has('VOLT_TACKLE', 'EXTREME_SPEED') : (has('VOLT_SWITCH') && (has('THUNDERBOLT') || has('ELECTRO_BALL'))));
+    if (!shape) problems.push(`Pikachu's moves (${pikachu.moveNames.join(', ')}) aren't a ${capped ? 'capped ' : ''}${physical ? 'physical' : 'special'} build`);
+    if (new Set(pikachu.moves).size !== 4) problems.push('Pikachu has a move twice');
+    const items = ['LIGHT_BALL', ...(original ? [] : physical ? ['PIKANIUM_Z'] : capped ? ['PIKASHUNIUM_Z'] : [])].map(I);
+    if (!items.includes(pikachu.heldItem)) problems.push(`Pikachu holds ${item(pikachu.heldItem).name}`);
     if (pikachu.shiny) problems.push('Pikachu is shiny');
-    matchesList({ ...pikachu, species: S('PIKACHU') }, listFor(S('PIKACHU'), capped ? 'ZMOVE' : 'NORMAL'), problems, 'Pikachu');
   }
 
   if (rolls && rolls.original !== original) problems.push(`original team ${original}, the seed's roll says ${rolls.original}`);
@@ -198,13 +206,14 @@ export function validateRed(party, rolls = null) {
       if (legend.level !== wantLevel) problems.push(`${legend.speciesName}: level ${legend.level}, expected ${wantLevel}`);
       if (kind === 'megaMewtwo') {
         matchesList(legend, listFor(MEGA_FORMES.get(legend.heldItem), 'MEGA'), problems, 'Mega Mewtwo');
-      } else if (kind === 'galarianBird' || kind === 'paradoxDog' || capped) {
+      } else if (kind === 'galarianBird' || kind === 'paradoxDog' || pikachuZ) {
         // The Galarian birds' sets are Gen 8 and the paradox dogs' Gen 9 (no
         // Z-Moves); a capped Pikachu has his Z-Move.
         matchesList(legend, listFor(sp, 'NORMAL'), problems, legend.speciesName);
         if (isMegaStone(legend.heldItem) || isZCrystal(legend.heldItem)) problems.push(`${legend.speciesName} holds ${item(legend.heldItem).name}`);
       } else if (kind) {
-        matchesList(legend, listFor(sp, 'ZMOVE'), problems, legend.speciesName);
+        // Its Z-Move sets, or its regular ones when those are all stall sets.
+        if (!setOf(legend, listFor(sp, 'ZMOVE'))) matchesList(legend, listFor(sp, 'NORMAL'), problems, legend.speciesName);
         if (isMegaStone(legend.heldItem)) problems.push(`${legend.speciesName} holds a Mega Stone`);
       }
     }
@@ -212,12 +221,11 @@ export function validateRed(party, rolls = null) {
     // The starter: its Mega Stone, or a regular set when Mewtwo Mega Evolves.
     if (starter) {
       if (starter.level !== LEVELS.starter) problems.push(`${starter.speciesName}: level ${starter.level}, expected ${LEVELS.starter}`);
-      if (kind === 'megaMewtwo' && capped) {
-        if (isZCrystal(starter.heldItem) || isMegaStone(starter.heldItem)) problems.push(`${starter.speciesName} holds ${item(starter.heldItem).name} on a Mega Mewtwo, capped-Pikachu day`);
+      if (kind === 'megaMewtwo' && pikachuZ) {
+        if (isZCrystal(starter.heldItem) || isMegaStone(starter.heldItem)) problems.push(`${starter.speciesName} holds ${item(starter.heldItem).name} on a Mega Mewtwo, Z-Pikachu day`);
         matchesList(starter, listFor(starter.species, 'NORMAL'), problems, starter.speciesName);
       } else if (kind === 'megaMewtwo') {
-        if (!isZCrystal(starter.heldItem)) problems.push(`${starter.speciesName} doesn't hold a Z-Crystal on a Mega Mewtwo day`);
-        matchesList(starter, listFor(starter.species, 'ZMOVE'), problems, starter.speciesName);
+        if (!setOf(starter, listFor(starter.species, 'ZMOVE'))) matchesList(starter, listFor(starter.species, 'NORMAL'), problems, starter.speciesName);
       } else {
         if (!info.stones.map(I).includes(starter.heldItem)) problems.push(`${starter.speciesName} doesn't hold its Mega Stone`);
         else matchesList(starter, listFor(MEGA_FORMES.get(starter.heldItem), 'MEGA'), problems, starter.speciesName);
@@ -251,7 +259,17 @@ export function validateRed(party, rolls = null) {
       }
     }
     if (picks.filter((m) => EEVEELUTIONS.includes(m.species)).length > 1) problems.push('more than one Eeveelution');
-    leaders = (capped ? [pikachu] : [pikachu, ...picks]).filter(Boolean); // the capped Pikachu always leads
+    leaders = (pikachuZ ? [pikachu] : [pikachu, ...picks]).filter(Boolean); // a Z-Crystal Pikachu always leads
+    // Hyper offense: one stall set at most.
+    const stall = [legend, starter, ...picks].filter((m) => {
+      if (!m) return false;
+      for (const kindName of ['NORMAL', 'ZMOVE', 'MEGA']) {
+        const st = setOf(m, listFor(kindName === 'MEGA' ? MEGA_FORMES.get(m.heldItem) : m.species, kindName));
+        if (st) return st.stall;
+      }
+      return false;
+    });
+    if (stall.length > 1) problems.push(`${stall.length} stall sets (${stall.map((m) => m.speciesName).join(', ')})`);
   }
 
   // One item held twice at most, one type shared at most.
