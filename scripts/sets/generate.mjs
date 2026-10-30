@@ -114,7 +114,7 @@ const Z_STARTERS = ['meganium', 'typhlosion', 'feraligatr', 'sceptile', 'blazike
 // one (Flare Meteor and Leaf Blade follow the user's stats, so any). See
 // "Signature moves" in the README.
 const SIGNATURE_MOVES = {
-  Venusaur: { id: 'drainplant', constant: 'MOVE_DRAIN_PLANT', type: 'Grass', category: 'Special' },
+  Venusaur: { id: 'drainingplant', constant: 'MOVE_DRAINING_PLANT', type: 'Grass', category: 'Special' },
   Blastoise: { id: 'twinpulse', constant: 'MOVE_TWIN_PULSE', type: 'Water', category: 'Special' },
   Charizard: { id: 'flaremeteor', constant: 'MOVE_FLARE_METEOR', type: 'Fire' },
   Meganium: { id: 'blightpetal', constant: 'MOVE_BLIGHT_PETAL', type: 'Grass', category: 'Special' },
