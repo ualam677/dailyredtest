@@ -772,14 +772,15 @@ def mega_typhlosion_icon():
     (art/mega-typhlosion/icon.png: its two 32x32 frames side by side, full
     colour), stacked into the game's 32x64 and put on icon palette 3 (the one
     Typhlosion uses, iconPalIndex 3). Each of the art's colours is pinned to a
-    palette colour by hand (the nearest by eye: its slate-navy back becomes
-    the palette's dark blue, its dark-red flame edges the outline), and any
-    other shade goes to the nearest of those art colours."""
+    palette colour by hand (the nearest by eye: its dark slate back becomes
+    the palette's charcoal grey, which keeps its darkness better than the
+    palette's brighter blue; its dark-red flame edges become the outline), and
+    any other shade goes to the nearest of those art colours."""
     src = Image.open(os.path.join(ROOT, 'art', 'mega-typhlosion', 'icon.png')).convert('RGBA')
     pal = read_jasc(os.path.join(GAME, 'graphics', 'pokemon', 'icon_palettes', 'pal3.pal'))
     anchors = {
-        (74, 82, 106): (65, 106, 148), (54, 55, 54): (65, 65, 65), (49, 49, 65): (65, 65, 65),
-        (32, 32, 41): (65, 65, 65), (85, 85, 83): (98, 98, 90), (247, 231, 132): (246, 246, 172),
+        (74, 82, 106): (98, 98, 90), (54, 55, 54): (65, 65, 65), (49, 49, 65): (65, 65, 65),
+        (32, 32, 41): (65, 65, 65), (85, 85, 83): (115, 115, 115), (247, 231, 132): (246, 246, 172),
         (212, 187, 99): (189, 164, 90), (173, 148, 74): (189, 164, 90), (156, 198, 198): (98, 148, 164),
         (198, 239, 247): (164, 197, 255), (207, 212, 209): (189, 189, 189), (252, 250, 250): (255, 255, 255),
         (239, 90, 41): (213, 98, 65), (255, 98, 0): (213, 98, 65), (158, 37, 10): (65, 65, 65),

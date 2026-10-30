@@ -133,7 +133,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Frostbite replaces freeze (as in Legends: Arceus): 1/16 HP a turn, special attacks do half damage. Its animation is poison's (a shake and a glow) in light blue, with the freeze sounds. Ice Punch, Ice Beam, Blizzard, Ice Fang and Freezing Glare have a 20% chance of it (was 10% freeze); Freeze-Dry and Powder Snow keep 10%, Tri Attack keeps its 20% of burn, paralysis or frostbite | `B_USE_FROSTBITE` in `include/config/battle.h`; `src/data/moves_info.h`; `gBattleAnimStatus_Frostbite` in `data/battle_anim_scripts.s` |
 | Aurora Beam is 75 power with a 30% chance of frostbite (was 65, 10% Attack drop); Chilling Water is 70 power with a 30% chance of frostbite (was 50, sure Attack drop); Scald is 70 power (was 80) | `src/data/moves_info.h` |
 | Sleep works as in Pokémon Champions: a sleeping Pokémon can't move on its first turn asleep, wakes on its second turn 1 time in 3, and always wakes on its third (Rest still sleeps 2 turns) | `B_SLEEP_TURNS` (`GEN_CHAMPIONS`) in `include/config/battle.h` |
-| Test seed 1234567 (practice only, never a daily game): RED has only his Pikachu, with a Light Ball and only Ice Beam, whose frostbite always lands | `DAILYRED_FROSTBITE_TEST_SEED` in `include/dailyred.h`; `MakeFrostbiteTestTeam` in `src/dailyred_red.c`; `CalcSecondaryEffectChance` in `src/battle_util.c` |
+| Test seed 1234567 (practice only, never a daily game), for trying out moves: your team is the six Kanto and Johto starters at level 100, each with its signature move (Blastoise and Typhlosion hold their Mega Stones), and RED has three level 100 Blissey that only know Splash | `DAILYRED_TEST_SEED` in `include/dailyred.h`; `sTestSeedTeam` in `src/dailyred_team.c`; `MakeTestSeedRedTeam` in `src/dailyred_red.c` |
 | Faster battle engine: battle scripts run several commands a frame until one has to wait (it ran one a frame), and get another pass in the same frame when a controller finishes at once | `RunBattleScriptCommands` and `BattleMainCB1` in `src/battle_main.c` |
 | Every move shows its current type in battle and in the summary (Hidden Power, Weather Ball, -ate abilities…) | `P_SHOW_DYNAMIC_TYPES` in `include/config/pokemon.h`; `MoveTypeShown` in `src/dailyred_summary.c` |
 
@@ -381,7 +381,7 @@ none of its own), and so is its cry (there's no Mega cry for it).
   sprites around them. Its party icon is also the owner's
   (`art/mega-typhlosion/icon.png`), put on the icon palette Typhlosion uses
   (`mega_typhlosion_icon()`; party icons share six fixed palettes, so its
-  slate-navy back comes out a little bluer); Typhlosionite's bag icon is the expansion's Feraligite (the Z-A Johto
+  dark slate back comes out charcoal grey); Typhlosionite's bag icon is the expansion's Feraligite (the Z-A Johto
   starters' stone) in the Mega's colours, a charcoal stone with a flame and
   cream swirl.
 
@@ -404,7 +404,7 @@ Changed moves:
 
 - **Leaf Blade** is physical or special by the user's higher attacking stat
   (like Photon Geyser), and makes contact only when physical.
-- **Blaze Kick:** 90 power (was 85), 95% accuracy (was 90%), 20% burn (was 10%).
+- **Blaze Kick:** 90 power (was 85), 95% accuracy (was 90%); 10% burn, as before.
 - **Muddy Water:** 90% accuracy (was 85%).
 - These three are now the Gen 3 starters' own: only the Treecko, Torchic and
   Mudkip families learn them, plus Leafeon and Gallade (Leaf Blade),
