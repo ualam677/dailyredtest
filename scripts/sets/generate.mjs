@@ -104,6 +104,30 @@ const INSURGENCE_MEGAS = [
 ];
 const Z_STARTERS = ['meganium', 'typhlosion', 'feraligatr', 'sceptile', 'blaziken', 'swampert'];
 
+// Daily Red's signature moves for the Kanto and Johto starters (and their
+// Megas), which Showdown doesn't have: a set of theirs gets its own in place
+// of its strongest attack of the same type and category (Charizard's Burning
+// Meteor, physical or special by its higher stat, takes either); a set
+// without one (Meganium's physical sets...) keeps its moves. Typhlosion's
+// Pyroclastic takes Work Up's place (its other sets, Choice ones, have no
+// slot for a status move). See "Signature moves" in the README.
+const SIGNATURE_MOVES = {
+  Venusaur: { id: 'havocbloom', constant: 'MOVE_HAVOC_BLOOM', type: 'Grass', category: 'Special' },
+  Blastoise: { id: 'twinpulse', constant: 'MOVE_TWIN_PULSE', type: 'Water', category: 'Special' },
+  Charizard: { id: 'burningmeteor', constant: 'MOVE_BURNING_METEOR', type: 'Fire' },
+  Meganium: { id: 'blightpetal', constant: 'MOVE_BLIGHT_PETAL', type: 'Grass', category: 'Special' },
+  Typhlosion: { id: 'pyroclastic', constant: 'MOVE_PYROCLASTIC', move: 'workup' },
+  Feraligatr: { id: 'jawcrash', constant: 'MOVE_JAW_CRASH', type: 'Water', category: 'Physical' },
+};
+const SIGNATURE_CONSTANTS = new Map(Object.values(SIGNATURE_MOVES).map((m) => [m.id, m.constant]));
+// The Gen 3 starters' moves that only their families (and these few) keep in
+// Daily Red; a set of anyone else's that has one is left out.
+const EXCLUSIVE_MOVES = {
+  leafblade: ['Treecko', 'Grovyle', 'Sceptile', 'Leafeon', 'Gallade'],
+  blazekick: ['Torchic', 'Combusken', 'Blaziken', 'Hitmonlee', 'Zapdos-Galar'],
+  muddywater: ['Mudkip', 'Marshtomp', 'Swampert', 'Barboach', 'Whiscash', 'Wooper', 'Quagsire'],
+};
+
 // Every final-stage starter of Generations 1-9 (their whole families are left
 // out of RED's random pick).
 const STARTER_ROOTS = new Set(['bulbasaur', 'charmander', 'squirtle', 'chikorita', 'cyndaquil', 'totodile',
@@ -221,6 +245,7 @@ const abilityConst = (name) => constant(ABILITIES, 'ABILITY_', ABILITY_ALIASES, 
 const typeConst = (name) => (name ? constant(TYPES, 'TYPE_', {}, name, 'type') : 'TYPE_NONE');
 function moveConst(dex, id) {
   if (id.startsWith('hiddenpower')) return 'MOVE_HIDDEN_POWER';
+  if (SIGNATURE_CONSTANTS.has(id)) return SIGNATURE_CONSTANTS.get(id);
   return constant(MOVES, 'MOVE_', MOVE_ALIASES, dex.moves.get(id).name, 'move');
 }
 
@@ -408,6 +433,33 @@ function forcePikachu(dex, set, list) {
   return { ...set, species: 'Pikachu', item: list.pikaniumZ ? 'Pikanium Z' : 'Light Ball', moves };
 }
 
+// A set with Daily Red's move rules (SIGNATURE_MOVES, EXCLUSIVE_MOVES): null
+// when it has a move its species doesn't keep.
+function signatureSet(dex, set) {
+  const species = dex.species.get(set.species);
+  const isMega = Boolean(species.forme?.startsWith('Mega'));
+  const name = isMega ? species.baseSpecies : species.name;
+  for (const [move, keepers] of Object.entries(EXCLUSIVE_MOVES)) {
+    if (set.moves.includes(move) && !keepers.includes(name)) return null;
+  }
+  const sig = !species.forme || isMega ? SIGNATURE_MOVES[species.baseSpecies] : null;
+  if (!sig || set.moves.includes(sig.id)) return set;
+  let slot = -1;
+  if (sig.move) {
+    slot = set.moves.indexOf(sig.move);
+  } else {
+    const attacks = set.moves.map((id, i) => ({ move: dex.moves.get(id), i }))
+      .filter(({ move }) => move.type === sig.type && move.category !== 'Status' && !move.id.startsWith('hiddenpower')
+        && (!sig.category || move.category === sig.category));
+    attacks.sort((a, b) => b.move.basePower - a.move.basePower);
+    if (attacks.length) slot = attacks[0].i;
+  }
+  if (slot < 0) return set;
+  const moves = [...set.moves];
+  moves[slot] = sig.id;
+  return { ...set, moves };
+}
+
 // Gimmick sets Daily Red leaves out (Showdown plays them, but they're odd in
 // a straight battle). Samples that hit one are dropped, so the remaining sets
 // keep Showdown's odds among themselves.
@@ -554,7 +606,9 @@ function handWrittenSet(lead) {
   const evTotal = Object.values(lead.evs).reduce((a, b) => a + b, 0);
   if (evTotal > 510) problems.push(`lead set ${lead.species}: ${evTotal} EVs`);
   const ivs = { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 };
-  return { set: canonicalSet(dexes.get(9), { ...lead, species: species.name, moves, ivs }), gen: 9, role: lead.role, handWritten: true };
+  const set = signatureSet(dexes.get(9), { ...lead, species: species.name, moves, ivs });
+  if (!set) return null;
+  return { set: canonicalSet(dexes.get(9), set), gen: 9, role: lead.role, handWritten: true };
 }
 const leadSetsBySpecies = new Map();
 for (const lead of LEAD_SETS) {
@@ -584,6 +638,11 @@ function sampleSource(list, source) {
     if (list.forceZ) set = addZCrystal(dex, set);
     set = forcePikachu(dex, set, list);
     set = competitiveSpread(dex, set);
+    set = signatureSet(dex, set);
+    if (!set) {
+      dropped.set('a move only the Gen 3 starters (and a few others) keep', (dropped.get('a move only the Gen 3 starters (and a few others) keep') ?? 0) + 1);
+      continue;
+    }
     if (list.insurgence) set = { ...set, item: list.insurgence.stone };
     const item = dex.items.get(set.item);
     if (list.kind === 'NORMAL' && (item.zMove || item.megaStone)) throw new Error(`${list.id}: NORMAL set holds ${set.item}`);
