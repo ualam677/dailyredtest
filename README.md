@@ -18,6 +18,7 @@ reimplemented in JavaScript.
 - [How it works](#how-it-works)
 - [Your team](#your-team)
   - [Mega Typhlosion (Pokémon Insurgence)](#mega-typhlosion-pokémon-insurgence)
+  - [Signature moves](#signature-moves)
 - [RED's team](#reds-team)
   - [Graphics](#graphics)
   - [Sets](#sets)
@@ -383,6 +384,61 @@ none of its own), and so is its cry (there's no Mega cry for it).
   slate-navy back comes out a little bluer); Typhlosionite's bag icon is the expansion's Feraligite (the Z-A Johto
   starters' stone) in the Mega's colours, a charcoal stone with a flame and
   cream swirl.
+
+### Signature moves
+
+The Kanto and Johto starters each have a signature move of Daily Red's own,
+which only they learn (at level 1, in every generation's learnset, Megas
+included; not Hisuian Typhlosion). The engine side is in the expansion:
+
+| Move | Starter | Type, category | Power | Acc. | What it does | Animation |
+|---|---|---|---|---|---|---|
+| Havoc Bloom | Venusaur | Grass, special | 85 | 100 | Seeds the target with Leech Seed on a hit | Frenzy Plant's roots, then Leech Seed's seeds |
+| Twin Pulse | Blastoise | Water, special | 40 ×2 | 100 | Hits twice; a pulse move, so Mega Launcher powers it up | Aurora Beam's rings in Water Pulse's blue, on a water background, water sounds; once per hit |
+| Burning Meteor | Charizard | Fire, physical or special by its higher attacking stat | 90 | 90 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2; 10% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red |
+| Blight Petal | Meganium | Grass, special, both foes | 80 | 100 | 40% chance of poison, paralysis, sleep or frostbite (one at random) | Heat Wave in green, with tumbling petals instead of sand |
+| Pyroclastic | Typhlosion | Fire, status, both foes | — | 95 | Lowers the foes' accuracy by 1, then raises the user's Speed by 1 | Eruption's blast, then smoke and ash (Haze's fog, darkened) instead of falling rocks |
+| Jaw Crash | Feraligatr | Water, physical | 130 | 95 | Turn 1: "slammed down its armored jaw!", Defense and Sp. Def +1. Turn 2: attacks. If the attack misses (or the target is protected or immune), the user loses that +1 Defense and Sp. Def | Turn 1: Skull Bash's charge, glowing blue. Turn 2: bubbles surround it, then Giga Impact |
+
+Changed moves:
+
+- **Leaf Blade** is physical or special by the user's higher attacking stat
+  (like Photon Geyser), and makes contact only when physical.
+- **Blaze Kick:** 90 power (was 85), 95% accuracy (was 90%), 20% burn (was 10%).
+- **Muddy Water:** 90% accuracy (was 85%).
+- These three are now the Gen 3 starters' own: only the Treecko, Torchic and
+  Mudkip families learn them, plus Leafeon and Gallade (Leaf Blade),
+  Hitmonlee and Galarian Zapdos (Blaze Kick), and Barboach, Whiscash, Wooper
+  and Quagsire (Muddy Water). Every other species lost them from its
+  level-up, egg and teachable learnsets.
+
+Where they are in the expansion: the moves in `src/data/moves_info.h` and
+`include/constants/moves.h` (after Gen 9's); the higher-stat category and
+contact in `IsDailyRedStatCategoryMove` (`SetDynamicMoveCategory`,
+`IsMoveMakingContact` in `src/battle_util.c`); Burning Meteor hitting Flying
+types in `CancelerTargetFailure` and Jaw Crash's lost boosts in
+`MoveEndMoveBlockRecoil` (`src/battle_move_resolution.c`); Pyroclastic's
+effect `EFFECT_PYROCLASTIC` (`BattleScript_EffectPyroclastic`); Blight Petal
+needs a fourth random effect (`MAX_RANDOM_ADDITIONAL_EFFECTS` in
+`include/move.h`); the animations at the end of the move animations in
+`data/battle_anim_scripts.s`, with Blight Petal's petal sprite in
+`src/dailyred_anims.c`; learnsets in `src/data/pokemon/level_up_learnsets/`,
+`egg_moves.h` and `all_learnables.json`. Their battle tests are in
+`test/battle/dailyred_signature_moves.c` (`make check
+TESTS=test/battle/dailyred_signature_moves.c`).
+
+**In the sets** (`signatureSet` in `scripts/sets/generate.mjs`): Showdown
+doesn't know these moves, so each set of a Kanto or Johto starter (or its
+Mega) gets its signature move in place of its strongest attack of the same
+type and category: Venusaur's special Grass attack, Blastoise's special Water
+attack, Charizard's Fire attack (either category: Burning Meteor follows its
+stats), Meganium's special Grass attack and Feraligatr's physical Water
+attack. A set with no such attack keeps its moves (Meganium's physical sets
+keep Petal Blizzard). Typhlosion's Pyroclastic takes Work Up's place, which
+only Mega Typhlosion's Work Up set has (its regular sets are Choice ones).
+Sets of any other species with Leaf Blade, Blaze Kick or Muddy Water are left
+out; that leaves Virizion, Kartana, Hisuian Lilligant, Hisuian Decidueye,
+Bellibolt and Iron Leaves with no sets, none of which Daily Red uses.
 
 ## RED's team
 
