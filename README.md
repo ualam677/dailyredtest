@@ -113,7 +113,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Team + warp to the summit instead of the bedroom | `src/new_game.c` → `DailyRed_InitNewGame` |
 | The summit: an open peak with no exits; stairs up to RED, who faces the drop | `data/maps/DailyRed_Summit/`, `data/layouts/DailyRed_Summit/` |
 | Snow on the summit, which carries into RED's battle as the Snow weather (for the whole battle, until a Pokémon changes the weather) | `data/maps/DailyRed_Summit/map.json`; overworld snow starts Snow in `TryFieldEffects` (`src/battle_util.c`, unchanged) |
-| Talking to RED → "…" → battle (he says "…!" if he loses, "…" if he wins) → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
+| Talking to RED: the wind fades out, he says "…" with his back to you, and turns around once you close the box → battle (he says "…!" if he loses, "…" if he wins) → "You defeated RED!" / "Your team was wiped out…" → record → "Play again tomorrow!" / "Try again tomorrow." → fade out | `data/maps/DailyRed_Summit/scripts.inc`; the `DailyRed_On*` specials in `src/dailyred.c` |
 | RED's "…" in his own box: a red frame and red text, so it reads as him speaking rather than a game message | `DailyRed_UseRedMessageBox` (`src/dailyred.c`), read by `GetOverworldTextboxPalettePtr` (`src/text_window.c`); `{COLOR RED}` in his line |
 | After a win, as in HGSS: a cut to black with the exit sound, and RED is gone when the screen comes back (he returns next run) | `data/maps/DailyRed_Summit/scripts.inc` |
 | RED's battle theme | `MUS_DAILYRED_VS_RED`, picked by his trainer class in `GetBattleBGM` (`src/pokemon.c`); see [RED's battle theme](#reds-battle-theme) |
@@ -128,7 +128,11 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Start menu as a shelf of icons; the BW-style Options, EV/IV screen and summary and the HGSS-style party screen, in red | `src/start_menu.c`, `src/option_menu.c`, `src/dailyred_eviv.c`, `src/dailyred_summary.c` (hooked from `ShowPokemonSummaryScreen`), `src/party_menu.c` and `src/data/party_menu.h`; see [Menus](#menus) |
 | No debug menus | `include/config/debug.h` |
 | Battle pacing: "X used Y!" prints in full, then a short beat, then the animation (the beats as they were before the faster engine); weather animations start as their message's last word prints, the Poké Ball throw and recall as "Go! X!" / "X, come back!" finish; Leftovers' message starts halfway through the healing sparkle and the HP bar fills while it prints; end-of-turn damage (poison, burn, frostbite, Curse, Nightmare, trapping moves, sandstorm and hail): its message, with the effect's animation starting as the last word prints, then the HP bar; ability pop-ups come up with their message, no pauses around them. A message that hands over early is never cut off: the next message, the next turn and the action menu wait until it has printed and been read. A and B don't hurry battle text | `GetEarlyStart`, `DailyRed_IsBattleTextHeld`, `Controller_WaitForHealSparkleHalf` in `src/battle_controllers.c`; `BattleScript_Attackstring` in `data/battle_scripts_1.s`; `canABSpeedUpPrint` in `src/battle_message.c`; each text printer reloads its own colours before drawing (`RunTextPrinters` in `src/text.c`) |
-| Shorter waits: the Snow weather's animation is about 1.25 s (was about 2.8 s; the Snowscape move keeps the long one) and weather messages don't pause before it; a switched-in Pokémon's cry no longer holds up the battle | `gBattleAnimGeneral_Snow` in `data/battle_anim_scripts.s`; `BtlController_HandleSwitchInSoundAndEnd` |
+| Shorter waits: the Snow weather's animation is about 1.75 s (was about 2.8 s; the Snowscape move keeps the long one), and its gust sound fades out half a second after the snowflakes finish (`AnimTask_FadeOutSoundEffects`) and weather messages don't pause before it; a switched-in Pokémon's cry no longer holds up the battle | `gBattleAnimGeneral_Snow` in `data/battle_anim_scripts.s`; `BtlController_HandleSwitchInSoundAndEnd` |
+| Frostbite replaces freeze (as in Legends: Arceus): 1/16 HP a turn, special attacks do half damage. Its animation is poison's (a shake and a glow) in light blue, with the freeze sounds. Ice Punch, Ice Beam, Blizzard, Ice Fang and Freezing Glare have a 20% chance of it (was 10% freeze); Freeze-Dry and Powder Snow keep 10%, Tri Attack keeps its 20% of burn, paralysis or frostbite | `B_USE_FROSTBITE` in `include/config/battle.h`; `src/data/moves_info.h`; `gBattleAnimStatus_Frostbite` in `data/battle_anim_scripts.s` |
+| Aurora Beam is 75 power with a 30% chance of frostbite (was 65, 10% Attack drop); Chilling Water is 70 power with a 30% chance of frostbite (was 50, sure Attack drop); Scald is 70 power (was 80) | `src/data/moves_info.h` |
+| Sleep works as in Pokémon Champions: a sleeping Pokémon can't move on its first turn asleep, wakes on its second turn 1 time in 3, and always wakes on its third (Rest still sleeps 2 turns) | `B_SLEEP_TURNS` (`GEN_CHAMPIONS`) in `include/config/battle.h` |
+| Test seed 1234567 (practice only, never a daily game): RED has only his Pikachu, with a Light Ball and only Ice Beam, whose frostbite always lands | `DAILYRED_FROSTBITE_TEST_SEED` in `include/dailyred.h`; `MakeFrostbiteTestTeam` in `src/dailyred_red.c`; `CalcSecondaryEffectChance` in `src/battle_util.c` |
 | Faster battle engine: battle scripts run several commands a frame until one has to wait (it ran one a frame), and get another pass in the same frame when a controller finishes at once | `RunBattleScriptCommands` and `BattleMainCB1` in `src/battle_main.c` |
 | Every move shows its current type in battle and in the summary (Hidden Power, Weather Ball, -ate abilities…) | `P_SHOW_DYNAMIC_TYPES` in `include/config/pokemon.h`; `MoveTypeShown` in `src/dailyred_summary.c` |
 
@@ -267,9 +271,9 @@ right after RED's (his starter decides yours), from the seed:
   (`LEGENDARY_TEAM_ODDS`): 1 team in 5 has exactly one, the rest none. It's
   never the legendary RED has that day, in any forme (his Galarian Moltres
   rules out Moltres). It's one of the Gen 1–3 legendaries (`sLegendaries`),
-  or on 6% of picks (`PARADOX_DOG_ODDS`) one of the Johto dogs' paradoxes,
-  Gouging Fire, Walking Wake or Raging Bolt (2% each, against about 4.5% for
-  each Gen 1–3 legendary).
+  or on 9% of picks (`PARADOX_DOG_ODDS`) one of the Johto dogs' paradoxes,
+  Gouging Fire, Walking Wake or Raging Bolt (3% each, so about 0.6% of
+  days each, against about 4.3% of picks for each Gen 1–3 legendary).
 - **5% of days mirror RED's team** (`MIRROR_RED_ODDS`): the starter, a
   **shiny Pikachu** (level 100, Light Ball and Volt Tackle, like his), a
   legendary for sure, and three more.
@@ -373,9 +377,10 @@ none of its own), and so is its cry (there's no Mega cry for it).
     greys) use the front's.
 
   They're GBA-style, so a little flatter than the expansion's DS-style
-  sprites around them. Its party icon is Typhlosion's with the Mega's
-  charcoal fur, a flame on its lower back and smoke over its neck flames;
-  Typhlosionite's bag icon is the expansion's Feraligite (the Z-A Johto
+  sprites around them. Its party icon is also the owner's
+  (`art/mega-typhlosion/icon.png`), put on the icon palette Typhlosion uses
+  (`mega_typhlosion_icon()`; party icons share six fixed palettes, so its
+  slate-navy back comes out a little bluer); Typhlosionite's bag icon is the expansion's Feraligite (the Z-A Johto
   starters' stone) in the Mega's colours, a charcoal stone with a flame and
   cream swirl.
 
@@ -394,17 +399,17 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
 | Slot | Pokémon | Level |
 |---|---|---|
 | Kanto starter | Venusaur, Charizard or Blastoise, holding its Mega Stone (Charizard: X or Y) | 99 |
-| Pikachu | always; Light Ball and Volt Tackle in every set. 10% of these days (`CAP_PIKACHU_ODDS`) it's a Pikachu in one of Ash's caps instead, holding a Pikanium Z (Catastropika), leading, and with a totem aura: +1 Attack, Defense, Sp. Atk, Sp. Def and Speed as the battle starts | 100 |
+| Pikachu | always; built physical or special (see below), in one of Ash's caps on 25% of these days (`CAP_PIKACHU_ODDS`). A Light Ball, or on about 12.5% of these days a Z-Crystal: then it leads, with a totem aura (+1 Attack, Defense, Sp. Atk, Sp. Def and Speed as the battle starts) | 100 |
 | Legendary | picked by the starter, see below | 99 |
 | Two from his pool | Poliwrath, Gyarados, Aerodactyl, Lapras, Snorlax, Vaporeon, Jolteon, Flareon, Espeon, Umbreon, Leafeon, Glaceon, Sylveon, Hitmonlee, Kabutops, Victreebel, Machamp, Arcanine, Gengar | 96 |
 | One from a Gen 1 family | any fully evolved Pokémon of the Gen 1 Pokédex, or a later Pokémon that evolves from one (Crobat, Scizor, Kingdra, Blissey, Magnezone, Kleavor, Annihilape…), except starters, Pikachu's family, legendaries and mythicals; no regional forms or their evolutions (no Sirfetch'd or Mr. Rime), and "fully evolved" by today's evolutions, so no Magneton or Scyther (81 species) | 96 |
 
 | Legendary roll | Odds | Venusaur | Charizard | Blastoise |
 |---|---|---|---|---|
-| His bird | 41% | Moltres | Articuno | Zapdos |
+| His bird | 43% | Moltres | Articuno | Zapdos |
 | Johto dog | 20% | Entei | Suicune | Raikou |
-| Paradox dog (`PARADOX_DOG_ODDS`) | 2% | Gouging Fire | Walking Wake | Raging Bolt |
-| Galarian bird | 15% | Galarian Moltres | Galarian Articuno | Galarian Zapdos |
+| Paradox dog (`PARADOX_DOG_ODDS`) | 5% | Gouging Fire | Walking Wake | Raging Bolt |
+| Galarian bird | 10% | Galarian Moltres | Galarian Articuno | Galarian Zapdos |
 | Mewtwo | 10% | | | |
 | Deoxys (any forme) | 5% | | | |
 | Mew (1% of days a shiny one) | 5% | | | |
@@ -416,19 +421,35 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
   Galarian birds or the paradox dogs: their sets are from Gen 8 and Gen 9,
   which have no Z-Moves). So RED has
   at most one Mega Evolution and one Z-Move.
-- **The capped Pikachu** (any of the Original, Hoenn, Sinnoh, Unova, Kalos,
-  Alola, Partner and World caps; never on original-team days) has his one
-  Z-Move: that day his legendary never holds a Z-Crystal and a Mega Mewtwo
-  day's starter gets a regular set. The expansion only gives Catastropika to
-  plain and Cosplay Pikachu, so `sSignatureZMoves` (`src/battle_z_move.c`)
-  adds the capped ones. Its totem aura is the expansion's totem boost ("The
-  opposing Pikachu's aura flared to life!"), queued as his battle starts
-  (`DailyRed_QueueRedTotemBoost`, called by the `DailyRed_OnBattleStart`
-  special). It lasts until Pikachu switches out, like any stat change.
+- **His Pikachu** is built, not picked from Showdown's sets (`AddPikachu` in
+  `dailyred_red.c`), physical (Jolly) or special (Timid) at 50/50, with
+  Lightning Rod:
+
+  | Build | Moves | Item |
+  |---|---|---|
+  | Physical | Volt Tackle, Extreme Speed + 2 of Volt Switch, Electroweb, Knock Off, Iron Tail, Play Rough, Brick Break, Fake Out, Nuzzle, Thunder Wave | Light Ball; 20% a Pikanium Z (Catastropika: the only Pikachu that gets it) |
+  | Special | Thunderbolt or Electro Ball, Volt Switch + 2 of Surf, Grass Knot, Focus Blast, Nasty Plot, Thunder Wave, Encore, Electroweb | Light Ball |
+  | Capped physical | Volt Tackle, Iron Tail, Quick Attack + 1 of Knock Off, Fly, Volt Switch, Thunder Wave, Brick Break, Electroweb | Light Ball |
+  | Capped special | Thunderbolt, Surf, Volt Switch + 1 of the special list | Light Ball; 40% a Pikashunium Z (10,000,000 Volt Thunderbolt) |
+
+  The caps are the Original, Hoenn, Sinnoh, Unova, Kalos, Alola, Partner and
+  World caps. About 12.5% of his usual days his Pikachu holds a Z-Crystal (7.5% Pikanium Z, 5% Pikashunium Z). A Pikachu with a Z-Crystal has his one Z-Move (that day his
+  legendary never holds a Z-Crystal and a Mega Mewtwo day's starter gets a
+  regular set), always leads, and gets the totem aura: the expansion's totem
+  boost ("The opposing Pikachu's aura flared to life!"), queued as his battle
+  starts (`DailyRed_QueueRedTotemBoost`, called by the
+  `DailyRed_OnBattleStart` special); it lasts until Pikachu switches out. The
+  expansion only gives Catastropika to plain and Cosplay Pikachu, so
+  `sSignatureZMoves` (`src/battle_z_move.c`) adds the capped ones.
+- **Hyper offense:** he takes at most one stall set (the set table marks
+  Showdown's staller and bulky support sets and any set whose nature raises
+  a defence), and stall sets' odds are cut to a quarter. When a legendary's
+  Z-Move sets are all stall sets (Zapdos's), it takes one of its regular
+  sets instead.
 - He leads with Pikachu or one of the three picks: one that sets entry
   hazards (Stealth Rock, Spikes, Toxic Spikes, Sticky Web, Stone Axe,
   Ceaseless Edge) if any does, otherwise at random. The starter and the
-  legendary never lead, and the capped Pikachu always does.
+  legendary never lead, and a Pikachu with a Z-Crystal always does.
 - The pool picks and the Gen 1 pick never hold a Mega Stone or a Z-Crystal.
   No two of those three share a type, and he has at most one Eeveelution.
 - The team limits apply to his six too (see [Your team](#your-team)): one
@@ -437,7 +458,7 @@ IVs maxed by hyper training (the real IVs keep Hidden Power's type).
   Electric), his three picks can't share any type with the rest.
 
 **5% of days ("HGSS days"), his original team** from HeartGold/SoulSilver, all level 100:
-Pikachu (never capped), Espeon or Lapras (50/50), Snorlax, Venusaur, Charizard and
+Pikachu (built as above, but never capped and always with a Light Ball), Espeon or Lapras (50/50), Snorlax, Venusaur, Charizard and
 Blastoise. The three starters share out Mega Evolution, a Z-Move and
 Terastallization at random, each with that gimmick's sets (Gen 7 for Mega and
 Z, Gen 9 for Tera, including its Tera type). Pikachu always leads, as in
@@ -561,10 +582,13 @@ equal share (Gen 7 is the last with Mega Evolution and Z-Moves; Gen 8 and 9
 bring newer items and moves: Heavy-Duty Boots, Assault Vest sets…). Mega and
 Z-Move lists come from Gen 7, Tera lists from Gen 9, and Mega Meganium and
 Mega Feraligatr from Showdown's Pokémon Champions Random Battles. Mega
-Typhlosion, which Showdown doesn't have, gets Typhlosion's own Random Battle
-sets (Gen 7 and 9) holding Typhlosionite in place of their Choice Specs or
-Scarf (`INSURGENCE_MEGAS` in the script): Eruption, Fire Blast and Focus
-Blast with Scorching Sands or Hidden Power (Grass or Rock), Timid.
+Typhlosion, which Showdown doesn't have, gets four hand-written sets
+(`INSURGENCE_MEGAS` in the script), since Typhlosion's own Random Battle sets
+are all Choice Specs or Choice Scarf ones: Eruption, Fire Blast, Focus Blast
+and Scorching Sands; Eruption, Flamethrower, Focus Blast and Shadow Ball; Work
+Up, Fire Blast, Focus Blast and Scorching Sands; and Sunny Day, Eruption, Solar
+Beam and Focus Blast (Blaze). All Timid, 252 Sp. Atk and Speed, checked against
+Typhlosion's learnset like the lead sets.
 
 **Lead sets.** Showdown's generators hardly make lead sets (a lead
 Aerodactyl gets a Focus Sash about 5% of the time), so
@@ -834,10 +858,10 @@ the back is FYTYNo1's
 which FYTYNo1 based on fan art by Tomycase, with its smoke extended and
 recoloured to share the front's palette. They're used with credit; Daily
 Red isn't affiliated with or endorsed by the Insurgence team or the artists.
-Mega Typhlosion's party icon is pokeemerald-expansion's Typhlosion icon, and
-Typhlosionite's icon its Feraligite icon (added to the expansion by
+Mega Typhlosion's party icon was supplied by the project's owner, and
+Typhlosionite's icon is pokeemerald-expansion's Feraligite icon (added to the expansion by
 kittenchilly, [rh-hideout/pokeemerald-expansion#9143](https://github.com/rh-hideout/pokeemerald-expansion/pull/9143)),
-both recoloured for Daily Red.
+recoloured for Daily Red.
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page

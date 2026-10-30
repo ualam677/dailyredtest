@@ -115,7 +115,7 @@ const STRUCTS = {
   Song: { type: 'struct Song', fields: ['header', 'ms', 'me'] },
   DailyRedSet: {
     type: 'struct DailyRedSet',
-    fields: ['ivs', 'species', 'item', 'ability', 'moves[]', 'evs[]', 'nature', 'teraType', 'friendship', 'weight'],
+    fields: ['ivs', 'species', 'item', 'ability', 'moves[]', 'evs[]', 'nature', 'teraType', 'friendship', 'weight', 'stall'],
   },
   DailyRedSetList: { type: 'struct DailyRedSetList', fields: ['species', 'firstSet', 'numSets', 'kind', 'level'] },
   DailyRedPickGroup: { type: 'struct DailyRedPickGroup', fields: ['first', 'count'] },

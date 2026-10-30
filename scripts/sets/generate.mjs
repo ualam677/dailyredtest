@@ -23,7 +23,7 @@
 //   MEGA    the sets of a Mega Evolution (Charizard-Mega-X...): the species to
 //           create is the base form, holding the stone. Pokemon Insurgence's
 //           Mega Typhlosion (INSURGENCE_MEGAS) has no Showdown sets of its
-//           own: it gets Typhlosion's, holding Typhlosionite.
+//           own: its sets are hand-written.
 //   ZMOVE   Z-Crystals: RED's legendaries' (Showdown's odds); the starters'
 //           always hold one (RED's Kanto starters; yours, when another of your
 //           Pokemon Mega Evolves): when the set has none, the one for its
@@ -86,14 +86,21 @@ const KANTO_STARTERS = ['venusaur', 'charizard', 'blastoise'];
 // with their stone, or a Z-Crystal when another of the team Mega Evolves.
 const LATER_MEGAS = ['meganiummega', 'feraligatrmega'];
 // Megas from Pokemon Insurgence that Daily Red adds to the expansion
-// (Typhlosion's, for your starter). Showdown doesn't have them, so each gets
-// its base species' Random Battle sets (the generations of its NORMAL list)
-// holding its Mega Stone in place of their item (Choice Specs and Scarf for
-// Typhlosion): the same moves, nature and EVs. `level` is the player's level
-// when it's one of the five (Typhlosion never is: it's only ever the starter,
-// at 100).
+// (Typhlosion's, for your starter). Showdown doesn't have them, so their sets
+// are hand-written (Typhlosion's own Random Battle sets are all Choice Specs
+// and Choice Scarf ones, which make no sense without the Choice item), checked
+// like the lead sets. `level` is the player's level when it's one of the five
+// (Typhlosion never is: it's only ever the starter, at 100).
+const MEGA_FAST_SPECIAL = { hp: 4, atk: 0, def: 0, spa: 252, spd: 0, spe: 252 };
 const INSURGENCE_MEGAS = [
-  { base: 'typhlosion', name: 'Typhlosion-Mega (Insurgence)', species: 'SPECIES_TYPHLOSION_MEGA', stone: 'Typhlosionite', level: 95 },
+  { base: 'typhlosion', name: 'Typhlosion-Mega (Insurgence)', species: 'SPECIES_TYPHLOSION_MEGA', stone: 'Typhlosionite', level: 95,
+    sets: [
+      // Hubris (Sp. Atk +1 on a KO) and no Choice lock: Eruption first, coverage after.
+      { ability: 'Flash Fire', moves: ['Eruption', 'Fire Blast', 'Focus Blast', 'Scorching Sands'], nature: 'Timid', role: 'Fast Attacker' },
+      { ability: 'Flash Fire', moves: ['Eruption', 'Flamethrower', 'Focus Blast', 'Shadow Ball'], nature: 'Timid', role: 'Fast Attacker' },
+      { ability: 'Flash Fire', moves: ['Work Up', 'Fire Blast', 'Focus Blast', 'Scorching Sands'], nature: 'Timid', role: 'Setup Sweeper' },
+      { ability: 'Blaze', moves: ['Sunny Day', 'Eruption', 'Solar Beam', 'Focus Blast'], nature: 'Timid', role: 'Setup Sweeper' },
+    ].map((st) => ({ species: 'Typhlosion', item: 'Typhlosionite', evs: MEGA_FAST_SPECIAL, ...st })) },
 ];
 const Z_STARTERS = ['meganium', 'typhlosion', 'feraligatr', 'sceptile', 'blaziken', 'swampert'];
 
@@ -533,23 +540,29 @@ function canLearn(speciesName, moveId) {
   }
   return false;
 }
-const leadSetsBySpecies = new Map();
-for (const lead of LEAD_SETS) {
+// A hand-written set, checked and in canonical form (null if it fails).
+function handWrittenSet(lead) {
   const species = Dex.species.get(lead.species);
-  if (!species.exists) { problems.push(`lead set: no species "${lead.species}" in Showdown`); continue; }
+  if (!species.exists) { problems.push(`lead set: no species "${lead.species}" in Showdown`); return null; }
   const moves = lead.moves.map(toID);
   moves.forEach((m, i) => {
     if (!Dex.moves.get(m).exists) problems.push(`lead set ${lead.species}: no move "${lead.moves[i]}" in Showdown`);
     else if (!canLearn(lead.species, m)) problems.push(`lead set ${lead.species}: can't learn ${lead.moves[i]}`);
   });
-  if (!Dex.items.get(lead.item).exists) problems.push(`lead set ${lead.species}: no item "${lead.item}" in Showdown`);
+  if (!Dex.items.get(lead.item).exists && !INSURGENCE_MEGAS.some((m) => m.stone === lead.item)) problems.push(`lead set ${lead.species}: no item "${lead.item}" in Showdown`);
   if (!Object.values(species.abilities).includes(lead.ability)) problems.push(`lead set ${lead.species}: can't have ${lead.ability}`);
   const evTotal = Object.values(lead.evs).reduce((a, b) => a + b, 0);
   if (evTotal > 510) problems.push(`lead set ${lead.species}: ${evTotal} EVs`);
   const ivs = { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 };
-  const c = canonicalSet(dexes.get(9), { ...lead, species: species.name, moves, ivs });
-  if (!leadSetsBySpecies.has(species.id)) leadSetsBySpecies.set(species.id, []);
-  leadSetsBySpecies.get(species.id).push({ set: c, gen: 9, role: lead.role, handWritten: true });
+  return { set: canonicalSet(dexes.get(9), { ...lead, species: species.name, moves, ivs }), gen: 9, role: lead.role, handWritten: true };
+}
+const leadSetsBySpecies = new Map();
+for (const lead of LEAD_SETS) {
+  const entry = handWrittenSet(lead);
+  if (!entry) continue;
+  const id = Dex.species.get(lead.species).id;
+  if (!leadSetsBySpecies.has(id)) leadSetsBySpecies.set(id, []);
+  leadSetsBySpecies.get(id).push(entry);
 }
 const leadsUsed = new Set();
 
@@ -591,12 +604,21 @@ function sampleSource(list, source) {
   return { sets: sets.map((st) => ({ ...st, share: st.count / kept })), distinct };
 }
 
+// A stall set (RED takes at most one, see dailyred_red.c): Showdown's
+// staller and bulky support roles, and any set whose nature raises a defence
+// (its spread is built to take hits, not to attack).
+const DEFENSIVE_NATURES = new Set(['Bold', 'Impish', 'Lax', 'Relaxed', 'Calm', 'Careful', 'Gentle', 'Sassy']);
+function isStall(set, role) {
+  return role === 'Staller' || role === 'Bulky Support' || DEFENSIVE_NATURES.has(set.nature);
+}
+
 const startTime = Date.now();
 for (const list of lists) {
   // Each generation an equal share of the list; the lead sets LEAD_SHARE.
-  const sampled = list.sources.map((source) => sampleSource(list, source)).filter((r) => r.sets.length);
-  const leads = list.kind === 'NORMAL' ? leadSetsBySpecies.get(list.species.id) ?? [] : [];
-  if (leads.length) leadsUsed.add(list.species.id);
+  const own = list.insurgence?.sets?.map(handWrittenSet).filter(Boolean);
+  const sampled = own ? [] : list.sources.map((source) => sampleSource(list, source)).filter((r) => r.sets.length);
+  const leads = own ?? (list.kind === 'NORMAL' ? leadSetsBySpecies.get(list.species.id) ?? [] : []);
+  if (leads.length && !own) leadsUsed.add(list.species.id);
   const showdownShare = leads.length ? 1 - LEAD_SHARE : 1;
   const merged = new Map();
   const add = (entry, share) => {
@@ -645,8 +667,9 @@ for (const list of lists.filter((l) => l.sets.length)) {
       ivs: set.ivs,
       teraType: typeConst(set.teraType),
       friendship: set.moves.includes('frustration') ? 0 : 255,
+      stall: isStall(set, role),
       weight: Math.max(1, Math.round((share * 255) / maxShare)),
-      comment: `${role ? `${role}, ` : ''}${handWritten ? 'hand-written' : gen === CHAMPIONS ? 'Champions' : `Gen ${gen}`}${list.insurgence ? ` ${list.species.name}'s` : ''}, ${(100 * share).toFixed(share < 0.1 ? 1 : 0)}%`,
+      comment: `${role ? `${role}, ` : ''}${handWritten ? 'hand-written' : gen === CHAMPIONS ? 'Champions' : `Gen ${gen}`}${list.insurgence && !handWritten ? ` ${list.species.name}'s` : ''}, ${(100 * share).toFixed(share < 0.1 ? 1 : 0)}%`,
     });
   }
   outLists.push({
@@ -692,7 +715,7 @@ lines.push(`//`);
 lines.push(`// Source: Pokémon Showdown ${PS_VERSION} (MIT license), Random Battle sets from`);
 lines.push(`// Gens 7, 8 and 9, each an equal share of a species' list (Mega and Z-Move lists`);
 lines.push(`// Gen 7, Tera lists Gen 9, Pokémon Champions for Mega Meganium and Mega`);
-lines.push(`// Feraligatr, Typhlosion's holding Typhlosionite for Pokémon Insurgence's Mega`);
+lines.push(`// Feraligatr, hand-written for Pokémon Insurgence's Mega`);
 lines.push(`// Typhlosion), and the hand-written lead sets of scripts/sets/lead-sets.mjs`);
 lines.push(`// (${LEAD_SHARE * 100}% of a list). ${SAMPLES} randomSet() calls per generation, sets under`);
 lines.push(`// ${MIN_SHARE * 100}% dropped, at most ${MAX_SETS} per generation.`);
@@ -710,23 +733,24 @@ lines.push(`#include "constants/species.h"`);
 lines.push(``);
 lines.push(`// species, item, ability, moves, nature, EVs (HP/Atk/Def/SpA/SpD/Spe), IVs`);
 lines.push(`// (same order; only Hidden Power's type uses them), Tera type, friendship,`);
-lines.push(`// weight within the list.`);
-lines.push(`#define SET(sp, it, ab, m1, m2, m3, m4, nat, evs_, ivs_, tera, fr, w) \\`);
+lines.push(`// weight within the list, and 1 for a stall set (RED takes at most one).`);
+lines.push(`#define SET(sp, it, ab, m1, m2, m3, m4, nat, evs_, ivs_, tera, fr, w, st) \\`);
 lines.push(`    {.species = SPECIES_##sp, .item = ITEM_##it, .ability = ABILITY_##ab, \\`);
 lines.push(`     .moves = {MOVE_##m1, MOVE_##m2, MOVE_##m3, MOVE_##m4}, .nature = NATURE_##nat, \\`);
-lines.push(`     .evs = evs_, .ivs = ivs_, .teraType = TYPE_##tera, .friendship = fr, .weight = w}`);
+lines.push(`     .evs = evs_, .ivs = ivs_, .teraType = TYPE_##tera, .friendship = fr, .weight = w, .stall = st}`);
 lines.push(`#define EVS(hp, atk, def, spa, spd, spe) {hp, atk, def, spa, spd, spe}`);
 lines.push(`#define IVS(hp, atk, def, spa, spd, spe) TRAINER_PARTY_IVS(hp, atk, def, spe, spa, spd)`);
 lines.push(``);
 lines.push(`const struct DailyRedSet gDailyRedSets[] =`);
 lines.push(`{`);
 for (const l of outLists) {
-  lines.push(`    // ${l.name}, ${l.kind} (${(l.gens ?? [l.gen]).map((g) => (g === CHAMPIONS ? 'Champions' : `Gen ${g}`)).join(', ')}${l.tierGen === 'Insurgence' ? ` ${l.base}'s` : ''})`);
+  const from = l.gens?.length === 0 ? 'hand-written' : `${(l.gens ?? [l.gen]).map((g) => (g === CHAMPIONS ? 'Champions' : `Gen ${g}`)).join(', ')}${l.tierGen === 'Insurgence' ? ` ${l.base}'s` : ''}`;
+  lines.push(`    // ${l.name}, ${l.kind} (${from})`);
   for (let i = 0; i < l.numSets; i++) {
     const s = outSets[l.firstSet + i];
     const moves = [...s.moves, 'MOVE_NONE', 'MOVE_NONE', 'MOVE_NONE'].slice(0, 4).map((m) => strip('MOVE_', m));
     const fields = [strip('SPECIES_', s.species), strip('ITEM_', s.item), strip('ABILITY_', s.ability), ...moves,
-      strip('NATURE_', s.nature), `EVS(${s.evs.join(', ')})`, `IVS(${s.ivs.join(', ')})`, strip('TYPE_', s.teraType), s.friendship, s.weight];
+      strip('NATURE_', s.nature), `EVS(${s.evs.join(', ')})`, `IVS(${s.ivs.join(', ')})`, strip('TYPE_', s.teraType), s.friendship, s.weight, s.stall ? 1 : 0];
     lines.push(`    SET(${fields.join(', ')}), // ${s.comment}`);
   }
 }
