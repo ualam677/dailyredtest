@@ -38,6 +38,24 @@ Graphics in the ROM
   (BPRE_HGSS.ips; author not named in the release).
   These are recoloured red for Daily Red.
   The text font: Pokémon FireRed's, from pret/pokefirered.
+  Mega Typhlosion's battle sprites (Pokémon Insurgence's design, see
+  below): supplied by the project's owner. The back is FYTYNo1's Mega
+  Typhlosion GBA sprite
+  (https://www.deviantart.com/fytyno1/art/Mega-Typhlosion-GBA-sprite-687447672),
+  based on fan art by Tomycase, with its smoke extended and recoloured to
+  match. Its party icon:
+  pokeemerald-expansion's Typhlosion icon, recoloured. Typhlosionite's icon:
+  pokeemerald-expansion's Feraligite icon (by kittenchilly,
+  https://github.com/rh-hideout/pokeemerald-expansion/pull/9143), recoloured.
+
+Mega Typhlosion, its ability Hubris and Typhlosionite
+  From Pokémon Insurgence (https://p-insurgence.com), a free fan game by the
+  Pokémon Insurgence team: lead developer 1ofthe4rocketbros, previous lead
+  developer TheSuzerain, programmer Deukhoofd, lead artist EchoTheThird and
+  its other artists. Its design, stats, ability and Mega Stone are theirs, as
+  the Pokémon Insurgence wiki gives them
+  (https://wiki.p-insurgence.com/Typhlosion_(Pok%C3%A9mon)). Used with
+  credit; Daily Red isn't affiliated with or endorsed by the Insurgence team.
 
 Sound in the ROM
   The summit's wind: from Pokémon HeartGold/SoulSilver's Mt. Silver.

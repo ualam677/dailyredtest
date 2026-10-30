@@ -21,12 +21,14 @@
 //   NORMAL  no Z-Crystal and no Mega Stone (Showdown's sets for a team that
 //           already has its Z-Move user). Every species has one.
 //   MEGA    the sets of a Mega Evolution (Charizard-Mega-X...): the species to
-//           create is the base form, holding the stone.
+//           create is the base form, holding the stone. Pokemon Insurgence's
+//           Mega Typhlosion (INSURGENCE_MEGAS) has no Showdown sets of its
+//           own: it gets Typhlosion's, holding Typhlosionite.
 //   ZMOVE   Z-Crystals: RED's legendaries' (Showdown's odds); the starters'
 //           always hold one (RED's Kanto starters; yours, when another of your
-//           Pokemon Mega Evolves, and Typhlosion, which has no Mega): when the
-//           set has none, the one for its strongest STAB type. RED's capped
-//           Pikachu's: a Pikanium Z and Volt Tackle.
+//           Pokemon Mega Evolves): when the set has none, the one for its
+//           strongest STAB type. RED's capped Pikachu's: a Pikanium Z and Volt
+//           Tackle.
 //   TERA    Gen 9 sets with their Tera type, for the Kanto starters.
 //
 // The ROM gives every Pokemon perfect stats (all IVs maxed by hyper training),
@@ -81,9 +83,18 @@ const RED_LEGENDARIES = ['articuno', 'zapdos', 'moltres', 'raikou', 'entei', 'su
   'deoxys', 'deoxysattack', 'deoxysdefense', 'deoxysspeed'];
 const KANTO_STARTERS = ['venusaur', 'charizard', 'blastoise'];
 // The player's starter, picked to counter RED's (see dailyred_team.c): Megas
-// with their stone, or a Z-Crystal when another of the team Mega Evolves
-// (Typhlosion, which has no Mega, always).
+// with their stone, or a Z-Crystal when another of the team Mega Evolves.
 const LATER_MEGAS = ['meganiummega', 'feraligatrmega'];
+// Megas from Pokemon Insurgence that Daily Red adds to the expansion
+// (Typhlosion's, for your starter). Showdown doesn't have them, so each gets
+// its base species' Random Battle sets (the generations of its NORMAL list)
+// holding its Mega Stone in place of their item (Choice Specs and Scarf for
+// Typhlosion): the same moves, nature and EVs. `level` is the player's level
+// when it's one of the five (Typhlosion never is: it's only ever the starter,
+// at 100).
+const INSURGENCE_MEGAS = [
+  { base: 'typhlosion', name: 'Typhlosion-Mega (Insurgence)', species: 'SPECIES_TYPHLOSION_MEGA', stone: 'Typhlosionite', level: 95 },
+];
 const Z_STARTERS = ['meganium', 'typhlosion', 'feraligatr', 'sceptile', 'blaziken', 'swampert'];
 
 // Every final-stage starter of Generations 1-9 (their whole families are left
@@ -280,6 +291,12 @@ for (const id of KANTO_STARTERS) {
 }
 for (const id of LATER_MEGAS) lists.push({ id, gen: CHAMPIONS, kind: 'MEGA', species: Dex.species.get(id), details: {}, sources: [{ gen: CHAMPIONS, id }] });
 for (const id of Z_STARTERS) lists.push({ id, gen: 7, kind: 'ZMOVE', species: dexes.get(7).species.get(id), details: {}, forceZ: true, sources: [{ gen: 7, id }] });
+for (const mega of INSURGENCE_MEGAS) {
+  const base = normalSources.get(mega.base);
+  if (!base) throw new Error(`${mega.name}: no Showdown sets for ${mega.base}`);
+  lists.push({ id: mega.base, gen: base.sources[0].gen, kind: 'MEGA', species: base.species, details: { zMove: 1 },
+    sources: base.sources.filter((src) => !src.onlyDynamax), insurgence: mega });
+}
 
 // The player's level for each species, from its Gen 7 Showdown tier (Gen 8,
 // then Gen 9, for species Gen 7 doesn't have): the stronger the tier, the
@@ -554,6 +571,7 @@ function sampleSource(list, source) {
     if (list.forceZ) set = addZCrystal(dex, set);
     set = forcePikachu(dex, set, list);
     set = competitiveSpread(dex, set);
+    if (list.insurgence) set = { ...set, item: list.insurgence.stone };
     const item = dex.items.get(set.item);
     if (list.kind === 'NORMAL' && (item.zMove || item.megaStone)) throw new Error(`${list.id}: NORMAL set holds ${set.item}`);
     if (list.kind !== 'TERA') set = { ...set, teraType: undefined };
@@ -609,7 +627,8 @@ const outLists = [];
 const outSets = [];
 const noSets = lists.filter((l) => !l.sets.length).map((l) => l.species.name);
 for (const list of lists.filter((l) => l.sets.length)) {
-  const key = speciesConst(list.species.name);
+  const key = list.insurgence ? constant(SPECIES, 'SPECIES_', { [list.insurgence.name]: list.insurgence.species }, list.insurgence.name, 'species')
+    : speciesConst(list.species.name);
   const firstSet = outSets.length;
   const maxShare = Math.max(...list.sets.map((st) => st.share));
   for (const { set, share, role, gen, handWritten } of list.sets) {
@@ -627,11 +646,11 @@ for (const list of lists.filter((l) => l.sets.length)) {
       teraType: typeConst(set.teraType),
       friendship: set.moves.includes('frustration') ? 0 : 255,
       weight: Math.max(1, Math.round((share * 255) / maxShare)),
-      comment: `${role ? `${role}, ` : ''}${handWritten ? 'hand-written' : gen === CHAMPIONS ? 'Champions' : `Gen ${gen}`}, ${(100 * share).toFixed(share < 0.1 ? 1 : 0)}%`,
+      comment: `${role ? `${role}, ` : ''}${handWritten ? 'hand-written' : gen === CHAMPIONS ? 'Champions' : `Gen ${gen}`}${list.insurgence ? ` ${list.species.name}'s` : ''}, ${(100 * share).toFixed(share < 0.1 ? 1 : 0)}%`,
     });
   }
   outLists.push({
-    name: list.species.name,
+    name: list.insurgence?.name ?? list.species.name,
     gen: list.gen,
     gens: list.gens,
     kind: list.kind,
@@ -641,6 +660,7 @@ for (const list of lists.filter((l) => l.sets.length)) {
     numSets: outSets.length - firstSet,
     randomPick: isRandomPick(list) && !SPECIES_SPECIAL.has(SPECIES.get(key)),
     ...(() => {
+      if (list.insurgence) return { tier: 'not on Showdown', tierGen: 'Insurgence', level: list.insurgence.level };
       const { tier, gen } = tierOf(list.species);
       return { tier, tierGen: gen, level: tierLevel(tier) };
     })(),
@@ -672,7 +692,8 @@ lines.push(`//`);
 lines.push(`// Source: Pokémon Showdown ${PS_VERSION} (MIT license), Random Battle sets from`);
 lines.push(`// Gens 7, 8 and 9, each an equal share of a species' list (Mega and Z-Move lists`);
 lines.push(`// Gen 7, Tera lists Gen 9, Pokémon Champions for Mega Meganium and Mega`);
-lines.push(`// Feraligatr), and the hand-written lead sets of scripts/sets/lead-sets.mjs`);
+lines.push(`// Feraligatr, Typhlosion's holding Typhlosionite for Pokémon Insurgence's Mega`);
+lines.push(`// Typhlosion), and the hand-written lead sets of scripts/sets/lead-sets.mjs`);
 lines.push(`// (${LEAD_SHARE * 100}% of a list). ${SAMPLES} randomSet() calls per generation, sets under`);
 lines.push(`// ${MIN_SHARE * 100}% dropped, at most ${MAX_SETS} per generation.`);
 lines.push(`// Gimmick sets left out (gimmickReason in the script): ${[...dropped.keys()].join('; ')}.`);
@@ -700,7 +721,7 @@ lines.push(``);
 lines.push(`const struct DailyRedSet gDailyRedSets[] =`);
 lines.push(`{`);
 for (const l of outLists) {
-  lines.push(`    // ${l.name}, ${l.kind} (${(l.gens ?? [l.gen]).map((g) => (g === CHAMPIONS ? 'Champions' : `Gen ${g}`)).join(', ')})`);
+  lines.push(`    // ${l.name}, ${l.kind} (${(l.gens ?? [l.gen]).map((g) => (g === CHAMPIONS ? 'Champions' : `Gen ${g}`)).join(', ')}${l.tierGen === 'Insurgence' ? ` ${l.base}'s` : ''})`);
   for (let i = 0; i < l.numSets; i++) {
     const s = outSets[l.firstSet + i];
     const moves = [...s.moves, 'MOVE_NONE', 'MOVE_NONE', 'MOVE_NONE'].slice(0, 4).map((m) => strip('MOVE_', m));
@@ -721,7 +742,8 @@ lines.push(``);
 lines.push(`const struct DailyRedSetList gDailyRedSetLists[] =`);
 lines.push(`{`);
 outLists.forEach((l, i) => {
-  lines.push(`    [${i}] = {.species = ${l.species}, .firstSet = ${l.firstSet}, .numSets = ${l.numSets}, .kind = DAILYRED_SETS_${l.kind}, .level = ${l.level}}, // ${l.name}, Gen ${l.tierGen} ${l.tier}`);
+  const tier = l.tierGen === 'Insurgence' ? `Pokémon Insurgence, ${l.tier}` : `Gen ${l.tierGen} ${l.tier}`;
+  lines.push(`    [${i}] = {.species = ${l.species}, .firstSet = ${l.firstSet}, .numSets = ${l.numSets}, .kind = DAILYRED_SETS_${l.kind}, .level = ${l.level}}, // ${l.name}, ${tier}`);
 });
 lines.push(`};`);
 lines.push(``);
