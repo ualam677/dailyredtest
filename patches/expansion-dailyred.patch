@@ -327,7 +327,7 @@ index f514f23b..9efb937a 100644
  gBattleAnimGeneral_Fog::
  	goto gBattleAnimMove_Haze
 diff --git a/data/battle_scripts_1.s b/data/battle_scripts_1.s
-index 4745ed0f..586ea13f 100644
+index 4745ed0f..ba99a251 100644
 --- a/data/battle_scripts_1.s
 +++ b/data/battle_scripts_1.s
 @@ -80,6 +80,21 @@ BattleScript_EffectStatChange::
@@ -929,7 +929,23 @@ index 4745ed0f..586ea13f 100644
  	return
  
  BattleScript_SelectingNotAllowedMoveChoiceItem::
-@@ -5989,7 +5962,6 @@ BattleScript_MoveEffectDamageNonTypes::
+@@ -5508,6 +5481,15 @@ BattleScript_ActionSelectionItemsCantBeUsed::
+ 	printselectionstring STRINGID_ITEMSCANTBEUSEDNOW
+ 	endselectionscript
+ 
++@ Daily Red: the Bag in battle (DailyRed_GetBagSelectionScript).
++BattleScript_DailyRedNoItems::
++	printselectionstring STRINGID_DAILYREDNOITEMS
++	endselectionscript
++
++BattleScript_DailyRedBegging::
++	printselectionstring STRINGID_DAILYREDBEGGING
++	endselectionscript
++
+ BattleScript_FlushMessageBox::
+ 	flushtextbox
+ 	return
+@@ -5989,7 +5971,6 @@ BattleScript_MoveEffectDamageNonTypes::
  
  BattleScript_DamageNonTypesContinues::
  	printfromtable gDamageNonTypesDmgStringIds
@@ -937,7 +953,7 @@ index 4745ed0f..586ea13f 100644
  	effectivenesssound
  	hitanimation BS_ATTACKER
  	goto BattleScript_DoTurnDmg
-@@ -6300,7 +6272,6 @@ BattleScript_BerserkGene_SafeguardProtected::
+@@ -6300,7 +6281,6 @@ BattleScript_BerserkGene_SafeguardProtected::
  	waitmessage B_WAIT_TIME_LONG
  	goto BattleScript_BerserkGene_End
  BattleScript_BerserkGene_OwnTempoPrevents:
@@ -945,7 +961,7 @@ index 4745ed0f..586ea13f 100644
  	call BattleScript_AbilityPopUpScripting
  	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
  	waitmessage B_WAIT_TIME_LONG
-@@ -6353,9 +6324,15 @@ BattleScript_ForfeitBattleGaveMoney::
+@@ -6353,9 +6333,15 @@ BattleScript_ForfeitBattleGaveMoney::
  	waitmessage B_WAIT_TIME_LONG
  	end
  
@@ -4404,14 +4420,16 @@ index f9fe8bbe..1b2c355c 100644
  extern const u8 gBattleAnimMove_AllOutPummeling[];
  extern const u8 gBattleAnimMove_SupersonicSkystrike[];
 diff --git a/include/battle_scripts.h b/include/battle_scripts.h
-index f52800db..c7d90adb 100644
+index f52800db..7b9b68a2 100644
 --- a/include/battle_scripts.h
 +++ b/include/battle_scripts.h
-@@ -618,6 +618,8 @@ extern const u8 BattleScript_EffectMoonlight[];
+@@ -618,6 +618,10 @@ extern const u8 BattleScript_EffectMoonlight[];
  extern const u8 BattleScript_MegaSolActivatesHealing[];
  extern const u8 BattleScript_EffectWeather[];
  extern const u8 BattleScript_EffectStatChange[];
 +extern const u8 BattleScript_EffectPyroclastic[]; // Daily Red
++extern const u8 BattleScript_DailyRedNoItems[];   // Daily Red
++extern const u8 BattleScript_DailyRedBegging[];   // Daily Red
 +extern const u8 BattleScript_JawCrashMissed[];    // Daily Red
  extern const u8 BattleScript_EffectStatChangeHalfHp[];
  extern const u8 BattleScript_EffectPsychUp[];
@@ -4441,7 +4459,7 @@ index 55f5b4cb..4e759335 100644
  bool32 MoveEffectIsGuaranteed(enum BattlerId battler, enum Ability battlerAbility, const struct AdditionalEffect *additionalEffect);
  void GetBattlerTypes(enum BattlerId battler, bool32 ignoreTera, enum Type types[static 3]);
 diff --git a/include/config/battle.h b/include/config/battle.h
-index b29ee42a..bd8ead17 100644
+index b29ee42a..ac017ec7 100644
 --- a/include/config/battle.h
 +++ b/include/config/battle.h
 @@ -58,7 +58,7 @@
@@ -4462,6 +4480,15 @@ index b29ee42a..bd8ead17 100644
  
  // Terrain settings
  #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.
+@@ -356,7 +356,7 @@
+ #define B_HIDE_HEALTHBOX_IN_ANIMS           TRUE       // If set to TRUE, healthboxes will be hidden during move animations.
+ #define B_WAIT_TIME_MULTIPLIER              16         // This determines how long text pauses for in battle. Vanilla is 16. Lower values result in faster battles.
+ #define B_QUICK_MOVE_CURSOR_TO_RUN          FALSE      // If set to TRUE, pushing B in the battle menu in a wild encounter will move the cursor to the Run option.
+-#define B_RUN_TRAINER_BATTLE                TRUE       // If set to TRUE, players can run from Trainer battles as in Gen9+. This is treated as a white out.
++#define B_RUN_TRAINER_BATTLE                FALSE      // Daily Red: off (no running from RED, the traditional message). If set to TRUE, players can run from Trainer battles as in Gen9+. This is treated as a white out.
+ #define B_MOVE_DESCRIPTION_BUTTON           L_BUTTON   // If set to a button other than B_LAST_USED_BALL_BUTTON, pressing this button will open the move description menu.
+ #define B_SHOW_USELESS_Z_MOVE_INFO          FALSE      // If set to TRUE, Z-Moves without additional effects, like newer generation status moves, will say "No additional effect."
+ #define B_ANIMATE_MON_AFTER_KO              TRUE       // If set to TRUE, if a Pokémon on the opposing side faints, the non-fainted Pokémon will play their animations.
 @@ -386,11 +386,11 @@
  // Other settings
  #define B_MULTI_BATTLE_WHITEOUT         GEN_LATEST // In Gen4+, Multi Battles end when the player as well as their partner don't have any Pokémon left.
@@ -4542,14 +4569,16 @@ index 5def78aa..8bb63e18 100644
  };
  
 diff --git a/include/constants/battle_string_ids.h b/include/constants/battle_string_ids.h
-index a1214e31..9d21bd8b 100644
+index a1214e31..0d11ca09 100644
 --- a/include/constants/battle_string_ids.h
 +++ b/include/constants/battle_string_ids.h
-@@ -725,6 +725,7 @@ enum StringID
+@@ -725,6 +725,9 @@ enum StringID
      STRINGID_S,
      STRINGID_LOSTSOMEOFITSHP,
      STRINGID_BELCHCANTUSE,
 +    STRINGID_JAWCRASHCHARGE, // Daily Red
++    STRINGID_DAILYREDNOITEMS, // Daily Red
++    STRINGID_DAILYREDBEGGING, // Daily Red
      STRINGID_COUNT
  };
  
@@ -4722,10 +4751,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..da35101f
+index 00000000..20ada2e4
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,138 @@
+@@ -0,0 +1,139 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -4756,6 +4785,7 @@ index 00000000..da35101f
 +const u16 *DailyRed_GetMessageBoxPalette(void);
 +u16 DailyRed_IsDailyGame(void);
 +bool32 DailyRed_IsOnSummit(void);
++const u8 *DailyRed_GetBagSelectionScript(void);
 +// A practice seed (never a daily game) for testing moves: your team is the six
 +// Kanto and Johto starters, each with its signature move (sTestSeedTeam in
 +// dailyred_team.c), and RED has three Blissey that only know Splash
@@ -9046,7 +9076,7 @@ index 69099bc4..0be0a9e9 100644
          LoadSpritePalette(&sSpritePalette_AbilityPopUp);
  
 diff --git a/src/battle_main.c b/src/battle_main.c
-index 46af80f3..047949e7 100644
+index 46af80f3..17cf6c0c 100644
 --- a/src/battle_main.c
 +++ b/src/battle_main.c
 @@ -1,4 +1,5 @@
@@ -9110,7 +9140,24 @@ index 46af80f3..047949e7 100644
  }
  
  static void ClearSetBScriptingStruct(void)
-@@ -5461,10 +5495,29 @@ void RunBattleScriptCommands_PopCallbacksStack(void)
+@@ -3913,6 +3947,16 @@ static void HandleTurnActionSelectionState(void)
+                     }
+                     break;
+                 case B_ACTION_USE_ITEM:
++                    // Daily Red: there are no items; the Bag only answers back.
++                    if (!gTestRunnerEnabled && IsOnPlayerSide(battler))
++                    {
++                        RecordedBattle_ClearBattlerAction(battler, 1);
++                        gSelectionBattleScripts[battler] = DailyRed_GetBagSelectionScript();
++                        gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
++                        gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
++                        gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
++                        return;
++                    }
+                     if (ShouldBattleRestrictionsApply(battler) && !IsAllowedToUseBag())
+                     {
+                         RecordedBattle_ClearBattlerAction(battler, 1);
+@@ -5461,10 +5505,29 @@ void RunBattleScriptCommands_PopCallbacksStack(void)
      }
  }
  
@@ -9143,7 +9190,7 @@ index 46af80f3..047949e7 100644
  
  enum Type TrySetAteType(enum Move move, enum BattlerId battlerAtk, enum Ability attackerAbility)
 diff --git a/src/battle_message.c b/src/battle_message.c
-index 680ea2d1..5de74df5 100644
+index 680ea2d1..3fc8a709 100644
 --- a/src/battle_message.c
 +++ b/src/battle_message.c
 @@ -1,4 +1,6 @@
@@ -9153,15 +9200,17 @@ index 680ea2d1..5de74df5 100644
  #include "battle.h"
  #include "battle_anim.h"
  #include "battle_ai_record.h"
-@@ -904,6 +906,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
+@@ -904,6 +906,9 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
      [STRINGID_S]                                    = COMPOUND_STRING("s"),
      [STRINGID_LOSTSOMEOFITSHP]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} lost some of its HP!"),
      [STRINGID_BELCHCANTUSE]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} hasn't eaten any held Berries, so it can't possibly belch!\p"),
 +    [STRINGID_JAWCRASHCHARGE]                       = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} slammed down its armored jaw!"), // Daily Red
++    [STRINGID_DAILYREDNOITEMS]                      = COMPOUND_STRING("But there were no items to use...{PAUSE 64}"), // Daily Red
++    [STRINGID_DAILYREDBEGGING]                      = COMPOUND_STRING("Would you say you're begging it?{PAUSE 64}"), // Daily Red
  };
  
  const u16 gTrainerUsedItemStringIds[] =
-@@ -3911,7 +3914,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+@@ -3911,7 +3916,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
          else
              speed = GetPlayerTextSpeedDelay();
  
@@ -9170,7 +9219,7 @@ index 680ea2d1..5de74df5 100644
      }
      else
      {
-@@ -3919,6 +3922,9 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+@@ -3919,6 +3924,9 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
          gTextFlags.canABSpeedUpPrint = 0;
      }
  
@@ -9180,7 +9229,7 @@ index 680ea2d1..5de74df5 100644
      AddTextPrinter(&printerTemplate, speed, NULL);
  
      if (copyToVram)
-@@ -3928,10 +3934,22 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+@@ -3928,10 +3936,22 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
      }
  }
  
@@ -9204,7 +9253,7 @@ index 680ea2d1..5de74df5 100644
      u8 var;
  
      if (!gBattleStruct->zmove.viewing)
-@@ -3940,11 +3958,12 @@ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
+@@ -3940,11 +3960,12 @@ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
      else
          var = 3;
  
@@ -9482,12 +9531,13 @@ index 4a0a3bc2..1ea2736c 100644
  };
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 00000000..67f8aefe
+index 00000000..6e2b6941
 --- /dev/null
 +++ b/src/dailyred.c
-@@ -0,0 +1,340 @@
+@@ -0,0 +1,354 @@
 +#include "global.h"
 +#include "dailyred.h"
++#include "battle_scripts.h"
 +#include "graphics.h"
 +#include "rtc.h"
 +#include "event_data.h"
@@ -9787,8 +9837,21 @@ index 00000000..67f8aefe
 +
 +// Specials the map script calls so the website can follow the battle. The
 +// battle's start also queues his Pikachu's totem aura (see dailyred_red.c).
++// The Bag in battle: Daily Red has no items. The first two tries say so; from
++// the third on, the game has a word with you (counted per battle).
++#define BAG_TRIES_BEFORE_BEGGING 2
++static EWRAM_DATA u8 sBagTries = 0;
++
++const u8 *DailyRed_GetBagSelectionScript(void)
++{
++    if (sBagTries < 255)
++        sBagTries++;
++    return sBagTries > BAG_TRIES_BEFORE_BEGGING ? BattleScript_DailyRedBegging : BattleScript_DailyRedNoItems;
++}
++
 +void DailyRed_OnBattleStart(void)
 +{
++    sBagTries = 0;
 +    sRedMessageBox = FALSE; // back to the usual box after RED's line
 +    sStatus.phase = DAILYRED_PHASE_BATTLE;
 +    DailyRed_QueueRedTotemBoost();
