@@ -132,6 +132,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Frostbite replaces freeze (as in Legends: Arceus): 1/16 HP a turn, special attacks do half damage. Its animation is poison's (a shake and a glow) in light blue, with the freeze sounds. Ice Punch, Ice Beam, Blizzard, Ice Fang and Freezing Glare have a 20% chance of it (was 10% freeze); Freeze-Dry and Powder Snow keep 10%, Tri Attack keeps its 20% of burn, paralysis or frostbite | `B_USE_FROSTBITE` in `include/config/battle.h`; `src/data/moves_info.h`; `gBattleAnimStatus_Frostbite` in `data/battle_anim_scripts.s` |
 | Aurora Beam is 75 power with a 30% chance of frostbite (was 65, 10% Attack drop); Chilling Water is 70 power with a 30% chance of frostbite (was 50, sure Attack drop); Scald is 70 power (was 80) | `src/data/moves_info.h` |
 | Sleep works as in Pokémon Champions: a sleeping Pokémon can't move on its first turn asleep, wakes on its second turn 1 time in 3, and always wakes on its third (Rest still sleeps 2 turns) | `B_SLEEP_TURNS` (`GEN_CHAMPIONS`) in `include/config/battle.h` |
+| Test seed 1234567 (practice only, never a daily game): RED has only his Pikachu, with a Light Ball and only Ice Beam, whose frostbite always lands | `DAILYRED_FROSTBITE_TEST_SEED` in `include/dailyred.h`; `MakeFrostbiteTestTeam` in `src/dailyred_red.c`; `CalcSecondaryEffectChance` in `src/battle_util.c` |
 | Faster battle engine: battle scripts run several commands a frame until one has to wait (it ran one a frame), and get another pass in the same frame when a controller finishes at once | `RunBattleScriptCommands` and `BattleMainCB1` in `src/battle_main.c` |
 | Every move shows its current type in battle and in the summary (Hidden Power, Weather Ball, -ate abilities…) | `P_SHOW_DYNAMIC_TYPES` in `include/config/pokemon.h`; `MoveTypeShown` in `src/dailyred_summary.c` |
 
@@ -376,9 +377,10 @@ none of its own), and so is its cry (there's no Mega cry for it).
     greys) use the front's.
 
   They're GBA-style, so a little flatter than the expansion's DS-style
-  sprites around them. Its party icon is Typhlosion's with the Mega's
-  charcoal fur, a flame on its lower back and smoke over its neck flames;
-  Typhlosionite's bag icon is the expansion's Feraligite (the Z-A Johto
+  sprites around them. Its party icon is also the owner's
+  (`art/mega-typhlosion/icon.png`), put on the icon palette Typhlosion uses
+  (`mega_typhlosion_icon()`; party icons share six fixed palettes, so its
+  slate-navy back comes out a little bluer); Typhlosionite's bag icon is the expansion's Feraligite (the Z-A Johto
   starters' stone) in the Mega's colours, a charcoal stone with a flame and
   cream swirl.
 
@@ -856,10 +858,10 @@ the back is FYTYNo1's
 which FYTYNo1 based on fan art by Tomycase, with its smoke extended and
 recoloured to share the front's palette. They're used with credit; Daily
 Red isn't affiliated with or endorsed by the Insurgence team or the artists.
-Mega Typhlosion's party icon is pokeemerald-expansion's Typhlosion icon, and
-Typhlosionite's icon its Feraligite icon (added to the expansion by
+Mega Typhlosion's party icon was supplied by the project's owner, and
+Typhlosionite's icon is pokeemerald-expansion's Feraligite icon (added to the expansion by
 kittenchilly, [rh-hideout/pokeemerald-expansion#9143](https://github.com/rh-hideout/pokeemerald-expansion/pull/9143)),
-both recoloured for Daily Red.
+recoloured for Daily Red.
 
 The emulator core is GPL-3.0 (RetroArch) and MPL-2.0 (mGBA). `web/licenses.txt`
 lists all third-party components with links to their source, and the page

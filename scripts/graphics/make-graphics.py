@@ -768,30 +768,35 @@ def read_jasc(path):
 
 
 def mega_typhlosion_icon():
-    """Typhlosion's party icon with the Mega's charcoal fur, a flame on its
-    lower back and smoke over its neck flames (both frames; the icon palette
-    is the one Typhlosion uses, iconPalIndex 3)."""
-    src = Image.open(os.path.join(GAME, 'graphics', 'pokemon', 'typhlosion', 'icon.png'))
-    out = src.copy()
-    px = out.load()
-    # Palette 3 indices: 1/2/3 greys, 4/5 Typhlosion's blues, 8 red,
-    # 10 yellow, 13 orange, 14 dark grey, 15 outline.
-    for y in range(out.size[1]):
-        for x in range(out.size[0]):
-            if px[x, y] == 5:
-                px[x, y] = 14
-            elif px[x, y] == 4:
-                px[x, y] = 15
-    pen = {'f': 15, 'e': 14, '1': 1, '2': 2, '3': 3, '8': 8, 'a': 10, 'd': 13}
-    flame = [(16, 23, 'f'), (17, 23, '8f.f'), (18, 23, '88f8f'), (19, 23, 'da88f'), (20, 24, 'da8f'),
-             (21, 24, 'adf'), (22, 25, 'f')]
-    smoke = [(2, 20, 'eee'), (3, 19, 'e233e'), (4, 18, 'e22322e'), (5, 18, 'e12221e'), (6, 19, 'e1ee')]
-    # The second frame's body is a row lower (its flames flicker higher).
-    for top, shift, spec in ((0, 0, flame), (32, 1, flame), (0, 0, smoke), (32, 0, smoke)):
-        for y, x0, row in spec:
-            for i, ch in enumerate(row):
-                if ch in pen:
-                    px[x0 + i, top + y + shift] = pen[ch]
+    """Mega Typhlosion's party icon from the owner's art
+    (art/mega-typhlosion/icon.png: its two 32x32 frames side by side, full
+    colour), stacked into the game's 32x64 and put on icon palette 3 (the one
+    Typhlosion uses, iconPalIndex 3). Each of the art's colours is pinned to a
+    palette colour by hand (the nearest by eye: its slate-navy back becomes
+    the palette's dark blue, its dark-red flame edges the outline), and any
+    other shade goes to the nearest of those art colours."""
+    src = Image.open(os.path.join(ROOT, 'art', 'mega-typhlosion', 'icon.png')).convert('RGBA')
+    pal = read_jasc(os.path.join(GAME, 'graphics', 'pokemon', 'icon_palettes', 'pal3.pal'))
+    anchors = {
+        (74, 82, 106): (65, 106, 148), (54, 55, 54): (65, 65, 65), (49, 49, 65): (65, 65, 65),
+        (32, 32, 41): (65, 65, 65), (85, 85, 83): (98, 98, 90), (247, 231, 132): (246, 246, 172),
+        (212, 187, 99): (189, 164, 90), (173, 148, 74): (189, 164, 90), (156, 198, 198): (98, 148, 164),
+        (198, 239, 247): (164, 197, 255), (207, 212, 209): (189, 189, 189), (252, 250, 250): (255, 255, 255),
+        (239, 90, 41): (213, 98, 65), (255, 98, 0): (213, 98, 65), (158, 37, 10): (65, 65, 65),
+        (254, 155, 41): (246, 148, 41), (255, 213, 41): (246, 230, 41), (255, 222, 0): (246, 230, 41),
+    }
+
+    def index(c):
+        art = min(anchors, key=lambda a: sum((a[k] - c[k]) ** 2 for k in range(3)))
+        return pal.index(anchors[art])
+
+    out = Image.new('P', (32, 64))
+    out.putpalette([v for c in pal for v in c] + [0] * (768 - 3 * len(pal)))
+    for frame in range(2):
+        for y in range(32):
+            for x in range(32):
+                c = src.getpixel((frame * 32 + x, y))
+                out.putpixel((x, frame * 32 + y), 0 if c[3] < 128 else index(c))
     out.save(os.path.join(MEGA_TYPHLOSION_OUT, 'icon.png'))
 
 

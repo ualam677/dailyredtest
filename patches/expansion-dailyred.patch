@@ -3826,20 +3826,18 @@ HcmV?d00001
 
 diff --git a/graphics/pokemon/typhlosion/mega/icon.png b/graphics/pokemon/typhlosion/mega/icon.png
 new file mode 100644
-index 0000000000000000000000000000000000000000..c9e7d6eb40e351e023835f9e693be9380d9c8a26
+index 0000000000000000000000000000000000000000..6e18952358005495407de806a30c00923b147109
 GIT binary patch
-literal 560
-zcmV-00?+-4P)<h;3K|Lk000e1NJLTq001BW002M)0{{R3iJ)km0000mP)t-sVw{6>
-zb924Dz5oCJL28s@l%%A^|L${~)nY-tq+0goDfafP)zxbDlqq6jT0ucU0xrFh0005I
-zNkl<ZcwV)Wze)o^5XQeXF`{60C54Lkr?U|8P%LdUSc@;9U}Yyhf>p}2R*6~*HX?{Z
-zo<I&0MX*VsML?51D>b={%<kRg5-b#Sn!6q5`*v>Tcfc>AUghFsq)0DM@OxjBsNji9
-zIte1`_D@e4k0^BT7D{9RRuLp5AoKA=twy!D0kv}vxw_G?L{mfWBlT%C0+3Y_QeWbE
-zM+Fs<Jr|!h`D`UZ18PPZSMza%*Yd*SBMDp40Mf4C+!z?t+DZggfTG&dg@R4c&>P^~
-zm-@%U)+;9t5`L?1(e}~4Nz5NlLg{3EO_|2DH~msVvW2WL9-dGhfL1oi555|Zrv!*K
-zJ_Yko3W`cRHk<I~#R%YcCMMk_2q>t~10=|I{aF=x2#Abx*S$F}GuaD5&*pv*|G<ac
-zN)!_BS{i18dDJvud58$Ab_0Was%iBWT%z&Me2RFvoY1m?)%w)>;XoXiD<{z$3npfO
-zamvk$kRS`p+}T!iE#cK|14rCh1Psox%ZuV$1g#vPxIOw&2s-^!U;@@dV36$r2G<>6
-yV1S8FEXBYKGca~Qo&fpo?QHy47g9IA<>Lz%udqUZTL}pO0000<MNUMnLSTZCeEB2*
+literal 1120
+zcmeAS@N?(olHy`uVBq!ia0vp^3P9|@!3-pQ0$S%VFfcO&_=LD7&1o(!F5bI$@Bjb*
+z9kZq+O<A(!=>K=cbFL;i?p+e~?V0AcZ)>hz&H6S)Gbt&`(a{m8eH4s_z_1AcsinEI
+z85kI)JzX3_D(1YM5}1Ejfv06LuadCKyZ`@h-+aER>49MBtHUN|gJ!k=PU3UUzg?I7
+zkWXNZMvj18hhV6SYwb5%hcCu&Hl>@*5LC!KSo(gVwbD!<wxSM`tHtjarh9C4j&e5J
+z%f3R`<M_oZO{?~@Yej9%;=Xw4YjyX!!ws{R?9@wUHvPb<u|R9Prntl1`Vg_yp36^!
+zmd;tOT%i!lKP4z<wF;N`mc*XqZS&pPqw)?`+H$^ac;FH!yCKuvYVM4@%Y2MNY1fy_
+zRxwCcA1&{S{%E)QboPmz`|fURex3Ax>zdn~T>Ni-pO5F5;2_8RL`Xicfv0}0r9&Ib
+zOs16o-Hc5o;tD?^8_xVPcDPl|q_XJ(`-wHbV{76YbiQ6aTEBB2gYE@I_UO)oUqNy1
+M>FVdQ&MBb@0M<ILhyVZp
 
 literal 0
 HcmV?d00001
@@ -4339,10 +4337,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..4b632e92
+index 00000000..e0b198f9
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,132 @@
+@@ -0,0 +1,136 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -4373,6 +4371,10 @@ index 00000000..4b632e92
 +const u16 *DailyRed_GetMessageBoxPalette(void);
 +u16 DailyRed_IsDailyGame(void);
 +bool32 DailyRed_IsOnSummit(void);
++// A practice seed (never a daily game) for testing frostbite: RED has only
++// his Pikachu, which knows only Ice Beam and always inflicts frostbite with it.
++#define DAILYRED_FROSTBITE_TEST_SEED 1234567
++bool32 DailyRed_IsFrostbiteTestSeed(void);
 +const u16 *DailyRed_GetMtSilverBattlePalette(void);
 +void DailyRed_ReturnFromHallOfFame(void);
 +void CB2_DailyRedEvIv(void);
@@ -8901,10 +8903,16 @@ index abe49bd2..d0cbb51b 100644
                                                  DISPLAY_WIDTH + 32,
                                                  106,
 diff --git a/src/battle_util.c b/src/battle_util.c
-index 85523e06..b73c27b1 100644
+index 85523e06..4aa22b51 100644
 --- a/src/battle_util.c
 +++ b/src/battle_util.c
-@@ -4550,6 +4550,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "battle.h"
+ #include "battle_anim.h"
+ #include "battle_anim_scripts.h"
+@@ -4550,6 +4551,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
          case ABILITY_AS_ONE_ICE_RIDER:
          case ABILITY_GRIM_NEIGH:
          case ABILITY_AS_ONE_SHADOW_RIDER:
@@ -8912,7 +8920,7 @@ index 85523e06..b73c27b1 100644
          case ABILITY_BEAST_BOOST:
          case ABILITY_EELEVATE:
              {
-@@ -4561,7 +4562,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
+@@ -4561,7 +4563,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
  
                  if (ability == ABILITY_BEAST_BOOST || ability == ABILITY_EELEVATE)
                      stat = GetHighestStatId(battler);
@@ -8921,6 +8929,17 @@ index 85523e06..b73c27b1 100644
                      stat = STAT_SPATK;
  
                  if (numMonsFainted && CompareStat(battler, stat, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
+@@ -9613,6 +9615,10 @@ u32 CalcSecondaryEffectChance(enum BattlerId battler, enum Ability battlerAbilit
+     bool8 hasRainbow = (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_RAINBOW) != 0;
+     u16 secondaryEffectChance = additionalEffect->chance;
+ 
++    // Daily Red: on the frostbite test seed, RED's frostbite always lands.
++    if (additionalEffect->moveEffect == MOVE_EFFECT_FROSTBITE && !IsOnPlayerSide(battler) && DailyRed_IsFrostbiteTestSeed())
++        return 100;
++
+     if (hasRainbow && hasSereneGrace && additionalEffect->moveEffect == MOVE_EFFECT_FLINCH)
+         return secondaryEffectChance * 2;
+ 
 diff --git a/src/battle_z_move.c b/src/battle_z_move.c
 index 4a0a3bc2..1ea2736c 100644
 --- a/src/battle_z_move.c
@@ -8943,10 +8962,10 @@ index 4a0a3bc2..1ea2736c 100644
  };
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 00000000..157adf4b
+index 00000000..288ab48c
 --- /dev/null
 +++ b/src/dailyred.c
-@@ -0,0 +1,335 @@
+@@ -0,0 +1,340 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "graphics.h"
@@ -9094,6 +9113,11 @@ index 00000000..157adf4b
 +    sStatus.seed = seed;
 +    sStatus.phase = DAILYRED_PHASE_EXPLORING;
 +    sStatus.result = DAILYRED_RESULT_NONE;
++}
++
++bool32 DailyRed_IsFrostbiteTestSeed(void)
++{
++    return GetInjectedSeed() == DAILYRED_FROSTBITE_TEST_SEED && !IsDailyGame();
 +}
 +
 +bool8 DailyRed_HasInjectedSeed(void)
@@ -10003,10 +10027,10 @@ index 00000000..a8af713b
 +}
 diff --git a/src/dailyred_red.c b/src/dailyred_red.c
 new file mode 100644
-index 00000000..767bc51b
+index 00000000..f63bb573
 --- /dev/null
 +++ b/src/dailyred_red.c
-@@ -0,0 +1,833 @@
+@@ -0,0 +1,864 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "battle.h"
@@ -10014,6 +10038,7 @@ index 00000000..767bc51b
 +#include "sprite.h"
 +#include "data.h"
 +#include "item.h"
++#include "move.h"
 +#include "pokemon.h"
 +#include "random.h"
 +#include "trainer_util.h"
@@ -10711,6 +10736,34 @@ index 00000000..767bc51b
 +    AddMember(team, FindSetList(SPECIES_SNORLAX, DAILYRED_SETS_NORMAL), LEVEL_ORIGINAL_TEAM, FALSE, rng);
 +}
 +
++// The frostbite test seed (DAILYRED_FROSTBITE_TEST_SEED): RED keeps only his
++// Pikachu (so he can't switch), with a Light Ball (no Z-Move or totem aura)
++// and only Ice Beam, which always inflicts frostbite on this seed
++// (CalcSecondaryEffectChance in battle_util.c).
++static void MakeFrostbiteTestTeam(void)
++{
++    struct Pokemon pikachu;
++    u16 move = MOVE_ICE_BEAM, none = MOVE_NONE, item = ITEM_LIGHT_BALL;
++    u8 pp = GetMovePP(MOVE_ICE_BEAM);
++    u32 i;
++
++    for (i = 0; i < PARTY_SIZE; i++)
++    {
++        if (GET_BASE_SPECIES_ID(GetMonData(&gDailyRedRedParty[i], MON_DATA_SPECIES)) == SPECIES_PIKACHU)
++            break;
++    }
++    if (i == PARTY_SIZE)
++        return;
++    pikachu = gDailyRedRedParty[i];
++    ZeroPartyMons(gDailyRedRedParty);
++    gDailyRedRedParty[0] = pikachu;
++    SetMonData(&gDailyRedRedParty[0], MON_DATA_MOVE1, &move);
++    SetMonData(&gDailyRedRedParty[0], MON_DATA_PP1, &pp);
++    for (i = MON_DATA_MOVE2; i <= MON_DATA_MOVE4; i++)
++        SetMonData(&gDailyRedRedParty[0], i, &none);
++    SetMonData(&gDailyRedRedParty[0], MON_DATA_HELD_ITEM, &item);
++}
++
 +// Returns RED's Kanto starter (SPECIES_NONE on original-team days, when he
 +// has all three), which decides the player's starter.
 +u16 DailyRed_GenerateRedTeam(u32 *rng)
@@ -10746,6 +10799,8 @@ index 00000000..767bc51b
 +    ZeroPartyMons(gDailyRedRedParty);
 +    for (i = 0; i < team.count; i++)
 +        CreateRedMon(&gDailyRedRedParty[i], &team.members[order[i]], &trainerGen);
++    if (DailyRed_IsFrostbiteTestSeed())
++        MakeFrostbiteTestTeam();
 +    return originalTeam ? SPECIES_NONE : sRedStarters[starter].species;
 +}
 +
