@@ -1,8 +1,29 @@
 diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
-index f514f23b..249ef008 100644
+index f514f23b..71f45a5b 100644
 --- a/data/battle_anim_scripts.s
 +++ b/data/battle_anim_scripts.s
-@@ -28699,8 +28699,26 @@ gBattleAnimGeneral_Sandstorm::
+@@ -28438,14 +28438,14 @@ gBattleAnimStatus_Nightmare::
+ 	clearmonbg ANIM_DEF_PARTNER
+ 	end
+ 
++@ Daily Red: frostbite looks like poison (a shake and a glow), in light blue,
++@ with the freeze status sounds.
+ gBattleAnimStatus_Frostbite::
+-	playsewithpan SE_M_ICY_WIND, SOUND_PAN_MIDDLE
+-	monbg ANIM_DEF_PARTNER
+-	splitbgprio ANIM_TARGET
+-	call IceCrystalEffectShort
+-	simple_palette_blend selector=F_PAL_TARGET, delay=5, initial_blend_y=7, target_blend_y=0, color=RGB(0, 20, 31)
++	playsewithpan SE_M_ICY_WIND, SOUND_PAN_TARGET
++	createvisualtask AnimTask_ShakeMon2, 2, ANIM_ATTACKER, 1, 0, 18, 2
++	blend_color_cycle selector=F_PAL_ATTACKER, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=12, color=RGB(16, 28, 31)
++	waitplaysewithpan SE_M_HAIL, SOUND_PAN_TARGET, 17
+ 	waitforvisualfinish
+-	clearmonbg ANIM_DEF_PARTNER
+ 	end
+ 
+ gBattleAnimGeneral_StatsChange::
+@@ -28699,8 +28699,27 @@ gBattleAnimGeneral_Sandstorm::
  gBattleAnimGeneral_Hail::
  	goto gBattleAnimMove_Hail
  
@@ -18,9 +39,10 @@ index f514f23b..249ef008 100644
 +	createvisualtask AnimTask_CreateSnowflakes, 2, 0, 2, 54
 +	createvisualtask AnimTask_CreateSnowflakes, 2, 0, 2, 54
 +	createvisualtask AnimTask_CreateSnowflakes, 2, 0, 2, 54
-+	delay 40
++	delay 70
 +	@ Daily Red: the gust fades out as the snow ends, instead of playing on
-+	@ for over a second after the animation.
++	@ for over a second after the animation (it starts fading half a second
++	@ after the snowflakes, so they finish to the sound).
 +	createvisualtask AnimTask_FadeOutSoundEffects, 2
 +	delay 14
 +	waitforvisualfinish
@@ -4082,9 +4104,18 @@ index fcfe42fd..206955b7 100644
  };
  
 diff --git a/include/config/battle.h b/include/config/battle.h
-index b29ee42a..29d06420 100644
+index b29ee42a..bd8ead17 100644
 --- a/include/config/battle.h
 +++ b/include/config/battle.h
+@@ -58,7 +58,7 @@
+ #define B_UPROAR_IGNORE_SOUNDPROOF  GEN_LATEST // In Gen5+, Uproar's effects ignore Soundproof.
+ #define B_DISABLE_TURNS             GEN_LATEST // Disable's turns. See Cmd_disablelastusedattack.
+ #define B_TAILWIND_TURNS            GEN_LATEST // In Gen5+, Tailwind lasts 4 turns instead of 3.
+-#define B_SLEEP_TURNS               GEN_LATEST // In Gen5+, sleep prevents movement for 1-3 turns. In Gens3-4, it was 1-4 turns. In Gen2, it was 1-7 turns.
++#define B_SLEEP_TURNS               GEN_CHAMPIONS // Daily Red: Champions sleep (1/3 wake on turn 2, always on turn 3). // In Gen5+, sleep prevents movement for 1-3 turns. In Gens3-4, it was 1-4 turns. In Gen2, it was 1-7 turns.
+ #define B_TAUNT_TURNS               GEN_LATEST // In Gen5+, Taunt lasts 3 turns if the user acts before the target, or 4 turns if the target acted before the user. In Gen4, it lasted 2-4/3-5 turns. In Gen3, it lasted 2/3 turns.
+ #define B_ENCORE_TURNS              GEN_LATEST // In Gen5+, Encore lasts 3 turns if the target hasn't yet moved this turn, or 4 turns if it has. In Gen4, it lasts 3-7 turns. In Gen2-3, 2-6 turns.
+ #define B_SPORT_TURNS               GEN_LATEST // In Gen6+, Water/Mud Sport last 5 turns, even if the user switches out. In Gen5 and earlier, they lasted until the user switched out.
 @@ -334,7 +334,7 @@
  #define B_OVERWORLD_SNOW                GEN_LATEST // In Gen9+, overworld snow will summon snow instead of hail in battle.
  #define B_SNOW_WARNING                  GEN_LATEST // In Gen9+, Snow Warning will summon snow instead of hail.
@@ -4094,7 +4125,7 @@ index b29ee42a..29d06420 100644
  
  // Terrain settings
  #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.
-@@ -386,7 +386,7 @@
+@@ -386,11 +386,11 @@
  // Other settings
  #define B_MULTI_BATTLE_WHITEOUT         GEN_LATEST // In Gen4+, Multi Battles end when the player as well as their partner don't have any Pokémon left.
  #define B_EVOLUTION_AFTER_WHITEOUT      GEN_LATEST // In Gen6+, Pokémon that qualify for evolution after battle will evolve even if the player loses.
@@ -4103,6 +4134,11 @@ index b29ee42a..29d06420 100644
  #define B_TRAINER_CLASS_POKE_BALLS      GEN_LATEST // In Gen7+, Trainers will use certain kinds of Poké Balls depending on their Trainer class.
  #define B_TRAINER_MON_RANDOM_ABILITY    0          // If this is set to 0, trainers mons with no set ability only use the first ability of a mon. If set to 1 it will roll a random non-hidden ability. If set to 2, it will roll any ability (including hidden ability) with equal chance
  #define B_OBEDIENCE_MECHANICS           GEN_LATEST // In PLA onwards (GEN_8 here), obedience restrictions also apply to non-outsider Pokémon, albeit based on their met level rather than their current level.
+-#define B_USE_FROSTBITE                 FALSE      // In PLA, Frostbite replaces Freeze. Enabling this flag does the same here. Moves can still be cherry-picked to either Freeze or Frostbite. Freeze-Dry, Secret Power & Tri Attack depend on this config.
++#define B_USE_FROSTBITE                 TRUE  // Daily Red: on.      // In PLA, Frostbite replaces Freeze. Enabling this flag does the same here. Moves can still be cherry-picked to either Freeze or Frostbite. Freeze-Dry, Secret Power & Tri Attack depend on this config.
+ #define B_TOXIC_REVERSAL                GEN_LATEST // In Gen5+, bad poison will change to regular poison at the end of battles.
+ #define B_TRY_CATCH_TRAINER_BALL        GEN_LATEST // In Gen4+, trying to catch a Trainer's Pokémon no longers consume the Poké Ball.
+ #define B_SLEEP_CLAUSE                  FALSE      // Enables Sleep Clause all the time in every case, overriding B_FLAG_SLEEP_CLAUSE. Use that for modularity.
 diff --git a/include/config/debug.h b/include/config/debug.h
 index 334d0ab5..bf0c16f2 100644
 --- a/include/config/debug.h
@@ -19940,7 +19976,7 @@ index 00000000..03185c9e
 +}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..ffec6cef
+index 00000000..c620b67c
 --- /dev/null
 +++ b/src/dailyred_team.c
 @@ -0,0 +1,581 @@
@@ -19996,7 +20032,7 @@ index 00000000..ffec6cef
 +
 +#define MIRROR_RED_ODDS 5 // percent of days
 +#define LEGENDARY_TEAM_ODDS 20 // percent of teams
-+#define PARADOX_DOG_ODDS 6 // percent of legendary picks (2% each)
++#define PARADOX_DOG_ODDS 9 // percent of legendary picks (3% each: 0.6% of days each)
 +#define MEGA_SWAP_ODDS 25 // percent of the days when another Pokemon can Mega Evolve
 +
 +// Minimum combined base stat total of the six. RED's original team adds up to
@@ -20680,6 +20716,114 @@ index c51a5acf..96c2b66f 100644
  // Gems
  #if I_PRICE >= GEN_9
      #define GEM_PRICE 15000
+diff --git a/src/data/moves_info.h b/src/data/moves_info.h
+index d75670d7..5d7347f2 100644
+--- a/src/data/moves_info.h
++++ b/src/data/moves_info.h
+@@ -234,7 +234,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+         .punchingMove = TRUE,
+         .additionalEffects = ADDITIONAL_EFFECTS({
+             .moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+-            .chance = 10,
++            .chance = 20, // Daily Red: was 10
+         }),
+         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+         .contestCategory = CONTEST_CATEGORY_BEAUTY,
+@@ -1577,7 +1577,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+             // The following effect is also relevant in src/battle_pike.c
+             // If you cherry-pick this to use something other than the config, make sure to update it there too
+             .moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+-            .chance = 10,
++            .chance = 20, // Daily Red: was 10
+         }),
+         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON : CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+         .contestCategory = CONTEST_CATEGORY_BEAUTY,
+@@ -1609,7 +1609,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+         .alwaysHitsInHailSnow = B_BLIZZARD_HAIL >= GEN_4,
+         .additionalEffects = ADDITIONAL_EFFECTS({
+             .moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+-            .chance = 10,
++            .chance = 20, // Daily Red: was 10
+         }),
+         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS : CONTEST_EFFECT_HIGHLY_APPEALING,
+         .contestCategory = CONTEST_CATEGORY_BEAUTY,
+@@ -1676,9 +1676,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+         .name = COMPOUND_STRING("Aurora Beam"),
+         .description = COMPOUND_STRING(
+             "Fires a rainbow-colored\n"
+-            "beam that may lower Attack."),
++            "beam that may cause frostbite."),
+         .effect = EFFECT_HIT,
+-        .power = 65,
++        .power = 75, // Daily Red: was 65
+         .type = TYPE_ICE,
+         .accuracy = 100,
+         .pp = 20,
+@@ -1686,9 +1686,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+         .priority = 0,
+         .category = DAMAGE_CATEGORY_SPECIAL,
+         .additionalEffects = ADDITIONAL_EFFECTS({
+-            .moveEffect = MOVE_EFFECT_STAT_MINUS,
+-            .attack = 1,
+-            .chance = B_UPDATED_MOVE_DATA >= GEN_2 ? 10 : 33,
++            // Daily Red: 30% frostbite (was a 10% Attack drop).
++            .moveEffect = MOVE_EFFECT_FROSTBITE,
++            .chance = 30,
+         }),
+         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_STARTLE_PREV_MON : CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+         .contestCategory = CONTEST_CATEGORY_BEAUTY,
+@@ -11472,7 +11472,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+         .bitingMove = TRUE,
+         .additionalEffects = ADDITIONAL_EFFECTS({
+             .moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+-            .chance = 10,
++            .chance = 20, // Daily Red: was 10
+         },
+         {
+             .moveEffect = MOVE_EFFECT_FLINCH,
+@@ -13495,7 +13495,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+             "Shoots boiling water at the\n"
+             "foe. May inflict a burn."),
+         .effect = EFFECT_HIT,
+-        .power = 80,
++        .power = 70, // Daily Red: was 80
+         .type = TYPE_WATER,
+         .accuracy = 100,
+         .pp = 15,
+@@ -19863,7 +19863,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+         .metronomeBanned = TRUE,
+         .additionalEffects = ADDITIONAL_EFFECTS({
+             .moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+-            .chance = 10,
++            .chance = 20, // Daily Red: was 10
+         }),
+         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+         .contestCategory = CONTEST_CATEGORY_CUTE,
+@@ -21310,9 +21310,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+         .name = COMPOUND_STRING("Chilling Water"),
+         .description = COMPOUND_STRING(
+             "A shower with ice-cold water\n"
+-            "lowers the target's Attack."),
++            "that may cause frostbite."),
+         .effect = EFFECT_HIT,
+-        .power = 50,
++        .power = 70, // Daily Red: was 50
+         .type = TYPE_WATER,
+         .accuracy = 100,
+         .pp = 20,
+@@ -21321,9 +21321,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+         .category = DAMAGE_CATEGORY_SPECIAL,
+         .metronomeBanned = TRUE,
+         .additionalEffects = ADDITIONAL_EFFECTS({
+-            .moveEffect = MOVE_EFFECT_STAT_MINUS,
+-            .attack = 1,
+-            .chance = 100,
++            // Daily Red: 30% frostbite (was a sure Attack drop).
++            .moveEffect = MOVE_EFFECT_FROSTBITE,
++            .chance = 30,
+         }),
+         .contestEffect = CONTEST_EFFECT_BETTER_IF_LAST,
+         .contestComboStarterId = 0,
 diff --git a/src/data/party_menu.h b/src/data/party_menu.h
 index 9d65313c..a04dd312 100644
 --- a/src/data/party_menu.h

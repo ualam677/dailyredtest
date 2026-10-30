@@ -128,7 +128,10 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Start menu as a shelf of icons; the BW-style Options, EV/IV screen and summary and the HGSS-style party screen, in red | `src/start_menu.c`, `src/option_menu.c`, `src/dailyred_eviv.c`, `src/dailyred_summary.c` (hooked from `ShowPokemonSummaryScreen`), `src/party_menu.c` and `src/data/party_menu.h`; see [Menus](#menus) |
 | No debug menus | `include/config/debug.h` |
 | Battle pacing: "X used Y!" prints in full, then a short beat, then the animation (the beats as they were before the faster engine); weather animations start as their message's last word prints, the Poké Ball throw and recall as "Go! X!" / "X, come back!" finish; Leftovers' message starts halfway through the healing sparkle and the HP bar fills while it prints; end-of-turn damage (poison, burn, frostbite, Curse, Nightmare, trapping moves, sandstorm and hail): its message, with the effect's animation starting as the last word prints, then the HP bar; ability pop-ups come up with their message, no pauses around them. A message that hands over early is never cut off: the next message, the next turn and the action menu wait until it has printed and been read. A and B don't hurry battle text | `GetEarlyStart`, `DailyRed_IsBattleTextHeld`, `Controller_WaitForHealSparkleHalf` in `src/battle_controllers.c`; `BattleScript_Attackstring` in `data/battle_scripts_1.s`; `canABSpeedUpPrint` in `src/battle_message.c`; each text printer reloads its own colours before drawing (`RunTextPrinters` in `src/text.c`) |
-| Shorter waits: the Snow weather's animation is about 1.25 s (was about 2.8 s; the Snowscape move keeps the long one), and its gust sound fades out with it (`AnimTask_FadeOutSoundEffects`) and weather messages don't pause before it; a switched-in Pokémon's cry no longer holds up the battle | `gBattleAnimGeneral_Snow` in `data/battle_anim_scripts.s`; `BtlController_HandleSwitchInSoundAndEnd` |
+| Shorter waits: the Snow weather's animation is about 1.75 s (was about 2.8 s; the Snowscape move keeps the long one), and its gust sound fades out half a second after the snowflakes finish (`AnimTask_FadeOutSoundEffects`) and weather messages don't pause before it; a switched-in Pokémon's cry no longer holds up the battle | `gBattleAnimGeneral_Snow` in `data/battle_anim_scripts.s`; `BtlController_HandleSwitchInSoundAndEnd` |
+| Frostbite replaces freeze (as in Legends: Arceus): 1/16 HP a turn, special attacks do half damage. Its animation is poison's (a shake and a glow) in light blue, with the freeze sounds. Ice Punch, Ice Beam, Blizzard, Ice Fang and Freezing Glare have a 20% chance of it (was 10% freeze); Freeze-Dry and Powder Snow keep 10%, Tri Attack keeps its 20% of burn, paralysis or frostbite | `B_USE_FROSTBITE` in `include/config/battle.h`; `src/data/moves_info.h`; `gBattleAnimStatus_Frostbite` in `data/battle_anim_scripts.s` |
+| Aurora Beam is 75 power with a 30% chance of frostbite (was 65, 10% Attack drop); Chilling Water is 70 power with a 30% chance of frostbite (was 50, sure Attack drop); Scald is 70 power (was 80) | `src/data/moves_info.h` |
+| Sleep works as in Pokémon Champions: a sleeping Pokémon can't move on its first turn asleep, wakes on its second turn 1 time in 3, and always wakes on its third (Rest still sleeps 2 turns) | `B_SLEEP_TURNS` (`GEN_CHAMPIONS`) in `include/config/battle.h` |
 | Faster battle engine: battle scripts run several commands a frame until one has to wait (it ran one a frame), and get another pass in the same frame when a controller finishes at once | `RunBattleScriptCommands` and `BattleMainCB1` in `src/battle_main.c` |
 | Every move shows its current type in battle and in the summary (Hidden Power, Weather Ball, -ate abilities…) | `P_SHOW_DYNAMIC_TYPES` in `include/config/pokemon.h`; `MoveTypeShown` in `src/dailyred_summary.c` |
 
@@ -267,9 +270,9 @@ right after RED's (his starter decides yours), from the seed:
   (`LEGENDARY_TEAM_ODDS`): 1 team in 5 has exactly one, the rest none. It's
   never the legendary RED has that day, in any forme (his Galarian Moltres
   rules out Moltres). It's one of the Gen 1–3 legendaries (`sLegendaries`),
-  or on 6% of picks (`PARADOX_DOG_ODDS`) one of the Johto dogs' paradoxes,
-  Gouging Fire, Walking Wake or Raging Bolt (2% each, against about 4.5% for
-  each Gen 1–3 legendary).
+  or on 9% of picks (`PARADOX_DOG_ODDS`) one of the Johto dogs' paradoxes,
+  Gouging Fire, Walking Wake or Raging Bolt (3% each, so about 0.6% of
+  days each, against about 4.3% of picks for each Gen 1–3 legendary).
 - **5% of days mirror RED's team** (`MIRROR_RED_ODDS`): the starter, a
   **shiny Pikachu** (level 100, Light Ball and Volt Tackle, like his), a
   legendary for sure, and three more.
