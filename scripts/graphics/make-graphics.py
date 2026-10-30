@@ -12,6 +12,10 @@
   expansion/graphics/trainers/front_pics/dailyred_*.png (the first frame),
   plus dailyred_red_anim.png with both of RED's frames (64x128, the same
   palette) for his animation in battle.
+- art/mega-typhlosion/ (Mega Typhlosion's front, shiny front and back) ->
+  expansion/graphics/pokemon/typhlosion/mega/,
+  with its party icon and Typhlosionite's bag icon recoloured from the
+  expansion's.
 
 GBA trainer pics are at most 64x64 and 15 colours (plus transparency), so a
 sprite that's too tall loses its most repetitive rows inside a band of the
@@ -752,6 +756,145 @@ def trainer_pic(name, band, keep=(), first=(), frames=1):
     print('%s: %d frame(s), dropped rows %s, merged %d colour(s) %s' % (name, frames, dropped, len(merges), merges))
 
 
+# --- Mega Typhlosion ---------------------------------------------------------------
+
+MEGA_TYPHLOSION_ART = os.path.join(ART, 'mega-typhlosion')
+MEGA_TYPHLOSION_OUT = os.path.join(GAME, 'graphics', 'pokemon', 'typhlosion', 'mega')
+
+
+def read_jasc(path):
+    values = open(path).read().split()[3:]
+    return [tuple(int(v) for v in values[i:i + 3]) for i in range(0, len(values), 3)]
+
+
+def mega_typhlosion_icon():
+    """Typhlosion's party icon with the Mega's charcoal fur, a flame on its
+    lower back and smoke over its neck flames (both frames; the icon palette
+    is the one Typhlosion uses, iconPalIndex 3)."""
+    src = Image.open(os.path.join(GAME, 'graphics', 'pokemon', 'typhlosion', 'icon.png'))
+    out = src.copy()
+    px = out.load()
+    # Palette 3 indices: 1/2/3 greys, 4/5 Typhlosion's blues, 8 red,
+    # 10 yellow, 13 orange, 14 dark grey, 15 outline.
+    for y in range(out.size[1]):
+        for x in range(out.size[0]):
+            if px[x, y] == 5:
+                px[x, y] = 14
+            elif px[x, y] == 4:
+                px[x, y] = 15
+    pen = {'f': 15, 'e': 14, '1': 1, '2': 2, '3': 3, '8': 8, 'a': 10, 'd': 13}
+    flame = [(16, 23, 'f'), (17, 23, '8f.f'), (18, 23, '88f8f'), (19, 23, 'da88f'), (20, 24, 'da8f'),
+             (21, 24, 'adf'), (22, 25, 'f')]
+    smoke = [(2, 20, 'eee'), (3, 19, 'e233e'), (4, 18, 'e22322e'), (5, 18, 'e12221e'), (6, 19, 'e1ee')]
+    # The second frame's body is a row lower (its flames flicker higher).
+    for top, shift, spec in ((0, 0, flame), (32, 1, flame), (0, 0, smoke), (32, 0, smoke)):
+        for y, x0, row in spec:
+            for i, ch in enumerate(row):
+                if ch in pen:
+                    px[x0 + i, top + y + shift] = pen[ch]
+    out.save(os.path.join(MEGA_TYPHLOSION_OUT, 'icon.png'))
+
+
+def typhlosionite_icon():
+    """Typhlosionite's bag icon: the expansion's Feraligite (the Z-A Johto
+    starters' stone) in the Mega's colours, a charcoal stone with a flame and
+    cream swirl."""
+    items = os.path.join(GAME, 'graphics', 'items')
+    shutil.copyfile(os.path.join(items, 'icons', 'feraligite.png'), os.path.join(items, 'icons', 'typhlosionite.png'))
+    recolour = {
+        (90, 180, 246): (77, 81, 106), (164, 213, 250): (120, 124, 156), (138, 196, 222): (98, 102, 132),
+        (78, 99, 137): (45, 44, 58), (138, 149, 197): (140, 140, 160),
+        (246, 82, 90): (238, 64, 0), (186, 63, 69): (176, 24, 0), (249, 146, 151): (255, 156, 0),
+        (244, 233, 171): (251, 242, 147), (248, 241, 202): (255, 250, 200), (191, 182, 133): (208, 200, 115),
+    }
+    colours = [recolour.get(c, c) for c in read_jasc(os.path.join(items, 'icon_palettes', 'feraligite.pal'))]
+    write_jasc(os.path.join(items, 'icon_palettes', 'typhlosionite.pal'), colours, 16)
+
+
+# The back's colours (back.png, in the front's colours plus Insurgence's
+# smoke and flame shades) -> the front's palette slots for the same parts.
+MEGA_TYPHLOSION_BACK_COLOURS = {
+    (16, 16, 16): 15,                                                     # outline
+    (48, 48, 64): 13, (72, 80, 104): 11,                                  # fur, its light shade
+    (216, 0, 0): 12, (222, 0, 0): 12, (248, 96, 0): 9, (255, 90, 0): 9,   # flames
+    (255, 156, 0): 3, (248, 216, 0): 3, (255, 222, 0): 3,
+    (65, 65, 65): 6, (136, 136, 136): 8, (139, 139, 139): 8,              # smoke, dark to light
+    (184, 176, 176): 5, (189, 180, 180): 5, (232, 232, 224): 1, (238, 238, 230): 1,   # (and eye, teeth)
+    (160, 136, 72): 7, (208, 192, 112): 4, (104, 80, 40): 10,             # tan neck, cream, brown
+}
+# Slot 6, freed on the front (see below): the smoke's dark grey, the back's
+# (65, 65, 65), the same on the shiny so its smoke keeps its shading.
+MEGA_TYPHLOSION_SMOKE_DARK = 6
+MEGA_TYPHLOSION_SMOKE_DARK_COLOUR = (64, 64, 64)
+
+
+def mega_typhlosion():
+    """Mega Typhlosion (Pokémon Insurgence's design). art/mega-typhlosion/ has
+    its front (front.png), shiny front (front_shiny.png) and back (back.png),
+    64x64 GBA sprites supplied by the project's owner (the back is FYTYNo1's
+    with smoke added).
+
+    The GBA gives a Pokémon one 16-colour palette for front and back, and a
+    shiny palette with the same slots, so:
+    - the front's 17 colours become 16: its 3 pure black pixels join the
+      outline, and its 7 light-orange flame pixels the yellow (both are cyan
+      on the shiny), which frees slot 6 for the smoke's dark grey (the
+      front's dark smoke is drawn in the fur's colour; it's told apart by
+      staying grey on the shiny front);
+    - the shiny palette is, for each slot, the colour the shiny front has at
+      most of that slot's pixels (red fur, blue flames), except that the
+      smoke's dark grey stays dark grey;
+    - the back's colours take the front's slots for the same parts
+      (MEGA_TYPHLOSION_BACK_COLOURS), so it turns shiny the same way.
+    Then the party icon and Typhlosionite's icon are made from the
+    expansion's."""
+    from collections import Counter
+    os.makedirs(MEGA_TYPHLOSION_OUT, exist_ok=True)
+    art = lambda name: os.path.join(MEGA_TYPHLOSION_ART, name)
+    front = Image.open(art('front.png'))
+    shiny_front = Image.open(art('front_shiny.png'))
+    assert front.mode == shiny_front.mode == 'P' and front.size == shiny_front.size == (64, 64)
+    pal = front.getpalette()
+    assert tuple(pal[45:51]) == (16, 16, 16, 0, 0, 0), 'front.png: slot 15 the outline, 16 pure black'
+    spal = shiny_front.getpalette()
+    shiny_rgb = [tuple(spal[3 * i:3 * i + 3]) for i in shiny_front.get_flattened_data()]
+    pixels = []
+    for i, s in zip(front.get_flattened_data(), shiny_rgb):
+        if i == 16:
+            i = 15
+        elif i == 6:
+            i = 3
+        elif i == 13 and s in ((136, 136, 136), (232, 232, 224)):
+            i = MEGA_TYPHLOSION_SMOKE_DARK
+        pixels.append(i)
+    normal = [tuple(pal[3 * i:3 * i + 3]) for i in range(16)]
+    normal[MEGA_TYPHLOSION_SMOKE_DARK] = MEGA_TYPHLOSION_SMOKE_DARK_COLOUR
+    votes = [Counter() for _ in range(16)]
+    for i, s in zip(pixels, shiny_rgb):
+        votes[i][s] += 1
+    shiny = [normal[0]] + [votes[i].most_common(1)[0][0] for i in range(1, 16)]
+    shiny[MEGA_TYPHLOSION_SMOKE_DARK] = MEGA_TYPHLOSION_SMOKE_DARK_COLOUR
+
+    back_src = Image.open(art('back.png')).convert('RGB')
+    assert back_src.size == (64, 64), 'back.png: not 64x64'
+    background = normal[0]
+    unknown = {c for c in back_src.get_flattened_data() if c != background and c not in MEGA_TYPHLOSION_BACK_COLOURS}
+    assert not unknown, 'back.png: colours with no palette slot: %s' % sorted(unknown)
+    back = [0 if c == background else MEGA_TYPHLOSION_BACK_COLOURS[c] for c in back_src.get_flattened_data()]
+
+    for name, data in (('front.png', pixels), ('back.png', back)):
+        im = Image.new('P', (64, 64))
+        im.putpalette([v for c in normal for v in c])
+        im.putdata(data)
+        im.save(os.path.join(MEGA_TYPHLOSION_OUT, name), bits=4, transparency=0)
+    write_jasc(os.path.join(MEGA_TYPHLOSION_OUT, 'normal.pal'), normal, 16)
+    write_jasc(os.path.join(MEGA_TYPHLOSION_OUT, 'shiny.pal'), shiny, 16)
+    mega_typhlosion_icon()
+    typhlosionite_icon()
+    print('mega typhlosion: front, back, normal and shiny palettes, icon -> %s; Typhlosionite icon'
+          % os.path.relpath(MEGA_TYPHLOSION_OUT, ROOT))
+
+
 if __name__ == '__main__':
     battle_background()
     battle_boxes()
@@ -766,3 +909,4 @@ if __name__ == '__main__':
     trainer_pic('leaf', (46, 64),
                 keep=[(120, 184, 216), (80, 136, 176), (48, 104, 136)],
                 first=[((248, 192, 88), (216, 160, 120))])
+    mega_typhlosion()

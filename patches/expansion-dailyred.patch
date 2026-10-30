@@ -3699,6 +3699,179 @@ z3%-6t#U*6s*2T0U+@Q`<L#)|Axa>FF_H=pH%?Pb4Tp)BnU`S4$EjP-(#ra;TcI3D`
 zjMystyzoOjf}qdDTtc0{W8BCh?5Wp1pY4dNnn7!_XZrj}J-^T8danG&V34abu`Py4
 gbv1yeXNMR%I=;gJ{dwi}-~T(u4igR)TDnL47aBw6r2qf`
 
+diff --git a/graphics/items/icon_palettes/typhlosionite.pal b/graphics/items/icon_palettes/typhlosionite.pal
+new file mode 100644
+index 00000000..f3232c0d
+--- /dev/null
++++ b/graphics/items/icon_palettes/typhlosionite.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++255 0 128
++176 24 0
++251 242 147
++45 44 58
++77 81 106
++255 156 0
++255 250 200
++140 140 160
++255 255 255
++238 64 0
++120 124 156
++98 102 132
++208 200 115
++49 49 49
++0 0 0
++0 0 0
+diff --git a/graphics/items/icons/typhlosionite.png b/graphics/items/icons/typhlosionite.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..4e1eb3fad57677be1fbd40a8f28815193f6a4a24
+GIT binary patch
+literal 230
+zcmeAS@N?(olHy`uVBq!ia0vp^5+KaM3?#3wJbMaAF%}28J29*~C-V}>F$nMpasAKG
+zu*=@{%gfb%$(>PKzWtmu{l~{sT~m+#|NsA6P}GvEzq*dx+rO>V(9jU50|<^>E)oP%
+zDV{ElAsQ3UUho!cP~dO~{P}}1_5ba+6HEiLVtDS$E?DxV-_W@FOv90hJ;e)8oe`_b
+zc3tG7ARcY)eXhe%#^r*l!`>z97Hki=UVBoL`S&-ixlGRA`&SroAGr5dg^NM|dexcu
+ZGmKyVvUn=g?)w9>*VEO{Wt~$(69Ai>UmO4c
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/pokemon/typhlosion/mega/back.png b/graphics/pokemon/typhlosion/mega/back.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..6c76b95a78873a8b5b204b94ce66a560246d0639
+GIT binary patch
+literal 1116
+zcmV-i1f%<jP)<h;3K|Lk000e1NJLTq002M$002M)0{{R3SVwH_0000mP)t-sn9!i;
+z=-~M1koedD(7<rGu&_WtK%j_7h=_>zU;t=PC`eFf*Z=@9FhC$6C=d`3jeyu{00001
+zbW%=J06^y0W&i*K+DSw~RCr#+l|g76RT#&A`(_;z2$EDis^c6y2!$~LFSaGp1us41
+zCIo~v!iqv*QM3ms^i*;vn47Sm3<Prs9(t_M(gh8bkZs0Na!Qu5dUVZ(R=1A(X61YD
+z&1|xI?_-%|zxUt&_y4}{|K7mUT8Cv~H6h_JF@d~9Oak(rL8$J?{c{p9pZA0$3UBo-
+zViNEu$h(Fl*!zC~Dj@G2f*M+iNd_VXdG{XlEyaHTj|hR3V9!zrV95zSgk6{ygo5Qe
+z9S3-(Xhm)+JPruMfQMek{8n&j+acyf9D7P~08#%4s6y0!@vX|}#>`{&&HIO)Gk<h#
+zFJFV)G9(PQ+uKXD|DF%XKVNfvX=7e;RA6daLe;_b-um6!H``pgT8esjQ5c>qRcp1H
+zH|!-B1DU|hQ}dHDzx@<Ae<guVuUg}s@u>5}0J8jfL<;&&0<~MgNs0<IRBul8#=+sa
+zrT(n>86N!hw!$Z;pWBF8)t|m-%eUr!;AS!Bw!O$gzW-7X8p2_}7?x*xXP!`99QDyL
+zi~<yy4Zblqw_rOAi#7u@x}Pd&z0!v~JvDhfBKG0OGrj6qoKzPjo}|(8snbG#q`?1W
+zT!JSV%+k=BTH_N1br<S(Q?NQr-!iUp4e3L<a+$OSnj{JF6bx=mcydwxT4aeTa9oy&
+z$yEUs#A$j-yn6iHtb({m;YA@Yu%Iuyz%jEGDZUU1{)JdmP4u(&1kcDr(I_=;=zWh_
+zE+?xlBok3mgj1TK>r@uaaVVFP(-=65By=J%j?G{SM!8vy`(wg(i3mk3EY=Bb+U1hA
+zD(coY3O+b{GI^V8l3DphF9SACse>m!8wM-T%N3dHvB@-a=u+g_F@?nqSrZ$msZ>tt
+zjyJ9EhgoDdBk-E6$zV`d%so>7nuOZQ54IeWW7_PauFI7~viudg^Wa>Rkd?!;0B+w?
+zVd`)4E0KQS;T1M7L^7O3Drx-FU5#`{1T;&_7>3VCQ7>gJh)$Ec6n{z;VhX>p@VX3W
+zngL!sVBG;Sdli`#mlS4%yEX-KFQ)rsWa6!ab(#b5q1iXnOzE-=t<BiYe$X^~kL6Ki
+z<>j;nrHw>{>61Id$`4X>$LyOFr6)c#1foGF#hgW>)w#vMUIM6<JkdK*Vg8tRZPi=f
+znQO=}G!UzlM|5={@%&)7c%h`7x-P6D^=D0Hwqh6_+4n^b`*b!=9x&;gf`cRXIzYe4
+z-BP@y`YV7i;6ONxWxaZ%0JP+&?#O)P-F0LEjrTU=;%f0*=8YvQ41>H+#jiJ{Oa6u5
+iKQ`e;%Q4s@U;P*A?_BUvL_cf*0000<MNUMnLSTXsI}5J>
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/pokemon/typhlosion/mega/front.png b/graphics/pokemon/typhlosion/mega/front.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..be74a82ec9d069d1d4226795d23c22c811a7310d
+GIT binary patch
+literal 1207
+zcmV;o1W5adP)<h;3K|Lk000e1NJLTq002M$002M)0{{R3SVwH_0000mP)t-sn9!i;
+z=-~M1koedD(7<rGu&_WtK%j_7h=_>zU;t=PC`eFf*Z=@9FhC$6C=d`3jeyu{00001
+zbW%=J06^y0W&i*LHAzH4RCr#6lwW8ZRTRd5dw04`noV}M7Nie0)AbKj5T-O(P^klr
+z4GM)I3Q`akl=h)2>r?DoL6H`H$U{*Y5EexG;L8evNSk&jD3m63L{tdvcG`y`D&0-l
+zblYuaM$Wx6yAv#U7-r_4^WF2EbM8482I38WGopt7#s335Tm~MBgb(EyQh4}0Bn|->
+za$mmxjYE6Tz6%5B1`$BF2;Ta|#<Dkv<C6hMdvHBQjx9c>m6~Kk)l!58bc>vv-+!Q1
+zge8v?P&-+ujU3k)lf|P;o^@vZ0^S7}@lPDyj$JtRxi(qyn&5-mu<K>ZJvm)INK4Jn
+zDCXx{3n^gv=_}{3Ufs<4=Dp<KZ)~4&A~l1ZQcT=z1(xeh1nv*_eH^Ou4lWKHu9+CF
+z?e195s~`ZE_plUPIz<G5)J6bz+SUuZiGp{0=6tS&r<z{#qD@4fngGUaqKn@J*dCUZ
+zr?%c?j7tjojRoz&KM(c}2%2nmaq_SAIP>maQ>cciL!h511PSf?`dEG5XicFalMmJ8
+zP@yNs*P@XC0)-ODUD@7i_&w^QVv;h6hjDDSvc~#fviJ8;_I*Z+zKKG~qZ%;FBEC<f
+zAJ&1W-%5^CflYZ|FxIPwK3~w6oum6!8VfoCeOR+!&)6-h`LqL&3Jews6~6K5S*~%<
+z0anh6<>L%i!H07PFY`cjyT75`1g<U(CqS|K=3A_cpRPf^9J_)mguec!G2}`+`d6?2
+z#z(WFc>sN$7;;FdS6BWnO&)-Il3?7VkRLiQXHle$#XYA7QLs+!iOdjcz}PvUhO}`I
+zwSL-@ai9TX&CDf0bZbfmDUCu*!SqgUR7A5D0j&<j;fxAkTe(~b$9EC6UYBLm?y#7t
+zB;=^%@Mr}Ta$;!7sAnly)q1I+mgr_Uj58aa#>kn)j?AbL11K&@GC*03aBF$l)w&eW
+z4Plc&rkv=`euxh3S@OCW0PeE%)VG`1Py5QWSdP?9xsn+2j?Ws?F0s>*sT)0#HiaI4
+z@WS3v^Ap*N`3ZWACiPCU@VDqxi=A!C@vBvrnu#$1ERmlbv|+wamx3fS1WZjmLoAtJ
+z$WacN>hLxui2=pqK}GJ-oaIDpI$JC_-6RIh3=`M?*pX<qeEB4d{Yuv<XFTM7tPO5P
+zN$l>C?u#2K>QR!9vS~wny7==3K#Yu_h|M87pej2xLmK2M88NfI`#{>?uH;G^vXK2%
+zTOL@`12Wmp0+ha9%p2~@>-uUIa99@kXC)H_=H53INYBDy&vRcrbySACYW(C(kV&CR
+ze;%Kc)}{Z7Xcx+$HUNm*i7I{xI9*BY1Bw_bdQ0vyj8aYrh7`ANRP<~~PwV^Z5yOyn
+z)IaB~t%;qSAe5;>N>ReSliDF?E4G@#r&6lKlbK~a`Aa<6*?@@S?7Gy6J92y?{{pz%
+VQ|*f>?Pvf1002ovPDHLkV1gk7JS6}C
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/pokemon/typhlosion/mega/icon.png b/graphics/pokemon/typhlosion/mega/icon.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..c9e7d6eb40e351e023835f9e693be9380d9c8a26
+GIT binary patch
+literal 560
+zcmV-00?+-4P)<h;3K|Lk000e1NJLTq001BW002M)0{{R3iJ)km0000mP)t-sVw{6>
+zb924Dz5oCJL28s@l%%A^|L${~)nY-tq+0goDfafP)zxbDlqq6jT0ucU0xrFh0005I
+zNkl<ZcwV)Wze)o^5XQeXF`{60C54Lkr?U|8P%LdUSc@;9U}Yyhf>p}2R*6~*HX?{Z
+zo<I&0MX*VsML?51D>b={%<kRg5-b#Sn!6q5`*v>Tcfc>AUghFsq)0DM@OxjBsNji9
+zIte1`_D@e4k0^BT7D{9RRuLp5AoKA=twy!D0kv}vxw_G?L{mfWBlT%C0+3Y_QeWbE
+zM+Fs<Jr|!h`D`UZ18PPZSMza%*Yd*SBMDp40Mf4C+!z?t+DZggfTG&dg@R4c&>P^~
+zm-@%U)+;9t5`L?1(e}~4Nz5NlLg{3EO_|2DH~msVvW2WL9-dGhfL1oi555|Zrv!*K
+zJ_Yko3W`cRHk<I~#R%YcCMMk_2q>t~10=|I{aF=x2#Abx*S$F}GuaD5&*pv*|G<ac
+zN)!_BS{i18dDJvud58$Ab_0Was%iBWT%z&Me2RFvoY1m?)%w)>;XoXiD<{z$3npfO
+zamvk$kRS`p+}T!iE#cK|14rCh1Psox%ZuV$1g#vPxIOw&2s-^!U;@@dV36$r2G<>6
+yV1S8FEXBYKGca~Qo&fpo?QHy47g9IA<>Lz%udqUZTL}pO0000<MNUMnLSTZCeEB2*
+
+literal 0
+HcmV?d00001
+
+diff --git a/graphics/pokemon/typhlosion/mega/normal.pal b/graphics/pokemon/typhlosion/mega/normal.pal
+new file mode 100644
+index 00000000..17b29875
+--- /dev/null
++++ b/graphics/pokemon/typhlosion/mega/normal.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++152 208 160
++232 232 224
++248 232 144
++248 216 0
++208 192 112
++184 176 176
++64 64 64
++160 136 72
++136 136 136
++248 96 0
++104 80 40
++72 80 104
++216 0 0
++48 48 64
++32 32 40
++16 16 16
+diff --git a/graphics/pokemon/typhlosion/mega/shiny.pal b/graphics/pokemon/typhlosion/mega/shiny.pal
+new file mode 100644
+index 00000000..ba6fcd3f
+--- /dev/null
++++ b/graphics/pokemon/typhlosion/mega/shiny.pal
+@@ -0,0 +1,19 @@
++JASC-PAL
++0100
++16
++152 208 160
++232 232 224
++248 232 144
++0 247 227
++208 192 112
++184 176 176
++64 64 64
++160 136 72
++136 136 136
++0 181 247
++104 80 40
++208 12 18
++0 146 214
++138 12 18
++81 12 18
++16 16 16
 diff --git a/graphics/text_window/1.png b/graphics/text_window/1.png
 index 5d8020eff5ac26935dca94e946ad345c28ef53fd..054dae8951afbdd0136939b7d74838fc1bfaa622 100644
 GIT binary patch
@@ -3967,6 +4140,22 @@ index 65fdec05..4db34a6d 100644
  #define P_BASE_HP_1_SHEDINJA_HANDLING    FALSE       // If TRUE, all species with 1 Base HP will have their handling match Shedinja's.
  
  // Learnset helper toggles
+diff --git a/include/constants/abilities.h b/include/constants/abilities.h
+index f54758ce..d2803b25 100644
+--- a/include/constants/abilities.h
++++ b/include/constants/abilities.h
+@@ -342,7 +342,10 @@ enum __attribute__((packed)) Ability
+     ABILITY_SPICY_SPRAY = 318,
+     ABILITY_AURA_GUARD = 319,
+     ABILITIES_COUNT_GEN9,
+-    ABILITIES_COUNT = ABILITIES_COUNT_GEN9,
++    // Daily Red: Pokémon Insurgence's Hubris (Mega Typhlosion): Sp. Atk +1
++    // after a KO, like Grim Neigh.
++    ABILITY_HUBRIS = 320,
++    ABILITIES_COUNT,
+ };
+ 
+ #endif  // GUARD_CONSTANTS_ABILITIES_H
 diff --git a/include/constants/dailyred.h b/include/constants/dailyred.h
 new file mode 100644
 index 00000000..334e5c72
@@ -3987,6 +4176,20 @@ index 00000000..334e5c72
 +#define DAILYRED_START_Y 17
 +
 +#endif // GUARD_CONSTANTS_DAILYRED_H
+diff --git a/include/constants/items.h b/include/constants/items.h
+index bf452230..5474ea42 100644
+--- a/include/constants/items.h
++++ b/include/constants/items.h
+@@ -1052,6 +1052,9 @@ enum __attribute__((packed)) Item
+     ITEM_TATSUGIRINITE = 872,
+     ITEM_GLIMMORANITE = 873,
+ 
++    // Daily Red: Pokémon Insurgence's Mega Stone for Typhlosion.
++    ITEM_TYPHLOSIONITE = 874,
++
+     ITEMS_COUNT,
+     ITEM_FIELD_ARROW = ITEMS_COUNT,
+ };
 diff --git a/include/constants/opponents_frlg.h b/include/constants/opponents_frlg.h
 index f21e27af..83ed756d 100644
 --- a/include/constants/opponents_frlg.h
@@ -4044,6 +4247,19 @@ index 0bb20e41..e70df6bb 100644
  #define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
  
  #define MUS_NONE                    0xFFFF
+diff --git a/include/constants/species.h b/include/constants/species.h
+index bf5122e1..cf6250c5 100644
+--- a/include/constants/species.h
++++ b/include/constants/species.h
+@@ -1692,6 +1692,8 @@ enum __attribute__((packed)) Species
+ 
+     SPECIES_CUSTOM_START = SPECIES_GLIMMORA_MEGA,
+     // Add any custom species between here and SPECIES_CUSTOM_END
++    // Daily Red: Pokémon Insurgence's Mega Typhlosion.
++    SPECIES_TYPHLOSION_MEGA = 1573,
+     SPECIES_CUSTOM_END,
+ 
+     SPECIES_EGG = SPECIES_CUSTOM_END,
 diff --git a/include/constants/trainers.h b/include/constants/trainers.h
 index 106cc06d..b3db360f 100644
 --- a/include/constants/trainers.h
@@ -4224,7 +4440,7 @@ index 00000000..4b632e92
 +
 +#endif // GUARD_DAILYRED_H
 diff --git a/include/graphics.h b/include/graphics.h
-index e72ab7db..3998cc36 100644
+index e72ab7db..77ee70fd 100644
 --- a/include/graphics.h
 +++ b/include/graphics.h
 @@ -245,6 +245,14 @@ extern const u32 gBattleEnvironmentTilemap_PondWater[];
@@ -4242,7 +4458,17 @@ index e72ab7db..3998cc36 100644
  extern const u32 gBattleEnvironmentTiles_Rock[];
  extern const u32 gBattleEnvironmentTilemap_Rock[];
  extern const u32 gBattleEnvironmentAnimTiles_Rock[];
-@@ -2032,6 +2040,7 @@ extern const u32 gBattleInterface_BallStatusBarGfx[];
+@@ -1034,6 +1042,9 @@ extern const u32 gItemIcon_Tatsugirinite[];
+ extern const u16 gItemIconPalette_Tatsugirinite[];
+ extern const u32 gItemIcon_Glimmoranite[];
+ extern const u16 gItemIconPalette_Glimmoranite[];
++// Daily Red: Typhlosionite (Pokémon Insurgence).
++extern const u32 gItemIcon_Typhlosionite[];
++extern const u16 gItemIconPalette_Typhlosionite[];
+ 
+ // Gems
+ extern const u32 gItemIcon_TypeGem[];
+@@ -2032,6 +2043,7 @@ extern const u32 gBattleInterface_BallStatusBarGfx[];
  extern const u8 gBattleInterface_BallDisplayGfx[];
  extern const u16 gBattleInterface_BallStatusBarPal[];
  extern const u16 gBattleInterface_BallDisplayPal[];
@@ -4250,7 +4476,7 @@ index e72ab7db..3998cc36 100644
  extern const u8 gHealthboxElementsGfxTable[][32];
  
  extern const u16 gNamingScreenMenu_Pal[6][16];
-@@ -2071,6 +2080,7 @@ extern const u32 gHealthboxSafariGfx[];
+@@ -2071,6 +2083,7 @@ extern const u32 gHealthboxSafariGfx[];
  extern const u32 gBlankGfxCompressed[];
  extern const u16 gBattleInterface_BallStatusBarPal[];
  extern const u16 gBattleInterface_BallDisplayPal[];
@@ -7599,7 +7825,7 @@ index 00000000..3bcdb60e
 +	voice_noise_alt 60, 0, 0, 0, 2, 6, 0  @ 126: noise
 +	voice_noise_alt 60, 0, 0, 0, 1, 8, 1  @ 127: noise, hi-hat
 diff --git a/src/battle_ai_util.c b/src/battle_ai_util.c
-index 86b6ead9..6004a112 100644
+index 86b6ead9..cd286b23 100644
 --- a/src/battle_ai_util.c
 +++ b/src/battle_ai_util.c
 @@ -4536,10 +4536,16 @@ s32 CountUsablePartyMons(enum BattlerId battlerId)
@@ -7622,6 +7848,14 @@ index 86b6ead9..6004a112 100644
          {
              ret++;
          }
+@@ -5695,6 +5701,7 @@ bool32 IsMoxieTypeAbility(enum Ability ability)
+     case ABILITY_AS_ONE_ICE_RIDER:
+     case ABILITY_GRIM_NEIGH:
+     case ABILITY_AS_ONE_SHADOW_RIDER:
++    case ABILITY_HUBRIS: // Daily Red: Insurgence's Hubris (Mega Typhlosion)
+     case ABILITY_EELEVATE:
+         return TRUE;
+     default:
 diff --git a/src/battle_anim.c b/src/battle_anim.c
 index 10c3eb24..7a99823c 100644
 --- a/src/battle_anim.c
@@ -8630,6 +8864,27 @@ index abe49bd2..d0cbb51b 100644
      task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender),
                                                  DISPLAY_WIDTH + 32,
                                                  106,
+diff --git a/src/battle_util.c b/src/battle_util.c
+index 85523e06..b73c27b1 100644
+--- a/src/battle_util.c
++++ b/src/battle_util.c
+@@ -4550,6 +4550,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
+         case ABILITY_AS_ONE_ICE_RIDER:
+         case ABILITY_GRIM_NEIGH:
+         case ABILITY_AS_ONE_SHADOW_RIDER:
++        case ABILITY_HUBRIS: // Daily Red: Insurgence's Hubris works like Grim Neigh
+         case ABILITY_BEAST_BOOST:
+         case ABILITY_EELEVATE:
+             {
+@@ -4561,7 +4562,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
+ 
+                 if (ability == ABILITY_BEAST_BOOST || ability == ABILITY_EELEVATE)
+                     stat = GetHighestStatId(battler);
+-                else if (ability == ABILITY_GRIM_NEIGH || ability == ABILITY_AS_ONE_SHADOW_RIDER)
++                else if (ability == ABILITY_GRIM_NEIGH || ability == ABILITY_AS_ONE_SHADOW_RIDER || ability == ABILITY_HUBRIS)
+                     stat = STAT_SPATK;
+ 
+                 if (numMonsFainted && CompareStat(battler, stat, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
 diff --git a/src/battle_z_move.c b/src/battle_z_move.c
 index 4a0a3bc2..1ea2736c 100644
 --- a/src/battle_z_move.c
@@ -9712,7 +9967,7 @@ index 00000000..a8af713b
 +}
 diff --git a/src/dailyred_red.c b/src/dailyred_red.c
 new file mode 100644
-index 00000000..ea17e11f
+index 00000000..767bc51b
 --- /dev/null
 +++ b/src/dailyred_red.c
 @@ -0,0 +1,833 @@
@@ -9802,9 +10057,9 @@ index 00000000..ea17e11f
 +#define SHINY_MEW_ODDS      1
 +#define DEOXYS_ODDS         5
 +#define MEWTWO_ODDS        10
-+#define GALARIAN_BIRD_ODDS 15
++#define GALARIAN_BIRD_ODDS 10
 +#define JOHTO_DOG_ODDS     20
-+#define PARADOX_DOG_ODDS    2 // the Johto dog's paradox; the rest (41%) is his bird
++#define PARADOX_DOG_ODDS    5
 +#define CAP_PIKACHU_ODDS   25 // of the days with his usual team
 +#define PIKANIUM_Z_ODDS    20 // of physical uncapped Pikachu on usual days (7.5% of days)
 +#define PIKASHUNIUM_Z_ODDS 40 // of special capped Pikachu on usual days (5% of days)
@@ -10551,21 +10806,22 @@ index 00000000..ea17e11f
 +}
 diff --git a/src/dailyred_sets.c b/src/dailyred_sets.c
 new file mode 100644
-index 00000000..bca3638b
+index 00000000..3d34b3f8
 --- /dev/null
 +++ b/src/dailyred_sets.c
-@@ -0,0 +1,8180 @@
+@@ -0,0 +1,8187 @@
 +// Generated by scripts/sets/generate.mjs. Don't edit by hand: change the
 +// script's options and run it again.
 +//
 +// Source: Pokémon Showdown 0.11.11 (MIT license), Random Battle sets from
 +// Gens 7, 8 and 9, each an equal share of a species' list (Mega and Z-Move lists
 +// Gen 7, Tera lists Gen 9, Pokémon Champions for Mega Meganium and Mega
-+// Feraligatr), and the hand-written lead sets of scripts/sets/lead-sets.mjs
++// Feraligatr, hand-written for Pokémon Insurgence's Mega
++// Typhlosion), and the hand-written lead sets of scripts/sets/lead-sets.mjs
 +// (25% of a list). 400 randomSet() calls per generation, sets under
 +// 2% dropped, at most 10 per generation.
 +// Gimmick sets left out (gimmickReason in the script): built for Dynamax (Max Moves); Tera Blast without a Tera type; status Z-Move.
-+// 6454 sets in 790 lists; 81 species for RED's random pick.
++// 6458 sets in 791 lists; 81 species for RED's random pick.
 +
 +#include "global.h"
 +#include "data.h"
@@ -17832,6 +18088,11 @@ index 00000000..bca3638b
 +    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, ROAR, SCALD, STEALTH_ROCK, NAUGHTY, EVS(252, 252, 0, 4, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 46, 0), // Bulky Attacker, Gen 7, 8.5%
 +    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, SCALD, STEALTH_ROCK, TOXIC, NAUGHTY, EVS(252, 252, 0, 4, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 43, 0), // Bulky Attacker, Gen 7, 8.0%
 +    SET(SWAMPERT, GROUNDIUM_Z, TORRENT, EARTHQUAKE, ICE_BEAM, SCALD, STEALTH_ROCK, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 38, 0), // Bulky Attacker, Gen 7, 7.0%
++    // Typhlosion-Mega (Insurgence), MEGA (hand-written)
++    SET(TYPHLOSION, TYPHLOSIONITE, FLASH_FIRE, ERUPTION, FIRE_BLAST, FOCUS_BLAST, SCORCHING_SANDS, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Fast Attacker, hand-written, 25%
++    SET(TYPHLOSION, TYPHLOSIONITE, FLASH_FIRE, ERUPTION, FLAMETHROWER, FOCUS_BLAST, SHADOW_BALL, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Fast Attacker, hand-written, 25%
++    SET(TYPHLOSION, TYPHLOSIONITE, BLAZE, ERUPTION, FOCUS_BLAST, SOLAR_BEAM, SUNNY_DAY, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, hand-written, 25%
++    SET(TYPHLOSION, TYPHLOSIONITE, FLASH_FIRE, FIRE_BLAST, FOCUS_BLAST, SCORCHING_SANDS, WORK_UP, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, hand-written, 25%
 +};
 +
 +#undef SET
@@ -18633,6 +18894,7 @@ index 00000000..bca3638b
 +    [787] = {.species = SPECIES_SCEPTILE, .firstSet = 6434, .numSets = 10, .kind = DAILYRED_SETS_ZMOVE, .level = 98}, // Sceptile, Gen 7 NU
 +    [788] = {.species = SPECIES_BLAZIKEN, .firstSet = 6444, .numSets = 3, .kind = DAILYRED_SETS_ZMOVE, .level = 94}, // Blaziken, Gen 7 Uber
 +    [789] = {.species = SPECIES_SWAMPERT, .firstSet = 6447, .numSets = 7, .kind = DAILYRED_SETS_ZMOVE, .level = 96}, // Swampert, Gen 7 UU
++    [790] = {.species = SPECIES_TYPHLOSION_MEGA, .firstSet = 6454, .numSets = 4, .kind = DAILYRED_SETS_MEGA, .level = 95}, // Typhlosion-Mega (Insurgence), Pokémon Insurgence, not on Showdown
 +};
 +
 +const u16 gDailyRedNumSetLists = ARRAY_COUNT(gDailyRedSetLists);
@@ -19678,7 +19940,7 @@ index 00000000..03185c9e
 +}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..7d28e473
+index 00000000..ffec6cef
 --- /dev/null
 +++ b/src/dailyred_team.c
 @@ -0,0 +1,581 @@
@@ -19697,9 +19959,9 @@ index 00000000..7d28e473
 +
 +// The player's team for Daily Red (see "Your team" in the project README):
 +//   - A starter that counters RED's (sCounterStarters), level 100, holding its
-+//     Mega Stone (Charizard X or Y), or a Firium Z for Typhlosion, which has
-+//     no Mega. On RED's original-team days (he has all three Kanto starters)
-+//     it's any of the nine.
++//     Mega Stone (Charizard X or Y; Typhlosion's is Pokemon Insurgence's
++//     Typhlosionite). On RED's original-team days (he has all three Kanto
++//     starters) it's any of the nine.
 +//   - Five fully evolved Pokemon in Daily Red's species scope (see
 +//     DailyRed_IsSpeciesInScope), never holding a Mega Stone or Z-Crystal.
 +//     LEGENDARY_TEAM_ODDS% of teams have exactly one legendary among them
@@ -19724,9 +19986,8 @@ index 00000000..7d28e473
 +//     Showdown tier (the list's .level): the stronger the tier, the lower.
 +//   - On MEGA_SWAP_ODDS% of the days when another of the six can Mega Evolve
 +//     (one of the five, or the legendary: Mewtwo, Latias, Latios...), it
-+//     holds its Mega Stone and the starter a Z-Crystal instead of its own
-+//     (Typhlosion keeps its Firium Z), as long as the Mega's types keep the
-+//     team within the type limit.
++//     holds its Mega Stone and the starter a Z-Crystal instead of its own, as
++//     long as the Mega's types keep the team within the type limit.
 +//   - The party order is random (the player can reorder it).
 +//
 +// It draws from its own RNG state (see dailyred.c), so a seed always gives the
@@ -19779,7 +20040,7 @@ index 00000000..7d28e473
 +    {SPECIES_BLASTOISE, {SPECIES_VENUSAUR,  SPECIES_MEGANIUM,   SPECIES_SCEPTILE}},
 +};
 +
-+// Each starter's Mega forme(s); none for Typhlosion (it holds a Z-Crystal).
++// Each starter's Mega forme(s). Typhlosion's is Pokemon Insurgence's.
 +struct StarterMega
 +{
 +    u16 species;
@@ -19792,6 +20053,7 @@ index 00000000..7d28e473
 +    {SPECIES_CHARIZARD,  {SPECIES_CHARIZARD_MEGA_X, SPECIES_CHARIZARD_MEGA_Y}},
 +    {SPECIES_BLASTOISE,  {SPECIES_BLASTOISE_MEGA,   SPECIES_BLASTOISE_MEGA}},
 +    {SPECIES_MEGANIUM,   {SPECIES_MEGANIUM_MEGA,    SPECIES_MEGANIUM_MEGA}},
++    {SPECIES_TYPHLOSION, {SPECIES_TYPHLOSION_MEGA,  SPECIES_TYPHLOSION_MEGA}},
 +    {SPECIES_FERALIGATR, {SPECIES_FERALIGATR_MEGA,  SPECIES_FERALIGATR_MEGA}},
 +    {SPECIES_SCEPTILE,   {SPECIES_SCEPTILE_MEGA,    SPECIES_SCEPTILE_MEGA}},
 +    {SPECIES_BLAZIKEN,   {SPECIES_BLAZIKEN_MEGA,    SPECIES_BLAZIKEN_MEGA}},
@@ -20016,7 +20278,7 @@ index 00000000..7d28e473
 +            list = DailyRed_FindSetList(sStarterMegas[i].megas[TeamRandom(rng) % 2], DAILYRED_SETS_MEGA);
 +    }
 +    if (list == NULL)
-+        list = DailyRed_FindSetList(starter, DAILYRED_SETS_ZMOVE); // Typhlosion
++        list = DailyRed_FindSetList(starter, DAILYRED_SETS_ZMOVE);
 +    if (list == NULL)
 +        list = DailyRed_FindSetList(starter, DAILYRED_SETS_NORMAL);
 +    AddMember(team, list, LEVEL_STARTER, FALSE, rng);
@@ -20263,6 +20525,24 @@ index 00000000..7d28e473
 +        SetMonData(&party[i], MON_DATA_MET_LOCATION, &metLocation);
 +    }
 +}
+diff --git a/src/data/abilities.h b/src/data/abilities.h
+index 56b71858..750f6dff 100644
+--- a/src/data/abilities.h
++++ b/src/data/abilities.h
+@@ -2556,4 +2556,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
+         .name = _("Aura Guard"),
+         .description = COMPOUND_STRING("Unimplemented."),
+     },
++
++    // Daily Red: Pokémon Insurgence's Hubris (Mega Typhlosion). It works like
++    // Grim Neigh (see ABILITY_GRIM_NEIGH in battle_util.c).
++    [ABILITY_HUBRIS] =
++    {
++        .name = _("Hubris"),
++        .description = COMPOUND_STRING("Raises Sp. Atk after KOs."),
++        .aiRating = 7,
++    },
+ };
 diff --git a/src/data/battle_environment.h b/src/data/battle_environment.h
 index 5e2ab161..33940885 100644
 --- a/src/data/battle_environment.h
@@ -20300,6 +20580,43 @@ index 4e05930b..8ff748f8 100644
 +const u32 gBattleEnvironmentTilemap_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/map.bin", ".smolTM");
 +const u32 gBattleEnvironmentAnimTiles_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/anim_tiles.png", ".4bpp.smol");
 +const u32 gBattleEnvironmentAnimTilemap_DailyRedMtSilver[] = INCGFX_U32("graphics/battle_environment/dailyred_mt_silver/anim_map.bin", ".smolTM");
+diff --git a/src/data/graphics/items.h b/src/data/graphics/items.h
+index 6261255e..25a368fb 100644
+--- a/src/data/graphics/items.h
++++ b/src/data/graphics/items.h
+@@ -1011,6 +1011,10 @@ const u16 gItemIconPalette_Tatsugirinite[] = INCGFX_U16("graphics/items/icon_pal
+ const u32 gItemIcon_Glimmoranite[] = INCGFX_U32("graphics/items/icons/glimmoranite.png", ".4bpp.smol");
+ const u16 gItemIconPalette_Glimmoranite[] = INCGFX_U16("graphics/items/icon_palettes/glimmoranite.pal", ".gbapal");
+ 
++// Daily Red: Typhlosionite (Pokémon Insurgence); scripts/graphics/make-graphics.py.
++const u32 gItemIcon_Typhlosionite[] = INCGFX_U32("graphics/items/icons/typhlosionite.png", ".4bpp.smol");
++const u16 gItemIconPalette_Typhlosionite[] = INCGFX_U16("graphics/items/icon_palettes/typhlosionite.pal", ".gbapal");
++
+ // Gems
+ 
+ const u32 gItemIcon_TypeGem[] = INCGFX_U32("graphics/items/icons/type_gem.png", ".4bpp.smol");
+diff --git a/src/data/graphics/pokemon.h b/src/data/graphics/pokemon.h
+index 758db662..08387178 100644
+--- a/src/data/graphics/pokemon.h
++++ b/src/data/graphics/pokemon.h
+@@ -6709,6 +6709,17 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
+ #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
+ #endif //OW_POKEMON_OBJECT_EVENTS
+ #endif //P_HISUIAN_FORMS
++
++// Daily Red: Mega Typhlosion (Pokémon Insurgence's design): GBA sprites from
++// Daily Red's owner, the back FYTYNo1's with its smoke extended; made from
++// art/mega-typhlosion/ by scripts/graphics/make-graphics.py.
++#if P_MEGA_EVOLUTIONS
++    const u32 gMonFrontPic_TyphlosionMega[] = INCGFX_U32("graphics/pokemon/typhlosion/mega/front.png", ".4bpp.smol");
++    const u16 gMonPalette_TyphlosionMega[] = INCGFX_U16("graphics/pokemon/typhlosion/mega/normal.pal", ".gbapal");
++    const u32 gMonBackPic_TyphlosionMega[] = INCGFX_U32("graphics/pokemon/typhlosion/mega/back.png", ".4bpp.smol");
++    const u16 gMonShinyPalette_TyphlosionMega[] = INCGFX_U16("graphics/pokemon/typhlosion/mega/shiny.pal", ".gbapal");
++    const u8 gMonIcon_TyphlosionMega[] = INCGFX_U8("graphics/pokemon/typhlosion/mega/icon.png", ".4bpp");
++#endif //P_MEGA_EVOLUTIONS
+ #endif //P_FAMILY_CYNDAQUIL
+ 
+ #if P_FAMILY_TOTODILE
 diff --git a/src/data/graphics/trainers.h b/src/data/graphics/trainers.h
 index a6416425..41fb7732 100644
 --- a/src/data/graphics/trainers.h
@@ -20333,6 +20650,36 @@ index a6416425..41fb7732 100644
 +        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_DailyRedLeaf, gTrainerPalette_DailyRedLeaf),
 +    },
  };
+diff --git a/src/data/items.h b/src/data/items.h
+index c51a5acf..96c2b66f 100644
+--- a/src/data/items.h
++++ b/src/data/items.h
+@@ -7307,6 +7307,25 @@ const struct ItemInfo gItemsInfo[] =
+         .iconPalette = gItemIconPalette_Glimmoranite,
+     },
+ 
++    // Daily Red: Pokémon Insurgence's Mega Stone for Typhlosion.
++    [ITEM_TYPHLOSIONITE] =
++    {
++        .name = ITEM_NAME("Typhlosionite"),
++        .price = 0,
++        .holdEffect = HOLD_EFFECT_MEGA_STONE,
++        .description = COMPOUND_STRING(
++            "This stone enables\n"
++            "Typhlosion to Mega\n"
++            "Evolve in battle."),
++        .pocket = POCKET_ITEMS,
++        .sortType = ITEM_TYPE_MEGA_STONE,
++        .type = ITEM_USE_BAG_MENU,
++        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
++        .flingPower = 80,
++        .iconPic = gItemIcon_Typhlosionite,
++        .iconPalette = gItemIconPalette_Typhlosionite,
++    },
++
+ // Gems
+ #if I_PRICE >= GEN_9
+     #define GEM_PRICE 15000
 diff --git a/src/data/party_menu.h b/src/data/party_menu.h
 index 9d65313c..a04dd312 100644
 --- a/src/data/party_menu.h
@@ -20588,6 +20935,135 @@ index 9d65313c..a04dd312 100644
  
  // Palette offsets
  static const u8 sGenderPalOffsets[] = {11, 12};
+diff --git a/src/data/pokemon/form_change_tables.h b/src/data/pokemon/form_change_tables.h
+index 3e1d3b71..ccd49205 100644
+--- a/src/data/pokemon/form_change_tables.h
++++ b/src/data/pokemon/form_change_tables.h
+@@ -362,6 +362,19 @@ static const struct FormChange sMeganiumFormChangeTable[] =
+ };
+ #endif //P_FAMILY_CHIKORITA
+ 
++// Daily Red: Pokémon Insurgence's Mega Typhlosion, by its Typhlosionite.
++#if P_FAMILY_CYNDAQUIL
++static const struct FormChange sTyphlosionFormChangeTable[] =
++{
++#if P_MEGA_EVOLUTIONS
++    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_TYPHLOSION_MEGA, ITEM_TYPHLOSIONITE},
++#endif
++    {FORM_CHANGE_FAINT,                         SPECIES_TYPHLOSION},
++    {FORM_CHANGE_END_BATTLE,                    SPECIES_TYPHLOSION},
++    {FORM_CHANGE_TERMINATOR},
++};
++#endif //P_FAMILY_CYNDAQUIL
++
+ #if P_FAMILY_TOTODILE
+ static const struct FormChange sFeraligatrFormChangeTable[] =
+ {
+diff --git a/src/data/pokemon/form_species_tables.h b/src/data/pokemon/form_species_tables.h
+index 44f0f60e..69a96813 100644
+--- a/src/data/pokemon/form_species_tables.h
++++ b/src/data/pokemon/form_species_tables.h
+@@ -640,6 +640,9 @@ static const u16 sTyphlosionFormSpeciesIdTable[] = {
+     SPECIES_TYPHLOSION,
+ #if P_HISUIAN_FORMS
+     SPECIES_TYPHLOSION_HISUI,
++#endif
++#if P_MEGA_EVOLUTIONS
++    SPECIES_TYPHLOSION_MEGA, // Daily Red: Pokémon Insurgence's Mega Typhlosion
+ #endif
+     FORM_SPECIES_END,
+ };
+diff --git a/src/data/pokemon/species_info/gen_2_families.h b/src/data/pokemon/species_info/gen_2_families.h
+index 493aa3fe..4a3230fa 100644
+--- a/src/data/pokemon/species_info/gen_2_families.h
++++ b/src/data/pokemon/species_info/gen_2_families.h
+@@ -505,6 +505,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
+         .levelUpLearnset = sTyphlosionLevelUpLearnset,
+         .teachableLearnset = sTyphlosionTeachableLearnset,
+         .formSpeciesIdTable = sTyphlosionFormSpeciesIdTable,
++        .formChangeTable = sTyphlosionFormChangeTable, // Daily Red: Mega Typhlosion (Pokémon Insurgence)
+     },
+ 
+ #if P_HISUIAN_FORMS
+@@ -573,6 +574,69 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
+         .formSpeciesIdTable = sTyphlosionFormSpeciesIdTable,
+     },
+ #endif //P_HISUIAN_FORMS
++
++#if P_MEGA_EVOLUTIONS
++    // Daily Red: Pokémon Insurgence's Mega Typhlosion (by the Pokémon
++    // Insurgence team, https://p-insurgence.com), as its wiki gives it
++    // (https://wiki.p-insurgence.com/Typhlosion_(Pok%C3%A9mon)): Fire, Hubris,
++    // 78 HP / 89 Atk / 88 Def / 159 Sp. Atk / 110 Sp. Def / 110 Speed, by
++    // Typhlosionite. Insurgence gives it Typhlosion's size and Pokédex entry.
++    // Its sprites are GBA sprites supplied by Daily Red's owner, the back
++    // FYTYNo1's (after fan art by Tomycase) with its smoke extended
++    // (art/mega-typhlosion/, by scripts/graphics/make-graphics.py).
++    [SPECIES_TYPHLOSION_MEGA] =
++    {
++        .baseHP        = 78,
++        .baseAttack    = 89,
++        .baseDefense   = 88,
++        .baseSpeed     = 110,
++        .baseSpAttack  = 159,
++        .baseSpDefense = 110,
++        .types = MON_TYPES(TYPE_FIRE),
++        .catchRate = 45,
++        .expYield = 285,
++        .evYield_SpAttack = 3,
++        .genderRatio = PERCENT_FEMALE(12.5),
++        .eggCycles = 20,
++        .friendship = STANDARD_FRIENDSHIP,
++        .growthRate = GROWTH_MEDIUM_SLOW,
++        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
++        .abilities = { ABILITY_HUBRIS, ABILITY_HUBRIS, ABILITY_HUBRIS },
++        .bodyColor = BODY_COLOR_YELLOW,
++        .speciesName = _("Typhlosion"),
++        .cryId = CRY_TYPHLOSION, // no Mega cry of its own
++        .natDexNum = NATIONAL_DEX_TYPHLOSION,
++        .categoryName = _("Volcano"),
++        .height = 17,
++        .weight = 795,
++        .description = COMPOUND_STRING(
++            "It can hide behind a shimmering heat haze\n"
++            "that it creates using its intense flames.\n"
++            "Typhlosion create blazing explosive\n"
++            "blasts that burn everything to cinders."),
++        .frontPic = gMonFrontPic_TyphlosionMega,
++        .frontPicSize = MON_COORDS_SIZE(64, 64),
++        .frontPicYOffset = 0,
++        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
++        .frontAnimId = ANIM_SHAKE_GLOW_RED_FAST,
++        .backPic = gMonBackPic_TyphlosionMega,
++        .backPicSize = MON_COORDS_SIZE(64, 64),
++        .backPicYOffset = 4,
++        .backAnimId = BACK_ANIM_SHAKE_GLOW_RED,
++        .palette = gMonPalette_TyphlosionMega,
++        .shinyPalette = gMonShinyPalette_TyphlosionMega,
++        .iconSprite = gMonIcon_TyphlosionMega,
++        .iconPalIndex = 3,
++        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
++        SHADOW(-1, 14, SHADOW_SIZE_L)
++        FOOTPRINT(Typhlosion)
++        .isMegaEvolution = TRUE,
++        .levelUpLearnset = sTyphlosionLevelUpLearnset,
++        .teachableLearnset = sTyphlosionTeachableLearnset,
++        .formSpeciesIdTable = sTyphlosionFormSpeciesIdTable,
++        .formChangeTable = sTyphlosionFormChangeTable,
++    },
++#endif //P_MEGA_EVOLUTIONS
+ #endif //P_FAMILY_CYNDAQUIL
+ 
+ #if P_FAMILY_TOTODILE
+@@ -6035,7 +6099,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
+         .backPicSizeFemale = MON_COORDS_SIZE(56, 64),
+ #endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
+         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+-        SHADOW(1, 14, SHADOW_SIZE_L)
++        SHADOW(2, 14, SHADOW_SIZE_L)
+         FOOTPRINT(Ursaring)
+         OVERWORLD(
+             sPicTable_Ursaring,
 diff --git a/src/data/tilesets/graphics.h b/src/data/tilesets/graphics.h
 index e1a44dca..59529aeb 100644
 --- a/src/data/tilesets/graphics.h
