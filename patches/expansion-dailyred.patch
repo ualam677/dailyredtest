@@ -1,8 +1,8 @@
 diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
-index f514f23b..f3eb3922 100644
+index f514f23b..f151eb60 100644
 --- a/data/battle_anim_scripts.s
 +++ b/data/battle_anim_scripts.s
-@@ -16775,6 +16775,267 @@ gBattleAnimMove_MalignantChain::
+@@ -16775,6 +16775,277 @@ gBattleAnimMove_MalignantChain::
  	waitforvisualfinish
  	end
  
@@ -87,14 +87,14 @@ index f514f23b..f3eb3922 100644
 +	waitbgfadein
 +	end
 +
-+@ Charizard's Burning Meteor. Turn 1: it sets itself ablaze (Flame Wheel's
++@ Charizard's Flare Meteor. Turn 1: it sets itself ablaze (Flame Wheel's
 +@ flames) and takes the target up (Sky Drop's first turn, in red). Turn 2:
 +@ the second half of Fusion Bolt, in red.
-+gBattleAnimMove_BurningMeteor::
-+	choosetwoturnanim BurningMeteorSetUp, BurningMeteorUnleash
-+BurningMeteorEnd:
++gBattleAnimMove_FlareMeteor::
++	choosetwoturnanim FlareMeteorSetUp, FlareMeteorUnleash
++FlareMeteorEnd:
 +	end
-+BurningMeteorSetUp:
++FlareMeteorSetUp:
 +	createsprite gFireSpiralOutwardSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 56, 0
 +	playsewithpan SE_M_FLAME_WHEEL, SOUND_PAN_ATTACKER
 +	delay 2
@@ -123,8 +123,8 @@ index f514f23b..f3eb3922 100644
 +	invisible ANIM_TARGET
 +	playsewithpan SE_M_FLY, SOUND_PAN_ATTACKER
 +	createsprite gSkyDropTargetFlyingTemplate, ANIM_ATTACKER, 2, 0, 0, 13, 336
-+	goto BurningMeteorEnd
-+BurningMeteorUnleash:
++	goto FlareMeteorEnd
++FlareMeteorUnleash:
 +	visible ANIM_TARGET
 +	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_CIRCLE_OF_LIGHT, 0, 12, 12, RGB_RED
 +	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_ELECTRICITY, 0, 12, 12, RGB(31, 10, 0)
@@ -145,7 +145,7 @@ index f514f23b..f3eb3922 100644
 +	playsewithpan SE_M_FLAMETHROWER, SOUND_PAN_ATTACKER
 +	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 0, 14, 0, RGB(12, 0, 0)
 +	waitforvisualfinish
-+	goto BurningMeteorEnd
++	goto FlareMeteorEnd
 +
 +@ Meganium's Blight Petal: Heat Wave in green, petals instead of sand.
 +gBattleAnimMove_BlightPetal::
@@ -180,23 +180,33 @@ index f514f23b..f3eb3922 100644
 +	createsprite gDailyRedBlightPetalSpriteTemplate, ANIM_ATTACKER, 40, 90, 2304, 64, 1
 +	end
 +
-+@ Typhlosion's Pyroclastic: Eruption's red flash and blast, but it spews ash
-+@ instead of rocks: Heat Wave's blowing sand, darkened to soot.
++@ Typhlosion's Pyroclastic: it charges up, glowing red; Eruption's red flash
++@ goes off with no rocks while it hops twice; then Smokescreen's smoke covers
++@ the target.
 +gBattleAnimMove_Pyroclastic::
-+	simple_palette_blend selector=F_PAL_BG | F_PAL_BATTLERS, delay=2, initial_blend_y=0, target_blend_y=4, color=RGB_RED
++	loopsewithpan SE_M_DRAGON_RAGE, SOUND_PAN_ATTACKER, 12, 3
++	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 0, 2, 36, 1
++	blend_color_cycle selector=F_PAL_ATTACKER, delay=2, num_blends=3, initial_blend_y=0, target_blend_y=12, color=RGB_RED
 +	waitforvisualfinish
++	simple_palette_blend selector=F_PAL_BG | F_PAL_BATTLERS, delay=2, initial_blend_y=0, target_blend_y=4, color=RGB_RED
 +	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
-+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_ATTACKER, 3, 0, 20, 1
-+	delay 20
++	createvisualtask AnimTask_Splash, 2, ANIM_ATTACKER, 2
++	waitforvisualfinish
 +	simple_palette_blend selector=F_PAL_BG | F_PAL_BATTLERS, delay=2, initial_blend_y=4, target_blend_y=0, color=RGB_RED
-+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_FLYING_DIRT, 0, 14, 14, RGB(5, 4, 4)
-+	createvisualtask AnimTask_LoadSandstormBackground, 5, TRUE
-+	createvisualtask AnimTask_BlendBackground, 6, 10, RGB(4, 3, 3)
-+	panse SE_M_HEAT_WAVE, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +2, 0
-+	delay 4
-+	createvisualtask AnimTask_MoveHeatWaveTargets, 5
-+	delay 12
-+	create_flying_sand_crescents anim_battler=ANIM_ATTACKER, unknown=1
++	playsewithpan SE_M_SAND_ATTACK, SOUND_PAN_TARGET
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, -12, 104, 0, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, -12, 72, 1, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, -6, 56, 1, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, -6, 88, 0, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, 0, 56, 0, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, 0, 88, 1, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, 6, 72, 0, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, 6, 104, 1, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, 12, 72, 0, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, 12, 56, 1, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, 18, 80, 0, 75
++	createsprite gBlackSmokeSpriteTemplate, ANIM_TARGET, 4, 0, 18, 72, 1, 75
++	waitforvisualfinish
 +	end
 +
 +@ Feraligatr's Jaw Crash. Turn 1: Skull Bash's charge, glowing red. Turn 2:
@@ -270,7 +280,7 @@ index f514f23b..f3eb3922 100644
  gBattleAnimMove_PopulationBomb::
  	monbg ANIM_TARGET
  	setalpha 12, 8
-@@ -28438,14 +28699,14 @@ gBattleAnimStatus_Nightmare::
+@@ -28438,14 +28709,14 @@ gBattleAnimStatus_Nightmare::
  	clearmonbg ANIM_DEF_PARTNER
  	end
  
@@ -291,7 +301,7 @@ index f514f23b..f3eb3922 100644
  	end
  
  gBattleAnimGeneral_StatsChange::
-@@ -28699,8 +28960,27 @@ gBattleAnimGeneral_Sandstorm::
+@@ -28699,8 +28970,27 @@ gBattleAnimGeneral_Sandstorm::
  gBattleAnimGeneral_Hail::
  	goto gBattleAnimMove_Hail
  
@@ -4380,7 +4390,7 @@ index 57d92066..b8216a84 100644
  void AnimMudSportDirt(struct Sprite *sprite);
  void AnimDirtScatter(struct Sprite *sprite);
 diff --git a/include/battle_anim_scripts.h b/include/battle_anim_scripts.h
-index f9fe8bbe..1133b1c9 100644
+index f9fe8bbe..47d0aa72 100644
 --- a/include/battle_anim_scripts.h
 +++ b/include/battle_anim_scripts.h
 @@ -850,6 +850,13 @@ extern const u8 gBattleAnimMove_SupercellSlam[];
@@ -4390,7 +4400,7 @@ index f9fe8bbe..1133b1c9 100644
 +// Daily Red: the Kanto and Johto starters' signature moves
 +extern const u8 gBattleAnimMove_HavocBloom[];
 +extern const u8 gBattleAnimMove_TwinPulse[];
-+extern const u8 gBattleAnimMove_BurningMeteor[];
++extern const u8 gBattleAnimMove_FlareMeteor[];
 +extern const u8 gBattleAnimMove_BlightPetal[];
 +extern const u8 gBattleAnimMove_Pyroclastic[];
 +extern const u8 gBattleAnimMove_JawCrash[];
@@ -4582,7 +4592,7 @@ index bf452230..5474ea42 100644
      ITEM_FIELD_ARROW = ITEMS_COUNT,
  };
 diff --git a/include/constants/moves.h b/include/constants/moves.h
-index cca0f09f..c45d4444 100644
+index cca0f09f..d7e49549 100644
 --- a/include/constants/moves.h
 +++ b/include/constants/moves.h
 @@ -907,7 +907,16 @@ enum __attribute__((packed)) Move
@@ -4593,7 +4603,7 @@ index cca0f09f..c45d4444 100644
 +    // Daily Red: the Kanto and Johto starters' signature moves.
 +    MOVE_HAVOC_BLOOM = MOVES_COUNT_GEN9, // Venusaur
 +    MOVE_TWIN_PULSE,                     // Blastoise
-+    MOVE_BURNING_METEOR,                 // Charizard
++    MOVE_FLARE_METEOR,                 // Charizard
 +    MOVE_BLIGHT_PETAL,                   // Meganium
 +    MOVE_PYROCLASTIC,                    // Typhlosion
 +    MOVE_JAW_CRASH,                      // Feraligatr
@@ -8267,14 +8277,14 @@ index 00000000..3bcdb60e
 +	voice_noise_alt 60, 0, 0, 0, 2, 6, 0  @ 126: noise
 +	voice_noise_alt 60, 0, 0, 0, 1, 8, 1  @ 127: noise, hi-hat
 diff --git a/src/battle_ai_switch.c b/src/battle_ai_switch.c
-index 355ab359..2b926ac9 100644
+index 355ab359..e1a19768 100644
 --- a/src/battle_ai_switch.c
 +++ b/src/battle_ai_switch.c
 @@ -1313,6 +1313,9 @@ static bool32 CanBattlerConsiderSwitch(enum BattlerId battler)
          return FALSE;
      if (gBattleMons[battler].volatiles.root)
          return FALSE;
-+    // Daily Red: held in the air by Sky Drop (or Burning Meteor), it can't switch.
++    // Daily Red: held in the air by Sky Drop (or Flare Meteor), it can't switch.
 +    if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
 +        return FALSE;
      if (IsAbilityPreventingEscape(battler))
@@ -9216,14 +9226,14 @@ index 680ea2d1..5de74df5 100644
  
  u8 GetCurrentPPToMaxPPState(u8 currentPP, u8 maxPP)
 diff --git a/src/battle_move_resolution.c b/src/battle_move_resolution.c
-index 1c90a529..06e2d172 100644
+index 1c90a529..47b171a2 100644
 --- a/src/battle_move_resolution.c
 +++ b/src/battle_move_resolution.c
 @@ -2077,6 +2077,7 @@ static bool32 IsTargetUnaffectedByMoveEffect(struct BattleCalcValues *cv)
          break;
      case EFFECT_SKY_DROP:
          if (!gProtectStructs[cv->battlerAtk].chargingTurn
-+         && cv->move != MOVE_BURNING_METEOR // Daily Red: a Fire move, so it hits Flying types
++         && cv->move != MOVE_FLARE_METEOR // Daily Red: a Fire move, so it hits Flying types
           && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_FLYING))
          {
              gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
@@ -9378,7 +9388,7 @@ index abe49bd2..d0cbb51b 100644
                                                  DISPLAY_WIDTH + 32,
                                                  106,
 diff --git a/src/battle_util.c b/src/battle_util.c
-index 85523e06..41aba380 100644
+index 85523e06..9a481874 100644
 --- a/src/battle_util.c
 +++ b/src/battle_util.c
 @@ -4550,6 +4550,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
@@ -9404,7 +9414,7 @@ index 85523e06..41aba380 100644
      if (!(MoveMakesContact(move) || (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM
 -                                  && gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL)))
 +                                  && gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL)
-+                              // Daily Red: Leaf Blade and Burning Meteor make contact when physical.
++                              // Daily Red: Leaf Blade and Flare Meteor make contact when physical.
 +                              || (IsDailyRedStatCategoryMove(move) && GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)))
      {
          return FALSE;
@@ -9416,14 +9426,14 @@ index 85523e06..41aba380 100644
 +// Daily Red: moves whose category follows the user's higher attacking stat.
 +bool32 IsDailyRedStatCategoryMove(enum Move move)
 +{
-+    return move == MOVE_LEAF_BLADE || move == MOVE_BURNING_METEOR;
++    return move == MOVE_LEAF_BLADE || move == MOVE_FLARE_METEOR;
 +}
 +
  void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
  {
      gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
  
-+    // Daily Red: Leaf Blade and Burning Meteor are physical or special by the
++    // Daily Red: Leaf Blade and Flare Meteor are physical or special by the
 +    // user's higher attacking stat, like Photon Geyser (and make contact only
 +    // when physical, see IsMoveMakingContact).
 +    if (IsDailyRedStatCategoryMove(move))
@@ -11514,7 +11524,7 @@ index 00000000..edecb805
 +}
 diff --git a/src/dailyred_sets.c b/src/dailyred_sets.c
 new file mode 100644
-index 00000000..7d67e1d7
+index 00000000..95288a79
 --- /dev/null
 +++ b/src/dailyred_sets.c
 @@ -0,0 +1,8140 @@
@@ -11557,11 +11567,11 @@ index 00000000..7d67e1d7
 +    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, HAVOC_BLOOM, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 239, 0), // Bulky Attacker, Gen 7, 33%
 +    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, HAVOC_BLOOM, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 235, 0), // Bulky Attacker, Gen 7, 32%
 +    // Charizard-Mega-X, MEGA (Gen 7)
-+    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, BURNING_METEOR, DRAGON_CLAW, DRAGON_DANCE, ROOST, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Gen 7, 55%
-+    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, BURNING_METEOR, DRAGON_CLAW, DRAGON_DANCE, EARTHQUAKE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 211, 0), // Setup Sweeper, Gen 7, 45%
++    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, DRAGON_CLAW, DRAGON_DANCE, FLARE_METEOR, ROOST, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Gen 7, 55%
++    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, DRAGON_CLAW, DRAGON_DANCE, EARTHQUAKE, FLARE_METEOR, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 211, 0), // Setup Sweeper, Gen 7, 45%
 +    // Charizard-Mega-Y, MEGA (Gen 7)
-+    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, BURNING_METEOR, DRAGON_PULSE, ROOST, SOLAR_BEAM, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7, 53%
-+    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, AIR_SLASH, BURNING_METEOR, ROOST, SOLAR_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 226, 0), // Fast Attacker, Gen 7, 47%
++    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, DRAGON_PULSE, FLARE_METEOR, ROOST, SOLAR_BEAM, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7, 53%
++    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, AIR_SLASH, FLARE_METEOR, ROOST, SOLAR_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 226, 0), // Fast Attacker, Gen 7, 47%
 +    // Blastoise-Mega, MEGA (Gen 7)
 +    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, AURA_SPHERE, ICE_BEAM, RAPID_SPIN, TWIN_PULSE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 1), // Bulky Support, Gen 7, 35%
 +    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, DARK_PULSE, ICE_BEAM, RAPID_SPIN, TWIN_PULSE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 253, 1), // Bulky Support, Gen 7, 34%
@@ -11809,16 +11819,16 @@ index 00000000..7d67e1d7
 +    SET(VENUSAUR, LEFTOVERS, CHLOROPHYLL, EARTH_POWER, SLUDGE_BOMB, SYNTHESIS, TOXIC, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 14, 0), // Bulky Attacker, Gen 9, 0.9%
 +    SET(VENUSAUR, LEFTOVERS, CHLOROPHYLL, EARTH_POWER, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 13, 0), // Bulky Attacker, Gen 9, 0.9%
 +    // Charizard, NORMAL (Gen 7, Gen 8, Gen 9)
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, SOLAR_POWER, AIR_SLASH, BURNING_METEOR, DEFOG, ROOST, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 8, 17%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, SOLAR_POWER, AIR_SLASH, BURNING_METEOR, ROOST, WILL_O_WISP, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 245, 0), // Bulky Attacker, Gen 8, 16%
-+    SET(CHARIZARD, NONE, BLAZE, ACROBATICS, BURNING_METEOR, EARTHQUAKE, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 232, 0), // Setup Sweeper, Gen 7, 16%
-+    SET(CHARIZARD, LEFTOVERS, BLAZE, AIR_SLASH, BURNING_METEOR, EARTHQUAKE, ROOST, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 149, 0), // Bulky Attacker, Gen 7, 9.9%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, OUTRAGE, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 135, 0), // Setup Sweeper, Gen 9, 9.0%
-+    SET(CHARIZARD, LEFTOVERS, BLAZE, AIR_SLASH, BURNING_METEOR, ROOST, WILL_O_WISP, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 119, 0), // Bulky Attacker, Gen 7, 7.9%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, DRAGON_DANCE, EARTHQUAKE, OUTRAGE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 115, 0), // Setup Sweeper, Gen 9, 7.7%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, HURRICANE, WILL_O_WISP, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 100, 0), // Fast Attacker, Gen 9, 6.7%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, FOCUS_BLAST, HURRICANE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 90, 0), // Fast Attacker, Gen 9, 6.0%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, FOCUS_BLAST, HURRICANE, WILL_O_WISP, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 60, 0), // Fast Attacker, Gen 9, 4.0%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, SOLAR_POWER, AIR_SLASH, DEFOG, FLARE_METEOR, ROOST, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 8, 17%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, SOLAR_POWER, AIR_SLASH, FLARE_METEOR, ROOST, WILL_O_WISP, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 245, 0), // Bulky Attacker, Gen 8, 16%
++    SET(CHARIZARD, NONE, BLAZE, ACROBATICS, EARTHQUAKE, FLARE_METEOR, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 232, 0), // Setup Sweeper, Gen 7, 16%
++    SET(CHARIZARD, LEFTOVERS, BLAZE, AIR_SLASH, EARTHQUAKE, FLARE_METEOR, ROOST, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 149, 0), // Bulky Attacker, Gen 7, 9.9%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, OUTRAGE, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 135, 0), // Setup Sweeper, Gen 9, 9.0%
++    SET(CHARIZARD, LEFTOVERS, BLAZE, AIR_SLASH, FLARE_METEOR, ROOST, WILL_O_WISP, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 119, 0), // Bulky Attacker, Gen 7, 7.9%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, DRAGON_DANCE, EARTHQUAKE, FLARE_METEOR, OUTRAGE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 115, 0), // Setup Sweeper, Gen 9, 7.7%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, HURRICANE, WILL_O_WISP, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 100, 0), // Fast Attacker, Gen 9, 6.7%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, FOCUS_BLAST, HURRICANE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 90, 0), // Fast Attacker, Gen 9, 6.0%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, FLARE_METEOR, FOCUS_BLAST, HURRICANE, WILL_O_WISP, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 60, 0), // Fast Attacker, Gen 9, 4.0%
 +    // Blastoise, NORMAL (Gen 7, Gen 8, Gen 9)
 +    SET(BLASTOISE, WHITE_HERB, TORRENT, EARTHQUAKE, ICE_BEAM, SHELL_SMASH, TWIN_PULSE, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Gen 8, 67%
 +    SET(BLASTOISE, LEFTOVERS, TORRENT, ICE_BEAM, PROTECT, TOXIC, TWIN_PULSE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 27, 1), // Staller, Gen 7, 7.2%
@@ -18690,19 +18700,19 @@ index 00000000..7d67e1d7
 +    SET(VENUSAUR, LEFTOVERS, CHLOROPHYLL, EARTH_POWER, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), STEEL, 255, 72, 0), // Bulky Attacker, Gen 9, 5.1%
 +    SET(VENUSAUR, LEFTOVERS, OVERGROW, HAVOC_BLOOM, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), STEEL, 255, 63, 0), // Bulky Attacker, Gen 9, 4.4%
 +    // Charizard, ZMOVE (Gen 7)
-+    SET(CHARIZARD, FIRIUM_Z, BLAZE, AIR_SLASH, BURNING_METEOR, EARTHQUAKE, ROOST, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7, 54%
-+    SET(CHARIZARD, FIRIUM_Z, BLAZE, AIR_SLASH, BURNING_METEOR, ROOST, WILL_O_WISP, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 221, 0), // Bulky Attacker, Gen 7, 46%
++    SET(CHARIZARD, FIRIUM_Z, BLAZE, AIR_SLASH, EARTHQUAKE, FLARE_METEOR, ROOST, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7, 54%
++    SET(CHARIZARD, FIRIUM_Z, BLAZE, AIR_SLASH, FLARE_METEOR, ROOST, WILL_O_WISP, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 221, 0), // Bulky Attacker, Gen 7, 46%
 +    // Charizard, TERA (Gen 9)
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, DRAGON_DANCE, EARTHQUAKE, OUTRAGE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 255, 0), // Setup Sweeper, Gen 9, 17%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, OUTRAGE, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 226, 0), // Setup Sweeper, Gen 9, 15%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, DRAGON_DANCE, EARTHQUAKE, OUTRAGE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), DRAGON, 255, 193, 0), // Setup Sweeper, Gen 9, 13%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, OUTRAGE, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), DRAGON, 255, 193, 0), // Setup Sweeper, Gen 9, 13%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, FOCUS_BLAST, HURRICANE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 144, 0), // Fast Attacker, Gen 9, 9.6%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, HURRICANE, WILL_O_WISP, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 119, 0), // Fast Attacker, Gen 9, 7.9%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, HURRICANE, WILL_O_WISP, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), DRAGON, 255, 107, 0), // Fast Attacker, Gen 9, 7.1%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, HURRICANE, WILL_O_WISP, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), FIRE, 255, 90, 0), // Fast Attacker, Gen 9, 6.0%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, EARTHQUAKE, FOCUS_BLAST, HURRICANE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), DRAGON, 255, 86, 0), // Fast Attacker, Gen 9, 5.8%
-+    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, BURNING_METEOR, FOCUS_BLAST, HURRICANE, WILL_O_WISP, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), DRAGON, 255, 86, 0), // Fast Attacker, Gen 9, 5.8%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, DRAGON_DANCE, EARTHQUAKE, FLARE_METEOR, OUTRAGE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 255, 0), // Setup Sweeper, Gen 9, 17%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, OUTRAGE, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 226, 0), // Setup Sweeper, Gen 9, 15%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, DRAGON_DANCE, EARTHQUAKE, FLARE_METEOR, OUTRAGE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), DRAGON, 255, 193, 0), // Setup Sweeper, Gen 9, 13%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, OUTRAGE, SWORDS_DANCE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), DRAGON, 255, 193, 0), // Setup Sweeper, Gen 9, 13%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, FOCUS_BLAST, HURRICANE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 144, 0), // Fast Attacker, Gen 9, 9.6%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, HURRICANE, WILL_O_WISP, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), GROUND, 255, 119, 0), // Fast Attacker, Gen 9, 7.9%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, HURRICANE, WILL_O_WISP, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), DRAGON, 255, 107, 0), // Fast Attacker, Gen 9, 7.1%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, HURRICANE, WILL_O_WISP, NAIVE, EVS(0, 4, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), FIRE, 255, 90, 0), // Fast Attacker, Gen 9, 6.0%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, EARTHQUAKE, FLARE_METEOR, FOCUS_BLAST, HURRICANE, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 31, 31, 31, 31, 31), DRAGON, 255, 86, 0), // Fast Attacker, Gen 9, 5.8%
++    SET(CHARIZARD, HEAVY_DUTY_BOOTS, BLAZE, FLARE_METEOR, FOCUS_BLAST, HURRICANE, WILL_O_WISP, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), DRAGON, 255, 86, 0), // Fast Attacker, Gen 9, 5.8%
 +    // Blastoise, ZMOVE (Gen 7)
 +    SET(BLASTOISE, WATERIUM_Z, TORRENT, ICE_BEAM, PROTECT, TOXIC, TWIN_PULSE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 1), // Staller, Gen 7, 18%
 +    SET(BLASTOISE, WATERIUM_Z, TORRENT, ICE_BEAM, RAPID_SPIN, ROAR, TWIN_PULSE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 244, 1), // Bulky Support, Gen 7, 17%
@@ -20601,7 +20611,7 @@ index 00000000..03185c9e
 +}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..d60c96d7
+index 00000000..971b24ca
 --- /dev/null
 +++ b/src/dailyred_team.c
 @@ -0,0 +1,614 @@
@@ -21154,7 +21164,7 @@ index 00000000..d60c96d7
 +    { .species = SPECIES_VENUSAUR, .item = ITEM_BLACK_SLUDGE, .ability = ABILITY_CHLOROPHYLL, .ivs = TEST_IVS, .friendship = 255,
 +      .moves = { MOVE_HAVOC_BLOOM, MOVE_SLUDGE_BOMB, MOVE_EARTH_POWER, MOVE_SYNTHESIS }, .nature = NATURE_MODEST, .evs = { 252, 0, 4, 252, 0, 0 } },
 +    { .species = SPECIES_CHARIZARD, .item = ITEM_LIFE_ORB, .ability = ABILITY_BLAZE, .ivs = TEST_IVS, .friendship = 255,
-+      .moves = { MOVE_BURNING_METEOR, MOVE_AIR_SLASH, MOVE_FOCUS_BLAST, MOVE_ROOST }, .nature = NATURE_TIMID, .evs = { 4, 0, 0, 252, 0, 252 } },
++      .moves = { MOVE_FLARE_METEOR, MOVE_AIR_SLASH, MOVE_FOCUS_BLAST, MOVE_ROOST }, .nature = NATURE_TIMID, .evs = { 4, 0, 0, 252, 0, 252 } },
 +    { .species = SPECIES_BLASTOISE, .item = ITEM_MYSTIC_WATER, .ability = ABILITY_TORRENT, .ivs = TEST_IVS, .friendship = 255,
 +      .moves = { MOVE_TWIN_PULSE, MOVE_ICE_BEAM, MOVE_DARK_PULSE, MOVE_RAPID_SPIN }, .nature = NATURE_MODEST, .evs = { 252, 0, 4, 252, 0, 0 } },
 +    { .species = SPECIES_MEGANIUM, .item = ITEM_LEFTOVERS, .ability = ABILITY_OVERGROW, .ivs = TEST_IVS, .friendship = 255,
@@ -21391,7 +21401,7 @@ index c51a5acf..96c2b66f 100644
  #if I_PRICE >= GEN_9
      #define GEM_PRICE 15000
 diff --git a/src/data/moves_info.h b/src/data/moves_info.h
-index d75670d7..a3f30606 100644
+index d75670d7..cd5e700d 100644
 --- a/src/data/moves_info.h
 +++ b/src/data/moves_info.h
 @@ -234,7 +234,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
@@ -21575,9 +21585,9 @@ index d75670d7..a3f30606 100644
 +        .battleAnimScript = gBattleAnimMove_TwinPulse,
 +    },
 +
-+    [MOVE_BURNING_METEOR] =
++    [MOVE_FLARE_METEOR] =
 +    {
-+        .name = COMPOUND_STRING("Burning Meteor"),
++        .name = COMPOUND_STRING("Flare Meteor"),
 +        .description = COMPOUND_STRING(
 +            "Takes the foe up ablaze,\n"
 +            "then crashes down. May burn."),
@@ -21597,7 +21607,7 @@ index d75670d7..a3f30606 100644
 +            .moveEffect = MOVE_EFFECT_BURN,
 +            .chance = 10,
 +        }),
-+        .battleAnimScript = gBattleAnimMove_BurningMeteor,
++        .battleAnimScript = gBattleAnimMove_FlareMeteor,
 +    },
 +
 +    [MOVE_BLIGHT_PETAL] =
@@ -21607,7 +21617,7 @@ index d75670d7..a3f30606 100644
 +            "A storm of tainted petals.\n"
 +            "May cause a status."),
 +        .effect = EFFECT_HIT,
-+        .power = 80,
++        .power = 75,
 +        .type = TYPE_GRASS,
 +        .accuracy = 100,
 +        .pp = 10,
@@ -23298,7 +23308,7 @@ index 44f0f60e..69a96813 100644
      FORM_SPECIES_END,
  };
 diff --git a/src/data/pokemon/level_up_learnsets/gen_1.h b/src/data/pokemon/level_up_learnsets/gen_1.h
-index f1e7cd32..d15eaec7 100644
+index f1e7cd32..f1a0cbd8 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_1.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_1.h
 @@ -35,6 +35,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
@@ -23313,7 +23323,7 @@ index f1e7cd32..d15eaec7 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_EMBER),
@@ -23614,7 +23624,7 @@ index f1e7cd32..d15eaec7 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_2.h b/src/data/pokemon/level_up_learnsets/gen_2.h
-index 3d74d70b..0577a9af 100644
+index 3d74d70b..9fcf9b6d 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_2.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_2.h
 @@ -40,6 +40,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
@@ -23629,7 +23639,7 @@ index 3d74d70b..0577a9af 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_EMBER),
@@ -23930,7 +23940,7 @@ index 3d74d70b..0577a9af 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_3.h b/src/data/pokemon/level_up_learnsets/gen_3.h
-index cedd09b3..dffcb62d 100644
+index cedd09b3..fe461c81 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_3.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_3.h
 @@ -40,6 +40,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
@@ -23945,7 +23955,7 @@ index cedd09b3..dffcb62d 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_EMBER),
@@ -24246,7 +24256,7 @@ index cedd09b3..dffcb62d 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_4.h b/src/data/pokemon/level_up_learnsets/gen_4.h
-index 4b302539..6afff5b5 100644
+index 4b302539..0b440ecd 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_4.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_4.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
@@ -24261,7 +24271,7 @@ index 4b302539..6afff5b5 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_DRAGON_CLAW),
      LEVEL_UP_MOVE( 1, MOVE_SHADOW_CLAW),
      LEVEL_UP_MOVE( 1, MOVE_AIR_SLASH),
@@ -24594,7 +24604,7 @@ index 4b302539..6afff5b5 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_5.h b/src/data/pokemon/level_up_learnsets/gen_5.h
-index 2403f17b..780a351c 100644
+index 2403f17b..55f537e2 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_5.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_5.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
@@ -24609,7 +24619,7 @@ index 2403f17b..780a351c 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_DRAGON_CLAW),
      LEVEL_UP_MOVE( 1, MOVE_SHADOW_CLAW),
      LEVEL_UP_MOVE( 1, MOVE_AIR_SLASH),
@@ -24942,7 +24952,7 @@ index 2403f17b..780a351c 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_6.h b/src/data/pokemon/level_up_learnsets/gen_6.h
-index c5a3a39a..9c3736ca 100644
+index c5a3a39a..77cf4d6d 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_6.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_6.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
@@ -24957,7 +24967,7 @@ index c5a3a39a..9c3736ca 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_FLARE_BLITZ),
      LEVEL_UP_MOVE( 1, MOVE_HEAT_WAVE),
      LEVEL_UP_MOVE( 1, MOVE_DRAGON_CLAW),
@@ -25306,7 +25316,7 @@ index c5a3a39a..9c3736ca 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_7.h b/src/data/pokemon/level_up_learnsets/gen_7.h
-index 77d2fc2d..8ba3f6b6 100644
+index 77d2fc2d..385433ae 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_7.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_7.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
@@ -25321,7 +25331,7 @@ index 77d2fc2d..8ba3f6b6 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_WING_ATTACK),
      LEVEL_UP_MOVE( 1, MOVE_WING_ATTACK),
      LEVEL_UP_MOVE( 1, MOVE_FLARE_BLITZ),
@@ -25670,7 +25680,7 @@ index 77d2fc2d..8ba3f6b6 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_8.h b/src/data/pokemon/level_up_learnsets/gen_8.h
-index 65b557a4..d9f9503a 100644
+index 65b557a4..5b7d74e7 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_8.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_8.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
@@ -25685,7 +25695,7 @@ index 65b557a4..d9f9503a 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_AIR_SLASH),
      LEVEL_UP_MOVE( 1, MOVE_AIR_SLASH),
      LEVEL_UP_MOVE( 1, MOVE_DRAGON_CLAW),
@@ -26034,7 +26044,7 @@ index 65b557a4..d9f9503a 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_9.h b/src/data/pokemon/level_up_learnsets/gen_9.h
-index 0bdfbe1e..e41fa591 100644
+index 0bdfbe1e..3fad4d9a 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_9.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_9.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
@@ -26049,7 +26059,7 @@ index 0bdfbe1e..e41fa591 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_AIR_SLASH),
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
@@ -28605,10 +28615,10 @@ index 57e9da2e..a3a86bc3 100644
          break;
 diff --git a/test/battle/dailyred_signature_moves.c b/test/battle/dailyred_signature_moves.c
 new file mode 100644
-index 00000000..dc37518e
+index 00000000..ce7c8a87
 --- /dev/null
 +++ b/test/battle/dailyred_signature_moves.c
-@@ -0,0 +1,149 @@
+@@ -0,0 +1,164 @@
 +#include "global.h"
 +#include "test/battle.h"
 +
@@ -28643,35 +28653,35 @@ index 00000000..dc37518e
 +    }
 +}
 +
-+SINGLE_BATTLE_TEST("Burning Meteor takes the target up, then hits even a Flying type")
++SINGLE_BATTLE_TEST("Flare Meteor takes the target up, then hits even a Flying type")
 +{
 +    GIVEN {
-+        PLAYER(SPECIES_CHARIZARD) { Moves(MOVE_BURNING_METEOR); }
++        PLAYER(SPECIES_CHARIZARD) { Moves(MOVE_FLARE_METEOR); }
 +        OPPONENT(SPECIES_PIDGEOT);
 +    } WHEN {
-+        TURN { MOVE(player, MOVE_BURNING_METEOR, hit: TRUE); }
++        TURN { MOVE(player, MOVE_FLARE_METEOR, hit: TRUE); }
 +        TURN { SKIP_TURN(player); }
 +    } SCENE {
 +        MESSAGE("Charizard took the opposing Pidgeot into the sky!");
-+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BURNING_METEOR, player);
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLARE_METEOR, player);
 +        HP_BAR(opponent);
 +    }
 +}
 +
-+SINGLE_BATTLE_TEST("Burning Meteor and Leaf Blade make contact only when physical")
++SINGLE_BATTLE_TEST("Flare Meteor and Leaf Blade make contact only when physical")
 +{
 +    enum Move move;
 +    enum Species species;
 +    bool32 contact;
-+    PARAMETRIZE { move = MOVE_BURNING_METEOR; species = SPECIES_MACHAMP; contact = TRUE; }
-+    PARAMETRIZE { move = MOVE_BURNING_METEOR; species = SPECIES_ALAKAZAM; contact = FALSE; }
++    PARAMETRIZE { move = MOVE_FLARE_METEOR; species = SPECIES_MACHAMP; contact = TRUE; }
++    PARAMETRIZE { move = MOVE_FLARE_METEOR; species = SPECIES_ALAKAZAM; contact = FALSE; }
 +    PARAMETRIZE { move = MOVE_LEAF_BLADE; species = SPECIES_MACHAMP; contact = TRUE; }
 +    PARAMETRIZE { move = MOVE_LEAF_BLADE; species = SPECIES_ALAKAZAM; contact = FALSE; }
 +    GIVEN {
 +        PLAYER(species) { Moves(move); }
 +        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
 +    } WHEN {
-+        if (move == MOVE_BURNING_METEOR)
++        if (move == MOVE_FLARE_METEOR)
 +        {
 +            TURN { MOVE(player, move, hit: TRUE); }
 +            TURN { SKIP_TURN(player); }
@@ -28756,5 +28766,20 @@ index 00000000..dc37518e
 +        ANIMATION(ANIM_TYPE_MOVE, MOVE_BLIGHT_PETAL, player);
 +        HP_BAR(opponent);
 +        ANIMATION(ANIM_TYPE_STATUS, statusAnim, opponent);
++    }
++}
++
++// As Sky Drop (and Showdown's): the lifting turn always succeeds; accuracy is
++// rolled on the second turn, when it hits.
++SINGLE_BATTLE_TEST("Flare Meteor's lifting turn ignores accuracy")
++{
++    GIVEN {
++        PLAYER(SPECIES_CHARIZARD) { Moves(MOVE_FLARE_METEOR); }
++        OPPONENT(SPECIES_WOBBUFFET);
++    } WHEN {
++        TURN { MOVE(player, MOVE_FLARE_METEOR, hit: FALSE); }
++        TURN { SKIP_TURN(player); }
++    } SCENE {
++        MESSAGE("Charizard took the opposing Wobbuffet into the sky!");
 +    }
 +}

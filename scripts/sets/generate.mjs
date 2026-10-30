@@ -114,7 +114,7 @@ const Z_STARTERS = ['meganium', 'typhlosion', 'feraligatr', 'sceptile', 'blazike
 const SIGNATURE_MOVES = {
   Venusaur: { id: 'havocbloom', constant: 'MOVE_HAVOC_BLOOM', type: 'Grass', category: 'Special' },
   Blastoise: { id: 'twinpulse', constant: 'MOVE_TWIN_PULSE', type: 'Water', category: 'Special' },
-  Charizard: { id: 'burningmeteor', constant: 'MOVE_BURNING_METEOR', type: 'Fire' },
+  Charizard: { id: 'flaremeteor', constant: 'MOVE_FLARE_METEOR', type: 'Fire' },
   Meganium: { id: 'blightpetal', constant: 'MOVE_BLIGHT_PETAL', type: 'Grass', category: 'Special' },
   Typhlosion: { id: 'pyroclastic', constant: 'MOVE_PYROCLASTIC', move: 'workup' },
   Feraligatr: { id: 'jawcrash', constant: 'MOVE_JAW_CRASH', type: 'Water', category: 'Physical' },

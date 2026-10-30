@@ -395,9 +395,9 @@ included; not Hisuian Typhlosion). The engine side is in the expansion:
 |---|---|---|---|---|---|---|
 | Havoc Bloom | Venusaur | Grass, special | 85 | 100 | Seeds the target with Leech Seed on a hit | Frenzy Plant's roots, then Leech Seed's seeds sprouting on the target |
 | Twin Pulse | Blastoise | Water, special | 40 ×2 | 100 | Hits twice; a pulse move, so Mega Launcher powers it up | Aurora Beam's rings, growing as Aurora Beam's do, in Water Pulse's blue, on a water background, water sounds; once per hit |
-| Burning Meteor | Charizard | Fire, physical or special by its higher attacking stat | 100 | 95 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2 (RED can't switch it out meanwhile: the expansion's switching AI didn't check for Sky Drop, `CanBattlerConsiderSwitch` in `src/battle_ai_switch.c`); 10% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red |
-| Blight Petal | Meganium | Grass, special, both foes | 80 | 100 | 40% chance of poison, paralysis, sleep or frostbite (one at random) | Heat Wave in green, with tumbling petals instead of sand |
-| Pyroclastic | Typhlosion | Fire, status, both foes | — | 95 | Lowers the foes' accuracy by 1, then raises the user's Speed by 1 | Eruption's red flash and blast, spewing soot instead of rocks: Heat Wave's blowing sand, darkened |
+| Flare Meteor | Charizard | Fire, physical or special by its higher attacking stat | 100 | 95 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2, where the accuracy roll is, as with Sky Drop (RED can't switch it out meanwhile: the expansion's switching AI didn't check for Sky Drop, `CanBattlerConsiderSwitch` in `src/battle_ai_switch.c`); 10% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red |
+| Blight Petal | Meganium | Grass, special, both foes | 75 | 100 | 40% chance of poison, paralysis, sleep or frostbite (one at random) | Heat Wave in green, with tumbling petals instead of sand |
+| Pyroclastic | Typhlosion | Fire, status, both foes | — | 95 | Lowers the foes' accuracy by 1, then raises the user's Speed by 1 | It charges up glowing red, Eruption's red flash goes off with no rocks while it hops twice, then Smokescreen's smoke covers the target |
 | Jaw Crash | Feraligatr | Water, physical | 130 | 95 | Turn 1: "slammed down its armored jaw!", Defense and Sp. Def +1. Turn 2: attacks. If the attack misses (or the target is protected or immune), the user loses that +1 Defense and Sp. Def | Turn 1: Skull Bash's charge, glowing red. Turn 2: Giga Impact's background, bubbles around it, then Double-Edge's charge |
 
 Changed moves:
@@ -415,7 +415,7 @@ Changed moves:
 Where they are in the expansion: the moves in `src/data/moves_info.h` and
 `include/constants/moves.h` (after Gen 9's); the higher-stat category and
 contact in `IsDailyRedStatCategoryMove` (`SetDynamicMoveCategory`,
-`IsMoveMakingContact` in `src/battle_util.c`); Burning Meteor hitting Flying
+`IsMoveMakingContact` in `src/battle_util.c`); Flare Meteor hitting Flying
 types in `CancelerTargetFailure` and Jaw Crash's lost boosts in
 `MoveEndMoveBlockRecoil` (`src/battle_move_resolution.c`); Pyroclastic's
 effect `EFFECT_PYROCLASTIC` (`BattleScript_EffectPyroclastic`); Blight Petal
@@ -431,7 +431,7 @@ TESTS=test/battle/dailyred_signature_moves.c`).
 doesn't know these moves, so each set of a Kanto or Johto starter (or its
 Mega) gets its signature move in place of its strongest attack of the same
 type and category: Venusaur's special Grass attack, Blastoise's special Water
-attack, Charizard's Fire attack (either category: Burning Meteor follows its
+attack, Charizard's Fire attack (either category: Flare Meteor follows its
 stats), Meganium's special Grass attack and Feraligatr's physical Water
 attack. A set with no such attack keeps its moves (Meganium's physical sets
 keep Petal Blizzard). Typhlosion's Pyroclastic takes Work Up's place, which
