@@ -577,10 +577,13 @@ equal share (Gen 7 is the last with Mega Evolution and Z-Moves; Gen 8 and 9
 bring newer items and moves: Heavy-Duty Boots, Assault Vest sets…). Mega and
 Z-Move lists come from Gen 7, Tera lists from Gen 9, and Mega Meganium and
 Mega Feraligatr from Showdown's Pokémon Champions Random Battles. Mega
-Typhlosion, which Showdown doesn't have, gets Typhlosion's own Random Battle
-sets (Gen 7 and 9) holding Typhlosionite in place of their Choice Specs or
-Scarf (`INSURGENCE_MEGAS` in the script): Eruption, Fire Blast and Focus
-Blast with Scorching Sands or Hidden Power (Grass or Rock), Timid.
+Typhlosion, which Showdown doesn't have, gets four hand-written sets
+(`INSURGENCE_MEGAS` in the script), since Typhlosion's own Random Battle sets
+are all Choice Specs or Choice Scarf ones: Eruption, Fire Blast, Focus Blast
+and Scorching Sands; Eruption, Flamethrower, Focus Blast and Shadow Ball; Work
+Up, Fire Blast, Focus Blast and Scorching Sands; and Sunny Day, Eruption, Solar
+Beam and Focus Blast (Blaze). All Timid, 252 Sp. Atk and Speed, checked against
+Typhlosion's learnset like the lead sets.
 
 **Lead sets.** Showdown's generators hardly make lead sets (a lead
 Aerodactyl gets a Focus Sash about 5% of the time), so
