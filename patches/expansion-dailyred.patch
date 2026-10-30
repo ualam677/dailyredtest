@@ -1,5 +1,5 @@
 diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
-index f514f23b..0fc3ffb0 100644
+index f514f23b..9efb937a 100644
 --- a/data/battle_anim_scripts.s
 +++ b/data/battle_anim_scripts.s
 @@ -16775,6 +16775,273 @@ gBattleAnimMove_MalignantChain::
@@ -8,9 +8,9 @@ index f514f23b..0fc3ffb0 100644
  
 +@ --- Daily Red: the Kanto and Johto starters' signature moves --------------------
 +
-+@ Venusaur's Drain Plant: Frenzy Plant's roots, then Leech Seed's seeds
++@ Venusaur's Draining Plant: Frenzy Plant's roots, then Leech Seed's seeds
 +@ sprouting on the target.
-+gBattleAnimMove_DrainPlant::
++gBattleAnimMove_DrainingPlant::
 +	monbg ANIM_TARGET
 +	splitbgprio ANIM_TARGET
 +	setalpha 12, 8
@@ -4386,7 +4386,7 @@ index 57d92066..b8216a84 100644
  void AnimMudSportDirt(struct Sprite *sprite);
  void AnimDirtScatter(struct Sprite *sprite);
 diff --git a/include/battle_anim_scripts.h b/include/battle_anim_scripts.h
-index f9fe8bbe..78005d3f 100644
+index f9fe8bbe..1b2c355c 100644
 --- a/include/battle_anim_scripts.h
 +++ b/include/battle_anim_scripts.h
 @@ -850,6 +850,13 @@ extern const u8 gBattleAnimMove_SupercellSlam[];
@@ -4394,7 +4394,7 @@ index f9fe8bbe..78005d3f 100644
  extern const u8 gBattleAnimMove_UpperHand[];
  extern const u8 gBattleAnimMove_MalignantChain[];
 +// Daily Red: the Kanto and Johto starters' signature moves
-+extern const u8 gBattleAnimMove_DrainPlant[];
++extern const u8 gBattleAnimMove_DrainingPlant[];
 +extern const u8 gBattleAnimMove_TwinPulse[];
 +extern const u8 gBattleAnimMove_FlareMeteor[];
 +extern const u8 gBattleAnimMove_BlightPetal[];
@@ -4588,7 +4588,7 @@ index bf452230..5474ea42 100644
      ITEM_FIELD_ARROW = ITEMS_COUNT,
  };
 diff --git a/include/constants/moves.h b/include/constants/moves.h
-index cca0f09f..11889325 100644
+index cca0f09f..8f8cb38b 100644
 --- a/include/constants/moves.h
 +++ b/include/constants/moves.h
 @@ -907,7 +907,16 @@ enum __attribute__((packed)) Move
@@ -4597,7 +4597,7 @@ index cca0f09f..11889325 100644
  
 -    MOVES_COUNT = MOVES_COUNT_GEN9,
 +    // Daily Red: the Kanto and Johto starters' signature moves.
-+    MOVE_DRAIN_PLANT = MOVES_COUNT_GEN9, // Venusaur
++    MOVE_DRAINING_PLANT = MOVES_COUNT_GEN9, // Venusaur
 +    MOVE_TWIN_PULSE,                     // Blastoise
 +    MOVE_FLARE_METEOR,                 // Charizard
 +    MOVE_BLIGHT_PETAL,                   // Meganium
@@ -9222,7 +9222,7 @@ index 680ea2d1..5de74df5 100644
  
  u8 GetCurrentPPToMaxPPState(u8 currentPP, u8 maxPP)
 diff --git a/src/battle_move_resolution.c b/src/battle_move_resolution.c
-index 1c90a529..47b171a2 100644
+index 1c90a529..9b9d4396 100644
 --- a/src/battle_move_resolution.c
 +++ b/src/battle_move_resolution.c
 @@ -2077,6 +2077,7 @@ static bool32 IsTargetUnaffectedByMoveEffect(struct BattleCalcValues *cv)
@@ -9233,7 +9233,26 @@ index 1c90a529..47b171a2 100644
           && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_FLYING))
          {
              gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
-@@ -4106,6 +4107,21 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
+@@ -2479,7 +2480,18 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
+      || ShouldSkipAccuracyCalcPastFirstHit(cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->moveEffect)
+      || IsMaxMove(cv->move)
+      || IsZMove(cv->move))
++    {
++        // Daily Red: a move that skips the accuracy check still ends here
++        // when no target is affected (a Z-Move into an immune Pokemon played
++        // its animation after "It doesn't affect...").
++        if (!IsAnyTargetAffected())
++        {
++            gBattlescriptCurrInstr = BattleScript_MoveEnd;
++            gBattleStruct->eventState.atkCanceler = CANCELER_END;
++            return CANCELER_RESULT_END;
++        }
+         return CANCELER_RESULT_SUCCESS;
++    }
+ 
+     enum SmartTargetState smartTargetState = INITIAL_STATE;
+     bool32 isSmartTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move) == TARGET_SMART;
+@@ -4106,6 +4118,21 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
  {
      enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
  
@@ -9809,7 +9828,7 @@ index 00000000..67f8aefe
 +}
 diff --git a/src/dailyred_anims.c b/src/dailyred_anims.c
 new file mode 100644
-index 00000000..ab4b99e5
+index 00000000..2703ea1d
 --- /dev/null
 +++ b/src/dailyred_anims.c
 @@ -0,0 +1,121 @@
@@ -9904,13 +9923,13 @@ index 00000000..ab4b99e5
 +    }
 +}
 +
-+// Drain Plant: Leech Seed's seeds, already on the target, sprouting (the
++// Draining Plant: Leech Seed's seeds, already on the target, sprouting (the
 +// second half of AnimLeechSeed, without the throw).
 +//   arg 0: x offset from the target
 +//   arg 1: y offset from the target
 +extern const union AnimCmd *const gLeechSeedAnimTable[];
 +
-+static void AnimDrainPlantSprout(struct Sprite *sprite);
++static void AnimDrainingPlantSprout(struct Sprite *sprite);
 +
 +const struct SpriteTemplate gDailyRedSproutingSeedSpriteTemplate =
 +{
@@ -9918,10 +9937,10 @@ index 00000000..ab4b99e5
 +    .paletteTag = ANIM_TAG_SEED,
 +    .oam = &gOamData_AffineOff_ObjNormal_16x16,
 +    .anims = gLeechSeedAnimTable,
-+    .callback = AnimDrainPlantSprout,
++    .callback = AnimDrainingPlantSprout,
 +};
 +
-+static void AnimDrainPlantSprout(struct Sprite *sprite)
++static void AnimDrainingPlantSprout(struct Sprite *sprite)
 +{
 +    s16 x = gBattleAnimArgs[0];
 +
@@ -11520,7 +11539,7 @@ index 00000000..edecb805
 +}
 diff --git a/src/dailyred_sets.c b/src/dailyred_sets.c
 new file mode 100644
-index 00000000..403a59c2
+index 00000000..8cf872aa
 --- /dev/null
 +++ b/src/dailyred_sets.c
 @@ -0,0 +1,8165 @@
@@ -11559,11 +11578,11 @@ index 00000000..403a59c2
 +const struct DailyRedSet gDailyRedSets[] =
 +{
 +    // Venusaur-Mega, MEGA (Gen 7)
-+    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, DRAIN_PLANT, EARTHQUAKE, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7 + signature move, 18%
++    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, DRAINING_PLANT, EARTHQUAKE, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7 + signature move, 18%
 +    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, EARTHQUAKE, GIGA_DRAIN, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7, 18%
-+    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, DRAIN_PLANT, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 239, 0), // Bulky Attacker, Gen 7 + signature move, 16%
++    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, DRAINING_PLANT, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 239, 0), // Bulky Attacker, Gen 7 + signature move, 16%
 +    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, GIGA_DRAIN, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 239, 0), // Bulky Attacker, Gen 7, 16%
-+    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, DRAIN_PLANT, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 235, 0), // Bulky Attacker, Gen 7 + signature move, 16%
++    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, DRAINING_PLANT, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 235, 0), // Bulky Attacker, Gen 7 + signature move, 16%
 +    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, GIGA_DRAIN, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 235, 0), // Bulky Attacker, Gen 7, 16%
 +    // Charizard-Mega-X, MEGA (Gen 7)
 +    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, DRAGON_CLAW, DRAGON_DANCE, FLARE_BLITZ, ROOST, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Gen 7, 27%
@@ -20632,7 +20651,7 @@ index 00000000..03185c9e
 +}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..51618eb8
+index 00000000..7815ab51
 --- /dev/null
 +++ b/src/dailyred_team.c
 @@ -0,0 +1,614 @@
@@ -21183,7 +21202,7 @@ index 00000000..51618eb8
 +static const struct DailyRedSet sTestSeedTeam[] =
 +{
 +    { .species = SPECIES_VENUSAUR, .item = ITEM_BLACK_SLUDGE, .ability = ABILITY_CHLOROPHYLL, .ivs = TEST_IVS, .friendship = 255,
-+      .moves = { MOVE_DRAIN_PLANT, MOVE_SLUDGE_BOMB, MOVE_EARTH_POWER, MOVE_SYNTHESIS }, .nature = NATURE_MODEST, .evs = { 252, 0, 4, 252, 0, 0 } },
++      .moves = { MOVE_DRAINING_PLANT, MOVE_SLUDGE_BOMB, MOVE_EARTH_POWER, MOVE_SYNTHESIS }, .nature = NATURE_MODEST, .evs = { 252, 0, 4, 252, 0, 0 } },
 +    { .species = SPECIES_CHARIZARD, .item = ITEM_LIFE_ORB, .ability = ABILITY_BLAZE, .ivs = TEST_IVS, .friendship = 255,
 +      .moves = { MOVE_FLARE_METEOR, MOVE_AIR_SLASH, MOVE_FOCUS_BLAST, MOVE_ROOST }, .nature = NATURE_TIMID, .evs = { 4, 0, 0, 252, 0, 252 } },
 +    { .species = SPECIES_BLASTOISE, .item = ITEM_MYSTIC_WATER, .ability = ABILITY_TORRENT, .ivs = TEST_IVS, .friendship = 255,
@@ -21422,7 +21441,7 @@ index c51a5acf..96c2b66f 100644
  #if I_PRICE >= GEN_9
      #define GEM_PRICE 15000
 diff --git a/src/data/moves_info.h b/src/data/moves_info.h
-index d75670d7..8eeaacf0 100644
+index d75670d7..3ac8ed6b 100644
 --- a/src/data/moves_info.h
 +++ b/src/data/moves_info.h
 @@ -234,7 +234,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
@@ -21567,9 +21586,9 @@ index d75670d7..8eeaacf0 100644
  
 +    // Daily Red: the Kanto and Johto starters' signature moves (only they
 +    // learn them).
-+    [MOVE_DRAIN_PLANT] =
++    [MOVE_DRAINING_PLANT] =
 +    {
-+        .name = COMPOUND_STRING("Drain Plant"),
++        .name = COMPOUND_STRING("Draining Plant"),
 +        .description = COMPOUND_STRING(
 +            "Wild roots strike, then\n"
 +            "seed the foe to sap HP."),
@@ -21584,7 +21603,7 @@ index d75670d7..8eeaacf0 100644
 +        .additionalEffects = ADDITIONAL_EFFECTS({
 +            .moveEffect = MOVE_EFFECT_LEECH_SEED,
 +        }),
-+        .battleAnimScript = gBattleAnimMove_DrainPlant,
++        .battleAnimScript = gBattleAnimMove_DrainingPlant,
 +    },
 +
 +    [MOVE_TWIN_PULSE] =
@@ -23329,14 +23348,14 @@ index 44f0f60e..69a96813 100644
      FORM_SPECIES_END,
  };
 diff --git a/src/data/pokemon/level_up_learnsets/gen_1.h b/src/data/pokemon/level_up_learnsets/gen_1.h
-index f1e7cd32..59bed3cd 100644
+index f1e7cd32..99466a6e 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_1.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_1.h
 @@ -35,6 +35,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAIN_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -23645,14 +23664,14 @@ index f1e7cd32..59bed3cd 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_2.h b/src/data/pokemon/level_up_learnsets/gen_2.h
-index 3d74d70b..40aee249 100644
+index 3d74d70b..79029a5d 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_2.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_2.h
 @@ -40,6 +40,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAIN_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -23961,14 +23980,14 @@ index 3d74d70b..40aee249 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_3.h b/src/data/pokemon/level_up_learnsets/gen_3.h
-index cedd09b3..81a11a7b 100644
+index cedd09b3..8e45ac29 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_3.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_3.h
 @@ -40,6 +40,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAIN_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -24277,14 +24296,14 @@ index cedd09b3..81a11a7b 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_4.h b/src/data/pokemon/level_up_learnsets/gen_4.h
-index 4b302539..e8402f5f 100644
+index 4b302539..4be0e7e2 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_4.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_4.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAIN_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -24625,14 +24644,14 @@ index 4b302539..e8402f5f 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_5.h b/src/data/pokemon/level_up_learnsets/gen_5.h
-index 2403f17b..23a177ac 100644
+index 2403f17b..40e53739 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_5.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_5.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAIN_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -24973,14 +24992,14 @@ index 2403f17b..23a177ac 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_6.h b/src/data/pokemon/level_up_learnsets/gen_6.h
-index c5a3a39a..1ee81ad1 100644
+index c5a3a39a..243a47a5 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_6.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_6.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAIN_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -25337,14 +25356,14 @@ index c5a3a39a..1ee81ad1 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_7.h b/src/data/pokemon/level_up_learnsets/gen_7.h
-index 77d2fc2d..70aa6c19 100644
+index 77d2fc2d..b3654141 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_7.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_7.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAIN_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_PETAL_DANCE),
      LEVEL_UP_MOVE( 1, MOVE_PETAL_DANCE),
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
@@ -25701,14 +25720,14 @@ index 77d2fc2d..70aa6c19 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_8.h b/src/data/pokemon/level_up_learnsets/gen_8.h
-index 65b557a4..ad567e1b 100644
+index 65b557a4..c4680c5c 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_8.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_8.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAIN_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_PETAL_BLIZZARD),
      LEVEL_UP_MOVE( 1, MOVE_PETAL_BLIZZARD),
      LEVEL_UP_MOVE( 1, MOVE_PETAL_DANCE),
@@ -26065,14 +26084,14 @@ index 65b557a4..ad567e1b 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_9.h b/src/data/pokemon/level_up_learnsets/gen_9.h
-index 0bdfbe1e..8df041f3 100644
+index 0bdfbe1e..0e815562 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_9.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_9.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAIN_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_PETAL_BLIZZARD),
      LEVEL_UP_MOVE( 1, MOVE_GROWTH),
      LEVEL_UP_MOVE( 1, MOVE_PETAL_DANCE),
@@ -28636,7 +28655,7 @@ index 57e9da2e..a3a86bc3 100644
          break;
 diff --git a/test/battle/dailyred_signature_moves.c b/test/battle/dailyred_signature_moves.c
 new file mode 100644
-index 00000000..7c79f0a7
+index 00000000..73fec828
 --- /dev/null
 +++ b/test/battle/dailyred_signature_moves.c
 @@ -0,0 +1,164 @@
@@ -28645,15 +28664,15 @@ index 00000000..7c79f0a7
 +
 +// Daily Red: the starters' signature moves and the moves changed with them.
 +
-+SINGLE_BATTLE_TEST("Drain Plant seeds the target")
++SINGLE_BATTLE_TEST("Draining Plant seeds the target")
 +{
 +    GIVEN {
-+        PLAYER(SPECIES_VENUSAUR) { Moves(MOVE_DRAIN_PLANT); }
++        PLAYER(SPECIES_VENUSAUR) { Moves(MOVE_DRAINING_PLANT); }
 +        OPPONENT(SPECIES_WOBBUFFET);
 +    } WHEN {
-+        TURN { MOVE(player, MOVE_DRAIN_PLANT); }
++        TURN { MOVE(player, MOVE_DRAINING_PLANT); }
 +    } SCENE {
-+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAIN_PLANT, player);
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_PLANT, player);
 +        HP_BAR(opponent);
 +        MESSAGE("The opposing Wobbuffet was seeded!");
 +    }
@@ -28802,5 +28821,43 @@ index 00000000..7c79f0a7
 +        TURN { SKIP_TURN(player); }
 +    } SCENE {
 +        MESSAGE("Charizard took the opposing Wobbuffet into the sky!");
++    }
++}
+diff --git a/test/battle/dailyred_zmove_immune.c b/test/battle/dailyred_zmove_immune.c
+new file mode 100644
+index 00000000..112e14fc
+--- /dev/null
++++ b/test/battle/dailyred_zmove_immune.c
+@@ -0,0 +1,32 @@
++#include "global.h"
++#include "test/battle.h"
++
++// Daily Red: a Z-Move that ends up not affecting its target plays no move
++// animation (only the Z-Power one).
++SINGLE_BATTLE_TEST("Z-Move into a switched-in immune Pokemon plays no move animation")
++{
++    GIVEN {
++        PLAYER(SPECIES_WOBBUFFET);
++        PLAYER(SPECIES_CAMERUPT);
++        OPPONENT(SPECIES_PIKACHU_ORIGINAL) { Item(ITEM_PIKASHUNIUM_Z); Moves(MOVE_THUNDERBOLT); }
++    } WHEN {
++        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_THUNDERBOLT, gimmick: GIMMICK_Z_MOVE); }
++    } SCENE {
++        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, opponent);
++        NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_10_000_000_VOLT_THUNDERBOLT, opponent); }
++        MESSAGE("It doesn't affect Camerupt…");
++    }
++}
++
++SINGLE_BATTLE_TEST("Z-Move into an immune Pokemon plays no move animation")
++{
++    GIVEN {
++        PLAYER(SPECIES_CAMERUPT);
++        OPPONENT(SPECIES_PIKACHU_ORIGINAL) { Item(ITEM_PIKASHUNIUM_Z); Moves(MOVE_THUNDERBOLT); }
++    } WHEN {
++        TURN { MOVE(opponent, MOVE_THUNDERBOLT, gimmick: GIMMICK_Z_MOVE); }
++    } SCENE {
++        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, opponent);
++        NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_10_000_000_VOLT_THUNDERBOLT, opponent); }
 +    }
 +}
