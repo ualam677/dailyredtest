@@ -111,17 +111,17 @@ const Z_STARTERS = ['meganium', 'typhlosion', 'feraligatr', 'sceptile', 'blazike
 // 50% chance it knows it; its other lists (Z-Crystal, Tera...) never have the
 // new ones. A set gets the move in place of: one of `moves` if it has one,
 // otherwise its strongest attack of the same type, of `category` if it has
-// one (Flare Meteor and Leaf Blade follow the user's stats, so any). See
+// one (Burning Meteor and Leaf Blade follow the user's stats, so any). See
 // "Signature moves" in the README.
 const SIGNATURE_MOVES = {
-  Venusaur: { id: 'drainingplant', constant: 'MOVE_DRAINING_PLANT', type: 'Grass', category: 'Special' },
-  Blastoise: { id: 'twinpulse', constant: 'MOVE_TWIN_PULSE', type: 'Water', category: 'Special' },
-  Charizard: { id: 'flaremeteor', constant: 'MOVE_FLARE_METEOR', type: 'Fire' },
+  Venusaur: { id: 'havocseed', constant: 'MOVE_HAVOC_SEED', type: 'Grass', category: 'Special' },
+  Blastoise: { id: 'rapidpulse', constant: 'MOVE_RAPID_PULSE', type: 'Water', category: 'Special' },
+  Charizard: { id: 'burningmeteor', constant: 'MOVE_BURNING_METEOR', type: 'Fire' },
   Meganium: { id: 'blightpetal', constant: 'MOVE_BLIGHT_PETAL', type: 'Grass', category: 'Special' },
   // A status move: in place of Work Up, or Eruption's second Fire attack, or
   // the sun set's Focus Blast.
   Typhlosion: { id: 'pyroclastic', constant: 'MOVE_PYROCLASTIC', moves: ['workup', 'fireblast', 'flamethrower', 'focusblast'] },
-  Feraligatr: { id: 'jawcrash', constant: 'MOVE_JAW_CRASH', type: 'Water', category: 'Physical' },
+  Feraligatr: { id: 'tidalrampage', constant: 'MOVE_TIDAL_RAMPAGE', type: 'Water', category: 'Physical' },
   Sceptile: { id: 'leafblade', type: 'Grass' },
   Blaziken: { id: 'blazekick', type: 'Fire', category: 'Physical' },
   Swampert: { id: 'muddywater', type: 'Water' },

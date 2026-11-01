@@ -18,6 +18,8 @@ const ui = {
   play: $('play'),
   retry: $('retry'),
   sound: $('sound'),
+  volume: $('volume'),
+  controls: $('controls'),
   fullscreen: $('fullscreen'),
   wins: $('stat-wins'),
   losses: $('stat-losses'),
@@ -38,6 +40,11 @@ const session = {
   get(key) { try { return sessionStorage.getItem(key); } catch { return null; } },
   set(key, value) { try { sessionStorage.setItem(key, value); } catch { /* not remembered */ } },
 };
+// The same for the settings kept between visits (volume, controls).
+const local = {
+  get(key) { try { return localStorage.getItem(key); } catch { return null; } },
+  set(key, value) { try { localStorage.setItem(key, value); } catch { /* not remembered */ } },
+};
 
 // ?seed=123 starts a practice run with that team, for testing: results
 // aren't saved, there's no daily limit, and the game keeps dealing new teams.
@@ -50,19 +57,35 @@ let pollTimer = null;
 let runDate = null;
 let battleSeen = false;
 let muted = session.get('dailyred-muted') === '1';
+let volume = Math.min(100, Math.max(0, Number(local.get('dailyred-volume') ?? 100) || 0));
 let starting = false;
 let titleDate = null;
 
 // RetroArch opens a Web Audio context for each emulator and never closes it,
 // so a restart would leave one running (and browsers cap how many a page can
 // have). Track the contexts the emulator creates and close them on exit.
+//
+// The volume slider: each context gets a gain node in front of its speakers,
+// and anything the emulator connects to the speakers goes through it instead.
 const audioContexts = [];
+const volumeNodes = new WeakMap(); // a context's destination -> its gain node
+const gainFor = (percent) => (percent / 100) ** 2; // the slider feels even to the ear
 const NativeAudioContext = window.AudioContext;
 if (NativeAudioContext) {
+  const nativeConnect = AudioNode.prototype.connect;
+  AudioNode.prototype.connect = function connect(target, ...rest) {
+    const gain = target && volumeNodes.get(target);
+    return nativeConnect.call(this, gain && gain !== this ? gain : target, ...rest);
+  };
   window.AudioContext = class extends NativeAudioContext {
     constructor(...args) {
       super(...args);
       audioContexts.push(this);
+      const gain = this.createGain();
+      gain.gain.value = gainFor(volume);
+      nativeConnect.call(gain, this.destination);
+      volumeNodes.set(this.destination, gain);
+      this.dailyRedVolume = gain;
     }
   };
 }
@@ -120,6 +143,82 @@ function checkBrowser() {
   }
 }
 
+// Frame pacing. The emulator normally paces its frames by the sound
+// (RetroArch's audio sync), so they come at uneven times against the screen's
+// refreshes. On a 60 Hz screen that hardly shows, but on a 120 Hz one (most
+// new phones) a frame stays up for one refresh, then three: the picture
+// judders and the game feels laggy. On such a screen, pace by the screen
+// instead: one game frame every Nth refresh (video_swap_interval), with the
+// sound following the picture (RetroArch's dynamic rate control).
+const PACING_TOLERANCE = 0.06; // how far off a multiple of 60 Hz still counts
+
+// The screen's refresh rate in Hz, from the gaps between animation frames, or
+// 0 if it can't be measured (the page is hidden, say). A busy page skips
+// refreshes, which only ever makes gaps longer, so this goes by the shorter
+// ones (the first quarter of them, after the first few frames).
+function measureRefreshRate(frames = 30, timeoutMs = 1500) {
+  return new Promise((resolve) => {
+    const times = [];
+    const timer = setTimeout(() => resolve(0), timeoutMs);
+    const tick = (t) => {
+      times.push(t);
+      if (times.length <= frames) { requestAnimationFrame(tick); return; }
+      clearTimeout(timer);
+      const gaps = times.slice(1).map((v, i) => v - times[i]).slice(6).filter((v) => v > 2).sort((a, b) => a - b);
+      const short = gaps.slice(0, Math.max(1, gaps.length >> 2));
+      const gap = gaps.length ? short.reduce((sum, v) => sum + v, 0) / short.length : 0;
+      resolve(gap > 0 ? 1000 / gap : 0);
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
+// Measured once the page has loaded, while it's idle on the title card: while
+// the game downloads or runs, the page's own work can hold up animation frames
+// and make the screen look slower than it is.
+const screenRefreshRate = new Promise((r) => setTimeout(r, 300)).then(() => measureRefreshRate());
+
+// How many refreshes each game frame should stay up for at this rate: 2 for
+// 120 Hz, 3 for 180 Hz, 4 for 240 Hz; 0 for 60 Hz and anything that isn't a
+// multiple of 60 Hz (90 Hz, 144 Hz), which keep the usual pacing.
+function swapIntervalFor(hz) {
+  const n = Math.round(hz / 60);
+  return n >= 1 && n <= 4 && Math.abs(hz - 60 * n) <= 60 * n * PACING_TOLERANCE ? n : 0;
+}
+
+// While paced by the screen, follow it if its rate changes (a phone dropping
+// to 60 Hz in battery saver, say), or the game would run at the wrong speed.
+// A change has to be measured twice in a row before it counts.
+async function followRefreshRate(game, interval) {
+  let seen = 0;
+  while (emu === game) {
+    await new Promise((r) => setTimeout(r, 2000));
+    if (emu !== game || document.hidden) continue;
+    const hz = await measureRefreshRate();
+    const next = hz ? Math.max(1, Math.round(hz / 60)) : interval;
+    if (emu !== game || next > 4 || next === interval) {
+      seen = 0;
+      continue;
+    }
+    if (next !== seen) {
+      seen = next;
+      continue;
+    }
+    seen = 0;
+    try {
+      const loop = game.getEmscripten().Browser.mainLoop;
+      loop.timingMode = 1; // requestAnimationFrame
+      loop.timingValue = next;
+      loop.pause();
+      loop.resume();
+      interval = next;
+    } catch (err) {
+      console.warn('Could not change the frame pacing', err);
+      return;
+    }
+  }
+}
+
 function stopEmulator() {
   clearInterval(pollTimer);
   pollTimer = null;
@@ -166,6 +265,7 @@ async function startRun() {
     ui.loadingDetail.textContent = '';
     ui.meter.style.width = '100%';
 
+    const swapInterval = swapIntervalFor((await screenRefreshRate) || await measureRefreshRate());
     const canvas = document.createElement('canvas');
     canvas.className = 'game-canvas';
     screen.prepend(canvas);
@@ -182,8 +282,11 @@ async function startRun() {
         // debugging tools in tests/ read the game's RAM.
         savestate_file_compression: false,
         savestate_thumbnail_enable: false,
+        // Paced by the screen on 120 Hz and faster ones (see above).
+        ...(swapInterval > 1 ? { audio_sync: false, video_swap_interval: swapInterval } : {}),
       },
     });
+    if (swapInterval > 1) followRefreshRate(emu, swapInterval);
 
     readGame = createGameLink(emu, seed);
     battleSeen = false;
@@ -262,6 +365,38 @@ function showMuted() {
   ui.sound.setAttribute('aria-pressed', String(muted));
 }
 
+// Volume: kept between visits; applies to the running game at once.
+function setVolume(percent) {
+  volume = percent;
+  local.set('dailyred-volume', String(volume));
+  for (const ctx of audioContexts) ctx.dailyRedVolume?.gain.setValueAtTime(gainFor(volume), ctx.currentTime);
+}
+ui.volume.value = String(volume);
+ui.volume.addEventListener('input', () => setVolume(Number(ui.volume.value)));
+// Arrow keys on the focused slider would move it instead of the player.
+ui.volume.addEventListener('change', () => ui.volume.blur());
+
+// On-screen controls: shown on touch screens unless hidden here, and on
+// other screens only when shown here. Kept between visits.
+const touchScreen = window.matchMedia('(pointer: coarse)');
+let controls = local.get('dailyred-controls'); // 'shown', 'hidden' or null (automatic)
+
+function showControls() {
+  const visible = controls ? controls === 'shown' : touchScreen.matches;
+  if (controls) app.dataset.pad = controls;
+  else delete app.dataset.pad;
+  ui.controls.textContent = visible ? 'Hide controls' : 'Show controls';
+  ui.controls.setAttribute('aria-pressed', String(visible));
+}
+
+onClick(ui.controls, () => {
+  const visible = ui.controls.getAttribute('aria-pressed') === 'true';
+  controls = visible ? 'hidden' : 'shown';
+  local.set('dailyred-controls', controls);
+  showControls();
+});
+touchScreen.addEventListener?.('change', showControls);
+
 onClick(ui.fullscreen, () => {
   if (document.fullscreenElement) document.exitFullscreen();
   else $('console').requestFullscreen().catch(() => {});
@@ -297,17 +432,44 @@ window.addEventListener('keydown', resumeAudio);
 
 // --- Touch controls ------------------------------------------------------------
 
+// The game reads the buttons once a frame, so a tap that starts and ends
+// between two reads (a quick tap during a slow frame) never reaches it. Every
+// press is held for at least this long; a quicker release waits out the rest.
+const MIN_PRESS_MS = 70;
+const pressedAt = new Map();
+const pendingRelease = new Map();
+
+function buttonDown(name) {
+  clearTimeout(pendingRelease.get(name));
+  pendingRelease.delete(name);
+  pressedAt.set(name, performance.now());
+  emu?.pressDown(name);
+}
+
+// now: release at once (the d-pad sliding to another direction).
+function buttonUp(name, now = false) {
+  const left = MIN_PRESS_MS - (performance.now() - (pressedAt.get(name) ?? 0));
+  if (now || left <= 0) {
+    emu?.pressUp(name);
+    return;
+  }
+  pendingRelease.set(name, setTimeout(() => {
+    pendingRelease.delete(name);
+    emu?.pressUp(name);
+  }, left));
+}
+
 for (const button of document.querySelectorAll('[data-button]')) {
   const release = () => {
     if (!button.classList.contains('is-down')) return;
     button.classList.remove('is-down');
-    emu?.pressUp(button.dataset.button);
+    buttonUp(button.dataset.button);
   };
   button.addEventListener('pointerdown', (event) => {
     event.preventDefault();
     button.setPointerCapture(event.pointerId);
     button.classList.add('is-down');
-    emu?.pressDown(button.dataset.button);
+    buttonDown(button.dataset.button);
   });
   button.addEventListener('pointerup', release);
   button.addEventListener('pointercancel', release);
@@ -320,8 +482,8 @@ let heldDirection = null;
 
 function setDirection(next) {
   if (next === heldDirection) return;
-  if (heldDirection) emu?.pressUp(heldDirection);
-  if (next) emu?.pressDown(next);
+  if (heldDirection) buttonUp(heldDirection, next !== null);
+  if (next) buttonDown(next);
   heldDirection = next;
   dpad.dataset.dir = next ?? '';
 }
@@ -355,4 +517,5 @@ window.dailyRed = {
 renderTitle();
 setState('title');
 showMuted();
+showControls();
 ui.fullscreen.hidden = !document.fullscreenEnabled; // e.g. iPhone Safari

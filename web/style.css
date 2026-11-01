@@ -279,6 +279,19 @@ a { color: inherit; text-underline-offset: 3px; }
 
 .button-quiet:not(:disabled):hover { border-color: var(--muted); }
 
+.volume {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+}
+
+.volume-label { font: 600 15px/1 var(--font-pixel); }
+.volume-slider { width: 110px; accent-color: var(--crimson); cursor: pointer; }
+
 /* Touch controls (phones and tablets only) ---------------------------------- */
 
 .pad {
@@ -297,6 +310,10 @@ a { color: inherit; text-underline-offset: 3px; }
 @media (pointer: coarse) {
   .pad { display: grid; }
 }
+
+/* The toolbar's Show/Hide controls overrides the automatic choice. */
+.app[data-pad="shown"] .pad { display: grid; }
+.app[data-pad="hidden"] .pad { display: none; }
 
 .dpad {
   grid-area: dpad;
