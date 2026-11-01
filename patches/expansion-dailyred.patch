@@ -1,67 +1,71 @@
 diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
-index f514f23b..9efb937a 100644
+index f514f23b..1c6cb0c5 100644
 --- a/data/battle_anim_scripts.s
 +++ b/data/battle_anim_scripts.s
-@@ -16775,6 +16775,273 @@ gBattleAnimMove_MalignantChain::
+@@ -16775,6 +16775,339 @@ gBattleAnimMove_MalignantChain::
  	waitforvisualfinish
  	end
  
 +@ --- Daily Red: the Kanto and Johto starters' signature moves --------------------
 +
-+@ Venusaur's Draining Plant: Frenzy Plant's roots, then Leech Seed's seeds
-+@ sprouting on the target.
-+gBattleAnimMove_DrainingPlant::
-+	monbg ANIM_TARGET
-+	splitbgprio ANIM_TARGET
++@ Venusaur's Havoc Seed (after Hellzone Grenade): on Giga Drain's green,
++@ Energy Balls fired at the target hold all around it, then crash into it at
++@ once; then Leech Seed's seeds sprout on it.
++gBattleAnimMove_HavocSeed::
++	monbg ANIM_DEF_PARTNER
++	splitbgprio_foes ANIM_TARGET
 +	setalpha 12, 8
-+	simple_palette_blend unused_subpriority_offset=0, selector=F_PAL_BG, delay=2, initial_blend_y=0, target_blend_y=5, color=RGB_BLACK
++	simple_palette_blend selector=F_PAL_BG, delay=1, initial_blend_y=0, target_blend_y=12, color=RGB(13, 31, 12)
++	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 10, 10, RGB(10, 31, 6)
 +	waitforvisualfinish
-+	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=10, offset_x=8, offset_y=2, subpriority=0, animation=0, duration=100
-+	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
-+	delay 5
-+	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=25, offset_x=-8, offset_y=-2, subpriority=0, animation=1, duration=95
-+	playsewithpan SE_M_SCRATCH, -43
-+	delay 5
-+	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=40, offset_x=8, offset_y=-4, subpriority=0, animation=0, duration=90
-+	playsewithpan SE_M_SCRATCH, -22
-+	delay 5
-+	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=55, offset_x=-8, offset_y=4, subpriority=0, animation=1, duration=85
-+	playsewithpan SE_M_SCRATCH, SOUND_PAN_MIDDLE
-+	delay 5
-+	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=70, offset_x=8, offset_y=0, subpriority=0, animation=0, duration=85
-+	playsewithpan SE_M_SCRATCH, +21
-+	delay 5
-+	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=85, offset_x=16, offset_y=6, subpriority=0, animation=3, duration=80
-+	playsewithpan SE_M_SCRATCH, SOUND_PAN_TARGET
-+	delay 5
-+	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=85, offset_x=-16, offset_y=-6, subpriority=0, animation=2, duration=75
-+	playsewithpan SE_M_SCRATCH, SOUND_PAN_TARGET
-+	delay 5
-+	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=-10, y=-10, relative_to=ANIM_TARGET, animation=3
-+	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
-+	createvisualtask AnimTask_ShakeMon, 3, ANIM_TARGET, 8, 0, 20, 1
++	@ Each ball: x, y to hold at around the target, frames to fly there, frames
++	@ to hold (so that all six crash together), frames to crash.
++	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
++	createsprite gDailyRedHavocSeedBallSpriteTemplate, ANIM_TARGET, 3, -30, 0, 14, 27, 6
 +	delay 3
-+	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=10, y=8, relative_to=ANIM_TARGET, animation=3
-+	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
++	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
++	createsprite gDailyRedHavocSeedBallSpriteTemplate, ANIM_TARGET, 3, 30, -6, 14, 24, 6
 +	delay 3
-+	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=-3, y=1, relative_to=ANIM_TARGET, animation=2
-+	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
++	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
++	createsprite gDailyRedHavocSeedBallSpriteTemplate, ANIM_TARGET, 3, -14, -26, 14, 21, 6
++	delay 3
++	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
++	createsprite gDailyRedHavocSeedBallSpriteTemplate, ANIM_TARGET, 3, 16, 22, 14, 18, 6
++	delay 3
++	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
++	createsprite gDailyRedHavocSeedBallSpriteTemplate, ANIM_TARGET, 3, 14, -28, 14, 15, 6
++	delay 3
++	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
++	createsprite gDailyRedHavocSeedBallSpriteTemplate, ANIM_TARGET, 3, -16, 22, 14, 12, 6
++	delay 20
++	playsewithpan SE_M_CHARGE, SOUND_PAN_TARGET
++	delay 12
++	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_TARGET
++	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 6, 0, 18, 1
++	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 0, 0, 1, 0
++	create_basic_hitsplat_sprite ANIM_ATTACKER, 3, x=0, y=0, relative_to=ANIM_TARGET, animation=0
++	delay 4
++	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, 14, -12, 1, 0
++	delay 4
++	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 4, -12, 10, 1, 0
 +	waitforvisualfinish
-+	simple_palette_blend unused_subpriority_offset=0, selector=F_PAL_BG, delay=2, initial_blend_y=5, target_blend_y=0, color=RGB_BLACK
-+	waitforvisualfinish
-+	clearmonbg ANIM_TARGET
++	clearmonbg ANIM_DEF_PARTNER
 +	blendoff
 +	createsprite gDailyRedSproutingSeedSpriteTemplate, ANIM_TARGET, 2, 0, 24
 +	createsprite gDailyRedSproutingSeedSpriteTemplate, ANIM_TARGET, 2, -16, 24
 +	createsprite gDailyRedSproutingSeedSpriteTemplate, ANIM_TARGET, 2, 16, 24
 +	loopsewithpan SE_M_TAIL_WHIP, SOUND_PAN_TARGET, 10, 8
 +	waitforvisualfinish
++	simple_palette_blend selector=F_PAL_BG, delay=1, initial_blend_y=12, target_blend_y=0, color=RGB(13, 31, 12)
++	waitforvisualfinish
 +	end
 +
-+@ Blastoise's Twin Pulse: Aurora Beam's rings (growing, as Aurora Beam's do)
-+@ in Water Pulse's blue, over a water background, with water sounds (it
-+@ plays for each of the two hits).
-+gBattleAnimMove_TwinPulse::
++@ Blastoise's Rapid Pulse: Aurora Beam's rings (growing, as Aurora Beam's do)
++@ in Water Pulse's blue, over a water background, with water sounds, for each
++@ hit. A third hit's rings grow to twice the size, and there are more of them
++@ (its move turn is the hit: see the animation canceler).
++gBattleAnimMove_RapidPulse::
++	jumpifmoveturn 2, RapidPulseThirdHit
 +	fadetobg BG_WATER_PULSE
 +	waitbgfadein
 +	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_RAINBOW_RINGS, 0, 12, 12, RGB(0, 18, 31)
@@ -86,15 +90,55 @@ index f514f23b..9efb937a 100644
 +	restorebg
 +	waitbgfadein
 +	end
++RapidPulseThirdHit:
++	fadetobg BG_WATER_PULSE
++	waitbgfadein
++	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_RAINBOW_RINGS, 0, 12, 12, RGB(0, 18, 31)
++	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
++	setarg 7, 0
++	call RapidPulseCreateBigRings
++	createvisualtask AnimTask_ShakeMon2, 5, ANIM_TARGET, 2, 0, 17, 1
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	setarg 7, -1
++	playsewithpan SE_M_HYDRO_PUMP, SOUND_PAN_ATTACKER
++	createsoundtask SoundTask_LoopSEAdjustPanning, SE_M_GIGA_DRAIN, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, 3, 6, 0, 10
++	createvisualtask AnimTask_ShakeMon2, 5, ANIM_TARGET, 4, 0, 56, 1
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	call RapidPulseCreateBigRings
++	waitforvisualfinish
++	playsewithpan SE_M_WATERFALL, SOUND_PAN_TARGET
++	restorebg
++	waitbgfadein
++	end
++RapidPulseCreateBigRings:
++	createsprite gDailyRedRapidPulseBigRingSpriteTemplate, ANIM_TARGET, 2, 20, 0, 0, 0, 17
++	delay 1
++	createsprite gDailyRedRapidPulseBigRingSpriteTemplate, ANIM_TARGET, 2, 20, 0, 0, 0, 17
++	delay 1
++	createsprite gDailyRedRapidPulseBigRingSpriteTemplate, ANIM_TARGET, 2, 20, 0, 0, 0, 17
++	delay 1
++	createsprite gDailyRedRapidPulseBigRingSpriteTemplate, ANIM_TARGET, 2, 20, 0, 0, 0, 17
++	delay 1
++	return
 +
-+@ Charizard's Flare Meteor. Turn 1: it sets itself ablaze (Flame Wheel's
++@ Charizard's Burning Meteor. Turn 1: it sets itself ablaze (Flame Wheel's
 +@ flames) and takes the target up (Sky Drop's first turn, in red). Turn 2:
 +@ the second half of Fusion Bolt, in red.
-+gBattleAnimMove_FlareMeteor::
-+	choosetwoturnanim FlareMeteorSetUp, FlareMeteorUnleash
-+FlareMeteorEnd:
++gBattleAnimMove_BurningMeteor::
++	choosetwoturnanim BurningMeteorSetUp, BurningMeteorUnleash
++BurningMeteorEnd:
 +	end
-+FlareMeteorSetUp:
++BurningMeteorSetUp:
 +	createsprite gFireSpiralOutwardSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 56, 0
 +	playsewithpan SE_M_FLAME_WHEEL, SOUND_PAN_ATTACKER
 +	delay 2
@@ -123,8 +167,8 @@ index f514f23b..9efb937a 100644
 +	invisible ANIM_TARGET
 +	playsewithpan SE_M_FLY, SOUND_PAN_ATTACKER
 +	createsprite gSkyDropTargetFlyingTemplate, ANIM_ATTACKER, 2, 0, 0, 13, 336
-+	goto FlareMeteorEnd
-+FlareMeteorUnleash:
++	goto BurningMeteorEnd
++BurningMeteorUnleash:
 +	visible ANIM_TARGET
 +	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_CIRCLE_OF_LIGHT, 0, 12, 12, RGB_RED
 +	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_ELECTRICITY, 0, 12, 12, RGB(31, 10, 0)
@@ -145,7 +189,7 @@ index f514f23b..9efb937a 100644
 +	playsewithpan SE_M_FLAMETHROWER, SOUND_PAN_ATTACKER
 +	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 0, 14, 0, RGB(12, 0, 0)
 +	waitforvisualfinish
-+	goto FlareMeteorEnd
++	goto BurningMeteorEnd
 +
 +@ Meganium's Blight Petal: Heat Wave in green, petals instead of sand.
 +gBattleAnimMove_BlightPetal::
@@ -205,78 +249,100 @@ index f514f23b..9efb937a 100644
 +	waitforvisualfinish
 +	end
 +
-+@ Feraligatr's Jaw Crash. Turn 1: Skull Bash's charge, glowing red. Turn 2:
-+@ Giga Impact's background, bubbles around it, then Double-Edge's charge.
-+gBattleAnimMove_JawCrash::
-+	choosetwoturnanim JawCrashSetUp, JawCrashAttack
-+JawCrashEnd:
-+	end
-+JawCrashSetUp:
-+	call SkullBashSetUpHeadDown
-+	blend_color_cycle selector=F_PAL_ATTACKER, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=11, color=RGB_RED
-+	call SkullBashSetUpHeadDown
++@ Feraligatr's Tidal Rampage: the first half of Outrage, in blue, with bubbles
++@ for its flames; then, on Giga Impact's background, a tackle as Circle
++@ Throw's pushes the target back, a punch, a claw and a bite land on it, and
++@ both reel back.
++gBattleAnimMove_TidalRampage::
++	loopsewithpan SE_M_SURF, SOUND_PAN_ATTACKER, 8, 2
++	blend_color_cycle selector=(F_PAL_BG | F_PAL_ATTACKER | F_PAL_TARGET), delay=2, num_blends=3, initial_blend_y=3, target_blend_y=8, color=RGB(0, 12, 28)
++	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 12, 6, 3, 4
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, 0, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, 0, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 0, 1280, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 0, -1280, 3
++	delay 0
++	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 20, 1
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, 768, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, 768, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, -768, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, -768, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, 0, 3
++	delay 3
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, 0, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 0, 1280, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 0, -1280, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, 768, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, 768, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, -768, 3
++	delay 0
++	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, -768, 3
 +	waitforvisualfinish
-+	goto JawCrashEnd
-+JawCrashAttack:
 +	createvisualtask AnimTask_IsTargetPlayerSide, 2
-+	jumpretfalse JawCrashOpponentBG
++	jumpretfalse TidalRampageOpponentBG
 +	fadetobg BG_GIGA_IMPACT_PLAYER
-+	goto JawCrashBubbles
-+JawCrashOpponentBG:
++	goto TidalRampageTackle
++TidalRampageOpponentBG:
 +	fadetobg BG_GIGA_IMPACT_OPPONENT
-+JawCrashBubbles:
++TidalRampageTackle:
 +	waitbgfadein
-+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
-+	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 10, 10, 25, 0
-+	delay 3
-+	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -15, 0, 25, 0
-+	delay 3
-+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
-+	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 20, 10, 25, 0
-+	delay 3
-+	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 0, -10, 25, 0
-+	delay 3
-+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
-+	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -10, 15, 25, 0
-+	delay 3
-+	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 25, 20, 25, 0
-+	delay 3
-+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
-+	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -20, 20, 25, 0
-+	delay 3
-+	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 12, 0, 25, 0
-+	waitforvisualfinish
-+	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
-+	waitplaysewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER, 8
-+	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 18, 6, 2, 4
++	monbg ANIM_DEF_PARTNER
++	setalpha 12, 8
++	playsewithpan SE_M_VITAL_THROW, SOUND_PAN_ATTACKER
++	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 12, 4, 1, 2
 +	waitforvisualfinish
 +	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 20, 0, 0, 4
-+	delay 3
++	delay 2
++	create_basic_hitsplat_sprite ANIM_ATTACKER, 3, x=0, y=0, relative_to=ANIM_TARGET, animation=1
++	playsewithpan SE_M_VITAL_THROW2, SOUND_PAN_TARGET
++	delay 1
++	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -24, 0, 0, 4
 +	waitforvisualfinish
-+	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
-+	create_basic_hitsplat_sprite ANIM_TARGET, 4, x=-10, y=0, relative_to=ANIM_TARGET, animation=0
-+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -32, 0, 0, 3
++	@ The target is now 24 pixels further back.
++	create_fist_sprite ANIM_ATTACKER, 3, x=18, y=0, duration=6, initPosition=ANIM_TARGET
++	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=22, y=-6, relative_to=ANIM_TARGET, animation=2
++	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
++	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 6, 1
++	delay 6
++	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 16, -10, 0
++	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 16, 10, 0
++	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
++	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 10, 1
++	delay 10
++	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
++	createsprite gDailyRedTidalRampageBiteSpriteTemplate, ANIM_ATTACKER, 2, 24, -32, 0, 0, 819, 10
++	createsprite gDailyRedTidalRampageBiteSpriteTemplate, ANIM_ATTACKER, 2, 24, 32, 4, 0, -819, 10
++	delay 10
++	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=24, y=0, relative_to=ANIM_TARGET, animation=2
++	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 4, 7, 1
 +	waitforvisualfinish
-+	createvisualtask AnimTask_RotateMonSpriteToSide, 2, 8, -256, ANIM_ATTACKER, 0
-+	createvisualtask AnimTask_RotateMonSpriteToSide, 2, 8, -256, ANIM_TARGET, 0
-+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 4, 0, 12, 1
-+	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 4, 0, 12, 1
++	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 7
++	delay 4
++	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 10
 +	waitforvisualfinish
-+	createvisualtask AnimTask_RotateMonSpriteToSide, 2, 8, -256, ANIM_ATTACKER, 1
-+	createvisualtask AnimTask_RotateMonSpriteToSide, 2, 8, -256, ANIM_TARGET, 1
-+	waitforvisualfinish
-+	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 5
-+	delay 3
-+	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 1, 0, 7
-+	waitforvisualfinish
++	clearmonbg ANIM_DEF_PARTNER
++	blendoff
 +	restorebg
 +	waitbgfadein
-+	goto JawCrashEnd
++	end
 +
  gBattleAnimMove_PopulationBomb::
  	monbg ANIM_TARGET
  	setalpha 12, 8
-@@ -28438,14 +28705,14 @@ gBattleAnimStatus_Nightmare::
+@@ -28438,14 +28771,14 @@ gBattleAnimStatus_Nightmare::
  	clearmonbg ANIM_DEF_PARTNER
  	end
  
@@ -297,7 +363,7 @@ index f514f23b..9efb937a 100644
  	end
  
  gBattleAnimGeneral_StatsChange::
-@@ -28699,8 +28966,27 @@ gBattleAnimGeneral_Sandstorm::
+@@ -28699,8 +29032,27 @@ gBattleAnimGeneral_Sandstorm::
  gBattleAnimGeneral_Hail::
  	goto gBattleAnimMove_Hail
  
@@ -327,10 +393,10 @@ index f514f23b..9efb937a 100644
  gBattleAnimGeneral_Fog::
  	goto gBattleAnimMove_Haze
 diff --git a/data/battle_scripts_1.s b/data/battle_scripts_1.s
-index 4745ed0f..ba99a251 100644
+index 4745ed0f..199723c4 100644
 --- a/data/battle_scripts_1.s
 +++ b/data/battle_scripts_1.s
-@@ -80,6 +80,21 @@ BattleScript_EffectStatChange::
+@@ -80,6 +80,15 @@ BattleScript_EffectStatChange::
  	trymovestatchanges
  	goto BattleScript_MoveEnd
  
@@ -343,16 +409,10 @@ index 4745ed0f..ba99a251 100644
 +	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
 +	goto BattleScript_MoveEnd
 +
-+@ Daily Red: Feraligatr's Jaw Crash missed: it loses the Defense and Sp. Def
-+@ its charging turn gave it (queued in MoveEndMoveBlockRecoil).
-+BattleScript_JawCrashMissed::
-+	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_CERTAIN
-+	return
-+
  BattleScript_EffectStatChangeHalfHp::
  	attackcanceler
  	trymovestatchanges
-@@ -222,7 +237,6 @@ BattleScript_ConsumableItemStatRaise::
+@@ -222,7 +231,6 @@ BattleScript_ConsumableItemStatRaise::
  	return
  
  BattleScript_MirrorArmorReflect::
@@ -360,7 +420,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE | STAT_CHANGE_IGNORE_MIRROR_ARMOR
  	return
-@@ -1476,7 +1490,6 @@ BattleScript_TerrainPrevents::
+@@ -1476,7 +1484,6 @@ BattleScript_TerrainPrevents::
  
  BattleScript_ImmunityProtectedRet::
  	call BattleScript_AbilityPopUp
@@ -368,7 +428,7 @@ index 4745ed0f..ba99a251 100644
  	printstring STRINGID_ITDOESNTAFFECT
  	waitmessage B_WAIT_TIME_LONG
  	return
-@@ -1496,14 +1509,12 @@ BattleScript_MistyTerrainPrevents::
+@@ -1496,14 +1503,12 @@ BattleScript_MistyTerrainPrevents::
  	goto BattleScript_MoveEnd
  
  BattleScript_FlowerVeilProtectsRet::
@@ -383,7 +443,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_FLOWERVEILPROTECTEDTARGET
  	waitmessage B_WAIT_TIME_LONG
-@@ -1511,7 +1522,6 @@ BattleScript_FlowerVeilProtects::
+@@ -1511,7 +1516,6 @@ BattleScript_FlowerVeilProtects::
  	goto BattleScript_MoveEnd
  
  BattleScript_SweetVeilProtectsRet::
@@ -391,7 +451,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_FLOWERVEILPROTECTED
  	waitmessage B_WAIT_TIME_LONG
-@@ -1523,7 +1533,6 @@ BattleScript_SweetVeilProtects:
+@@ -1523,7 +1527,6 @@ BattleScript_SweetVeilProtects:
  	goto BattleScript_MoveEnd
  
  BattleScript_AromaVeilProtectsRet::
@@ -399,7 +459,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_AROMAVEILPROTECTED
  	waitmessage B_WAIT_TIME_LONG
-@@ -1535,7 +1544,6 @@ BattleScript_AromaVeilProtects:
+@@ -1535,7 +1538,6 @@ BattleScript_AromaVeilProtects:
  	goto BattleScript_MoveEnd
  
  BattleScript_AbilityProtectsDoesntAffectRet::
@@ -407,7 +467,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_ITDOESNTAFFECT
  	waitmessage B_WAIT_TIME_LONG
-@@ -1547,7 +1555,6 @@ BattleScript_AbilityProtectsDoesntAffect::
+@@ -1547,7 +1549,6 @@ BattleScript_AbilityProtectsDoesntAffect::
  	goto BattleScript_MoveEnd
  
  BattleScript_InsomniaProtects::
@@ -415,7 +475,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_PKMNSTAYEDAWAKEUSING
  	waitmessage B_WAIT_TIME_LONG
-@@ -2244,12 +2251,10 @@ BattleScript_MegaSolActivatesHealing::
+@@ -2244,12 +2245,10 @@ BattleScript_MegaSolActivatesHealing::
  	attackanimation
  	waitanimation
  	call BattleScript_AbilityPopUp
@@ -428,7 +488,7 @@ index 4745ed0f..ba99a251 100644
  	return
  
  BattleScript_EffectWeather::
-@@ -2408,7 +2413,6 @@ BattleScript_NotAffected::
+@@ -2408,7 +2407,6 @@ BattleScript_NotAffected::
  	goto BattleScript_MoveEnd
  
  BattleScript_NotAffectedAbilityPopUp::
@@ -436,7 +496,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	resultmessage
  	waitmessage B_WAIT_TIME_LONG
-@@ -2617,7 +2621,6 @@ BattleScript_MoveEffectYawnFoe::
+@@ -2617,7 +2615,6 @@ BattleScript_MoveEffectYawnFoe::
  	return
  
  BattleScript_PrintAbilityMadeIneffective::
@@ -444,7 +504,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_PKMNSXMADEITINEFFECTIVE
  	waitmessage B_WAIT_TIME_LONG
-@@ -3128,7 +3131,6 @@ BattleScript_LearnMoveReturn::
+@@ -3128,7 +3125,6 @@ BattleScript_LearnMoveReturn::
  	return
  
  BattleScript_WeatherAbilityActivates::
@@ -452,7 +512,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	jumpifability BS_SCRIPTING, ABILITY_SAND_SPIT, BattleScript_SandSpitActivates
  	printfromtable gAbilityWeatherChangeStringId
-@@ -3156,7 +3158,6 @@ BattleScript_OrichalcumPulseActivates::
+@@ -3156,7 +3152,6 @@ BattleScript_OrichalcumPulseActivates::
  	return
  
  BattleScript_OrichalcumPulseActivatesInSun::
@@ -460,7 +520,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_ORICHALCUMPULSEACTIVATESINSUN
  	waitmessage B_WAIT_TIME_LONG
-@@ -3164,7 +3165,9 @@ BattleScript_OrichalcumPulseActivatesInSun::
+@@ -3164,7 +3159,9 @@ BattleScript_OrichalcumPulseActivatesInSun::
  
  BattleScript_WeatherContinues::
  	printfromtable gWeatherTurnStringIds
@@ -471,7 +531,7 @@ index 4745ed0f..ba99a251 100644
  	playanimation_var BS_ATTACKER, sB_ANIM_ARG1
  	setbyte gBattleCommunication, 0
  	call BattleScript_ActivateWeatherAbilities
-@@ -3178,7 +3181,6 @@ BattleScript_WeatherFaded::
+@@ -3178,7 +3175,6 @@ BattleScript_WeatherFaded::
  
  BattleScript_DamagingWeather::
  	printfromtable gSandStormHailDmgStringIds
@@ -479,7 +539,7 @@ index 4745ed0f..ba99a251 100644
  	effectivenesssound
  	hitanimation BS_ATTACKER
  	goto BattleScript_DoTurnDmg
-@@ -3212,14 +3214,18 @@ BattleScript_OverworldStatusStarts_TryActivations:
+@@ -3212,14 +3208,18 @@ BattleScript_OverworldStatusStarts_TryActivations:
  
  BattleScript_OverworldWeatherStarts::
  	printfromtable gWeatherStartsStringIds
@@ -500,7 +560,7 @@ index 4745ed0f..ba99a251 100644
  	playanimation_var BS_BATTLER_0, sB_ANIM_ARG1
  	call BattleScript_ActivateWeatherAbilities
  	end3
-@@ -3542,7 +3548,6 @@ BattleScript_GulpMissileNoSecondEffectGulping:
+@@ -3542,7 +3542,6 @@ BattleScript_GulpMissileNoSecondEffectGulping:
  	return
  
  BattleScript_SeedSowerActivates::
@@ -508,7 +568,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESGRASSY
  	waitmessage B_WAIT_TIME_LONG
-@@ -3560,7 +3565,6 @@ BattleScript_WindPowerActivates::
+@@ -3560,7 +3559,6 @@ BattleScript_WindPowerActivates::
  
  BattleScript_ToxicDebrisActivates::
  	call BattleScript_AbilityPopUp
@@ -516,7 +576,7 @@ index 4745ed0f..ba99a251 100644
  	settoxicspikes BattleScript_ToxicDebrisRet
  	printstring STRINGID_POISONSPIKESSCATTERED
  	waitmessage B_WAIT_TIME_LONG
-@@ -3571,7 +3575,6 @@ BattleScript_ToxicDebrisRet:
+@@ -3571,7 +3569,6 @@ BattleScript_ToxicDebrisRet:
  
  BattleScript_EarthEaterActivates::
  	call BattleScript_AbilityPopUp
@@ -524,7 +584,7 @@ index 4745ed0f..ba99a251 100644
  	tryhealquarterhealth BS_TARGET, BattleScript_EarthEaterRet
  	healthbarupdate BS_TARGET
  	datahpupdate BS_TARGET, ASSURANCE_DOUBLE
-@@ -3827,7 +3830,6 @@ BattleScript_GrudgeTakesPP::
+@@ -3827,7 +3824,6 @@ BattleScript_GrudgeTakesPP::
  	return
  
  BattleScript_MagicBounce::
@@ -532,7 +592,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_PKMNMOVEBOUNCEDABILITY
  	waitmessage B_WAIT_TIME_LONG
-@@ -3860,7 +3862,6 @@ BattleScript_EnduredMsg::
+@@ -3860,7 +3856,6 @@ BattleScript_EnduredMsg::
  	return
  
  BattleScript_SturdiedMsg::
@@ -540,7 +600,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUpTarget
  	printstring STRINGID_PKMNENDUREDHIT
  	waitmessage B_WAIT_TIME_LONG
-@@ -3953,7 +3954,6 @@ BattleScript_UltraBurst::
+@@ -3953,7 +3948,6 @@ BattleScript_UltraBurst::
  	end3
  
  BattleScript_BattlerFormChange::
@@ -548,7 +608,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUpScripting
  	flushtextbox
  BattleScript_BattlerFormChangeNoPopup::
-@@ -3980,7 +3980,6 @@ BattleScript_ZenMode::
+@@ -3980,7 +3974,6 @@ BattleScript_ZenMode::
  
  BattleScript_BattlerFormChangeDisguise::
  	call BattleScript_AbilityPopUpScripting
@@ -556,7 +616,7 @@ index 4745ed0f..ba99a251 100644
  	handleformchange BS_SCRIPTING, 0
  	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE_DISGUISE
  	waitanimation
-@@ -3990,7 +3989,6 @@ BattleScript_BattlerFormChangeDisguise::
+@@ -3990,7 +3983,6 @@ BattleScript_BattlerFormChangeDisguise::
  	return
  
  BattleScript_BattlerFormChangeWithString::
@@ -564,7 +624,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUpScripting
  	flushtextbox
  	handleformchange BS_SCRIPTING, 0
-@@ -4020,7 +4018,6 @@ BattleScript_BallFetch::
+@@ -4020,7 +4012,6 @@ BattleScript_BallFetch::
  	return
  
  BattleScript_CudChewActivates::
@@ -572,7 +632,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
  	consumeberry BS_ATTACKER, FALSE
-@@ -4043,13 +4040,11 @@ BattleScript_TargetFormChangeNoPopup:
+@@ -4043,13 +4034,11 @@ BattleScript_TargetFormChangeNoPopup:
  	return
  
  BattleScript_TargetFormChange::
@@ -586,7 +646,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUpTarget
  BattleScript_TargetFormChangeWithStringNoPopup::
  	call BattleScript_TargetFormChangeNoPopup
-@@ -4073,14 +4068,12 @@ BattleScript_IllusionOff::
+@@ -4073,14 +4062,12 @@ BattleScript_IllusionOff::
  	return
  
  BattleScript_AnticipationActivates::
@@ -601,7 +661,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUpScripting
  	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_AftermathDmgRet
  	healthbarupdate BS_ATTACKER
-@@ -4090,7 +4083,6 @@ BattleScript_AftermathDmgRet:
+@@ -4090,7 +4077,6 @@ BattleScript_AftermathDmgRet:
  	return
  
  BattleScript_DampPreventsAftermath::
@@ -609,7 +669,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	pause 40
  	copybyte gBattlerAbility, sBATTLER
-@@ -4124,10 +4116,13 @@ BattleScript_MonWokeUpInUproar::
+@@ -4124,10 +4110,13 @@ BattleScript_MonWokeUpInUproar::
  	return
  
  BattleScript_PoisonTurnDmg::
@@ -624,7 +684,7 @@ index 4745ed0f..ba99a251 100644
  BattleScript_DoTurnDmg:
  	healthbarupdate BS_ATTACKER
  	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
-@@ -4149,12 +4144,10 @@ BattleScript_PoisonHealActivates::
+@@ -4149,12 +4138,10 @@ BattleScript_PoisonHealActivates::
  
  BattleScript_BurnTurnDmg::
  	printstring STRINGID_PKMNHURTBYBURN
@@ -637,7 +697,7 @@ index 4745ed0f..ba99a251 100644
  	goto BattleScript_DoStatusTurnDmg
  
  BattleScript_MoveUsedIsFrozen::
-@@ -4275,9 +4268,9 @@ BattleScript_PrintPayDayMoneyString::
+@@ -4275,9 +4262,9 @@ BattleScript_PrintPayDayMoneyString::
  
  BattleScript_WrapTurnDmg::
  	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_DoTurnDmgEnd
@@ -649,7 +709,7 @@ index 4745ed0f..ba99a251 100644
  	goto BattleScript_DoTurnDmg
  
  BattleScript_WrapEnds::
-@@ -4298,13 +4291,11 @@ BattleScript_MoveUsedIsInLoveCantAttack::
+@@ -4298,13 +4285,11 @@ BattleScript_MoveUsedIsInLoveCantAttack::
  
  BattleScript_NightmareTurnDmg::
  	printstring STRINGID_PKMNLOCKEDINNIGHTMARE
@@ -663,7 +723,7 @@ index 4745ed0f..ba99a251 100644
  	volatileanimation BS_ATTACKER, VOLATILE_CURSED
  	goto BattleScript_DoTurnDmg
  
-@@ -4480,7 +4471,11 @@ BattleScript_AbilityPopUpTarget::
+@@ -4480,7 +4465,11 @@ BattleScript_AbilityPopUpTarget::
  BattleScript_AbilityPopUp::
  	tryactivateabilityshield BS_ABILITY_BATTLER
  	showabilitypopup
@@ -676,7 +736,7 @@ index 4745ed0f..ba99a251 100644
  	recordability BS_ABILITY_BATTLER
  	sethword sABILITY_OVERWRITE, 0
  	return
-@@ -4505,24 +4500,24 @@ BattleScript_ItemPopUp_Attacker::
+@@ -4505,24 +4494,24 @@ BattleScript_ItemPopUp_Attacker::
  	flushtextbox
  BattleScript_ItemPopUp_AttackerNoFlush::
  	showitempopup BS_ATTACKER
@@ -707,7 +767,7 @@ index 4745ed0f..ba99a251 100644
  	return
  
  @ Can't compare directly to a value, have to compare to value at pointer
-@@ -4530,9 +4525,7 @@ sZero:
+@@ -4530,9 +4519,7 @@ sZero:
  .byte 0
  
  BattleScript_EmergencyExit::
@@ -717,7 +777,7 @@ index 4745ed0f..ba99a251 100644
  	playanimation BS_SCRIPTING, B_ANIM_SLIDE_OFFSCREEN
  	waitanimation
  	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_SwitchOutEffects
-@@ -4569,7 +4562,6 @@ BattleScript_QueuedSwitchRet:
+@@ -4569,7 +4556,6 @@ BattleScript_QueuedSwitchRet:
  	return
  
  BattleScript_TraceActivates::
@@ -725,7 +785,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUpScripting
  	printstring STRINGID_PKMNTRACED
  	waitmessage B_WAIT_TIME_LONG
-@@ -4703,28 +4695,24 @@ BattleScript_RuinAbilityActivates::
+@@ -4703,28 +4689,24 @@ BattleScript_RuinAbilityActivates::
  	return
  
  BattleScript_SupremeOverlordActivates::
@@ -754,7 +814,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_COMMANDERACTIVATES
  	waitmessage B_WAIT_TIME_LONG
-@@ -4732,7 +4720,6 @@ BattleScript_CommanderActivates::
+@@ -4732,7 +4714,6 @@ BattleScript_CommanderActivates::
  	return
  
  BattleScript_HospitalityActivates::
@@ -762,7 +822,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_HOSPITALITYRESTORATION
  	waitmessage B_WAIT_TIME_LONG
-@@ -4748,7 +4735,6 @@ BattleScript_AttackWeakenedByStrongWinds::
+@@ -4748,7 +4729,6 @@ BattleScript_AttackWeakenedByStrongWinds::
  	return
  
  BattleScript_MimicryActivates::
@@ -770,7 +830,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_BATTLERTYPECHANGEDTO
  	waitmessage B_WAIT_TIME_SHORT
-@@ -4774,7 +4760,6 @@ BattleScript_ActivateTerrainAbility:
+@@ -4774,7 +4754,6 @@ BattleScript_ActivateTerrainAbility:
  	return
  
  BattleScript_ElectricSurgeActivates::
@@ -778,7 +838,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESELECTRIC
  	waitmessage B_WAIT_TIME_LONG
-@@ -4783,7 +4768,6 @@ BattleScript_ElectricSurgeActivates::
+@@ -4783,7 +4762,6 @@ BattleScript_ElectricSurgeActivates::
  	return
  
  BattleScript_HadronEngineActivates::
@@ -786,7 +846,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_HADRONENGINEACTIVATES
  	waitmessage B_WAIT_TIME_LONG
-@@ -4792,14 +4776,12 @@ BattleScript_HadronEngineActivates::
+@@ -4792,14 +4770,12 @@ BattleScript_HadronEngineActivates::
  	return
  
  BattleScript_HadronEngineActivatesInTerrain::
@@ -801,7 +861,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESMISTY
  	waitmessage B_WAIT_TIME_LONG
-@@ -4808,7 +4790,6 @@ BattleScript_MistySurgeActivates::
+@@ -4808,7 +4784,6 @@ BattleScript_MistySurgeActivates::
  	return
  
  BattleScript_GrassySurgeActivates::
@@ -809,7 +869,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESGRASSY
  	waitmessage B_WAIT_TIME_LONG
-@@ -4817,7 +4798,6 @@ BattleScript_GrassySurgeActivates::
+@@ -4817,7 +4792,6 @@ BattleScript_GrassySurgeActivates::
  	return
  
  BattleScript_PsychicSurgeActivates::
@@ -817,7 +877,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_TERRAINBECOMESPSYCHIC
  	waitmessage B_WAIT_TIME_LONG
-@@ -4869,14 +4849,12 @@ BattleScript_TookAttack::
+@@ -4869,14 +4843,12 @@ BattleScript_TookAttack::
  	return
  
  BattleScript_SturdyPreventsOHKO::
@@ -832,7 +892,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	healthbarupdate BS_SCRIPTING
  	datahpupdate BS_SCRIPTING, ASSURANCE_DOUBLE
-@@ -4885,20 +4863,17 @@ BattleScript_MoveHPDrain::
+@@ -4885,20 +4857,17 @@ BattleScript_MoveHPDrain::
  	return
  
  BattleScript_MoveStatDrain::
@@ -853,7 +913,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printfromtable gFlashFireStringIds
  	waitmessage B_WAIT_TIME_LONG
-@@ -4909,21 +4884,18 @@ BattleScript_AbilityPreventsPhasingOut::
+@@ -4909,21 +4878,18 @@ BattleScript_AbilityPreventsPhasingOut::
  	goto BattleScript_MoveEnd
  
  BattleScript_AbilityPreventsPhasingOutRet::
@@ -875,7 +935,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_PKMNSXPREVENTSYLOSS
  	waitmessage B_WAIT_TIME_LONG
-@@ -4940,7 +4912,6 @@ BattleScript_OwnTempoPrevents::
+@@ -4940,7 +4906,6 @@ BattleScript_OwnTempoPrevents::
  	goto BattleScript_MoveEnd
  
  BattleScript_OwnTempoPreventsRet::
@@ -883,7 +943,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	copybyte sBATTLER, gBattlerTarget
  	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
-@@ -4952,7 +4923,6 @@ BattleScript_IceFaceNullsDamage::
+@@ -4952,7 +4917,6 @@ BattleScript_IceFaceNullsDamage::
  	return
  
  BattleScript_PokemonCannotUseMove::
@@ -891,7 +951,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	printstring STRINGID_POKEMONCANNOTUSEMOVE
  	waitmessage B_WAIT_TIME_LONG
-@@ -4977,7 +4947,6 @@ BattleScript_StickyHoldActivates::
+@@ -4977,7 +4941,6 @@ BattleScript_StickyHoldActivates::
  	goto BattleScript_MoveEnd
  
  BattleScript_StickyHoldActivatesRet::
@@ -899,7 +959,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUp
  	copybyte sBATTLER, gBattlerAbility
  	printstring STRINGID_PKMNSXMADEYINEFFECTIVE
-@@ -4991,14 +4960,12 @@ BattleScript_ColorChangeActivates::
+@@ -4991,14 +4954,12 @@ BattleScript_ColorChangeActivates::
  	return
  
  BattleScript_ProteanActivates::
@@ -914,7 +974,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUpScripting
  	printstring STRINGID_PKMNMADESHELLGLEAM
  	waitmessage B_WAIT_TIME_LONG
-@@ -5425,8 +5392,14 @@ BattleScript_ItemHealHP_Ret::
+@@ -5425,8 +5386,14 @@ BattleScript_ItemHealHP_Ret::
  	call BattleScript_ItemPopUp_Attacker
  	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
  	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
@@ -929,7 +989,7 @@ index 4745ed0f..ba99a251 100644
  	return
  
  BattleScript_SelectingNotAllowedMoveChoiceItem::
-@@ -5508,6 +5481,15 @@ BattleScript_ActionSelectionItemsCantBeUsed::
+@@ -5508,6 +5475,15 @@ BattleScript_ActionSelectionItemsCantBeUsed::
  	printselectionstring STRINGID_ITEMSCANTBEUSEDNOW
  	endselectionscript
  
@@ -945,7 +1005,7 @@ index 4745ed0f..ba99a251 100644
  BattleScript_FlushMessageBox::
  	flushtextbox
  	return
-@@ -5989,7 +5971,6 @@ BattleScript_MoveEffectDamageNonTypes::
+@@ -5989,7 +5965,6 @@ BattleScript_MoveEffectDamageNonTypes::
  
  BattleScript_DamageNonTypesContinues::
  	printfromtable gDamageNonTypesDmgStringIds
@@ -953,7 +1013,7 @@ index 4745ed0f..ba99a251 100644
  	effectivenesssound
  	hitanimation BS_ATTACKER
  	goto BattleScript_DoTurnDmg
-@@ -6300,7 +6281,6 @@ BattleScript_BerserkGene_SafeguardProtected::
+@@ -6300,7 +6275,6 @@ BattleScript_BerserkGene_SafeguardProtected::
  	waitmessage B_WAIT_TIME_LONG
  	goto BattleScript_BerserkGene_End
  BattleScript_BerserkGene_OwnTempoPrevents:
@@ -961,7 +1021,7 @@ index 4745ed0f..ba99a251 100644
  	call BattleScript_AbilityPopUpScripting
  	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
  	waitmessage B_WAIT_TIME_LONG
-@@ -6353,9 +6333,15 @@ BattleScript_ForfeitBattleGaveMoney::
+@@ -6353,9 +6327,15 @@ BattleScript_ForfeitBattleGaveMoney::
  	waitmessage B_WAIT_TIME_LONG
  	end
  
@@ -4402,7 +4462,7 @@ index 57d92066..b8216a84 100644
  void AnimMudSportDirt(struct Sprite *sprite);
  void AnimDirtScatter(struct Sprite *sprite);
 diff --git a/include/battle_anim_scripts.h b/include/battle_anim_scripts.h
-index f9fe8bbe..1b2c355c 100644
+index f9fe8bbe..04f538d6 100644
 --- a/include/battle_anim_scripts.h
 +++ b/include/battle_anim_scripts.h
 @@ -850,6 +850,13 @@ extern const u8 gBattleAnimMove_SupercellSlam[];
@@ -4410,27 +4470,26 @@ index f9fe8bbe..1b2c355c 100644
  extern const u8 gBattleAnimMove_UpperHand[];
  extern const u8 gBattleAnimMove_MalignantChain[];
 +// Daily Red: the Kanto and Johto starters' signature moves
-+extern const u8 gBattleAnimMove_DrainingPlant[];
-+extern const u8 gBattleAnimMove_TwinPulse[];
-+extern const u8 gBattleAnimMove_FlareMeteor[];
++extern const u8 gBattleAnimMove_HavocSeed[];
++extern const u8 gBattleAnimMove_RapidPulse[];
++extern const u8 gBattleAnimMove_BurningMeteor[];
 +extern const u8 gBattleAnimMove_BlightPetal[];
 +extern const u8 gBattleAnimMove_Pyroclastic[];
-+extern const u8 gBattleAnimMove_JawCrash[];
++extern const u8 gBattleAnimMove_TidalRampage[];
  extern const u8 gBattleAnimMove_BreakneckBlitz[];
  extern const u8 gBattleAnimMove_AllOutPummeling[];
  extern const u8 gBattleAnimMove_SupersonicSkystrike[];
 diff --git a/include/battle_scripts.h b/include/battle_scripts.h
-index f52800db..7b9b68a2 100644
+index f52800db..17d97047 100644
 --- a/include/battle_scripts.h
 +++ b/include/battle_scripts.h
-@@ -618,6 +618,10 @@ extern const u8 BattleScript_EffectMoonlight[];
+@@ -618,6 +618,9 @@ extern const u8 BattleScript_EffectMoonlight[];
  extern const u8 BattleScript_MegaSolActivatesHealing[];
  extern const u8 BattleScript_EffectWeather[];
  extern const u8 BattleScript_EffectStatChange[];
 +extern const u8 BattleScript_EffectPyroclastic[]; // Daily Red
 +extern const u8 BattleScript_DailyRedNoItems[];   // Daily Red
 +extern const u8 BattleScript_DailyRedBegging[];   // Daily Red
-+extern const u8 BattleScript_JawCrashMissed[];    // Daily Red
  extern const u8 BattleScript_EffectStatChangeHalfHp[];
  extern const u8 BattleScript_EffectPsychUp[];
  extern const u8 BattleScript_EffectFutureSight[];
@@ -4569,14 +4628,13 @@ index 5def78aa..8bb63e18 100644
  };
  
 diff --git a/include/constants/battle_string_ids.h b/include/constants/battle_string_ids.h
-index a1214e31..0d11ca09 100644
+index a1214e31..5d3f4636 100644
 --- a/include/constants/battle_string_ids.h
 +++ b/include/constants/battle_string_ids.h
-@@ -725,6 +725,9 @@ enum StringID
+@@ -725,6 +725,8 @@ enum StringID
      STRINGID_S,
      STRINGID_LOSTSOMEOFITSHP,
      STRINGID_BELCHCANTUSE,
-+    STRINGID_JAWCRASHCHARGE, // Daily Red
 +    STRINGID_DAILYREDNOITEMS, // Daily Red
 +    STRINGID_DAILYREDBEGGING, // Daily Red
      STRINGID_COUNT
@@ -4617,7 +4675,7 @@ index bf452230..5474ea42 100644
      ITEM_FIELD_ARROW = ITEMS_COUNT,
  };
 diff --git a/include/constants/moves.h b/include/constants/moves.h
-index cca0f09f..8f8cb38b 100644
+index cca0f09f..19c8ba81 100644
 --- a/include/constants/moves.h
 +++ b/include/constants/moves.h
 @@ -907,7 +907,16 @@ enum __attribute__((packed)) Move
@@ -4626,12 +4684,12 @@ index cca0f09f..8f8cb38b 100644
  
 -    MOVES_COUNT = MOVES_COUNT_GEN9,
 +    // Daily Red: the Kanto and Johto starters' signature moves.
-+    MOVE_DRAINING_PLANT = MOVES_COUNT_GEN9, // Venusaur
-+    MOVE_TWIN_PULSE,                     // Blastoise
-+    MOVE_FLARE_METEOR,                 // Charizard
++    MOVE_HAVOC_SEED = MOVES_COUNT_GEN9, // Venusaur
++    MOVE_RAPID_PULSE,                     // Blastoise
++    MOVE_BURNING_METEOR,                 // Charizard
 +    MOVE_BLIGHT_PETAL,                   // Meganium
 +    MOVE_PYROCLASTIC,                    // Typhlosion
-+    MOVE_JAW_CRASH,                      // Feraligatr
++    MOVE_TIDAL_RAMPAGE,                  // Feraligatr
 +    MOVES_COUNT_DAILYRED,
 +
 +    MOVES_COUNT = MOVES_COUNT_DAILYRED, // Daily Red: was MOVES_COUNT_GEN9
@@ -4751,10 +4809,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..20ada2e4
+index 00000000..d99848a8
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,139 @@
+@@ -0,0 +1,141 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -4786,6 +4844,7 @@ index 00000000..20ada2e4
 +u16 DailyRed_IsDailyGame(void);
 +bool32 DailyRed_IsOnSummit(void);
 +const u8 *DailyRed_GetBagSelectionScript(void);
++bool32 DailyRed_IsFastForward(void);
 +// A practice seed (never a daily game) for testing moves: your team is the six
 +// Kanto and Johto starters, each with its signature move (sTestSeedTeam in
 +// dailyred_team.c), and RED has three Blissey that only know Splash
@@ -4806,6 +4865,7 @@ index 00000000..20ada2e4
 +// every box, and the action menu and move list print on their own copy of
 +// the battle text palette in those colours.
 +#define DAILYRED_BATTLE_MENU_PAL_NUM 14
++#define DAILYRED_MOVE_INFO_FRAME_PAL_NUM 15 // the L move info window's frame (src/battle_controller_player.c)
 +#define DAILYRED_BATTLE_BOX_FILL_TILE 7 // a box's inside, in the textbox tiles (palette 0)
 +#define DAILYRED_BATTLE_BOX_FILL RGB(5, 5, 6)
 +#define DAILYRED_BATTLE_TEXT RGB(31, 31, 31)
@@ -8303,14 +8363,14 @@ index 00000000..3bcdb60e
 +	voice_noise_alt 60, 0, 0, 0, 2, 6, 0  @ 126: noise
 +	voice_noise_alt 60, 0, 0, 0, 1, 8, 1  @ 127: noise, hi-hat
 diff --git a/src/battle_ai_switch.c b/src/battle_ai_switch.c
-index 355ab359..e1a19768 100644
+index 355ab359..2b926ac9 100644
 --- a/src/battle_ai_switch.c
 +++ b/src/battle_ai_switch.c
 @@ -1313,6 +1313,9 @@ static bool32 CanBattlerConsiderSwitch(enum BattlerId battler)
          return FALSE;
      if (gBattleMons[battler].volatiles.root)
          return FALSE;
-+    // Daily Red: held in the air by Sky Drop (or Flare Meteor), it can't switch.
++    // Daily Red: held in the air by Sky Drop (or Burning Meteor), it can't switch.
 +    if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
 +        return FALSE;
      if (IsAbilityPreventingEscape(battler))
@@ -8573,7 +8633,7 @@ index 49d91ce4..c25db9e1 100644
      case 6:
          LoadBattleMenuWindowGfx();
 diff --git a/src/battle_controller_player.c b/src/battle_controller_player.c
-index 7553ca61..85513d22 100644
+index 7553ca61..87f0954a 100644
 --- a/src/battle_controller_player.c
 +++ b/src/battle_controller_player.c
 @@ -1,4 +1,5 @@
@@ -8582,7 +8642,29 @@ index 7553ca61..85513d22 100644
  #include "battle.h"
  #include "battle_anim.h"
  #include "battle_arena.h"
-@@ -1813,8 +1814,10 @@ void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
+@@ -44,6 +45,7 @@
+ #include "constants/rgb.h"
+ #include "caps.h"
+ #include "menu.h"
++#include "text_window.h" // Daily Red
+ #include "pokemon_summary_screen.h"
+ #include "type_icons.h"
+ #include "pokedex.h"
+@@ -1769,8 +1771,11 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
+     u8 cat_start[] = _("{CLEAR_TO 3}");
+     u8 pwr_start[] = _("{CLEAR_TO 56}");
+     u8 acc_start[] = _("{CLEAR_TO 108}");
+-    LoadMessageBoxAndBorderGfx();
+-    DrawStdWindowFrame(B_WIN_MOVE_DESCRIPTION, FALSE);
++    // Daily Red: the frame's colours go in palette 15, not the standard
++    // window's 14, which is the HGSS-style move list's (was
++    // LoadMessageBoxAndBorderGfx(); DrawStdWindowFrame(...)).
++    LoadUserWindowBorderGfx(0, STD_WINDOW_BASE_TILE_NUM, BG_PLTT_ID(DAILYRED_MOVE_INFO_FRAME_PAL_NUM));
++    DrawStdFrameWithCustomTileAndPalette(B_WIN_MOVE_DESCRIPTION, FALSE, STD_WINDOW_BASE_TILE_NUM, DAILYRED_MOVE_INFO_FRAME_PAL_NUM);
+     if (pwr < 2)
+         StringCopy(pwr_num, gText_BattleSwitchWhich5);
+     else
+@@ -1813,8 +1818,10 @@ void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
  void MoveSelectionDestroyCursorAt(u8 cursorPosition)
  {
      u16 src[2];
@@ -8595,7 +8677,7 @@ index 7553ca61..85513d22 100644
  
      CopyToBgTilemapBufferRect_ChangePalette(0, src, 9 * (cursorPosition & 1) + 1, 55 + (cursorPosition & 2), 1, 2, 0x11);
      CopyBgTilemapBufferToVram(0);
-@@ -1833,8 +1836,10 @@ void ActionSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
+@@ -1833,8 +1840,10 @@ void ActionSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
  void ActionSelectionDestroyCursorAt(u8 cursorPosition)
  {
      u16 src[2];
@@ -9190,7 +9272,7 @@ index 46af80f3..17cf6c0c 100644
  
  enum Type TrySetAteType(enum Move move, enum BattlerId battlerAtk, enum Ability attackerAbility)
 diff --git a/src/battle_message.c b/src/battle_message.c
-index 680ea2d1..3fc8a709 100644
+index 680ea2d1..eed316ec 100644
 --- a/src/battle_message.c
 +++ b/src/battle_message.c
 @@ -1,4 +1,6 @@
@@ -9200,17 +9282,16 @@ index 680ea2d1..3fc8a709 100644
  #include "battle.h"
  #include "battle_anim.h"
  #include "battle_ai_record.h"
-@@ -904,6 +906,9 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
+@@ -904,6 +906,8 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
      [STRINGID_S]                                    = COMPOUND_STRING("s"),
      [STRINGID_LOSTSOMEOFITSHP]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} lost some of its HP!"),
      [STRINGID_BELCHCANTUSE]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} hasn't eaten any held Berries, so it can't possibly belch!\p"),
-+    [STRINGID_JAWCRASHCHARGE]                       = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} slammed down its armored jaw!"), // Daily Red
 +    [STRINGID_DAILYREDNOITEMS]                      = COMPOUND_STRING("But there were no items to use...{PAUSE 64}"), // Daily Red
 +    [STRINGID_DAILYREDBEGGING]                      = COMPOUND_STRING("Would you say you're begging it?{PAUSE 64}"), // Daily Red
  };
  
  const u16 gTrainerUsedItemStringIds[] =
-@@ -3911,7 +3916,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+@@ -3911,7 +3915,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
          else
              speed = GetPlayerTextSpeedDelay();
  
@@ -9219,7 +9300,7 @@ index 680ea2d1..3fc8a709 100644
      }
      else
      {
-@@ -3919,6 +3924,9 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+@@ -3919,6 +3923,9 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
          gTextFlags.canABSpeedUpPrint = 0;
      }
  
@@ -9229,7 +9310,7 @@ index 680ea2d1..3fc8a709 100644
      AddTextPrinter(&printerTemplate, speed, NULL);
  
      if (copyToVram)
-@@ -3928,10 +3936,22 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
+@@ -3928,10 +3935,22 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
      }
  }
  
@@ -9253,7 +9334,7 @@ index 680ea2d1..3fc8a709 100644
      u8 var;
  
      if (!gBattleStruct->zmove.viewing)
-@@ -3940,11 +3960,12 @@ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
+@@ -3940,11 +3959,12 @@ void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
      else
          var = 3;
  
@@ -9271,18 +9352,35 @@ index 680ea2d1..3fc8a709 100644
  
  u8 GetCurrentPPToMaxPPState(u8 currentPP, u8 maxPP)
 diff --git a/src/battle_move_resolution.c b/src/battle_move_resolution.c
-index 1c90a529..9b9d4396 100644
+index 1c90a529..60c5ce9b 100644
 --- a/src/battle_move_resolution.c
 +++ b/src/battle_move_resolution.c
 @@ -2077,6 +2077,7 @@ static bool32 IsTargetUnaffectedByMoveEffect(struct BattleCalcValues *cv)
          break;
      case EFFECT_SKY_DROP:
          if (!gProtectStructs[cv->battlerAtk].chargingTurn
-+         && cv->move != MOVE_FLARE_METEOR // Daily Red: a Fire move, so it hits Flying types
++         && cv->move != MOVE_BURNING_METEOR // Daily Red: a Fire move, so it hits Flying types
           && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_FLYING))
          {
              gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
-@@ -2479,7 +2480,18 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
+@@ -2352,6 +2353,16 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
+         {
+             gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 10);
+         }
++        else if (cv->move == MOVE_RAPID_PULSE)
++        {
++            // Daily Red: Rapid Pulse hits twice, and a third time 20% of the
++            // time (always with Skill Link or Loaded Dice).
++            if (cv->abilities[cv->battlerAtk] == ABILITY_SKILL_LINK
++             || cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_LOADED_DICE)
++                gMultiHitCounter = 3;
++            else
++                gMultiHitCounter = 2 + RandomPercentage(RNG_HITS, 20);
++        }
+         else
+         {
+             gMultiHitCounter = GetMoveStrikeCount(cv->move);
+@@ -2479,7 +2490,18 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
       || ShouldSkipAccuracyCalcPastFirstHit(cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->moveEffect)
       || IsMaxMove(cv->move)
       || IsZMove(cv->move))
@@ -9301,28 +9399,18 @@ index 1c90a529..9b9d4396 100644
  
      enum SmartTargetState smartTargetState = INITIAL_STATE;
      bool32 isSmartTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move) == TARGET_SMART;
-@@ -4106,6 +4118,21 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
- {
-     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+@@ -2783,6 +2805,11 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
+      && gBattleStruct->numSpreadTargets > 1)
+         gBattleScripting.animTurn = 1;
  
-+    // Daily Red: when Jaw Crash's attack misses (or the target is unaffected),
-+    // the user loses the Defense and Sp. Def its charging turn gave it.
-+    if (cv->move == MOVE_JAW_CRASH
-+     && IsBattlerAlive(cv->battlerAtk)
-+     && !gProtectStructs[cv->battlerAtk].chargingTurn
-+     && !gBattleStruct->unableToUseMove
-+     && IsBattlerUnaffectedByMove(cv->battlerDef))
-+    {
-+        SetStatChange(cv->battlerAtk, STAT_DEF, -1);
-+        SetStatChange(cv->battlerAtk, STAT_SPDEF, -1);
-+        BattleScriptCall(BattleScript_JawCrashMissed);
-+        gBattleScripting.moveendState++;
-+        return MOVEEND_RESULT_RUN_SCRIPT;
-+    }
++    // Daily Red: Rapid Pulse's animation is told which hit it is (0, 1 or 2:
++    // its third is bigger).
++    if (cv->move == MOVE_RAPID_PULSE)
++        gBattleScripting.animTurn = gBattleScripting.multihitString[4];
 +
-     switch (cv->moveEffect)
-     {
-     case EFFECT_RECOIL_IF_MISS:
+     u32 multiHit = gMultiHitCounter;
+     bool32 willDamageFaintBattler = (gBattleMons[cv->battlerDef].hp <= gBattleStruct->moveDamage[cv->battlerDef]);
+     if (!gBattleMons[cv->battlerDef].volatiles.substitute && willDamageFaintBattler)
 diff --git a/src/battle_script_commands.c b/src/battle_script_commands.c
 index 2d8de986..e0e6f0b4 100644
 --- a/src/battle_script_commands.c
@@ -9355,6 +9443,23 @@ index 2d8de986..e0e6f0b4 100644
  void BS_SaveTarget(void)
  {
      NATIVE_ARGS();
+diff --git a/src/battle_set_effect.c b/src/battle_set_effect.c
+index 8300eb72..3d5df130 100644
+--- a/src/battle_set_effect.c
++++ b/src/battle_set_effect.c
+@@ -355,7 +355,11 @@ static void HandleSetEffectThrash(struct BattleCalcValues *cv, struct SetEffect
+     {
+         gBattleMons[se->effectBattler].volatiles.multipleTurns = TRUE;
+         gLockedMoves[se->effectBattler] = cv->move;
+-        gBattleMons[se->effectBattler].volatiles.rampageTurns = RandomUniform(RNG_RAMPAGE_TURNS, 2, B_RAMPAGE_TURNS);
++        // Daily Red: Tidal Rampage always rampages for 2 turns.
++        if (cv->move == MOVE_TIDAL_RAMPAGE)
++            gBattleMons[se->effectBattler].volatiles.rampageTurns = 2;
++        else
++            gBattleMons[se->effectBattler].volatiles.rampageTurns = RandomUniform(RNG_RAMPAGE_TURNS, 2, B_RAMPAGE_TURNS);
+     }
+ }
+ 
 diff --git a/src/battle_setup.c b/src/battle_setup.c
 index 6024da3c..d786bd71 100644
 --- a/src/battle_setup.c
@@ -9452,7 +9557,7 @@ index abe49bd2..d0cbb51b 100644
                                                  DISPLAY_WIDTH + 32,
                                                  106,
 diff --git a/src/battle_util.c b/src/battle_util.c
-index 85523e06..9a481874 100644
+index 85523e06..41aba380 100644
 --- a/src/battle_util.c
 +++ b/src/battle_util.c
 @@ -4550,6 +4550,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
@@ -9478,7 +9583,7 @@ index 85523e06..9a481874 100644
      if (!(MoveMakesContact(move) || (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM
 -                                  && gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL)))
 +                                  && gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL)
-+                              // Daily Red: Leaf Blade and Flare Meteor make contact when physical.
++                              // Daily Red: Leaf Blade and Burning Meteor make contact when physical.
 +                              || (IsDailyRedStatCategoryMove(move) && GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)))
      {
          return FALSE;
@@ -9490,14 +9595,14 @@ index 85523e06..9a481874 100644
 +// Daily Red: moves whose category follows the user's higher attacking stat.
 +bool32 IsDailyRedStatCategoryMove(enum Move move)
 +{
-+    return move == MOVE_LEAF_BLADE || move == MOVE_FLARE_METEOR;
++    return move == MOVE_LEAF_BLADE || move == MOVE_BURNING_METEOR;
 +}
 +
  void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
  {
      gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
  
-+    // Daily Red: Leaf Blade and Flare Meteor are physical or special by the
++    // Daily Red: Leaf Blade and Burning Meteor are physical or special by the
 +    // user's higher attacking stat, like Photon Geyser (and make contact only
 +    // when physical, see IsMoveMakingContact).
 +    if (IsDailyRedStatCategoryMove(move))
@@ -9531,10 +9636,10 @@ index 4a0a3bc2..1ea2736c 100644
  };
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 00000000..6e2b6941
+index 00000000..1a575528
 --- /dev/null
 +++ b/src/dailyred.c
-@@ -0,0 +1,354 @@
+@@ -0,0 +1,362 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "battle_scripts.h"
@@ -9593,7 +9698,8 @@ index 00000000..6e2b6941
 +    u32 seed;
 +    u8 phase;  // DAILYRED_PHASE_*
 +    u8 result; // DAILYRED_RESULT_*
-+    u8 padding[2];
++    u8 speed;  // written by the website: 1 while its 2x speed is on (DailyRed_IsFastForward)
++    u8 padding;
 +};
 +
 +enum
@@ -9683,6 +9789,13 @@ index 00000000..6e2b6941
 +    sStatus.seed = seed;
 +    sStatus.phase = DAILYRED_PHASE_EXPLORING;
 +    sStatus.result = DAILYRED_RESULT_NONE;
++    sStatus.speed = 0;
++}
++
++// The website's 2x speed (web/app.js writes sStatus.speed): see AgbMainLoop.
++bool32 DailyRed_IsFastForward(void)
++{
++    return sStatus.speed != 0;
 +}
 +
 +bool32 DailyRed_IsTestSeed(void)
@@ -9891,13 +10004,14 @@ index 00000000..6e2b6941
 +}
 diff --git a/src/dailyred_anims.c b/src/dailyred_anims.c
 new file mode 100644
-index 00000000..2703ea1d
+index 00000000..7a1d159e
 --- /dev/null
 +++ b/src/dailyred_anims.c
-@@ -0,0 +1,121 @@
+@@ -0,0 +1,350 @@
 +#include "global.h"
 +#include "battle_anim.h"
 +#include "sprite.h"
++#include "trig.h"
 +#include "constants/battle_anim.h"
 +
 +// Daily Red: sprites for the starters' signature move animations
@@ -9986,13 +10100,13 @@ index 00000000..2703ea1d
 +    }
 +}
 +
-+// Draining Plant: Leech Seed's seeds, already on the target, sprouting (the
++// Havoc Seed: Leech Seed's seeds, already on the target, sprouting (the
 +// second half of AnimLeechSeed, without the throw).
 +//   arg 0: x offset from the target
 +//   arg 1: y offset from the target
 +extern const union AnimCmd *const gLeechSeedAnimTable[];
 +
-+static void AnimDrainingPlantSprout(struct Sprite *sprite);
++static void AnimHavocSeedSprout(struct Sprite *sprite);
 +
 +const struct SpriteTemplate gDailyRedSproutingSeedSpriteTemplate =
 +{
@@ -10000,10 +10114,10 @@ index 00000000..2703ea1d
 +    .paletteTag = ANIM_TAG_SEED,
 +    .oam = &gOamData_AffineOff_ObjNormal_16x16,
 +    .anims = gLeechSeedAnimTable,
-+    .callback = AnimDrainingPlantSprout,
++    .callback = AnimHavocSeedSprout,
 +};
 +
-+static void AnimDrainingPlantSprout(struct Sprite *sprite)
++static void AnimHavocSeedSprout(struct Sprite *sprite)
 +{
 +    s16 x = gBattleAnimArgs[0];
 +
@@ -10016,6 +10130,234 @@ index 00000000..2703ea1d
 +    sprite->callback = WaitAnimForDuration;
 +    StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 +}
++
++// Havoc Seed: Energy Ball's balls, small, fired from the user to points around
++// the target, held there, then all driven into the target at once.
++//   arg 0: x offset from the target where it holds (towards the target's
++//          back, mirrored when the user is an opponent)
++//   arg 1: y offset from the target where it holds
++//   arg 2: frames to fly there
++//   arg 3: frames to hold
++//   arg 4: frames to crash into the target
++#define sTimer    data[0]
++#define sPhase    data[1]
++#define sHold     data[2]
++#define sCrash    data[3]
++#define sDuration data[4]
++#define sDeltaX   data[5]
++#define sDeltaY   data[6]
++
++static const union AffineAnimCmd sAffineAnim_HavocSeedBall[] =
++{
++    AFFINEANIMCMD_FRAME(0xA0, 0xA0, 0, 0),
++    AFFINEANIMCMD_FRAME(0x0, 0x0, 10, 1),
++    AFFINEANIMCMD_JUMP(1),
++};
++
++static const union AffineAnimCmd *const sAffineAnims_HavocSeedBall[] =
++{
++    sAffineAnim_HavocSeedBall,
++};
++
++static void AnimHavocSeedBall(struct Sprite *sprite);
++static void AnimHavocSeedBall_Step(struct Sprite *sprite);
++
++const struct SpriteTemplate gDailyRedHavocSeedBallSpriteTemplate =
++{
++    .tileTag = ANIM_TAG_ENERGY_BALL,
++    .paletteTag = ANIM_TAG_ENERGY_BALL,
++    .oam = &gOamData_AffineNormal_ObjNormal_32x32,
++    .affineAnims = sAffineAnims_HavocSeedBall,
++    .callback = AnimHavocSeedBall,
++};
++
++static void AnimHavocSeedBall(struct Sprite *sprite)
++{
++    s16 x = gBattleAnimArgs[0];
++
++    if (!IsOnPlayerSide(gBattleAnimAttacker))
++        x = -x;
++    sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
++    sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
++    sprite->sDeltaX = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + x - sprite->x;
++    sprite->sDeltaY = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[1] - sprite->y;
++    sprite->sDuration = gBattleAnimArgs[2];
++    sprite->sHold = gBattleAnimArgs[3];
++    sprite->sCrash = gBattleAnimArgs[4];
++    sprite->callback = AnimHavocSeedBall_Step;
++}
++
++static void AnimHavocSeedBall_Step(struct Sprite *sprite)
++{
++    switch (sprite->sPhase)
++    {
++    case 0: // flying out
++    case 2: // crashing in
++        sprite->sTimer++;
++        sprite->x2 = sprite->sDeltaX * sprite->sTimer / sprite->sDuration;
++        sprite->y2 = sprite->sDeltaY * sprite->sTimer / sprite->sDuration;
++        if (sprite->sTimer >= sprite->sDuration)
++        {
++            if (sprite->sPhase == 2)
++            {
++                DestroyAnimSprite(sprite);
++                return;
++            }
++            sprite->x += sprite->x2;
++            sprite->y += sprite->y2;
++            sprite->x2 = 0;
++            sprite->y2 = 0;
++            sprite->sTimer = 0;
++            sprite->sPhase = 1;
++        }
++        break;
++    case 1: // holding, bobbing a little
++        sprite->y2 = Sin((sprite->sTimer * 16) & 0xFF, 2);
++        if (++sprite->sTimer >= sprite->sHold)
++        {
++            sprite->y2 = 0;
++            sprite->sDeltaX = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) - sprite->x;
++            sprite->sDeltaY = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) - sprite->y;
++            sprite->sDuration = sprite->sCrash;
++            sprite->sTimer = 0;
++            sprite->sPhase = 2;
++        }
++        break;
++    }
++}
++
++#undef sTimer
++#undef sPhase
++#undef sHold
++#undef sCrash
++#undef sDuration
++#undef sDeltaX
++#undef sDeltaY
++
++// Rapid Pulse's third hit: Aurora Beam's rings (AnimAuroraBeamRings in
++// src/battle_anim_water.c, the same flight), which grow to twice their size
++// when they ramp up (arg 7 set to -1) instead of Aurora Beam's 1.375.
++static const union AnimCmd sAnim_RapidPulseRing_Small[] =
++{
++    ANIMCMD_FRAME(0, 1),
++    ANIMCMD_END,
++};
++
++static const union AnimCmd sAnim_RapidPulseRing_Big[] =
++{
++    ANIMCMD_FRAME(4, 1),
++    ANIMCMD_END,
++};
++
++static const union AnimCmd *const sAnims_RapidPulseRing[] =
++{
++    sAnim_RapidPulseRing_Small,
++    sAnim_RapidPulseRing_Big,
++};
++
++static const union AffineAnimCmd sAffineAnim_RapidPulseBigRing[] =
++{
++    AFFINEANIMCMD_FRAME(0x0, 0x0, 0, 1),
++    AFFINEANIMCMD_FRAME(0x20, 0x20, 0, 8),
++    AFFINEANIMCMD_END,
++};
++
++static const union AffineAnimCmd *const sAffineAnims_RapidPulseBigRing[] =
++{
++    sAffineAnim_RapidPulseBigRing,
++};
++
++static void AnimRapidPulseBigRing(struct Sprite *sprite);
++static void AnimRapidPulseBigRing_Step(struct Sprite *sprite);
++
++const struct SpriteTemplate gDailyRedRapidPulseBigRingSpriteTemplate =
++{
++    .tileTag = ANIM_TAG_RAINBOW_RINGS,
++    .paletteTag = ANIM_TAG_RAINBOW_RINGS,
++    .oam = &gOamData_AffineDouble_ObjNormal_8x16,
++    .anims = sAnims_RapidPulseRing,
++    .affineAnims = sAffineAnims_RapidPulseBigRing,
++    .callback = AnimRapidPulseBigRing,
++};
++
++static void AnimRapidPulseBigRing(struct Sprite *sprite)
++{
++    s16 x;
++
++    InitSpritePosToAnimAttacker(sprite, TRUE);
++    if (!IsOnPlayerSide(gBattleAnimAttacker))
++        x = -gBattleAnimArgs[2];
++    else
++        x = gBattleAnimArgs[2];
++    sprite->data[0] = gBattleAnimArgs[4];
++    sprite->data[1] = sprite->x;
++    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + x;
++    sprite->data[3] = sprite->y;
++    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
++    InitAnimLinearTranslation(sprite);
++    sprite->callback = AnimRapidPulseBigRing_Step;
++    sprite->affineAnimPaused = TRUE;
++    sprite->callback(sprite);
++}
++
++static void AnimRapidPulseBigRing_Step(struct Sprite *sprite)
++{
++    if ((u16)gBattleAnimArgs[7] == 0xFFFF)
++    {
++        StartSpriteAnim(sprite, 1);
++        sprite->affineAnimPaused = FALSE;
++    }
++    if (AnimTranslateLinear(sprite))
++        DestroyAnimSprite(sprite);
++}
++
++// Tidal Rampage's claw and bite, on a target its tackle has pushed back: Crush
++// Claw's slash and Bite's teeth, whose x offsets (arg 0) are made to point
++// away from the user, as other sprites' are (SetAnimSpriteInitialXOffset).
++static void AnimTidalRampageClaw(struct Sprite *sprite);
++static void AnimTidalRampageBite(struct Sprite *sprite);
++
++const struct SpriteTemplate gDailyRedTidalRampageClawSpriteTemplate =
++{
++    .tileTag = ANIM_TAG_CLAW_SLASH,
++    .paletteTag = ANIM_TAG_CLAW_SLASH,
++    .oam = &gOamData_AffineOff_ObjNormal_32x32,
++    .anims = gAnims_ClawSlash,
++    .callback = AnimTidalRampageClaw,
++};
++
++const struct SpriteTemplate gDailyRedTidalRampageBiteSpriteTemplate =
++{
++    .tileTag = ANIM_TAG_SHARP_TEETH,
++    .paletteTag = ANIM_TAG_SHARP_TEETH,
++    .oam = &gOamData_AffineNormal_ObjBlend_64x64,
++    .affineAnims = gAffineAnims_Bite,
++    .callback = AnimTidalRampageBite,
++};
++
++static void AnimTidalRampageClaw(struct Sprite *sprite)
++{
++    if (!IsOnPlayerSide(gBattleAnimAttacker))
++        gBattleAnimArgs[0] = -gBattleAnimArgs[0];
++    AnimClawSlash(sprite);
++}
++
++static void AnimTidalRampageBite(struct Sprite *sprite)
++{
++    if (!IsOnPlayerSide(gBattleAnimAttacker))
++        gBattleAnimArgs[0] = -gBattleAnimArgs[0];
++    AnimBite(sprite);
++}
++
++// Tidal Rampage's rampage: Outrage's flames (AnimOutrageFlame), as bubbles.
++const struct SpriteTemplate gDailyRedTidalRampageBubbleSpriteTemplate =
++{
++    .tileTag = ANIM_TAG_SMALL_BUBBLES,
++    .paletteTag = ANIM_TAG_SMALL_BUBBLES,
++    .oam = &gOamData_AffineOff_ObjNormal_16x16,
++    .anims = gAnims_WaterBubble,
++    .callback = AnimOutrageFlame,
++};
 diff --git a/src/dailyred_eviv.c b/src/dailyred_eviv.c
 new file mode 100644
 index 00000000..3c7111f8
@@ -11602,7 +11944,7 @@ index 00000000..edecb805
 +}
 diff --git a/src/dailyred_sets.c b/src/dailyred_sets.c
 new file mode 100644
-index 00000000..8cf872aa
+index 00000000..29e60ac7
 --- /dev/null
 +++ b/src/dailyred_sets.c
 @@ -0,0 +1,8165 @@
@@ -11641,29 +11983,29 @@ index 00000000..8cf872aa
 +const struct DailyRedSet gDailyRedSets[] =
 +{
 +    // Venusaur-Mega, MEGA (Gen 7)
-+    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, DRAINING_PLANT, EARTHQUAKE, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7 + signature move, 18%
 +    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, EARTHQUAKE, GIGA_DRAIN, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7, 18%
-+    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, DRAINING_PLANT, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 239, 0), // Bulky Attacker, Gen 7 + signature move, 16%
++    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, EARTHQUAKE, HAVOC_SEED, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7 + signature move, 18%
 +    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, GIGA_DRAIN, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 239, 0), // Bulky Attacker, Gen 7, 16%
-+    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, DRAINING_PLANT, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 235, 0), // Bulky Attacker, Gen 7 + signature move, 16%
++    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, HAVOC_SEED, KNOCK_OFF, SLUDGE_BOMB, SYNTHESIS, RASH, EVS(252, 4, 0, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 239, 0), // Bulky Attacker, Gen 7 + signature move, 16%
 +    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, GIGA_DRAIN, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 235, 0), // Bulky Attacker, Gen 7, 16%
++    SET(VENUSAUR, VENUSAURITE, CHLOROPHYLL, HAVOC_SEED, SLEEP_POWDER, SLUDGE_BOMB, SYNTHESIS, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 235, 0), // Bulky Attacker, Gen 7 + signature move, 16%
 +    // Charizard-Mega-X, MEGA (Gen 7)
++    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, BURNING_METEOR, DRAGON_CLAW, DRAGON_DANCE, ROOST, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Gen 7 + signature move, 27%
 +    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, DRAGON_CLAW, DRAGON_DANCE, FLARE_BLITZ, ROOST, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Gen 7, 27%
-+    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, DRAGON_CLAW, DRAGON_DANCE, FLARE_METEOR, ROOST, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Gen 7 + signature move, 27%
++    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, BURNING_METEOR, DRAGON_CLAW, DRAGON_DANCE, EARTHQUAKE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 211, 0), // Setup Sweeper, Gen 7 + signature move, 23%
 +    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, DRAGON_CLAW, DRAGON_DANCE, EARTHQUAKE, FLARE_BLITZ, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 211, 0), // Setup Sweeper, Gen 7, 23%
-+    SET(CHARIZARD, CHARIZARDITE_X, BLAZE, DRAGON_CLAW, DRAGON_DANCE, EARTHQUAKE, FLARE_METEOR, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 211, 0), // Setup Sweeper, Gen 7 + signature move, 23%
 +    // Charizard-Mega-Y, MEGA (Gen 7)
++    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, BURNING_METEOR, DRAGON_PULSE, ROOST, SOLAR_BEAM, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7 + signature move, 27%
 +    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, DRAGON_PULSE, FIRE_BLAST, ROOST, SOLAR_BEAM, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7, 27%
-+    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, DRAGON_PULSE, FLARE_METEOR, ROOST, SOLAR_BEAM, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Gen 7 + signature move, 27%
++    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, AIR_SLASH, BURNING_METEOR, ROOST, SOLAR_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 226, 0), // Fast Attacker, Gen 7 + signature move, 24%
 +    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, AIR_SLASH, FIRE_BLAST, ROOST, SOLAR_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 226, 0), // Fast Attacker, Gen 7, 24%
-+    SET(CHARIZARD, CHARIZARDITE_Y, BLAZE, AIR_SLASH, FLARE_METEOR, ROOST, SOLAR_BEAM, TIMID, EVS(4, 0, 0, 252, 0, 252), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 226, 0), // Fast Attacker, Gen 7 + signature move, 24%
 +    // Blastoise-Mega, MEGA (Gen 7)
++    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, AURA_SPHERE, ICE_BEAM, RAPID_PULSE, RAPID_SPIN, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 1), // Bulky Support, Gen 7 + signature move, 17%
 +    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, AURA_SPHERE, ICE_BEAM, RAPID_SPIN, SCALD, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 1), // Bulky Support, Gen 7, 17%
-+    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, AURA_SPHERE, ICE_BEAM, RAPID_SPIN, TWIN_PULSE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 255, 1), // Bulky Support, Gen 7 + signature move, 17%
++    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, DARK_PULSE, ICE_BEAM, RAPID_PULSE, RAPID_SPIN, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 253, 1), // Bulky Support, Gen 7 + signature move, 17%
 +    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, DARK_PULSE, ICE_BEAM, RAPID_SPIN, SCALD, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 253, 1), // Bulky Support, Gen 7, 17%
-+    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, DARK_PULSE, ICE_BEAM, RAPID_SPIN, TWIN_PULSE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 253, 1), // Bulky Support, Gen 7 + signature move, 17%
++    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, AURA_SPHERE, DARK_PULSE, RAPID_PULSE, RAPID_SPIN, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 231, 1), // Bulky Support, Gen 7 + signature move, 16%
 +    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, AURA_SPHERE, DARK_PULSE, RAPID_SPIN, SCALD, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 231, 1), // Bulky Support, Gen 7, 16%
-+    SET(BLASTOISE, BLASTOISINITE, RAIN_DISH, AURA_SPHERE, DARK_PULSE, RAPID_SPIN, TWIN_PULSE, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 0, 31, 31, 31, 31), NONE, 255, 231, 1), // Bulky Support, Gen 7 + signature move, 16%
 +    // Beedrill-Mega, MEGA (Gen 7)
 +    SET(BEEDRILL, BEEDRILLITE, SWARM, DRILL_RUN, KNOCK_OFF, POISON_JAB, U_TURN, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Fast Attacker, Gen 7, 53%
 +    SET(BEEDRILL, BEEDRILLITE, SWARM, DRILL_RUN, POISON_JAB, SWORDS_DANCE, X_SCISSOR, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 115, 0), // Setup Sweeper, Gen 7, 24%
@@ -18826,10 +19168,10 @@ index 00000000..8cf872aa
 +    SET(MEGANIUM, MEGANIUMITE, LEAF_GUARD, BLIGHT_PETAL, DAZZLING_GLEAM, SYNTHESIS, WEATHER_BALL, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Champions + signature move, 50%
 +    SET(MEGANIUM, MEGANIUMITE, LEAF_GUARD, DAZZLING_GLEAM, SOLAR_BEAM, SYNTHESIS, WEATHER_BALL, MODEST, EVS(252, 0, 4, 252, 0, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Bulky Attacker, Champions, 50%
 +    // Feraligatr-Mega, MEGA (Champions)
-+    SET(FERALIGATR, FERALIGITE, SHEER_FORCE, AQUA_JET, DOUBLE_EDGE, DRAGON_DANCE, JAW_CRASH, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Champions + signature move, 26%
 +    SET(FERALIGATR, FERALIGITE, SHEER_FORCE, AQUA_JET, DOUBLE_EDGE, DRAGON_DANCE, LIQUIDATION, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Champions, 26%
-+    SET(FERALIGATR, FERALIGITE, SHEER_FORCE, DOUBLE_EDGE, DRAGON_DANCE, FACADE, JAW_CRASH, ADAMANT, EVS(252, 252, 0, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 231, 0), // Bulky Setup, Champions + signature move, 24%
++    SET(FERALIGATR, FERALIGITE, SHEER_FORCE, AQUA_JET, DOUBLE_EDGE, DRAGON_DANCE, TIDAL_RAMPAGE, JOLLY, EVS(4, 252, 0, 0, 0, 252), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 0), // Setup Sweeper, Champions + signature move, 26%
 +    SET(FERALIGATR, FERALIGITE, SHEER_FORCE, DOUBLE_EDGE, DRAGON_DANCE, FACADE, LIQUIDATION, ADAMANT, EVS(252, 252, 0, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 231, 0), // Bulky Setup, Champions, 24%
++    SET(FERALIGATR, FERALIGITE, SHEER_FORCE, DOUBLE_EDGE, DRAGON_DANCE, FACADE, TIDAL_RAMPAGE, ADAMANT, EVS(252, 252, 0, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 231, 0), // Bulky Setup, Champions + signature move, 24%
 +    // Meganium, ZMOVE (Gen 7)
 +    SET(MEGANIUM, GRASSIUM_Z, OVERGROW, EARTHQUAKE, ENERGY_BALL, SYNTHESIS, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 255, 1), // Staller, Gen 7, 26%
 +    SET(MEGANIUM, GRASSIUM_Z, OVERGROW, DRAGON_TAIL, ENERGY_BALL, SYNTHESIS, TOXIC, BOLD, EVS(252, 0, 252, 0, 4, 0), IVS(31, 31, 31, 31, 31, 31), NONE, 255, 253, 1), // Staller, Gen 7, 26%
@@ -20714,7 +21056,7 @@ index 00000000..03185c9e
 +}
 diff --git a/src/dailyred_team.c b/src/dailyred_team.c
 new file mode 100644
-index 00000000..7815ab51
+index 00000000..2712c3f8
 --- /dev/null
 +++ b/src/dailyred_team.c
 @@ -0,0 +1,614 @@
@@ -21265,17 +21607,17 @@ index 00000000..7815ab51
 +static const struct DailyRedSet sTestSeedTeam[] =
 +{
 +    { .species = SPECIES_VENUSAUR, .item = ITEM_BLACK_SLUDGE, .ability = ABILITY_CHLOROPHYLL, .ivs = TEST_IVS, .friendship = 255,
-+      .moves = { MOVE_DRAINING_PLANT, MOVE_SLUDGE_BOMB, MOVE_EARTH_POWER, MOVE_SYNTHESIS }, .nature = NATURE_MODEST, .evs = { 252, 0, 4, 252, 0, 0 } },
++      .moves = { MOVE_HAVOC_SEED, MOVE_SLUDGE_BOMB, MOVE_EARTH_POWER, MOVE_SYNTHESIS }, .nature = NATURE_MODEST, .evs = { 252, 0, 4, 252, 0, 0 } },
 +    { .species = SPECIES_CHARIZARD, .item = ITEM_LIFE_ORB, .ability = ABILITY_BLAZE, .ivs = TEST_IVS, .friendship = 255,
-+      .moves = { MOVE_FLARE_METEOR, MOVE_AIR_SLASH, MOVE_FOCUS_BLAST, MOVE_ROOST }, .nature = NATURE_TIMID, .evs = { 4, 0, 0, 252, 0, 252 } },
++      .moves = { MOVE_BURNING_METEOR, MOVE_AIR_SLASH, MOVE_FOCUS_BLAST, MOVE_ROOST }, .nature = NATURE_TIMID, .evs = { 4, 0, 0, 252, 0, 252 } },
 +    { .species = SPECIES_BLASTOISE, .item = ITEM_MYSTIC_WATER, .ability = ABILITY_TORRENT, .ivs = TEST_IVS, .friendship = 255,
-+      .moves = { MOVE_TWIN_PULSE, MOVE_ICE_BEAM, MOVE_DARK_PULSE, MOVE_RAPID_SPIN }, .nature = NATURE_MODEST, .evs = { 252, 0, 4, 252, 0, 0 } },
++      .moves = { MOVE_RAPID_PULSE, MOVE_ICE_BEAM, MOVE_DARK_PULSE, MOVE_RAPID_SPIN }, .nature = NATURE_MODEST, .evs = { 252, 0, 4, 252, 0, 0 } },
 +    { .species = SPECIES_MEGANIUM, .item = ITEM_LEFTOVERS, .ability = ABILITY_OVERGROW, .ivs = TEST_IVS, .friendship = 255,
 +      .moves = { MOVE_BLIGHT_PETAL, MOVE_EARTHQUAKE, MOVE_SYNTHESIS, MOVE_DRAGON_TAIL }, .nature = NATURE_BOLD, .evs = { 252, 0, 252, 0, 4, 0 } },
 +    { .species = SPECIES_TYPHLOSION, .item = ITEM_TYPHLOSIONITE, .ability = ABILITY_FLASH_FIRE, .ivs = TEST_IVS, .friendship = 255,
 +      .moves = { MOVE_PYROCLASTIC, MOVE_ERUPTION, MOVE_FOCUS_BLAST, MOVE_SCORCHING_SANDS }, .nature = NATURE_TIMID, .evs = { 4, 0, 0, 252, 0, 252 } },
 +    { .species = SPECIES_FERALIGATR, .item = ITEM_LIFE_ORB, .ability = ABILITY_SHEER_FORCE, .ivs = TEST_IVS, .friendship = 255,
-+      .moves = { MOVE_JAW_CRASH, MOVE_ICE_PUNCH, MOVE_CRUNCH, MOVE_DRAGON_DANCE }, .nature = NATURE_ADAMANT, .evs = { 4, 252, 0, 0, 0, 252 } },
++      .moves = { MOVE_TIDAL_RAMPAGE, MOVE_ICE_PUNCH, MOVE_CRUNCH, MOVE_DRAGON_DANCE }, .nature = NATURE_ADAMANT, .evs = { 4, 252, 0, 0, 0, 252 } },
 +};
 +#undef TEST_IVS
 +
@@ -21504,7 +21846,7 @@ index c51a5acf..96c2b66f 100644
  #if I_PRICE >= GEN_9
      #define GEM_PRICE 15000
 diff --git a/src/data/moves_info.h b/src/data/moves_info.h
-index d75670d7..3ac8ed6b 100644
+index d75670d7..30a88eb5 100644
 --- a/src/data/moves_info.h
 +++ b/src/data/moves_info.h
 @@ -234,7 +234,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
@@ -21643,18 +21985,18 @@ index d75670d7..3ac8ed6b 100644
          }),
          .contestEffect = CONTEST_EFFECT_BETTER_IF_LAST,
          .contestComboStarterId = 0,
-@@ -22116,6 +22118,145 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
+@@ -22116,6 +22118,144 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
          .battleAnimScript = gBattleAnimMove_MalignantChain,
      },
  
 +    // Daily Red: the Kanto and Johto starters' signature moves (only they
 +    // learn them).
-+    [MOVE_DRAINING_PLANT] =
++    [MOVE_HAVOC_SEED] =
 +    {
-+        .name = COMPOUND_STRING("Draining Plant"),
++        .name = COMPOUND_STRING("Havoc Seed"),
 +        .description = COMPOUND_STRING(
-+            "Wild roots strike, then\n"
-+            "seed the foe to sap HP."),
++            "A barrage of seeds bursts,\n"
++            "then seeds the foe to sap HP."),
 +        .effect = EFFECT_HIT,
 +        .power = 85,
 +        .type = TYPE_GRASS,
@@ -21666,17 +22008,18 @@ index d75670d7..3ac8ed6b 100644
 +        .additionalEffects = ADDITIONAL_EFFECTS({
 +            .moveEffect = MOVE_EFFECT_LEECH_SEED,
 +        }),
-+        .battleAnimScript = gBattleAnimMove_DrainingPlant,
++        .battleAnimScript = gBattleAnimMove_HavocSeed,
 +    },
 +
-+    [MOVE_TWIN_PULSE] =
++    [MOVE_RAPID_PULSE] =
 +    {
-+        .name = COMPOUND_STRING("Twin Pulse"),
++        .name = COMPOUND_STRING("Rapid Pulse"),
 +        .description = COMPOUND_STRING(
-+            "Fires two pulses of water\n"
-+            "at the foe in a row."),
++            "Water pulses hit 2 times,\n"
++            "sometimes a 3rd time."),
++        // 2 hits, a 3rd 20% of the time (CancelerMultihitMoves).
 +        .effect = EFFECT_HIT,
-+        .power = 40,
++        .power = 30,
 +        .type = TYPE_WATER,
 +        .accuracy = 100,
 +        .pp = 10,
@@ -21685,12 +22028,12 @@ index d75670d7..3ac8ed6b 100644
 +        .category = DAMAGE_CATEGORY_SPECIAL,
 +        .strikeCount = 2,
 +        .pulseMove = TRUE,
-+        .battleAnimScript = gBattleAnimMove_TwinPulse,
++        .battleAnimScript = gBattleAnimMove_RapidPulse,
 +    },
 +
-+    [MOVE_FLARE_METEOR] =
++    [MOVE_BURNING_METEOR] =
 +    {
-+        .name = COMPOUND_STRING("Flare Meteor"),
++        .name = COMPOUND_STRING("Burning Meteor"),
 +        .description = COMPOUND_STRING(
 +            "Takes the foe up ablaze,\n"
 +            "then crashes down. May burn."),
@@ -21698,9 +22041,9 @@ index d75670d7..3ac8ed6b 100644
 +        // Physical or special by the user's higher attacking stat, contact
 +        // only when physical (IsDailyRedStatCategoryMove).
 +        .effect = EFFECT_SKY_DROP,
-+        .power = 100,
++        .power = 95,
 +        .type = TYPE_FIRE,
-+        .accuracy = 95,
++        .accuracy = 100,
 +        .pp = 10,
 +        .target = TARGET_SELECTED,
 +        .priority = 0,
@@ -21710,7 +22053,7 @@ index d75670d7..3ac8ed6b 100644
 +            .moveEffect = MOVE_EFFECT_BURN,
 +            .chance = 10,
 +        }),
-+        .battleAnimScript = gBattleAnimMove_FlareMeteor,
++        .battleAnimScript = gBattleAnimMove_BurningMeteor,
 +    },
 +
 +    [MOVE_BLIGHT_PETAL] =
@@ -21722,7 +22065,7 @@ index d75670d7..3ac8ed6b 100644
 +        .effect = EFFECT_HIT,
 +        .power = 75,
 +        .type = TYPE_GRASS,
-+        .accuracy = 100,
++        .accuracy = 95,
 +        .pp = 10,
 +        .target = TARGET_BOTH,
 +        .priority = 0,
@@ -21744,7 +22087,7 @@ index d75670d7..3ac8ed6b 100644
 +        .effect = EFFECT_PYROCLASTIC,
 +        .power = 0,
 +        .type = TYPE_FIRE,
-+        .accuracy = 95,
++        .accuracy = 100,
 +        .pp = 10,
 +        .target = TARGET_BOTH,
 +        .priority = 0,
@@ -21758,32 +22101,30 @@ index d75670d7..3ac8ed6b 100644
 +        .battleAnimScript = gBattleAnimMove_Pyroclastic,
 +    },
 +
-+    [MOVE_JAW_CRASH] =
++    [MOVE_TIDAL_RAMPAGE] =
 +    {
-+        .name = COMPOUND_STRING("Jaw Crash"),
++        .name = COMPOUND_STRING("Tidal Rampage"),
 +        .description = COMPOUND_STRING(
-+            "Braces, raising defenses,\n"
-+            "then slams. Miss: loses them."),
-+        // Turn 1: Defense and Sp. Def +1; if the attack then misses, they
-+        // drop again (MoveEndMoveBlockRecoil).
-+        .effect = EFFECT_TWO_TURNS_ATTACK,
-+        .power = 130,
++            "A 2-turn water rampage that\n"
++            "ignores abilities. Confuses."),
++        // Outrage as Water, ignoring the target's ability, and always for 2
++        // turns (HandleSetEffectThrash).
++        .effect = EFFECT_HIT,
++        .power = 120,
 +        .type = TYPE_WATER,
-+        .accuracy = 95,
++        .accuracy = 100,
 +        .pp = 10,
-+        .target = TARGET_SELECTED,
++        .target = TARGET_RANDOM,
 +        .priority = 0,
 +        .category = DAMAGE_CATEGORY_PHYSICAL,
 +        .makesContact = TRUE,
-+        .argument.twoTurnAttack = { .stringId = STRINGID_JAWCRASHCHARGE },
++        .instructBanned = TRUE,
++        .ignoresTargetAbility = TRUE,
 +        .additionalEffects = ADDITIONAL_EFFECTS({
-+            .moveEffect = MOVE_EFFECT_STAT_PLUS,
-+            .defense = 1,
-+            .spDef = 1,
++            .moveEffect = MOVE_EFFECT_THRASH,
 +            .self = TRUE,
-+            .onChargeTurnOnly = TRUE,
 +        }),
-+        .battleAnimScript = gBattleAnimMove_JawCrash,
++        .battleAnimScript = gBattleAnimMove_TidalRampage,
 +    },
 +
      // Z-Moves
@@ -23411,14 +23752,14 @@ index 44f0f60e..69a96813 100644
      FORM_SPECIES_END,
  };
 diff --git a/src/data/pokemon/level_up_learnsets/gen_1.h b/src/data/pokemon/level_up_learnsets/gen_1.h
-index f1e7cd32..99466a6e 100644
+index f1e7cd32..d6b5a12e 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_1.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_1.h
 @@ -35,6 +35,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_HAVOC_SEED), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -23426,7 +23767,7 @@ index f1e7cd32..99466a6e 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_EMBER),
@@ -23434,7 +23775,7 @@ index f1e7cd32..99466a6e 100644
  };
  
  static const struct LevelUpMove sBlastoiseLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_TWIN_PULSE), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_RAPID_PULSE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_TAIL_WHIP),
      LEVEL_UP_MOVE( 1, MOVE_BUBBLE),
@@ -23474,7 +23815,7 @@ index f1e7cd32..99466a6e 100644
  };
  
  static const struct LevelUpMove sFeraligatrLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_JAW_CRASH), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_TIDAL_RAMPAGE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_LEER),
      LEVEL_UP_MOVE( 1, MOVE_RAGE),
@@ -23727,14 +24068,14 @@ index f1e7cd32..99466a6e 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_2.h b/src/data/pokemon/level_up_learnsets/gen_2.h
-index 3d74d70b..79029a5d 100644
+index 3d74d70b..05d10f1a 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_2.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_2.h
 @@ -40,6 +40,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_HAVOC_SEED), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -23742,7 +24083,7 @@ index 3d74d70b..79029a5d 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_EMBER),
@@ -23750,7 +24091,7 @@ index 3d74d70b..79029a5d 100644
  };
  
  static const struct LevelUpMove sBlastoiseLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_TWIN_PULSE), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_RAPID_PULSE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_TAIL_WHIP),
      LEVEL_UP_MOVE( 1, MOVE_BUBBLE),
@@ -23790,7 +24131,7 @@ index 3d74d70b..79029a5d 100644
  };
  
  static const struct LevelUpMove sFeraligatrLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_JAW_CRASH), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_TIDAL_RAMPAGE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_LEER),
      LEVEL_UP_MOVE( 1, MOVE_RAGE),
@@ -24043,14 +24384,14 @@ index 3d74d70b..79029a5d 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_3.h b/src/data/pokemon/level_up_learnsets/gen_3.h
-index cedd09b3..8e45ac29 100644
+index cedd09b3..c1877900 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_3.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_3.h
 @@ -40,6 +40,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_HAVOC_SEED), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -24058,7 +24399,7 @@ index cedd09b3..8e45ac29 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_EMBER),
@@ -24066,7 +24407,7 @@ index cedd09b3..8e45ac29 100644
  };
  
  static const struct LevelUpMove sBlastoiseLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_TWIN_PULSE), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_RAPID_PULSE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_TAIL_WHIP),
      LEVEL_UP_MOVE( 1, MOVE_BUBBLE),
@@ -24106,7 +24447,7 @@ index cedd09b3..8e45ac29 100644
  };
  
  static const struct LevelUpMove sFeraligatrLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_JAW_CRASH), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_TIDAL_RAMPAGE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_LEER),
      LEVEL_UP_MOVE( 1, MOVE_RAGE),
@@ -24359,14 +24700,14 @@ index cedd09b3..8e45ac29 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_4.h b/src/data/pokemon/level_up_learnsets/gen_4.h
-index 4b302539..4be0e7e2 100644
+index 4b302539..c4bc799e 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_4.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_4.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_HAVOC_SEED), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -24374,7 +24715,7 @@ index 4b302539..4be0e7e2 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_DRAGON_CLAW),
      LEVEL_UP_MOVE( 1, MOVE_SHADOW_CLAW),
      LEVEL_UP_MOVE( 1, MOVE_AIR_SLASH),
@@ -24382,7 +24723,7 @@ index 4b302539..4be0e7e2 100644
  };
  
  static const struct LevelUpMove sBlastoiseLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_TWIN_PULSE), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_RAPID_PULSE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_FLASH_CANNON),
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_TAIL_WHIP),
@@ -24446,7 +24787,7 @@ index 4b302539..4be0e7e2 100644
  };
  
  static const struct LevelUpMove sFeraligatrLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_JAW_CRASH), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_TIDAL_RAMPAGE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_LEER),
      LEVEL_UP_MOVE( 1, MOVE_WATER_GUN),
@@ -24707,14 +25048,14 @@ index 4b302539..4be0e7e2 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_5.h b/src/data/pokemon/level_up_learnsets/gen_5.h
-index 2403f17b..40e53739 100644
+index 2403f17b..968ad979 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_5.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_5.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_HAVOC_SEED), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -24722,7 +25063,7 @@ index 2403f17b..40e53739 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_DRAGON_CLAW),
      LEVEL_UP_MOVE( 1, MOVE_SHADOW_CLAW),
      LEVEL_UP_MOVE( 1, MOVE_AIR_SLASH),
@@ -24730,7 +25071,7 @@ index 2403f17b..40e53739 100644
  };
  
  static const struct LevelUpMove sBlastoiseLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_TWIN_PULSE), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_RAPID_PULSE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_FLASH_CANNON),
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_TAIL_WHIP),
@@ -24794,7 +25135,7 @@ index 2403f17b..40e53739 100644
  };
  
  static const struct LevelUpMove sFeraligatrLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_JAW_CRASH), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_TIDAL_RAMPAGE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_LEER),
      LEVEL_UP_MOVE( 1, MOVE_WATER_GUN),
@@ -25055,14 +25396,14 @@ index 2403f17b..40e53739 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_6.h b/src/data/pokemon/level_up_learnsets/gen_6.h
-index c5a3a39a..243a47a5 100644
+index c5a3a39a..f4378576 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_6.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_6.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_HAVOC_SEED), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
      LEVEL_UP_MOVE( 1, MOVE_LEECH_SEED),
@@ -25070,7 +25411,7 @@ index c5a3a39a..243a47a5 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_FLARE_BLITZ),
      LEVEL_UP_MOVE( 1, MOVE_HEAT_WAVE),
      LEVEL_UP_MOVE( 1, MOVE_DRAGON_CLAW),
@@ -25078,7 +25419,7 @@ index c5a3a39a..243a47a5 100644
  };
  
  static const struct LevelUpMove sBlastoiseLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_TWIN_PULSE), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_RAPID_PULSE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_FLASH_CANNON),
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_TAIL_WHIP),
@@ -25142,7 +25483,7 @@ index c5a3a39a..243a47a5 100644
  };
  
  static const struct LevelUpMove sFeraligatrLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_JAW_CRASH), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_TIDAL_RAMPAGE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_LEER),
      LEVEL_UP_MOVE( 1, MOVE_WATER_GUN),
@@ -25419,14 +25760,14 @@ index c5a3a39a..243a47a5 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_7.h b/src/data/pokemon/level_up_learnsets/gen_7.h
-index 77d2fc2d..b3654141 100644
+index 77d2fc2d..8c3a6db8 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_7.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_7.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_HAVOC_SEED), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_PETAL_DANCE),
      LEVEL_UP_MOVE( 1, MOVE_PETAL_DANCE),
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
@@ -25434,7 +25775,7 @@ index 77d2fc2d..b3654141 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_WING_ATTACK),
      LEVEL_UP_MOVE( 1, MOVE_WING_ATTACK),
      LEVEL_UP_MOVE( 1, MOVE_FLARE_BLITZ),
@@ -25442,7 +25783,7 @@ index 77d2fc2d..b3654141 100644
  };
  
  static const struct LevelUpMove sBlastoiseLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_TWIN_PULSE), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_RAPID_PULSE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_FLASH_CANNON),
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_TAIL_WHIP),
@@ -25506,7 +25847,7 @@ index 77d2fc2d..b3654141 100644
  };
  
  static const struct LevelUpMove sFeraligatrLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_JAW_CRASH), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_TIDAL_RAMPAGE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_AGILITY),
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_LEER),
@@ -25783,14 +26124,14 @@ index 77d2fc2d..b3654141 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_8.h b/src/data/pokemon/level_up_learnsets/gen_8.h
-index 65b557a4..c4680c5c 100644
+index 65b557a4..73b6a069 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_8.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_8.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_HAVOC_SEED), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_PETAL_BLIZZARD),
      LEVEL_UP_MOVE( 1, MOVE_PETAL_BLIZZARD),
      LEVEL_UP_MOVE( 1, MOVE_PETAL_DANCE),
@@ -25798,7 +26139,7 @@ index 65b557a4..c4680c5c 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_AIR_SLASH),
      LEVEL_UP_MOVE( 1, MOVE_AIR_SLASH),
      LEVEL_UP_MOVE( 1, MOVE_DRAGON_CLAW),
@@ -25806,7 +26147,7 @@ index 65b557a4..c4680c5c 100644
  };
  
  static const struct LevelUpMove sBlastoiseLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_TWIN_PULSE), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_RAPID_PULSE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_FLASH_CANNON),
      LEVEL_UP_MOVE( 1, MOVE_FLASH_CANNON),
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
@@ -25870,7 +26211,7 @@ index 65b557a4..c4680c5c 100644
  };
  
  static const struct LevelUpMove sFeraligatrLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_JAW_CRASH), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_TIDAL_RAMPAGE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_AGILITY),
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_LEER),
@@ -26147,14 +26488,14 @@ index 65b557a4..c4680c5c 100644
      LEVEL_UP_MOVE(63, MOVE_CLOSE_COMBAT),
      LEVEL_UP_MOVE(70, MOVE_IMPRISON),
 diff --git a/src/data/pokemon/level_up_learnsets/gen_9.h b/src/data/pokemon/level_up_learnsets/gen_9.h
-index 0bdfbe1e..0e815562 100644
+index 0bdfbe1e..1a98cf68 100644
 --- a/src/data/pokemon/level_up_learnsets/gen_9.h
 +++ b/src/data/pokemon/level_up_learnsets/gen_9.h
 @@ -46,6 +46,7 @@ static const struct LevelUpMove sIvysaurLevelUpLearnset[] = {
  };
  
  static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_DRAINING_PLANT), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_HAVOC_SEED), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_PETAL_BLIZZARD),
      LEVEL_UP_MOVE( 1, MOVE_GROWTH),
      LEVEL_UP_MOVE( 1, MOVE_PETAL_DANCE),
@@ -26162,7 +26503,7 @@ index 0bdfbe1e..0e815562 100644
  };
  
  static const struct LevelUpMove sCharizardLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_FLARE_METEOR), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_BURNING_METEOR), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_AIR_SLASH),
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_GROWL),
@@ -26170,7 +26511,7 @@ index 0bdfbe1e..0e815562 100644
  };
  
  static const struct LevelUpMove sBlastoiseLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_TWIN_PULSE), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_RAPID_PULSE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 0, MOVE_FLASH_CANNON),
      LEVEL_UP_MOVE( 1, MOVE_TACKLE),
      LEVEL_UP_MOVE( 1, MOVE_TAIL_WHIP),
@@ -26234,7 +26575,7 @@ index 0bdfbe1e..0e815562 100644
  };
  
  static const struct LevelUpMove sFeraligatrLevelUpLearnset[] = {
-+    LEVEL_UP_MOVE( 1, MOVE_JAW_CRASH), // Daily Red: its signature move
++    LEVEL_UP_MOVE( 1, MOVE_TIDAL_RAMPAGE), // Daily Red: its signature move
      LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
      LEVEL_UP_MOVE( 1, MOVE_LEER),
      LEVEL_UP_MOVE( 1, MOVE_WATER_GUN),
@@ -27097,10 +27438,36 @@ index 96c46ec9..abb27499 100644
      }
      return TRUE;
 diff --git a/src/main.c b/src/main.c
-index 7ec4e57b..aa5bb550 100644
+index 7ec4e57b..1118472f 100644
 --- a/src/main.c
 +++ b/src/main.c
-@@ -225,6 +225,13 @@ void SeedRngAndSetTrainerId(void)
+@@ -1,4 +1,5 @@
+ #include "global.h"
++#include "dailyred.h" // Daily Red
+ #include "crt0.h"
+ #include "malloc.h"
+ #include "link.h"
+@@ -157,6 +158,19 @@ void AgbMainLoop(void)
+             gLinkTransferringData = FALSE;
+             UpdateLinkAndCallCallbacks();
+ 
++            // Daily Red: 2x speed (the website's toggle, DailyRed_IsFastForward)
++            // runs the game's callbacks a second time before the frame ends.
++            // The music is driven by the VBlank interrupt, so it keeps its
++            // speed and pitch. The second pass sees no newly pressed keys, so
++            // a press still counts once.
++            if (DailyRed_IsFastForward())
++            {
++                gMain.newKeysRaw = 0;
++                gMain.newKeys = 0;
++                gMain.newAndRepeatedKeys = 0;
++                UpdateLinkAndCallCallbacks();
++            }
++
+             if (Overworld_RecvKeysFromLinkIsRunning() == TRUE)
+             {
+                 gMain.newKeys = 0;
+@@ -225,6 +239,13 @@ void SeedRngAndSetTrainerId(void)
      sTrainerId = Random();
  }
  
@@ -28718,75 +29085,90 @@ index 57e9da2e..a3a86bc3 100644
          break;
 diff --git a/test/battle/dailyred_signature_moves.c b/test/battle/dailyred_signature_moves.c
 new file mode 100644
-index 00000000..73fec828
+index 00000000..2532a70a
 --- /dev/null
 +++ b/test/battle/dailyred_signature_moves.c
-@@ -0,0 +1,164 @@
+@@ -0,0 +1,163 @@
 +#include "global.h"
 +#include "test/battle.h"
 +
 +// Daily Red: the starters' signature moves and the moves changed with them.
 +
-+SINGLE_BATTLE_TEST("Draining Plant seeds the target")
++SINGLE_BATTLE_TEST("Havoc Seed seeds the target")
 +{
 +    GIVEN {
-+        PLAYER(SPECIES_VENUSAUR) { Moves(MOVE_DRAINING_PLANT); }
++        PLAYER(SPECIES_VENUSAUR) { Moves(MOVE_HAVOC_SEED); }
 +        OPPONENT(SPECIES_WOBBUFFET);
 +    } WHEN {
-+        TURN { MOVE(player, MOVE_DRAINING_PLANT); }
++        TURN { MOVE(player, MOVE_HAVOC_SEED); }
 +    } SCENE {
-+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_PLANT, player);
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_HAVOC_SEED, player);
 +        HP_BAR(opponent);
 +        MESSAGE("The opposing Wobbuffet was seeded!");
 +    }
 +}
 +
-+SINGLE_BATTLE_TEST("Twin Pulse hits twice")
++SINGLE_BATTLE_TEST("Rapid Pulse hits at least twice")
 +{
 +    GIVEN {
-+        PLAYER(SPECIES_BLASTOISE) { Moves(MOVE_TWIN_PULSE); }
++        PLAYER(SPECIES_BLASTOISE) { Moves(MOVE_RAPID_PULSE); }
 +        OPPONENT(SPECIES_WOBBUFFET);
 +    } WHEN {
-+        TURN { MOVE(player, MOVE_TWIN_PULSE); }
++        TURN { MOVE(player, MOVE_RAPID_PULSE); }
 +    } SCENE {
-+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TWIN_PULSE, player);
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_PULSE, player);
 +        HP_BAR(opponent);
-+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TWIN_PULSE, player);
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_PULSE, player);
 +        HP_BAR(opponent);
 +    }
 +}
 +
-+SINGLE_BATTLE_TEST("Flare Meteor takes the target up, then hits even a Flying type")
++SINGLE_BATTLE_TEST("Rapid Pulse hits a third time 20% of the time")
++{
++    PASSES_RANDOMLY(20, 100, RNG_HITS);
++    GIVEN {
++        PLAYER(SPECIES_BLASTOISE) { Moves(MOVE_RAPID_PULSE); }
++        OPPONENT(SPECIES_WOBBUFFET);
++    } WHEN {
++        TURN { MOVE(player, MOVE_RAPID_PULSE); }
++    } SCENE {
++        HP_BAR(opponent);
++        HP_BAR(opponent);
++        HP_BAR(opponent);
++    }
++}
++
++SINGLE_BATTLE_TEST("Burning Meteor takes the target up, then hits even a Flying type")
 +{
 +    GIVEN {
-+        PLAYER(SPECIES_CHARIZARD) { Moves(MOVE_FLARE_METEOR); }
++        PLAYER(SPECIES_CHARIZARD) { Moves(MOVE_BURNING_METEOR); }
 +        OPPONENT(SPECIES_PIDGEOT);
 +    } WHEN {
-+        TURN { MOVE(player, MOVE_FLARE_METEOR, hit: TRUE); }
++        TURN { MOVE(player, MOVE_BURNING_METEOR); }
 +        TURN { SKIP_TURN(player); }
 +    } SCENE {
 +        MESSAGE("Charizard took the opposing Pidgeot into the sky!");
-+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLARE_METEOR, player);
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_BURNING_METEOR, player);
 +        HP_BAR(opponent);
 +    }
 +}
 +
-+SINGLE_BATTLE_TEST("Flare Meteor and Leaf Blade make contact only when physical")
++SINGLE_BATTLE_TEST("Burning Meteor and Leaf Blade make contact only when physical")
 +{
 +    enum Move move;
 +    enum Species species;
 +    bool32 contact;
-+    PARAMETRIZE { move = MOVE_FLARE_METEOR; species = SPECIES_MACHAMP; contact = TRUE; }
-+    PARAMETRIZE { move = MOVE_FLARE_METEOR; species = SPECIES_ALAKAZAM; contact = FALSE; }
++    PARAMETRIZE { move = MOVE_BURNING_METEOR; species = SPECIES_MACHAMP; contact = TRUE; }
++    PARAMETRIZE { move = MOVE_BURNING_METEOR; species = SPECIES_ALAKAZAM; contact = FALSE; }
 +    PARAMETRIZE { move = MOVE_LEAF_BLADE; species = SPECIES_MACHAMP; contact = TRUE; }
 +    PARAMETRIZE { move = MOVE_LEAF_BLADE; species = SPECIES_ALAKAZAM; contact = FALSE; }
 +    GIVEN {
 +        PLAYER(species) { Moves(move); }
 +        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
 +    } WHEN {
-+        if (move == MOVE_FLARE_METEOR)
++        if (move == MOVE_BURNING_METEOR)
 +        {
-+            TURN { MOVE(player, move, hit: TRUE); }
++            TURN { MOVE(player, move); }
 +            TURN { SKIP_TURN(player); }
 +        }
 +        else
@@ -28808,7 +29190,7 @@ index 00000000..73fec828
 +        PLAYER(SPECIES_TYPHLOSION) { Moves(MOVE_PYROCLASTIC); }
 +        OPPONENT(SPECIES_WOBBUFFET);
 +    } WHEN {
-+        TURN { MOVE(player, MOVE_PYROCLASTIC, hit: TRUE); }
++        TURN { MOVE(player, MOVE_PYROCLASTIC); }
 +    } SCENE {
 +        ANIMATION(ANIM_TYPE_MOVE, MOVE_PYROCLASTIC, player);
 +    } THEN {
@@ -28817,37 +29199,36 @@ index 00000000..73fec828
 +    }
 +}
 +
-+SINGLE_BATTLE_TEST("Jaw Crash raises Defense and Sp. Def, then attacks")
++SINGLE_BATTLE_TEST("Tidal Rampage rampages for exactly 2 turns, then confuses the user")
 +{
 +    GIVEN {
-+        PLAYER(SPECIES_FERALIGATR) { Moves(MOVE_JAW_CRASH); }
-+        OPPONENT(SPECIES_WOBBUFFET);
++        PLAYER(SPECIES_FERALIGATR) { Moves(MOVE_TIDAL_RAMPAGE, MOVE_CELEBRATE); }
++        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(999); HP(999); }
 +    } WHEN {
-+        TURN { MOVE(player, MOVE_JAW_CRASH); }
++        TURN { MOVE(player, MOVE_TIDAL_RAMPAGE); }
 +        TURN { SKIP_TURN(player); }
 +    } SCENE {
-+        MESSAGE("Feraligatr slammed down its armored jaw!");
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDAL_RAMPAGE, player);
 +        HP_BAR(opponent);
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDAL_RAMPAGE, player);
++        HP_BAR(opponent);
++        MESSAGE("Feraligatr became confused due to fatigue!");
 +    } THEN {
-+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
-+        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 1);
++        EXPECT(player->volatiles.confusionTimer > 0);
 +    }
 +}
 +
-+SINGLE_BATTLE_TEST("Jaw Crash loses its Defense and Sp. Def when it fails to hit")
++SINGLE_BATTLE_TEST("Tidal Rampage ignores the target's ability")
 +{
 +    GIVEN {
-+        PLAYER(SPECIES_FERALIGATR) { Moves(MOVE_JAW_CRASH); Speed(1); }
-+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_PROTECT, MOVE_CELEBRATE); Speed(2); }
++        PLAYER(SPECIES_FERALIGATR) { Moves(MOVE_TIDAL_RAMPAGE); }
++        OPPONENT(SPECIES_VAPOREON) { Ability(ABILITY_WATER_ABSORB); }
 +    } WHEN {
-+        TURN { MOVE(player, MOVE_JAW_CRASH); MOVE(opponent, MOVE_CELEBRATE); }
-+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_PROTECT); }
++        TURN { MOVE(player, MOVE_TIDAL_RAMPAGE); }
 +    } SCENE {
-+        MESSAGE("Feraligatr slammed down its armored jaw!");
-+        NOT HP_BAR(opponent);
-+    } THEN {
-+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
-+        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
++        NONE_OF { ABILITY_POPUP(opponent, ABILITY_WATER_ABSORB); }
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDAL_RAMPAGE, player);
++        HP_BAR(opponent);
 +    }
 +}
 +
@@ -28869,21 +29250,6 @@ index 00000000..73fec828
 +        ANIMATION(ANIM_TYPE_MOVE, MOVE_BLIGHT_PETAL, player);
 +        HP_BAR(opponent);
 +        ANIMATION(ANIM_TYPE_STATUS, statusAnim, opponent);
-+    }
-+}
-+
-+// As Sky Drop (and Showdown's): the lifting turn always succeeds; accuracy is
-+// rolled on the second turn, when it hits.
-+SINGLE_BATTLE_TEST("Flare Meteor's lifting turn ignores accuracy")
-+{
-+    GIVEN {
-+        PLAYER(SPECIES_CHARIZARD) { Moves(MOVE_FLARE_METEOR); }
-+        OPPONENT(SPECIES_WOBBUFFET);
-+    } WHEN {
-+        TURN { MOVE(player, MOVE_FLARE_METEOR, hit: FALSE); }
-+        TURN { SKIP_TURN(player); }
-+    } SCENE {
-+        MESSAGE("Charizard took the opposing Wobbuffet into the sky!");
 +    }
 +}
 diff --git a/test/battle/dailyred_zmove_immune.c b/test/battle/dailyred_zmove_immune.c

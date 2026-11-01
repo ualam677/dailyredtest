@@ -18,6 +18,9 @@ const ui = {
   play: $('play'),
   retry: $('retry'),
   sound: $('sound'),
+  volume: $('volume'),
+  speed: $('speed'),
+  controls: $('controls'),
   fullscreen: $('fullscreen'),
   wins: $('stat-wins'),
   losses: $('stat-losses'),
@@ -38,6 +41,11 @@ const session = {
   get(key) { try { return sessionStorage.getItem(key); } catch { return null; } },
   set(key, value) { try { sessionStorage.setItem(key, value); } catch { /* not remembered */ } },
 };
+// The same for the settings kept between visits (volume, speed, controls).
+const local = {
+  get(key) { try { return localStorage.getItem(key); } catch { return null; } },
+  set(key, value) { try { localStorage.setItem(key, value); } catch { /* not remembered */ } },
+};
 
 // ?seed=123 starts a practice run with that team, for testing: results
 // aren't saved, there's no daily limit, and the game keeps dealing new teams.
@@ -50,19 +58,36 @@ let pollTimer = null;
 let runDate = null;
 let battleSeen = false;
 let muted = session.get('dailyred-muted') === '1';
+let volume = Math.min(100, Math.max(0, Number(local.get('dailyred-volume') ?? 100) || 0));
+let fast = local.get('dailyred-speed') === '1';
 let starting = false;
 let titleDate = null;
 
 // RetroArch opens a Web Audio context for each emulator and never closes it,
 // so a restart would leave one running (and browsers cap how many a page can
 // have). Track the contexts the emulator creates and close them on exit.
+//
+// The volume slider: each context gets a gain node in front of its speakers,
+// and anything the emulator connects to the speakers goes through it instead.
 const audioContexts = [];
+const volumeNodes = new WeakMap(); // a context's destination -> its gain node
+const gainFor = (percent) => (percent / 100) ** 2; // the slider feels even to the ear
 const NativeAudioContext = window.AudioContext;
 if (NativeAudioContext) {
+  const nativeConnect = AudioNode.prototype.connect;
+  AudioNode.prototype.connect = function connect(target, ...rest) {
+    const gain = target && volumeNodes.get(target);
+    return nativeConnect.call(this, gain && gain !== this ? gain : target, ...rest);
+  };
   window.AudioContext = class extends NativeAudioContext {
     constructor(...args) {
       super(...args);
       audioContexts.push(this);
+      const gain = this.createGain();
+      gain.gain.value = gainFor(volume);
+      nativeConnect.call(gain, this.destination);
+      volumeNodes.set(this.destination, gain);
+      this.dailyRedVolume = gain;
     }
   };
 }
@@ -71,6 +96,7 @@ function setState(state) {
   app.dataset.state = state;
   const playing = state === 'playing';
   ui.sound.disabled = !playing;
+  ui.speed.disabled = !playing;
   ui.fullscreen.disabled = !playing || !document.fullscreenEnabled;
 }
 
@@ -207,6 +233,7 @@ async function startRun() {
 function watchGame() {
   let status;
   try {
+    readGame?.setSpeed(fast); // also once the status block is first found
     status = readGame?.();
   } catch {
     return;
@@ -261,6 +288,52 @@ function showMuted() {
   ui.sound.textContent = muted ? 'Unmute' : 'Mute';
   ui.sound.setAttribute('aria-pressed', String(muted));
 }
+
+// Volume: kept between visits; applies to the running game at once.
+function setVolume(percent) {
+  volume = percent;
+  local.set('dailyred-volume', String(volume));
+  for (const ctx of audioContexts) ctx.dailyRedVolume?.gain.setValueAtTime(gainFor(volume), ctx.currentTime);
+}
+ui.volume.value = String(volume);
+ui.volume.addEventListener('input', () => setVolume(Number(ui.volume.value)));
+// Arrow keys on the focused slider would move it instead of the player.
+ui.volume.addEventListener('change', () => ui.volume.blur());
+
+// 2x speed: the game runs its frames twice as fast (AgbMainLoop in the ROM);
+// the music keeps its speed. Kept between visits.
+onClick(ui.speed, () => {
+  fast = !fast;
+  local.set('dailyred-speed', fast ? '1' : '0');
+  readGame?.setSpeed(fast);
+  showSpeed();
+});
+
+function showSpeed() {
+  ui.speed.setAttribute('aria-pressed', String(fast));
+  ui.speed.textContent = fast ? '2x speed: on' : '2x speed';
+}
+
+// On-screen controls: shown on touch screens unless hidden here, and on
+// other screens only when shown here. Kept between visits.
+const touchScreen = window.matchMedia('(pointer: coarse)');
+let controls = local.get('dailyred-controls'); // 'shown', 'hidden' or null (automatic)
+
+function showControls() {
+  const visible = controls ? controls === 'shown' : touchScreen.matches;
+  if (controls) app.dataset.pad = controls;
+  else delete app.dataset.pad;
+  ui.controls.textContent = visible ? 'Hide controls' : 'Show controls';
+  ui.controls.setAttribute('aria-pressed', String(visible));
+}
+
+onClick(ui.controls, () => {
+  const visible = ui.controls.getAttribute('aria-pressed') === 'true';
+  controls = visible ? 'hidden' : 'shown';
+  local.set('dailyred-controls', controls);
+  showControls();
+});
+touchScreen.addEventListener?.('change', showControls);
 
 onClick(ui.fullscreen, () => {
   if (document.fullscreenElement) document.exitFullscreen();
@@ -355,4 +428,6 @@ window.dailyRed = {
 renderTitle();
 setState('title');
 showMuted();
+showSpeed();
+showControls();
 ui.fullscreen.hidden = !document.fullscreenEnabled; // e.g. iPhone Safari

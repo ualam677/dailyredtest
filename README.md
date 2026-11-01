@@ -100,6 +100,16 @@ file server works without special headers. Everything loads from `web/vendor/`.
 - **Without the website** (seed 0, e.g. the ROM in a desktop emulator): the
   normal intro and title screen appear, pressing Start seeds the game the way
   vanilla FireRed does, and after each battle a new team arrives.
+- **Toolbar options** (`web/index.html`, `web/app.js`; each remembered in
+  localStorage): a volume slider beside the sound button (a gain node on
+  every connection the emulator makes to the speakers), **2x speed** and
+  **Hide controls**. 2x speed is a byte in the status block
+  (`web/game-link.js` writes `sStatus.speed`): while it's set, `AgbMainLoop`
+  in `src/main.c` runs the game's callbacks twice a frame (buttons are only
+  read once), so the game moves at double speed while the music and sound
+  effects, which run once a frame in the VBlank interrupt, keep their
+  normal speed and pitch. Hide controls hides the on-screen pad; it shows
+  again with Show controls (by default the pad is shown on touch screens).
 - **`?seed=1234`** in the URL starts a practice run for testing: that seed's
   team, no daily limit, nothing saved, and a new team after each battle. It
   isn't shown anywhere in the UI.
@@ -134,6 +144,7 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Aurora Beam is 75 power with a 30% chance of frostbite (was 65, 10% Attack drop); Chilling Water is 70 power with a 30% chance of frostbite (was 50, sure Attack drop); Scald is 70 power (was 80) | `src/data/moves_info.h` |
 | Sleep works as in Pokémon Champions: a sleeping Pokémon can't move on its first turn asleep, wakes on its second turn 1 time in 3, and always wakes on its third (Rest still sleeps 2 turns) | `B_SLEEP_TURNS` (`GEN_CHAMPIONS`) in `include/config/battle.h` |
 | Z-Moves and Max Moves into a Pokémon they don't affect (a type immunity, an absorbing ability) play no move animation, only the Z-Power one: the expansion's check for "no target affected" sat in the accuracy check, which Z-Moves and Max Moves skip | `CancelerAccuracyCheck` in `src/battle_move_resolution.c`; `test/battle/dailyred_zmove_immune.c` |
+| The move info window (L in the move list) draws its frame on palette 15: the standard window palette it used, 14, is the move list's, so the move and PP boxes turned white | `MoveSelectionDisplayMoveDescription` in `src/battle_controller_player.c`; `DAILYRED_MOVE_INFO_FRAME_PAL_NUM` in `include/dailyred.h` |
 | The Bag in battle has nothing in it: choosing it says "But there were no items to use...", and from the third try on "Would you say you're begging it?". Run gives the traditional "No! There's no running from a Trainer battle!" (the expansion's Gen 9 forfeit is off) | `DailyRed_GetBagSelectionScript` in `src/dailyred.c`, `B_ACTION_USE_ITEM` in `HandleTurnActionSelectionState` (`src/battle_main.c`); `B_RUN_TRAINER_BATTLE` in `include/config/battle.h` |
 | Test seed 1234567 (practice only, never a daily game), for trying out moves: your team is the six Kanto and Johto starters at level 100, each with its signature move (Typhlosion holds its Mega Stone), and RED has three level 100 Blissey that only know Splash | `DAILYRED_TEST_SEED` in `include/dailyred.h`; `sTestSeedTeam` in `src/dailyred_team.c`; `MakeTestSeedRedTeam` in `src/dailyred_red.c` |
 | Faster battle engine: battle scripts run several commands a frame until one has to wait (it ran one a frame), and get another pass in the same frame when a controller finishes at once | `RunBattleScriptCommands` and `BattleMainCB1` in `src/battle_main.c` |
@@ -395,12 +406,12 @@ included; not Hisuian Typhlosion). The engine side is in the expansion:
 
 | Move | Starter | Type, category | Power | Acc. | What it does | Animation |
 |---|---|---|---|---|---|---|
-| Draining Plant | Venusaur | Grass, special | 85 | 100 | Seeds the target with Leech Seed on a hit | Frenzy Plant's roots, then Leech Seed's seeds sprouting on the target |
-| Twin Pulse | Blastoise | Water, special | 40 ×2 | 100 | Hits twice; a pulse move, so Mega Launcher powers it up | Aurora Beam's rings, growing as Aurora Beam's do, in Water Pulse's blue, on a water background, water sounds; once per hit |
-| Flare Meteor | Charizard | Fire, physical or special by its higher attacking stat | 100 | 95 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2, where the accuracy roll is, as with Sky Drop (RED can't switch it out meanwhile: the expansion's switching AI didn't check for Sky Drop, `CanBattlerConsiderSwitch` in `src/battle_ai_switch.c`); 10% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red |
-| Blight Petal | Meganium | Grass, special, both foes | 75 | 100 | 40% chance of poison, paralysis, sleep or frostbite (one at random) | Heat Wave in green, with tumbling petals instead of sand |
-| Pyroclastic | Typhlosion | Fire, status, both foes | — | 95 | Lowers the foes' accuracy by 1, then raises the user's Speed by 1 | It charges up glowing red, Eruption's red flash goes off with no rocks while it hops twice, then dark smoke covers the screen (Haze's fog, darkened) |
-| Jaw Crash | Feraligatr | Water, physical | 130 | 95 | Turn 1: "slammed down its armored jaw!", Defense and Sp. Def +1. Turn 2: attacks. If the attack misses (or the target is protected or immune), the user loses that +1 Defense and Sp. Def | Turn 1: Skull Bash's charge, glowing red. Turn 2: Giga Impact's background, bubbles around it, then Double-Edge's charge |
+| Havoc Seed | Venusaur | Grass, special | 85 | 100 | Seeds the target with Leech Seed on a hit | After Hellzone Grenade: on Giga Drain's green background, six small Energy Balls are fired at the target, hold all around it, then crash into it at once (green explosions); then Leech Seed's seeds sprout on it |
+| Rapid Pulse | Blastoise | Water, special | 30 ×2–3 | 100 | Hits twice, and a third time 20% of the time (always with Skill Link or Loaded Dice); a pulse move, so Mega Launcher powers it up | Aurora Beam's rings, growing as Aurora Beam's do, in Water Pulse's blue, on a water background, water sounds; once per hit. The third hit's rings grow to twice the size, and there are more of them |
+| Burning Meteor | Charizard | Fire, physical or special by its higher attacking stat | 95 | 100 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2 (RED can't switch it out meanwhile: the expansion's switching AI didn't check for Sky Drop, `CanBattlerConsiderSwitch` in `src/battle_ai_switch.c`); 10% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red |
+| Blight Petal | Meganium | Grass, special, both foes | 75 | 95 | 40% chance of poison, paralysis, sleep or frostbite (one at random) | Heat Wave in green, with tumbling petals instead of sand |
+| Pyroclastic | Typhlosion | Fire, status, both foes | — | 100 | Lowers the foes' accuracy by 1, then raises the user's Speed by 1 | It charges up glowing red, Eruption's red flash goes off with no rocks while it hops twice, then dark smoke covers the screen (Haze's fog, darkened) |
+| Tidal Rampage | Feraligatr | Water, physical, contact | 120 | 100 | Outrage as a Water move that ignores the target's ability (as Mold Breaker): the user rampages for exactly 2 turns (Outrage's is 2–3), then becomes confused | The first half of Outrage in blue, with bubbles for its flames; then on Giga Impact's background, a tackle as Circle Throw's pushes the target back, a punch, a claw and a bite land on it, and both reel back |
 
 Changed moves:
 
@@ -417,14 +428,18 @@ Changed moves:
 Where they are in the expansion: the moves in `src/data/moves_info.h` and
 `include/constants/moves.h` (after Gen 9's); the higher-stat category and
 contact in `IsDailyRedStatCategoryMove` (`SetDynamicMoveCategory`,
-`IsMoveMakingContact` in `src/battle_util.c`); Flare Meteor hitting Flying
-types in `CancelerTargetFailure` and Jaw Crash's lost boosts in
-`MoveEndMoveBlockRecoil` (`src/battle_move_resolution.c`); Pyroclastic's
+`IsMoveMakingContact` in `src/battle_util.c`); Burning Meteor hitting Flying
+types in `CancelerTargetFailure`, Rapid Pulse's hits in
+`CancelerMultihitMoves` and its animation told which hit it is (its move
+turn) in the animation canceler (`src/battle_move_resolution.c`); Tidal
+Rampage's 2 turns in `HandleSetEffectThrash` (`src/battle_set_effect.c`);
+Pyroclastic's
 effect `EFFECT_PYROCLASTIC` (`BattleScript_EffectPyroclastic`); Blight Petal
 needs a fourth random effect (`MAX_RANDOM_ADDITIONAL_EFFECTS` in
 `include/move.h`); the animations at the end of the move animations in
-`data/battle_anim_scripts.s`, with Blight Petal's petal sprite in
-`src/dailyred_anims.c`; learnsets in `src/data/pokemon/level_up_learnsets/`,
+`data/battle_anim_scripts.s`, with their own sprites (Blight Petal's petals,
+Havoc Seed's balls and sprouts, Rapid Pulse's big rings, Tidal Rampage's
+bubbles, claw and bite) in `src/dailyred_anims.c`; learnsets in `src/data/pokemon/level_up_learnsets/`,
 `egg_moves.h` and `all_learnables.json`. Their battle tests are in
 `test/battle/dailyred_signature_moves.c` (`make check
 TESTS=test/battle/dailyred_signature_moves.c`).
@@ -437,7 +452,7 @@ That goes for your starter and RED's (his Kanto starter, and the Mega one on
 original-team days). Its other lists (Z-Crystal, Tera) never get the new
 moves. Each Mega set without the move also comes as a copy with the move in
 place of: Venusaur's special Grass attack, Blastoise's special Water attack,
-Charizard's Fire attack (either category: Flare Meteor follows its stats),
+Charizard's Fire attack (either category: Burning Meteor follows its stats),
 Meganium's special Grass attack, Feraligatr's physical Water attack,
 Sceptile's Grass attack, Blaziken's physical Fire attack and Swampert's Water
 attack; Typhlosion's Pyroclastic takes Work Up's place, or Eruption's second
