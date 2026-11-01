@@ -105,6 +105,18 @@ file server works without special headers. Everything loads from `web/vendor/`.
   every connection the emulator makes to the speakers) and **Hide
   controls**, which hides the on-screen pad; it shows again with Show
   controls (by default the pad is shown on touch screens).
+- **Frame pacing** (`web/app.js`): the emulator normally paces its frames by
+  the sound (RetroArch's audio sync), so they come at uneven times against
+  the screen's refreshes. On a 120 Hz screen (most new phones) that shows as
+  judder: a frame stays up for one refresh, then three. When the screen
+  refreshes at 120, 180 or 240 Hz (measured from animation frames on the title
+  card), the site paces by the screen instead: one game frame every 2nd, 3rd
+  or 4th refresh (`audio_sync` off, `video_swap_interval`), with the sound
+  following the picture. While playing it re-measures every couple of seconds
+  and follows a change (a phone dropping to 60 Hz, say). 60 Hz screens and
+  ones that aren't a multiple of 60 Hz (90, 144 Hz) keep the usual pacing.
+- **Touch buttons** hold every press for at least 70 ms: the game reads the
+  buttons once a frame, so a quicker tap could fall between two reads.
 - **`?seed=1234`** in the URL starts a practice run for testing: that seed's
   team, no daily limit, nothing saved, and a new team after each battle. It
   isn't shown anywhere in the UI.
@@ -403,10 +415,10 @@ included; not Hisuian Typhlosion). The engine side is in the expansion:
 |---|---|---|---|---|---|---|
 | Havoc Seed | Venusaur | Grass, special | 80 | 100 | Seeds the target with Leech Seed on a hit | After Hellzone Grenade: on Giga Drain's green background, six small Energy Balls are fired at the target, hold all around it, then crash into it at once (green explosions); then Leech Seed's seeds sprout on it |
 | Rapid Pulse | Blastoise | Water, special | 30 ×2–3 | 100 | Hits twice, and a third time 20% of the time (always with Skill Link or Loaded Dice); a pulse move, so Mega Launcher powers it up | Aurora Beam's rings, growing as Aurora Beam's do, in Water Pulse's blue, on a water background, water sounds; once per hit. The third hit's rings grow to twice the size, and there are more of them |
-| Burning Meteor | Charizard | Fire, physical or special by its higher attacking stat | 95 | 100 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2 (RED can't switch it out meanwhile: the expansion's switching AI didn't check for Sky Drop, `CanBattlerConsiderSwitch` in `src/battle_ai_switch.c`); 10% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red; the target reappears coming down with Charizard's sweep |
+| Burning Meteor | Charizard | Fire, physical or special by its higher attacking stat | 95 | 100 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2 (RED can't switch it out meanwhile: the expansion's switching AI didn't check for Sky Drop, `CanBattlerConsiderSwitch` in `src/battle_ai_switch.c`); 10% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red; the target reappears coming down with Charizard's sweep, and Charizard flies back in while the background clears |
 | Blight Petal | Meganium | Grass, special, both foes | 75 | 95 | 40% chance of poison, paralysis, sleep or frostbite (one at random) | Heat Wave in green, with tumbling petals instead of sand |
 | Pyroclastic | Typhlosion | Fire, status, both foes | — | 100 | Lowers the foes' accuracy by 1, then raises the user's Speed by 1 | It charges up glowing red, Eruption's red flash goes off with no rocks while it hops twice, then dark smoke covers the screen (Haze's fog, darkened) |
-| Tidal Rampage | Feraligatr | Water, physical, contact | 120 | 100 | Outrage as a Water move that ignores the target's ability (as Mold Breaker): the user rampages for exactly 2 turns (Outrage's is 2–3), then becomes confused | It charges up in a rage, shaking and glowing blue, with bubbles around it and Rage's anger marks; then on Giga Impact's background it winds up and slams into the target as Take Down does, pushing it back, and a punch, a claw (Crush Claw's two pairs of slashes) and a bite land on it in turn, and both reel back |
+| Tidal Rampage | Feraligatr | Water, physical, contact | 120 | 100 | Outrage as a Water move that ignores the target's ability (as Mold Breaker): the user rampages for exactly 2 turns (Outrage's is 2–3), then becomes confused | It charges up in a rage, glowing blue, with bubbles around it and Rage's anger marks, while the background turns to Giga Impact's; halfway through the charge it winds back as Take Down does, and when the charge ends it rushes in (a little faster than Take Down) and slams the target back; a punch, a claw (Crush Claw's two pairs of slashes) and a bite land on it in turn, and both reel back |
 
 Changed moves:
 
