@@ -1,8 +1,8 @@
 diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
-index f514f23b..3bee7a5e 100644
+index f514f23b..e3411908 100644
 --- a/data/battle_anim_scripts.s
 +++ b/data/battle_anim_scripts.s
-@@ -16775,6 +16775,341 @@ gBattleAnimMove_MalignantChain::
+@@ -16775,6 +16775,345 @@ gBattleAnimMove_MalignantChain::
  	waitforvisualfinish
  	end
  
@@ -254,13 +254,15 @@ index f514f23b..3bee7a5e 100644
 +
 +@ Feraligatr's Tidal Rampage: it charges up in a rage, glowing blue, with
 +@ bubbles around it and anger marks, while the background turns to Giga
-+@ Impact's. Halfway through the charge it winds back as Take Down does, and
++@ Impact's. Three quarters of the way through the charge it winds back as Take Down does, and
 +@ when the charge ends it rushes in (a little faster than Take Down) and
 +@ slams the target back; a punch, a claw (Crush Claw's two pairs of slashes)
 +@ and a bite land on it in turn, and both reel back.
 +@ (The glow is AnimTask_BlendMonInAndOut, which blends the palette itself:
 +@ fadetobg's hardware fade and the palette fades of blend_color_cycle can't
-+@ run at once. The shake ends before the wind-up moves the attacker.)
++@ run at once. The shake ends before the wind-up moves the attacker. The
++@ target's shakes in the flurry are ShakeMonInPlace, which keep it pushed
++@ back, so the punch, claw and bite land on it.)
 +gBattleAnimMove_TidalRampage::
 +	createvisualtask AnimTask_IsTargetPlayerSide, 2
 +	jumpretfalse TidalRampageOpponentBG
@@ -284,7 +286,6 @@ index f514f23b..3bee7a5e 100644
 +	waitbgfadein
 +	monbg ANIM_DEF_PARTNER
 +	setalpha 12, 8
-+	createvisualtask AnimTask_WindUpLunge, 5, ANIM_ATTACKER, -24, 8, 22, 3, 40, 7
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -10, 15, 25, 0
 +	delay 3
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 25, 20, 25, 0
@@ -292,11 +293,14 @@ index f514f23b..3bee7a5e 100644
 +	createsprite gAngerMarkSpriteTemplate, ANIM_ATTACKER, 2, 0, 20, -28
 +	playsewithpan SE_M_SWAGGER2, SOUND_PAN_ATTACKER
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -20, 20, 25, 0
-+	delay 3
++	delay 4
++	@ Three quarters of the way through the charge: the wind-up (15 frames),
++	@ then the rush (7) as the charge ends.
++	createvisualtask AnimTask_WindUpLunge, 5, ANIM_ATTACKER, -24, 8, 15, 2, 40, 7
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 12, 0, 25, 0
 +	delay 3
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -5, -15, 25, 0
-+	delay 18
++	delay 19
 +	complex_palette_blend selector=F_PAL_BG | F_PAL_BATTLERS, delay=3, num_blends=1, color1=RGB_BLACK, blend_y1=10, color2=RGB_BLACK, blend_y2=0
 +	create_basic_hitsplat_sprite ANIM_ATTACKER, 4, x=-10, y=0, relative_to=ANIM_TARGET, animation=0
 +	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
@@ -310,10 +314,10 @@ index f514f23b..3bee7a5e 100644
 +	create_fist_sprite ANIM_ATTACKER, 3, x=18, y=0, duration=18, initPosition=ANIM_TARGET
 +	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=22, y=-6, relative_to=ANIM_TARGET, animation=0
 +	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
-+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 4, 0, 8, 1
++	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 3, 0, 4, 1
 +	delay 22
 +	@ The claw:
-+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 18, 1
++	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 8, 1
 +	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 14, -10, 0
 +	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 14, 10, 0
 +	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
@@ -328,7 +332,7 @@ index f514f23b..3bee7a5e 100644
 +	createsprite gDailyRedTidalRampageBiteSpriteTemplate, ANIM_ATTACKER, 2, 24, 32, 4, 0, -585, 14
 +	delay 14
 +	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=24, y=0, relative_to=ANIM_TARGET, animation=2
-+	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 4, 10, 1
++	createvisualtask AnimTask_ShakeMonInPlace, 5, ANIM_TARGET, 0, 3, 5, 1
 +	waitforvisualfinish
 +	delay 6
 +	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 7
@@ -344,7 +348,7 @@ index f514f23b..3bee7a5e 100644
  gBattleAnimMove_PopulationBomb::
  	monbg ANIM_TARGET
  	setalpha 12, 8
-@@ -28438,14 +28773,14 @@ gBattleAnimStatus_Nightmare::
+@@ -28438,14 +28777,14 @@ gBattleAnimStatus_Nightmare::
  	clearmonbg ANIM_DEF_PARTNER
  	end
  
@@ -365,7 +369,7 @@ index f514f23b..3bee7a5e 100644
  	end
  
  gBattleAnimGeneral_StatsChange::
-@@ -28699,8 +29034,27 @@ gBattleAnimGeneral_Sandstorm::
+@@ -28699,8 +29038,27 @@ gBattleAnimGeneral_Sandstorm::
  gBattleAnimGeneral_Hail::
  	goto gBattleAnimMove_Hail
  
