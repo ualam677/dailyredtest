@@ -1,8 +1,8 @@
 // Follows RED's battle by reading the game's RAM straight out of the emulator.
 //
 // The game keeps a status block in RAM (sStatus in pokefirered/src/dailyred.c):
-// the magic "DAILYRED-STATUS1", the seed it was booted with, a phase byte, a
-// result byte and a speed byte, which this side writes (2x speed). We search the emulator's WebAssembly memory for the magic
+// the magic "DAILYRED-STATUS1", the seed it was booted with, a phase byte and a
+// result byte. We search the emulator's WebAssembly memory for the magic
 // followed by our seed (the ROM's own copy of the magic isn't followed by it),
 // remember where it is, and read the two bytes on each call.
 //
@@ -21,9 +21,7 @@ export const PHASE = { EXPLORING: 0, BATTLE: 1, RESULT: 2, FINISHED: 3 };
 export const RESULT = { NONE: 0, WON: 1, LOST: 2 };
 
 // Returns read(): { phase, result }, or null until the status block has been
-// found (just after boot). read.setSpeed(on) sets the game's 2x speed (the
-// block's speed byte; nothing happens until the block is found). read.stop()
-// ends a search still running.
+// found (just after boot). read.stop() ends a search still running.
 export function createGameLink(emulator, seed) {
   let offset = -1;
   let stopped = false;
@@ -41,9 +39,6 @@ export function createGameLink(emulator, seed) {
     const heap = heapOf();
     return { phase: heap[offset + 20], result: heap[offset + 21] };
   }
-  read.setSpeed = (on) => {
-    if (offset >= 0) heapOf()[offset + 22] = on ? 1 : 0;
-  };
   read.stop = () => { stopped = true; };
   return read;
 }

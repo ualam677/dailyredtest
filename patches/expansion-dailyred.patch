@@ -1,8 +1,8 @@
 diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
-index f514f23b..1c6cb0c5 100644
+index f514f23b..aca59e7e 100644
 --- a/data/battle_anim_scripts.s
 +++ b/data/battle_anim_scripts.s
-@@ -16775,6 +16775,339 @@ gBattleAnimMove_MalignantChain::
+@@ -16775,6 +16775,336 @@ gBattleAnimMove_MalignantChain::
  	waitforvisualfinish
  	end
  
@@ -249,47 +249,36 @@ index f514f23b..1c6cb0c5 100644
 +	waitforvisualfinish
 +	end
 +
-+@ Feraligatr's Tidal Rampage: the first half of Outrage, in blue, with bubbles
-+@ for its flames; then, on Giga Impact's background, a tackle as Circle
-+@ Throw's pushes the target back, a punch, a claw and a bite land on it, and
++@ Feraligatr's Tidal Rampage: it charges up in a rage, shaking and glowing blue,
++@ with bubbles all around it and anger marks; then, on Giga Impact's
++@ background, a tackle as Circle Throw's pushes the target back, a punch, a
++@ claw (Crush Claw's two pairs of slashes) and a bite land on it in turn, and
 +@ both reel back.
 +gBattleAnimMove_TidalRampage::
-+	loopsewithpan SE_M_SURF, SOUND_PAN_ATTACKER, 8, 2
-+	blend_color_cycle selector=(F_PAL_BG | F_PAL_ATTACKER | F_PAL_TARGET), delay=2, num_blends=3, initial_blend_y=3, target_blend_y=8, color=RGB(0, 12, 28)
-+	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 12, 6, 3, 4
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, 0, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, 0, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 0, 1280, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 0, -1280, 3
-+	delay 0
-+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 20, 1
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, 768, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, 768, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, -768, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, -768, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, 0, 3
++	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 2, 0, 40, 1
++	blend_color_cycle selector=F_PAL_ATTACKER, delay=2, num_blends=3, initial_blend_y=0, target_blend_y=12, color=RGB(4, 14, 31)
++	loopsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER, 10, 4
++	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 10, 10, 25, 0
 +	delay 3
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, 0, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 0, 1280, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 0, -1280, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, 768, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, 768, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 1280, -768, 3
-+	delay 0
-+	createsprite gDailyRedTidalRampageBubbleSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, -1280, -768, 3
++	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -15, 0, 25, 0
++	delay 3
++	createsprite gAngerMarkSpriteTemplate, ANIM_ATTACKER, 2, 0, -20, -28
++	playsewithpan SE_M_SWAGGER2, SOUND_PAN_ATTACKER
++	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 20, 10, 25, 0
++	delay 3
++	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 0, -10, 25, 0
++	delay 3
++	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -10, 15, 25, 0
++	delay 3
++	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 25, 20, 25, 0
++	delay 3
++	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -20, 20, 25, 0
++	delay 3
++	createsprite gAngerMarkSpriteTemplate, ANIM_ATTACKER, 2, 0, 20, -28
++	playsewithpan SE_M_SWAGGER2, SOUND_PAN_ATTACKER
++	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 12, 0, 25, 0
++	delay 3
++	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -5, -15, 25, 0
 +	waitforvisualfinish
 +	createvisualtask AnimTask_IsTargetPlayerSide, 2
 +	jumpretfalse TidalRampageOpponentBG
@@ -311,24 +300,32 @@ index f514f23b..1c6cb0c5 100644
 +	delay 1
 +	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -24, 0, 0, 4
 +	waitforvisualfinish
-+	@ The target is now 24 pixels further back.
-+	create_fist_sprite ANIM_ATTACKER, 3, x=18, y=0, duration=6, initPosition=ANIM_TARGET
-+	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=22, y=-6, relative_to=ANIM_TARGET, animation=2
++	delay 4
++	@ The target is now 24 pixels further back. The punch:
++	create_fist_sprite ANIM_ATTACKER, 3, x=18, y=0, duration=18, initPosition=ANIM_TARGET
++	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=22, y=-6, relative_to=ANIM_TARGET, animation=0
 +	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
-+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 6, 1
-+	delay 6
-+	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 16, -10, 0
-+	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 16, 10, 0
++	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 4, 0, 8, 1
++	delay 22
++	@ The claw:
++	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 18, 1
++	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 14, -10, 0
++	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 14, 10, 0
 +	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
-+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 10, 1
-+	delay 10
++	delay 12
++	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 34, -10, 1
++	createsprite gDailyRedTidalRampageClawSpriteTemplate, ANIM_TARGET, 2, 34, 10, 1
++	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
++	delay 24
++	@ The bite (Bite's teeth, closing more slowly):
 +	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-+	createsprite gDailyRedTidalRampageBiteSpriteTemplate, ANIM_ATTACKER, 2, 24, -32, 0, 0, 819, 10
-+	createsprite gDailyRedTidalRampageBiteSpriteTemplate, ANIM_ATTACKER, 2, 24, 32, 4, 0, -819, 10
-+	delay 10
++	createsprite gDailyRedTidalRampageBiteSpriteTemplate, ANIM_ATTACKER, 2, 24, -32, 0, 0, 585, 14
++	createsprite gDailyRedTidalRampageBiteSpriteTemplate, ANIM_ATTACKER, 2, 24, 32, 4, 0, -585, 14
++	delay 14
 +	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=24, y=0, relative_to=ANIM_TARGET, animation=2
-+	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 4, 7, 1
++	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 4, 10, 1
 +	waitforvisualfinish
++	delay 6
 +	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 7
 +	delay 4
 +	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 10
@@ -342,7 +339,7 @@ index f514f23b..1c6cb0c5 100644
  gBattleAnimMove_PopulationBomb::
  	monbg ANIM_TARGET
  	setalpha 12, 8
-@@ -28438,14 +28771,14 @@ gBattleAnimStatus_Nightmare::
+@@ -28438,14 +28768,14 @@ gBattleAnimStatus_Nightmare::
  	clearmonbg ANIM_DEF_PARTNER
  	end
  
@@ -363,7 +360,7 @@ index f514f23b..1c6cb0c5 100644
  	end
  
  gBattleAnimGeneral_StatsChange::
-@@ -28699,8 +29032,27 @@ gBattleAnimGeneral_Sandstorm::
+@@ -28699,8 +29029,27 @@ gBattleAnimGeneral_Sandstorm::
  gBattleAnimGeneral_Hail::
  	goto gBattleAnimMove_Hail
  
@@ -4809,10 +4806,10 @@ index 370f0e12..2581d755 100644
  #define VAR_0x40A0                 0x40A0
 diff --git a/include/dailyred.h b/include/dailyred.h
 new file mode 100644
-index 00000000..d99848a8
+index 00000000..e6ec43d3
 --- /dev/null
 +++ b/include/dailyred.h
-@@ -0,0 +1,141 @@
+@@ -0,0 +1,140 @@
 +#ifndef GUARD_DAILYRED_H
 +#define GUARD_DAILYRED_H
 +
@@ -4844,7 +4841,6 @@ index 00000000..d99848a8
 +u16 DailyRed_IsDailyGame(void);
 +bool32 DailyRed_IsOnSummit(void);
 +const u8 *DailyRed_GetBagSelectionScript(void);
-+bool32 DailyRed_IsFastForward(void);
 +// A practice seed (never a daily game) for testing moves: your team is the six
 +// Kanto and Johto starters, each with its signature move (sTestSeedTeam in
 +// dailyred_team.c), and RED has three Blissey that only know Splash
@@ -9636,10 +9632,10 @@ index 4a0a3bc2..1ea2736c 100644
  };
 diff --git a/src/dailyred.c b/src/dailyred.c
 new file mode 100644
-index 00000000..1a575528
+index 00000000..6e2b6941
 --- /dev/null
 +++ b/src/dailyred.c
-@@ -0,0 +1,362 @@
+@@ -0,0 +1,354 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "battle_scripts.h"
@@ -9698,8 +9694,7 @@ index 00000000..1a575528
 +    u32 seed;
 +    u8 phase;  // DAILYRED_PHASE_*
 +    u8 result; // DAILYRED_RESULT_*
-+    u8 speed;  // written by the website: 1 while its 2x speed is on (DailyRed_IsFastForward)
-+    u8 padding;
++    u8 padding[2];
 +};
 +
 +enum
@@ -9789,13 +9784,6 @@ index 00000000..1a575528
 +    sStatus.seed = seed;
 +    sStatus.phase = DAILYRED_PHASE_EXPLORING;
 +    sStatus.result = DAILYRED_RESULT_NONE;
-+    sStatus.speed = 0;
-+}
-+
-+// The website's 2x speed (web/app.js writes sStatus.speed): see AgbMainLoop.
-+bool32 DailyRed_IsFastForward(void)
-+{
-+    return sStatus.speed != 0;
 +}
 +
 +bool32 DailyRed_IsTestSeed(void)
@@ -10004,10 +9992,10 @@ index 00000000..1a575528
 +}
 diff --git a/src/dailyred_anims.c b/src/dailyred_anims.c
 new file mode 100644
-index 00000000..7a1d159e
+index 00000000..13acc85d
 --- /dev/null
 +++ b/src/dailyred_anims.c
-@@ -0,0 +1,350 @@
+@@ -0,0 +1,340 @@
 +#include "global.h"
 +#include "battle_anim.h"
 +#include "sprite.h"
@@ -10348,16 +10336,6 @@ index 00000000..7a1d159e
 +        gBattleAnimArgs[0] = -gBattleAnimArgs[0];
 +    AnimBite(sprite);
 +}
-+
-+// Tidal Rampage's rampage: Outrage's flames (AnimOutrageFlame), as bubbles.
-+const struct SpriteTemplate gDailyRedTidalRampageBubbleSpriteTemplate =
-+{
-+    .tileTag = ANIM_TAG_SMALL_BUBBLES,
-+    .paletteTag = ANIM_TAG_SMALL_BUBBLES,
-+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
-+    .anims = gAnims_WaterBubble,
-+    .callback = AnimOutrageFlame,
-+};
 diff --git a/src/dailyred_eviv.c b/src/dailyred_eviv.c
 new file mode 100644
 index 00000000..3c7111f8
@@ -27438,36 +27416,10 @@ index 96c46ec9..abb27499 100644
      }
      return TRUE;
 diff --git a/src/main.c b/src/main.c
-index 7ec4e57b..1118472f 100644
+index 7ec4e57b..aa5bb550 100644
 --- a/src/main.c
 +++ b/src/main.c
-@@ -1,4 +1,5 @@
- #include "global.h"
-+#include "dailyred.h" // Daily Red
- #include "crt0.h"
- #include "malloc.h"
- #include "link.h"
-@@ -157,6 +158,19 @@ void AgbMainLoop(void)
-             gLinkTransferringData = FALSE;
-             UpdateLinkAndCallCallbacks();
- 
-+            // Daily Red: 2x speed (the website's toggle, DailyRed_IsFastForward)
-+            // runs the game's callbacks a second time before the frame ends.
-+            // The music is driven by the VBlank interrupt, so it keeps its
-+            // speed and pitch. The second pass sees no newly pressed keys, so
-+            // a press still counts once.
-+            if (DailyRed_IsFastForward())
-+            {
-+                gMain.newKeysRaw = 0;
-+                gMain.newKeys = 0;
-+                gMain.newAndRepeatedKeys = 0;
-+                UpdateLinkAndCallCallbacks();
-+            }
-+
-             if (Overworld_RecvKeysFromLinkIsRunning() == TRUE)
-             {
-                 gMain.newKeys = 0;
-@@ -225,6 +239,13 @@ void SeedRngAndSetTrainerId(void)
+@@ -225,6 +225,13 @@ void SeedRngAndSetTrainerId(void)
      sTrainerId = Random();
  }
  

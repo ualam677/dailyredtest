@@ -102,14 +102,9 @@ file server works without special headers. Everything loads from `web/vendor/`.
   vanilla FireRed does, and after each battle a new team arrives.
 - **Toolbar options** (`web/index.html`, `web/app.js`; each remembered in
   localStorage): a volume slider beside the sound button (a gain node on
-  every connection the emulator makes to the speakers), **2x speed** and
-  **Hide controls**. 2x speed is a byte in the status block
-  (`web/game-link.js` writes `sStatus.speed`): while it's set, `AgbMainLoop`
-  in `src/main.c` runs the game's callbacks twice a frame (buttons are only
-  read once), so the game moves at double speed while the music and sound
-  effects, which run once a frame in the VBlank interrupt, keep their
-  normal speed and pitch. Hide controls hides the on-screen pad; it shows
-  again with Show controls (by default the pad is shown on touch screens).
+  every connection the emulator makes to the speakers) and **Hide
+  controls**, which hides the on-screen pad; it shows again with Show
+  controls (by default the pad is shown on touch screens).
 - **`?seed=1234`** in the URL starts a practice run for testing: that seed's
   team, no daily limit, nothing saved, and a new team after each battle. It
   isn't shown anywhere in the UI.
@@ -411,7 +406,7 @@ included; not Hisuian Typhlosion). The engine side is in the expansion:
 | Burning Meteor | Charizard | Fire, physical or special by its higher attacking stat | 95 | 100 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2 (RED can't switch it out meanwhile: the expansion's switching AI didn't check for Sky Drop, `CanBattlerConsiderSwitch` in `src/battle_ai_switch.c`); 10% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red |
 | Blight Petal | Meganium | Grass, special, both foes | 75 | 95 | 40% chance of poison, paralysis, sleep or frostbite (one at random) | Heat Wave in green, with tumbling petals instead of sand |
 | Pyroclastic | Typhlosion | Fire, status, both foes | — | 100 | Lowers the foes' accuracy by 1, then raises the user's Speed by 1 | It charges up glowing red, Eruption's red flash goes off with no rocks while it hops twice, then dark smoke covers the screen (Haze's fog, darkened) |
-| Tidal Rampage | Feraligatr | Water, physical, contact | 120 | 100 | Outrage as a Water move that ignores the target's ability (as Mold Breaker): the user rampages for exactly 2 turns (Outrage's is 2–3), then becomes confused | The first half of Outrage in blue, with bubbles for its flames; then on Giga Impact's background, a tackle as Circle Throw's pushes the target back, a punch, a claw and a bite land on it, and both reel back |
+| Tidal Rampage | Feraligatr | Water, physical, contact | 120 | 100 | Outrage as a Water move that ignores the target's ability (as Mold Breaker): the user rampages for exactly 2 turns (Outrage's is 2–3), then becomes confused | It charges up in a rage, shaking and glowing blue, with bubbles around it and Rage's anger marks; then on Giga Impact's background, a tackle as Circle Throw's pushes the target back, a punch, a claw (Crush Claw's two pairs of slashes) and a bite land on it in turn, and both reel back |
 
 Changed moves:
 
@@ -439,7 +434,7 @@ needs a fourth random effect (`MAX_RANDOM_ADDITIONAL_EFFECTS` in
 `include/move.h`); the animations at the end of the move animations in
 `data/battle_anim_scripts.s`, with their own sprites (Blight Petal's petals,
 Havoc Seed's balls and sprouts, Rapid Pulse's big rings, Tidal Rampage's
-bubbles, claw and bite) in `src/dailyred_anims.c`; learnsets in `src/data/pokemon/level_up_learnsets/`,
+claw and bite) in `src/dailyred_anims.c`; learnsets in `src/data/pokemon/level_up_learnsets/`,
 `egg_moves.h` and `all_learnables.json`. Their battle tests are in
 `test/battle/dailyred_signature_moves.c` (`make check
 TESTS=test/battle/dailyred_signature_moves.c`).

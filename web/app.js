@@ -19,7 +19,6 @@ const ui = {
   retry: $('retry'),
   sound: $('sound'),
   volume: $('volume'),
-  speed: $('speed'),
   controls: $('controls'),
   fullscreen: $('fullscreen'),
   wins: $('stat-wins'),
@@ -41,7 +40,7 @@ const session = {
   get(key) { try { return sessionStorage.getItem(key); } catch { return null; } },
   set(key, value) { try { sessionStorage.setItem(key, value); } catch { /* not remembered */ } },
 };
-// The same for the settings kept between visits (volume, speed, controls).
+// The same for the settings kept between visits (volume, controls).
 const local = {
   get(key) { try { return localStorage.getItem(key); } catch { return null; } },
   set(key, value) { try { localStorage.setItem(key, value); } catch { /* not remembered */ } },
@@ -59,7 +58,6 @@ let runDate = null;
 let battleSeen = false;
 let muted = session.get('dailyred-muted') === '1';
 let volume = Math.min(100, Math.max(0, Number(local.get('dailyred-volume') ?? 100) || 0));
-let fast = local.get('dailyred-speed') === '1';
 let starting = false;
 let titleDate = null;
 
@@ -96,7 +94,6 @@ function setState(state) {
   app.dataset.state = state;
   const playing = state === 'playing';
   ui.sound.disabled = !playing;
-  ui.speed.disabled = !playing;
   ui.fullscreen.disabled = !playing || !document.fullscreenEnabled;
 }
 
@@ -233,7 +230,6 @@ async function startRun() {
 function watchGame() {
   let status;
   try {
-    readGame?.setSpeed(fast); // also once the status block is first found
     status = readGame?.();
   } catch {
     return;
@@ -299,20 +295,6 @@ ui.volume.value = String(volume);
 ui.volume.addEventListener('input', () => setVolume(Number(ui.volume.value)));
 // Arrow keys on the focused slider would move it instead of the player.
 ui.volume.addEventListener('change', () => ui.volume.blur());
-
-// 2x speed: the game runs its frames twice as fast (AgbMainLoop in the ROM);
-// the music keeps its speed. Kept between visits.
-onClick(ui.speed, () => {
-  fast = !fast;
-  local.set('dailyred-speed', fast ? '1' : '0');
-  readGame?.setSpeed(fast);
-  showSpeed();
-});
-
-function showSpeed() {
-  ui.speed.setAttribute('aria-pressed', String(fast));
-  ui.speed.textContent = fast ? '2x speed: on' : '2x speed';
-}
 
 // On-screen controls: shown on touch screens unless hidden here, and on
 // other screens only when shown here. Kept between visits.
@@ -428,6 +410,5 @@ window.dailyRed = {
 renderTitle();
 setState('title');
 showMuted();
-showSpeed();
 showControls();
 ui.fullscreen.hidden = !document.fullscreenEnabled; // e.g. iPhone Safari

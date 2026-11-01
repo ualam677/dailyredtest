@@ -292,8 +292,6 @@ a { color: inherit; text-underline-offset: 3px; }
 .volume-label { font: 600 15px/1 var(--font-pixel); }
 .volume-slider { width: 110px; accent-color: var(--crimson); cursor: pointer; }
 
-.button[aria-pressed="true"]#speed { border-color: var(--crimson); }
-
 /* Touch controls (phones and tablets only) ---------------------------------- */
 
 .pad {
