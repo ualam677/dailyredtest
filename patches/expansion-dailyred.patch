@@ -22109,7 +22109,7 @@ index c51a5acf..96c2b66f 100644
  #if I_PRICE >= GEN_9
      #define GEM_PRICE 15000
 diff --git a/src/data/moves_info.h b/src/data/moves_info.h
-index d75670d7..7c462226 100644
+index d75670d7..89eed7d2 100644
 --- a/src/data/moves_info.h
 +++ b/src/data/moves_info.h
 @@ -234,7 +234,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
@@ -22242,9 +22242,9 @@ index d75670d7..7c462226 100644
              .attack = 1,
              .chance = 100,
 +        },{
-+            // Daily Red: and a 10% chance of frostbite.
++            // Daily Red: and a 20% chance of frostbite.
 +            .moveEffect = MOVE_EFFECT_FROSTBITE,
-+            .chance = 10,
++            .chance = 20,
          }),
          .contestEffect = CONTEST_EFFECT_BETTER_IF_LAST,
          .contestComboStarterId = 0,
@@ -22314,7 +22314,7 @@ index d75670d7..7c462226 100644
 +        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNTOOKTARGETHIGH, .state = STATE_ON_AIR },
 +        .additionalEffects = ADDITIONAL_EFFECTS({
 +            .moveEffect = MOVE_EFFECT_BURN,
-+            .chance = 10,
++            .chance = 20,
 +        }),
 +        .battleAnimScript = gBattleAnimMove_BurningMeteor,
 +    },
