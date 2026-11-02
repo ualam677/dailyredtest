@@ -1,5 +1,5 @@
 diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
-index f514f23b..e3411908 100644
+index f514f23b..28855a87 100644
 --- a/data/battle_anim_scripts.s
 +++ b/data/battle_anim_scripts.s
 @@ -16775,6 +16775,345 @@ gBattleAnimMove_MalignantChain::
@@ -253,24 +253,16 @@ index f514f23b..e3411908 100644
 +	end
 +
 +@ Feraligatr's Tidal Rampage: it charges up in a rage, glowing blue, with
-+@ bubbles around it and anger marks, while the background turns to Giga
-+@ Impact's. Three quarters of the way through the charge it winds back as Take Down does, and
++@ bubbles around it and anger marks. Three quarters of the way through the
++@ charge Giga Impact's background comes in and it winds back as Take Down does, and
 +@ when the charge ends it rushes in (a little faster than Take Down) and
 +@ slams the target back; a punch, a claw (Crush Claw's two pairs of slashes)
 +@ and a bite land on it in turn, and both reel back.
-+@ (The glow is AnimTask_BlendMonInAndOut, which blends the palette itself:
-+@ fadetobg's hardware fade and the palette fades of blend_color_cycle can't
-+@ run at once. The shake ends before the wind-up moves the attacker. The
++@ (The background comes in at once with changebg: fadetobg
++@ fades out and back in over half a second. The shake ends before the wind-up moves the attacker. The
 +@ target's shakes in the flurry are ShakeMonInPlace, which keep it pushed
 +@ back, so the punch, claw and bite land on it.)
 +gBattleAnimMove_TidalRampage::
-+	createvisualtask AnimTask_IsTargetPlayerSide, 2
-+	jumpretfalse TidalRampageOpponentBG
-+	fadetobg BG_GIGA_IMPACT_PLAYER
-+	goto TidalRampageCharge
-+TidalRampageOpponentBG:
-+	fadetobg BG_GIGA_IMPACT_OPPONENT
-+TidalRampageCharge:
 +	createvisualtask AnimTask_BlendMonInAndOut, 3, ANIM_ATTACKER, RGB(4, 14, 31), 10, 1, 3
 +	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 2, 0, 14, 1
 +	loopsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER, 10, 5
@@ -283,7 +275,7 @@ index f514f23b..e3411908 100644
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 20, 10, 25, 0
 +	delay 3
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 0, -10, 25, 0
-+	waitbgfadein
++	delay 26
 +	monbg ANIM_DEF_PARTNER
 +	setalpha 12, 8
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -10, 15, 25, 0
@@ -294,8 +286,16 @@ index f514f23b..e3411908 100644
 +	playsewithpan SE_M_SWAGGER2, SOUND_PAN_ATTACKER
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -20, 20, 25, 0
 +	delay 4
-+	@ Three quarters of the way through the charge: the wind-up (15 frames),
-+	@ then the rush (7) as the charge ends.
++	@ Three quarters of the way through the charge: Giga Impact's background
++	@ comes in as it winds up (15 frames), then the rush (7) as the charge
++	@ ends.
++	createvisualtask AnimTask_IsTargetPlayerSide, 2
++	jumpretfalse TidalRampageOpponentBG
++	changebg BG_GIGA_IMPACT_PLAYER
++	goto TidalRampageRush
++TidalRampageOpponentBG:
++	changebg BG_GIGA_IMPACT_OPPONENT
++TidalRampageRush:
 +	createvisualtask AnimTask_WindUpLunge, 5, ANIM_ATTACKER, -24, 8, 15, 2, 40, 7
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 12, 0, 25, 0
 +	delay 3
