@@ -1,8 +1,8 @@
 diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
-index f514f23b..3d151738 100644
+index f514f23b..30896833 100644
 --- a/data/battle_anim_scripts.s
 +++ b/data/battle_anim_scripts.s
-@@ -16775,6 +16775,350 @@ gBattleAnimMove_MalignantChain::
+@@ -16775,6 +16775,349 @@ gBattleAnimMove_MalignantChain::
  	waitforvisualfinish
  	end
  
@@ -306,7 +306,6 @@ index f514f23b..3d151738 100644
 +	monbg ANIM_DEF_PARTNER
 +	setalpha 12, 8
 +	delay 4
-+	complex_palette_blend selector=F_PAL_BG | F_PAL_BATTLERS, delay=3, num_blends=1, color1=RGB_BLACK, blend_y1=10, color2=RGB_BLACK, blend_y2=0
 +	create_basic_hitsplat_sprite ANIM_ATTACKER, 4, x=-10, y=0, relative_to=ANIM_TARGET, animation=0
 +	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
 +	delay 1
@@ -353,7 +352,7 @@ index f514f23b..3d151738 100644
  gBattleAnimMove_PopulationBomb::
  	monbg ANIM_TARGET
  	setalpha 12, 8
-@@ -28438,14 +28782,14 @@ gBattleAnimStatus_Nightmare::
+@@ -28438,14 +28781,14 @@ gBattleAnimStatus_Nightmare::
  	clearmonbg ANIM_DEF_PARTNER
  	end
  
@@ -374,7 +373,7 @@ index f514f23b..3d151738 100644
  	end
  
  gBattleAnimGeneral_StatsChange::
-@@ -28699,8 +29043,27 @@ gBattleAnimGeneral_Sandstorm::
+@@ -28699,8 +29042,27 @@ gBattleAnimGeneral_Sandstorm::
  gBattleAnimGeneral_Hail::
  	goto gBattleAnimMove_Hail
  
