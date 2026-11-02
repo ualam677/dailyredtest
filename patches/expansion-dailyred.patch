@@ -9522,10 +9522,26 @@ index abe49bd2..d0cbb51b 100644
                                                  DISPLAY_WIDTH + 32,
                                                  106,
 diff --git a/src/battle_util.c b/src/battle_util.c
-index 85523e06..58d6bcce 100644
+index 85523e06..1f8900cf 100644
 --- a/src/battle_util.c
 +++ b/src/battle_util.c
-@@ -4550,6 +4550,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
+@@ -477,6 +477,15 @@ static bool32 IsUnnerveAbilityOnOpposingSide(enum BattlerId battler)
+ // Functions
+ void HandleAction_UseMove(void)
+ {
++    // Daily Red: originalBattlerPartyId marks a battler that left the field
++    // during the current move (Eject Button, Red Card, U-turn...). It's only
++    // cleared when a move ends, so a plain switch action left it set until
++    // the next move anywhere ended: after a turn where both sides switched,
++    // the switched-in mon's first move skipped Life Orb, Shell Bell, U-turn's
++    // switch and the like. A new move starts with nobody having left.
++    for (enum BattlerId i = 0; i < gBattlersCount; i++)
++        gBattleStruct->battlerState[i].originalBattlerPartyId = PARTY_SIZE;
++
+     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+     if (!IsBattlerAlive(gBattlerAttacker)
+      || gBattleStruct->battlerState[gBattlerAttacker].commandingDondozo)
+@@ -4550,6 +4559,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
          case ABILITY_AS_ONE_ICE_RIDER:
          case ABILITY_GRIM_NEIGH:
          case ABILITY_AS_ONE_SHADOW_RIDER:
@@ -9533,7 +9549,7 @@ index 85523e06..58d6bcce 100644
          case ABILITY_BEAST_BOOST:
          case ABILITY_EELEVATE:
              {
-@@ -4561,7 +4562,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
+@@ -4561,7 +4571,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
  
                  if (ability == ABILITY_BEAST_BOOST || ability == ABILITY_EELEVATE)
                      stat = GetHighestStatId(battler);
@@ -9542,7 +9558,7 @@ index 85523e06..58d6bcce 100644
                      stat = STAT_SPATK;
  
                  if (numMonsFainted && CompareStat(battler, stat, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
-@@ -5804,7 +5805,10 @@ bool32 CanBattlerAvoidContactEffects(enum BattlerId battlerAtk, enum BattlerId b
+@@ -5804,7 +5814,10 @@ bool32 CanBattlerAvoidContactEffects(enum BattlerId battlerAtk, enum BattlerId b
  bool32 IsMoveMakingContact(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, enum Move move)
  {
      if (!(MoveMakesContact(move) || (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM
@@ -9554,7 +9570,7 @@ index 85523e06..58d6bcce 100644
      {
          return FALSE;
      }
-@@ -9097,10 +9101,25 @@ enum DamageCategory GetBattleMoveCategory(enum Move move)
+@@ -9097,10 +9110,25 @@ enum DamageCategory GetBattleMoveCategory(enum Move move)
      return GetMoveCategory(move);
  }
  
@@ -29537,6 +29553,60 @@ index 00000000..cc697fa8
 +        ANIMATION(ANIM_TYPE_MOVE, MOVE_BLIGHT_PETAL, player);
 +        HP_BAR(opponent);
 +        ANIMATION(ANIM_TYPE_STATUS, statusAnim, opponent);
++    }
++}
+diff --git a/test/battle/dailyred_switch_in_move.c b/test/battle/dailyred_switch_in_move.c
+new file mode 100644
+index 00000000..4d722b87
+--- /dev/null
++++ b/test/battle/dailyred_switch_in_move.c
+@@ -0,0 +1,48 @@
++#include "global.h"
++#include "test/battle.h"
++
++// A plain switch used to leave originalBattlerPartyId set (it marks a
++// battler that left the field mid-move), so when no move ran between the
++// switch and the switched-in mon's first move (both sides switched), that
++// move skipped Life Orb, U-turn's switch and the like. HandleAction_UseMove
++// now clears it.
++
++SINGLE_BATTLE_TEST("Daily Red: Life Orb activates on the first move after both sides switch")
++{
++    GIVEN {
++        PLAYER(SPECIES_WOBBUFFET);
++        PLAYER(SPECIES_FERALIGATR) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_LIFE_ORB); Moves(MOVE_TIDAL_RAMPAGE, MOVE_CELEBRATE); }
++        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
++        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(999); HP(999); Moves(MOVE_CELEBRATE); }
++    } WHEN {
++        TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
++        TURN { MOVE(player, MOVE_TIDAL_RAMPAGE); MOVE(opponent, MOVE_CELEBRATE); }
++        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_CELEBRATE); }
++    } SCENE {
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDAL_RAMPAGE, player);
++        HP_BAR(opponent);
++        HP_BAR(player);
++        MESSAGE("Feraligatr lost some of its HP!");
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDAL_RAMPAGE, player);
++        HP_BAR(opponent);
++        HP_BAR(player);
++        MESSAGE("Feraligatr lost some of its HP!");
++    }
++}
++
++SINGLE_BATTLE_TEST("Daily Red: U-turn switches out on the first move after both sides switch")
++{
++    GIVEN {
++        PLAYER(SPECIES_WOBBUFFET);
++        PLAYER(SPECIES_SCIZOR) { Moves(MOVE_U_TURN); }
++        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
++        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
++    } WHEN {
++        TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
++        TURN { MOVE(player, MOVE_U_TURN); MOVE(opponent, MOVE_CELEBRATE); SEND_OUT(player, 0); }
++    } SCENE {
++        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
++        HP_BAR(opponent);
++        SEND_IN_MESSAGE("Wobbuffet");
 +    }
 +}
 diff --git a/test/battle/dailyred_zmove_immune.c b/test/battle/dailyred_zmove_immune.c
