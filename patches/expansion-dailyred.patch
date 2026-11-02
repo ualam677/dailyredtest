@@ -1,8 +1,8 @@
 diff --git a/data/battle_anim_scripts.s b/data/battle_anim_scripts.s
-index f514f23b..68c96c2a 100644
+index f514f23b..28855a87 100644
 --- a/data/battle_anim_scripts.s
 +++ b/data/battle_anim_scripts.s
-@@ -16775,6 +16775,346 @@ gBattleAnimMove_MalignantChain::
+@@ -16775,6 +16775,345 @@ gBattleAnimMove_MalignantChain::
  	waitforvisualfinish
  	end
  
@@ -254,11 +254,11 @@ index f514f23b..68c96c2a 100644
 +
 +@ Feraligatr's Tidal Rampage: it charges up in a rage, glowing blue, with
 +@ bubbles around it and anger marks. Three quarters of the way through the
-+@ charge Giga Impact's background flashes in and it winds back as Take Down does, and
++@ charge Giga Impact's background comes in and it winds back as Take Down does, and
 +@ when the charge ends it rushes in (a little faster than Take Down) and
 +@ slams the target back; a punch, a claw (Crush Claw's two pairs of slashes)
 +@ and a bite land on it in turn, and both reel back.
-+@ (The background comes in at once with changebg and a white flash: fadetobg
++@ (The background comes in at once with changebg: fadetobg
 +@ fades out and back in over half a second. The shake ends before the wind-up moves the attacker. The
 +@ target's shakes in the flurry are ShakeMonInPlace, which keep it pushed
 +@ back, so the punch, claw and bite land on it.)
@@ -287,7 +287,7 @@ index f514f23b..68c96c2a 100644
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, -20, 20, 25, 0
 +	delay 4
 +	@ Three quarters of the way through the charge: Giga Impact's background
-+	@ flashes in as it winds up (15 frames), then the rush (7) as the charge
++	@ comes in as it winds up (15 frames), then the rush (7) as the charge
 +	@ ends.
 +	createvisualtask AnimTask_IsTargetPlayerSide, 2
 +	jumpretfalse TidalRampageOpponentBG
@@ -296,7 +296,6 @@ index f514f23b..68c96c2a 100644
 +TidalRampageOpponentBG:
 +	changebg BG_GIGA_IMPACT_OPPONENT
 +TidalRampageRush:
-+	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 0, 12, 0, RGB_WHITE
 +	createvisualtask AnimTask_WindUpLunge, 5, ANIM_ATTACKER, -24, 8, 15, 2, 40, 7
 +	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 12, 0, 25, 0
 +	delay 3
@@ -349,7 +348,7 @@ index f514f23b..68c96c2a 100644
  gBattleAnimMove_PopulationBomb::
  	monbg ANIM_TARGET
  	setalpha 12, 8
-@@ -28438,14 +28778,14 @@ gBattleAnimStatus_Nightmare::
+@@ -28438,14 +28777,14 @@ gBattleAnimStatus_Nightmare::
  	clearmonbg ANIM_DEF_PARTNER
  	end
  
@@ -370,7 +369,7 @@ index f514f23b..68c96c2a 100644
  	end
  
  gBattleAnimGeneral_StatsChange::
-@@ -28699,8 +29039,27 @@ gBattleAnimGeneral_Sandstorm::
+@@ -28699,8 +29038,27 @@ gBattleAnimGeneral_Sandstorm::
  gBattleAnimGeneral_Hail::
  	goto gBattleAnimMove_Hail
  
@@ -4606,18 +4605,6 @@ index 65fdec05..4db34a6d 100644
  #define P_BASE_HP_1_SHEDINJA_HANDLING    FALSE       // If TRUE, all species with 1 Base HP will have their handling match Shedinja's.
  
  // Learnset helper toggles
-diff --git a/include/config/test.h b/include/config/test.h
-index 53801063..e292d6ab 100644
---- a/include/config/test.h
-+++ b/include/config/test.h
-@@ -1143,6 +1143,6 @@
- #define T_COMPRESSION_SHOULD_PRINT FALSE
- 
- //  Move animation testing
--#define T_SHOULD_RUN_MOVE_ANIM  FALSE       //  If TRUE, enables the move animation tests, these are very computationally heavy and takes a long time to run.
-+#define T_SHOULD_RUN_MOVE_ANIM  TRUE       //  If TRUE, enables the move animation tests, these are very computationally heavy and takes a long time to run.
- 
- #endif // GUARD_CONFIG_TEST_H
 diff --git a/include/constants/abilities.h b/include/constants/abilities.h
 index f54758ce..d2803b25 100644
 --- a/include/constants/abilities.h
@@ -29264,18 +29251,3 @@ index 00000000..112e14fc
 +        NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_10_000_000_VOLT_THUNDERBOLT, opponent); }
 +    }
 +}
-diff --git a/test/battle/move_animations/all_anims.c b/test/battle/move_animations/all_anims.c
-index 4396295c..edd6776f 100644
---- a/test/battle/move_animations/all_anims.c
-+++ b/test/battle/move_animations/all_anims.c
-@@ -4,8 +4,8 @@
- 
- // These tests are very heavy computationally. Only use them to review animation PRs.
- 
--#define ANIM_TEST_START_MOVE 1              //  First move to test
--#define ANIM_TEST_END_MOVE   MOVES_COUNT-1  //  Last move to test
-+#define ANIM_TEST_START_MOVE MOVE_TIDAL_RAMPAGE              //  First move to test
-+#define ANIM_TEST_END_MOVE   MOVE_TIDAL_RAMPAGE  //  Last move to test
- 
- static void ParametrizeMovesAndSpecies(u32 j, enum Move *pMove, enum Species *pSpecies, u32 variation)
- {
