@@ -148,9 +148,10 @@ file server works without special headers. Everything loads from `web/vendor/`.
 | Battle pacing: "X used Y!" prints in full, then a short beat, then the animation (the beats as they were before the faster engine); weather animations start as their message's last word prints, the Poké Ball throw and recall as "Go! X!" / "X, come back!" finish; Leftovers' message starts halfway through the healing sparkle and the HP bar fills while it prints; end-of-turn damage (poison, burn, frostbite, Curse, Nightmare, trapping moves, sandstorm and hail): its message, with the effect's animation starting as the last word prints, then the HP bar; ability pop-ups come up with their message, no pauses around them. A message that hands over early is never cut off: the next message, the next turn and the action menu wait until it has printed and been read. A and B don't hurry battle text | `GetEarlyStart`, `DailyRed_IsBattleTextHeld`, `Controller_WaitForHealSparkleHalf` in `src/battle_controllers.c`; `BattleScript_Attackstring` in `data/battle_scripts_1.s`; `canABSpeedUpPrint` in `src/battle_message.c`; each text printer reloads its own colours before drawing (`RunTextPrinters` in `src/text.c`) |
 | Shorter waits: the Snow weather's animation is about 1.75 s (was about 2.8 s; the Snowscape move keeps the long one), and its gust sound fades out half a second after the snowflakes finish (`AnimTask_FadeOutSoundEffects`) and weather messages don't pause before it; a switched-in Pokémon's cry no longer holds up the battle | `gBattleAnimGeneral_Snow` in `data/battle_anim_scripts.s`; `BtlController_HandleSwitchInSoundAndEnd` |
 | Frostbite replaces freeze (as in Legends: Arceus): 1/16 HP a turn, special attacks do half damage. Its animation is poison's (a shake and a glow) in light blue, with the freeze sounds. Ice Punch, Ice Beam, Blizzard, Ice Fang and Freezing Glare have a 20% chance of it (was 10% freeze); Freeze-Dry and Powder Snow keep 10%, Tri Attack keeps its 20% of burn, paralysis or frostbite | `B_USE_FROSTBITE` in `include/config/battle.h`; `src/data/moves_info.h`; `gBattleAnimStatus_Frostbite` in `data/battle_anim_scripts.s` |
-| Aurora Beam is 75 power with a 30% chance of frostbite (was 65, 10% Attack drop); Chilling Water is 70 power with a 30% chance of frostbite (was 50, sure Attack drop); Scald is 70 power (was 80) | `src/data/moves_info.h` |
+| Aurora Beam is 75 power with a 30% chance of frostbite (was 65, 10% Attack drop); Chilling Water is 60 power with a sure Attack drop and a 20% chance of frostbite (was 50, no frostbite); Scald is 70 power (was 80) | `src/data/moves_info.h` |
 | Sleep works as in Pokémon Champions: a sleeping Pokémon can't move on its first turn asleep, wakes on its second turn 1 time in 3, and always wakes on its third (Rest still sleeps 2 turns) | `B_SLEEP_TURNS` (`GEN_CHAMPIONS`) in `include/config/battle.h` |
 | Z-Moves and Max Moves into a Pokémon they don't affect (a type immunity, an absorbing ability) play no move animation, only the Z-Power one: the expansion's check for "no target affected" sat in the accuracy check, which Z-Moves and Max Moves skip | `CancelerAccuracyCheck` in `src/battle_move_resolution.c`; `test/battle/dailyred_zmove_immune.c` |
+| A Pokémon's first move after a turn where both sides switched works normally: the expansion marks a battler that leaves the field during a move (Eject Button, Red Card, U-turn) and only cleared the mark when a move ended, so after a plain switch with no move in between, that first move skipped Life Orb recoil, Shell Bell, Throat Spray, U-turn / Volt Switch's switch and similar. The mark is now cleared as each move starts | `HandleAction_UseMove` in `src/battle_util.c`; `test/battle/dailyred_switch_in_move.c` |
 | The move info window (L in the move list) draws its frame on palette 15: the standard window palette it used, 14, is the move list's, so the move and PP boxes turned white | `MoveSelectionDisplayMoveDescription` in `src/battle_controller_player.c`; `DAILYRED_MOVE_INFO_FRAME_PAL_NUM` in `include/dailyred.h` |
 | The Bag in battle has nothing in it: choosing it says "But there were no items to use...", and from the third try on "Would you say you're begging it?". Run gives the traditional "No! There's no running from a Trainer battle!" (the expansion's Gen 9 forfeit is off) | `DailyRed_GetBagSelectionScript` in `src/dailyred.c`, `B_ACTION_USE_ITEM` in `HandleTurnActionSelectionState` (`src/battle_main.c`); `B_RUN_TRAINER_BATTLE` in `include/config/battle.h` |
 | Test seed 1234567 (practice only, never a daily game), for trying out moves: your team is the six Kanto and Johto starters at level 100, each with its signature move (Typhlosion holds its Mega Stone), and RED has three level 100 Blissey that only know Splash | `DAILYRED_TEST_SEED` in `include/dailyred.h`; `sTestSeedTeam` in `src/dailyred_team.c`; `MakeTestSeedRedTeam` in `src/dailyred_red.c` |
@@ -284,9 +285,10 @@ right after RED's (his starter decides yours), from the seed:
 - **Sometimes another Pokémon Mega Evolves instead:** when one of your other
   five can Mega Evolve (Gengar, Gyarados, Aerodactyl, Mewtwo, Latias…), 25%
   of those days (`MEGA_SWAP_ODDS`) it gets one of its Mega's sets, holding
-  its Mega Stone (at its Mega's tier level), and your starter holds a
-  Z-Crystal instead (one of its Z-Move sets, the crystal for its strongest
-  STAB type). The Mega's types must still fit the type limit below.
+  its Mega Stone (at its Mega's tier level), and your starter gets, half the
+  time each, a Z-Crystal (one of its Z-Move sets, the crystal for its
+  strongest STAB type) or one of its plain sets (with its signature move
+  half the time). The Mega's types must still fit the type limit below.
 - **Five fully evolved Pokémon** from Daily Red's species scope (below), never
   holding a Mega Stone or a Z-Crystal. **Legendaries are a 20% roll**
   (`LEGENDARY_TEAM_ODDS`): 1 team in 5 has exactly one, the rest none. It's
@@ -415,17 +417,17 @@ included; not Hisuian Typhlosion). The engine side is in the expansion:
 |---|---|---|---|---|---|---|
 | Havoc Seed | Venusaur | Grass, special | 80 | 100 | Seeds the target with Leech Seed on a hit | After Hellzone Grenade: on Giga Drain's green background, six small Energy Balls are fired at the target, hold all around it, then crash into it at once (green explosions); then Leech Seed's seeds sprout on it |
 | Rapid Pulse | Blastoise | Water, special | 30 ×2–3 | 100 | Hits twice, and a third time 20% of the time (always with Skill Link or Loaded Dice); a pulse move, so Mega Launcher powers it up | Aurora Beam's rings, growing as Aurora Beam's do, in Water Pulse's blue, on a water background, water sounds; once per hit. The third hit's rings grow to twice the size, and there are more of them |
-| Burning Meteor | Charizard | Fire, physical or special by its higher attacking stat | 95 | 100 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2 (RED can't switch it out meanwhile: the expansion's switching AI didn't check for Sky Drop, `CanBattlerConsiderSwitch` in `src/battle_ai_switch.c`); 10% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red; the target reappears coming down with Charizard's sweep, and Charizard flies back in while the background clears |
+| Burning Meteor | Charizard | Fire, physical or special by its higher attacking stat | 95 | 100 | Sky Drop's two turns as a Fire move: takes the target up on turn 1 (it can't act), hits on turn 2 (RED can't switch it out meanwhile: the expansion's switching AI didn't check for Sky Drop, `CanBattlerConsiderSwitch` in `src/battle_ai_switch.c`); 20% burn; contact only when physical; unlike Sky Drop it hits Flying types, but like it, it can't lift a target of 200 kg or more | Turn 1: Flame Wheel's flames and a red glow, then Sky Drop's lift in red. Turn 2: the second half of Fusion Bolt, in red; the target reappears coming down with Charizard's sweep, and Charizard flies back in while the background clears |
 | Blight Petal | Meganium | Grass, special, both foes | 75 | 95 | 40% chance of poison, paralysis, sleep or frostbite (one at random) | Heat Wave in green, with tumbling petals instead of sand |
-| Pyroclastic | Typhlosion | Fire, status, both foes | — | 100 | Lowers the foes' accuracy by 1, then raises the user's Speed by 1 | It charges up glowing red, Eruption's red flash goes off with no rocks while it hops twice, then dark smoke covers the screen (Haze's fog, darkened) |
-| Tidal Rampage | Feraligatr | Water, physical, contact | 120 | 100 | Outrage as a Water move that ignores the target's ability (as Mold Breaker): the user rampages for exactly 2 turns (Outrage's is 2–3), then becomes confused | It charges up in a rage, glowing blue, with bubbles around it and Rage's anger marks; three quarters of the way through the charge Giga Impact's background comes in as it winds back as Take Down does, and when the charge ends it rushes in (a little faster than Take Down) and slams the target back; a punch, a claw (Crush Claw's two pairs of slashes) and a bite land on it in turn, and both reel back |
+| Pyroclastic | Typhlosion | Fire, special, both foes | 50 | 95 | 50% chance to lower each foe's accuracy by 1; always raises the user's Speed by 1 | It charges up glowing red, Eruption's red flash goes off with no rocks while it hops twice, then dark smoke covers the screen (Haze's fog, darkened) |
+| Tidal Rampage | Feraligatr | Water, physical, contact | 120 | 100 | Outrage as a Water move that ignores the target's ability (as Mold Breaker): the user rampages for exactly 2 turns (Outrage's is 2–3), then becomes confused | It charges up in a rage, glowing blue, with bubbles around it and Rage's anger marks; the background fades to Giga Impact's, coming in as, three quarters of the way through the charge, it winds back as Take Down does; and when the charge ends it rushes in (a little faster than Take Down) and slams the target back; a punch, a claw (Crush Claw's two pairs of slashes) and a bite land on it in turn, and both reel back |
 
 Changed moves:
 
 - **Leaf Blade** is physical or special by the user's higher attacking stat
   (like Photon Geyser), and makes contact only when physical.
 - **Blaze Kick:** 90 power (was 85), 95% accuracy (was 90%); 10% burn, as before.
-- **Muddy Water:** 90% accuracy (was 85%).
+- **Muddy Water:** 90% accuracy (was 85%), and physical or special by the user's higher attacking stat (it never makes contact).
 - These three are now the Gen 3 starters' own: only the Treecko, Torchic and
   Mudkip families learn them, plus Leafeon and Gallade (Leaf Blade),
   Hitmonlee and Galarian Zapdos (Blaze Kick), and Barboach, Whiscash, Wooper
@@ -452,21 +454,27 @@ claw and bite) in `src/dailyred_anims.c`; learnsets in `src/data/pokemon/level_u
 TESTS=test/battle/dailyred_signature_moves.c`).
 
 **In the sets** (`splitSignature` in `scripts/sets/generate.mjs`): every
-starter that Mega Evolves, the Gen 3 starters included (their signature moves
-are Leaf Blade, Blaze Kick and Muddy Water), knows its signature move in half
-of its Mega list, so on a day it Mega Evolves there's a 50% chance it has it.
-That goes for your starter and RED's (his Kanto starter, and the Mega one on
-original-team days). Its other lists (Z-Crystal, Tera) never get the new
-moves. Each Mega set without the move also comes as a copy with the move in
+starter (the Gen 3 starters included: their signature moves are Leaf Blade,
+Blaze Kick and Muddy Water; not Hisuian Typhlosion) always knows its
+signature move in its Mega, Z-Move and Tera lists, yours and RED's, and in
+half of its plain list (which your starter uses on half the days another of
+your Pokémon takes the Mega Evolution). A set without the move gets it in
 place of: Venusaur's special Grass attack, Blastoise's special Water attack,
 Charizard's Fire attack (either category: Burning Meteor follows its stats),
 Meganium's special Grass attack, Feraligatr's physical Water attack,
 Sceptile's Grass attack, Blaziken's physical Fire attack and Swampert's Water
-attack; Typhlosion's Pyroclastic takes Work Up's place, or Eruption's second
-Fire attack, or the sun set's Focus Blast. The two halves are then weighted
-to 50% each. When the move is of the other category than the set's nature
-favours (Mega Swampert's special Muddy Water on its Jolly sets), the nature
-keeps its boost but lowers a defence instead (Naive).
+attack (Leaf Blade and Muddy Water follow the stats too); Typhlosion's
+Pyroclastic takes Flame Charge's or Work Up's place, else Eruption's second
+Fire attack, and a Choice item becomes Life Orb (Pyroclastic is no move to be
+locked into). With no attack of the type, it takes the set's weakest attack.
+A special signature move never goes on a set whose nature is for physical
+attacks (Meganium's Swords Dance sets), nor a physical one the other way.
+Mega Charizard Y always has Air Slash (one Gen 7 Showdown set had Dragon
+Pulse instead: `SET_FIXES`).
+
+**Aurora Beam and Chilling Water** (`MOVE_SWAPS`): 30% of each set with Ice
+Beam whose species can learn Aurora Beam has Aurora Beam instead, and 30% of
+each set with Scald whose species can learn Chilling Water has Chilling Water.
 Sets of any other species with Leaf Blade, Blaze Kick or Muddy Water are left
 out; that leaves Virizion, Kartana, Hisuian Lilligant, Hisuian Decidueye,
 Bellibolt and Iron Leaves with no sets, none of which Daily Red uses.

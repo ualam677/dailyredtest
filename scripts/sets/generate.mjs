@@ -106,27 +106,28 @@ const Z_STARTERS = ['meganium', 'typhlosion', 'feraligatr', 'sceptile', 'blazike
 
 // Daily Red's signature moves: the Kanto and Johto starters' own (which
 // Showdown doesn't have) and the Gen 3 starters' Leaf Blade, Blaze Kick and
-// Muddy Water. A starter that Mega Evolves has its signature move in half of
-// its Mega list (yours and RED's: splitSignature), so on a Mega day there's a
-// 50% chance it knows it; its other lists (Z-Crystal, Tera...) never have the
-// new ones. A set gets the move in place of: one of `moves` if it has one,
-// otherwise its strongest attack of the same type, of `category` if it has
-// one (Burning Meteor and Leaf Blade follow the user's stats, so any). See
-// "Signature moves" in the README.
+// Muddy Water. A starter always knows its signature move in its Mega, Z-Move
+// and Tera lists (yours and RED's: splitSignature), and half the time in its
+// plain list (which yours uses half the time when another of your Pokémon
+// takes the Mega Evolution, src/dailyred_team.c). A set gets the
+// move in place of: one of `moves` if it has one, otherwise its strongest
+// attack of the same type, of `category` if it has one (Burning Meteor, Leaf
+// Blade and Muddy Water follow the user's stats, so any), otherwise its
+// weakest attack. See "Signature moves" in the README.
 const SIGNATURE_MOVES = {
   Venusaur: { id: 'havocseed', constant: 'MOVE_HAVOC_SEED', type: 'Grass', category: 'Special' },
   Blastoise: { id: 'rapidpulse', constant: 'MOVE_RAPID_PULSE', type: 'Water', category: 'Special' },
   Charizard: { id: 'burningmeteor', constant: 'MOVE_BURNING_METEOR', type: 'Fire' },
   Meganium: { id: 'blightpetal', constant: 'MOVE_BLIGHT_PETAL', type: 'Grass', category: 'Special' },
-  // A status move: in place of Work Up, or Eruption's second Fire attack, or
-  // the sun set's Focus Blast.
-  Typhlosion: { id: 'pyroclastic', constant: 'MOVE_PYROCLASTIC', moves: ['workup', 'fireblast', 'flamethrower', 'focusblast'] },
+  // A weak attack that raises Speed: in place of Flame Charge or Work Up,
+  // else Eruption's second Fire attack.
+  Typhlosion: { id: 'pyroclastic', constant: 'MOVE_PYROCLASTIC', moves: ['flamecharge', 'workup', 'flamethrower', 'fireblast'] },
   Feraligatr: { id: 'tidalrampage', constant: 'MOVE_TIDAL_RAMPAGE', type: 'Water', category: 'Physical' },
   Sceptile: { id: 'leafblade', type: 'Grass' },
   Blaziken: { id: 'blazekick', type: 'Fire', category: 'Physical' },
   Swampert: { id: 'muddywater', type: 'Water' },
 };
-const SIGNATURE_SHARE = 0.5; // of a starter's Mega list
+const SIGNATURE_SHARE = { NORMAL: 0.5, default: 1 }; // of a starter's list, by kind
 const SIGNATURE_CONSTANTS = new Map(Object.values(SIGNATURE_MOVES).filter((m) => m.constant).map((m) => [m.id, m.constant]));
 // The Gen 3 starters' moves that only their families (and these few) keep in
 // Daily Red; a set of anyone else's that has one is left out.
@@ -454,8 +455,12 @@ function signatureSet(dex, set) {
 // A canonical set with its species' signature move in place of one of its
 // moves (SIGNATURE_MOVES), or null if it has it already or has no slot for it.
 function signatureVariant(dex, set) {
-  const sig = SIGNATURE_MOVES[dex.species.get(set.species).baseSpecies];
+  const sig = signatureOf(dex, set.species);
   if (!sig || set.moves.includes(sig.id)) return null;
+  // A special signature move doesn't go on a set whose nature is for
+  // physical attacks (Meganium's Swords Dance sets), nor the other way round.
+  const plus = dex.natures.get(set.nature).plus;
+  if ((sig.category === 'Special' && plus === 'atk') || (sig.category === 'Physical' && plus === 'spa')) return null;
   let slot = -1;
   for (const id of sig.moves ?? []) {
     slot = set.moves.indexOf(id);
@@ -467,23 +472,80 @@ function signatureVariant(dex, set) {
     attacks.sort((a, b) => (b.move.category === sig.category) - (a.move.category === sig.category) || b.move.basePower - a.move.basePower);
     if (attacks.length) slot = attacks[0].i;
   }
+  if (slot < 0) {
+    // No attack of its type: in place of its weakest attack.
+    const attacks = set.moves.map((id, i) => ({ move: dex.moves.get(id), i }))
+      .filter(({ move }) => move.category !== 'Status')
+      .sort((a, b) => a.move.basePower - b.move.basePower);
+    if (attacks.length) slot = attacks[0].i;
+  }
   if (slot < 0) return null;
   const moves = [...set.moves];
   moves[slot] = sig.id;
-  // A signature move of the other category than the set's nature favours
-  // (Mega Swampert's special Muddy Water on its Jolly sets): keep the
-  // nature's boost but lower a defence instead of that attack.
-  const category = dex.moves.get(sig.id).exists ? dex.moves.get(sig.id).category : null;
+  // Pyroclastic is no move to be locked into: a Choice item becomes Life Orb.
+  const item = sig.id === 'pyroclastic' && /^Choice /.test(set.item) ? 'Life Orb' : set.item;
+  // A signature move of the other category than the set's nature favours:
+  // keep the nature's boost but lower a defence instead of that attack.
+  // (Burning Meteor, Leaf Blade and Muddy Water follow the user's stats.)
+  const category = sig.type && !sig.category ? null : dex.moves.get(sig.id).exists ? dex.moves.get(sig.id).category : null;
   const nature = (category === 'Special' && NATURE_KEEP_SPA[set.nature]) || (category === 'Physical' && NATURE_KEEP_ATK[set.nature]) || set.nature;
-  return { ...set, moves: moves.sort(), nature };
+  return { ...set, item, moves: moves.sort(), nature };
+}
+
+// A species' signature move (SIGNATURE_MOVES), by its base species; regional
+// formes (Hisuian Typhlosion) have none.
+function signatureOf(dex, speciesName) {
+  const species = dex.species.get(speciesName);
+  if (['Hisui', 'Alola', 'Galar', 'Paldea'].includes(species.forme)) return null;
+  return SIGNATURE_MOVES[species.baseSpecies] ?? null;
+}
+
+// Showdown sets Daily Red puts right: Mega Charizard Y always has Air Slash
+// (one Gen 7 set has Dragon Pulse in its place).
+const SET_FIXES = [
+  { item: 'Charizardite Y', needs: 'airslash', instead: ['dragonpulse'] },
+];
+function fixSet(dex, set) {
+  let moves = set.moves;
+  for (const fix of SET_FIXES) {
+    if (fix.item !== set.item || moves.includes(fix.needs)) continue;
+    const slot = moves.findIndex((m) => fix.instead.includes(m));
+    if (slot >= 0) moves = moves.map((m, i) => (i === slot ? fix.needs : m));
+  }
+  return moves === set.moves ? set : { ...set, moves };
 }
 const NATURE_KEEP_SPA = { Jolly: 'Naive', Adamant: 'Naughty', Impish: 'Lax', Careful: 'Rash' };
 const NATURE_KEEP_ATK = { Timid: 'Hasty', Modest: 'Mild', Bold: 'Lax', Calm: 'Gentle' };
 
-// A starter's Mega list, reweighted so the sets with its signature move add up
+// Daily Red's changed moves in some sets: of the sets with `from` whose
+// species can learn `to`, `share` of each gets `to` instead (Aurora Beam and
+// Chilling Water, now 75 power with 30% frostbite and 60 power with an
+// Attack drop and 10% frostbite).
+const MOVE_SWAPS = [
+  { from: 'icebeam', to: 'aurorabeam', share: 0.3 },
+  { from: 'scald', to: 'chillingwater', share: 0.3 },
+];
+function splitMoveSwaps(entries) {
+  const merged = new Map();
+  const add = (e, share) => {
+    const key = JSON.stringify(e.set);
+    if (!merged.has(key)) merged.set(key, { ...e, share: 0 });
+    merged.get(key).share += share;
+  };
+  for (const e of entries) {
+    const swap = MOVE_SWAPS.find((w) => e.set.moves.includes(w.from) && !e.set.moves.includes(w.to)
+      && canLearn(dexes.get(e.gen).species.get(e.set.species).name, w.to));
+    if (!swap) { add(e, e.share); continue; }
+    add(e, e.share * (1 - swap.share));
+    add({ ...e, set: { ...e.set, moves: e.set.moves.map((m) => (m === swap.from ? swap.to : m)).sort() } }, e.share * swap.share);
+  }
+  return [...merged.values()].sort((a, b) => b.share - a.share || (a.set.moves.join() < b.set.moves.join() ? -1 : 1));
+}
+
+// A starter's list, reweighted so the sets with its signature move add up
 // to SIGNATURE_SHARE: each set without it also comes with the move swapped in.
-function splitSignature(entries) {
-  const sigOf = (e) => SIGNATURE_MOVES[dexes.get(e.gen).species.get(e.set.species).baseSpecies];
+function splitSignature(entries, share) {
+  const sigOf = (e) => signatureOf(dexes.get(e.gen), e.set.species);
   if (!entries.length || !sigOf(entries[0])) return entries;
   const withSig = [];
   const without = [];
@@ -502,9 +564,9 @@ function splitSignature(entries) {
     if (!merged.has(key)) merged.set(key, { ...e, share: 0 });
     merged.get(key).share += share;
   };
-  for (const e of withSig) add(e, plainTotal ? (SIGNATURE_SHARE * e.share) / sigTotal : e.share / sigTotal);
-  for (const e of without) add(e, sigTotal ? ((1 - SIGNATURE_SHARE) * e.share) / plainTotal : e.share / plainTotal);
-  return [...merged.values()].sort((a, b) => b.share - a.share || (a.set.moves.join() < b.set.moves.join() ? -1 : 1));
+  for (const e of withSig) add(e, plainTotal ? (share * e.share) / sigTotal : e.share / sigTotal);
+  for (const e of without) add(e, sigTotal ? ((1 - share) * e.share) / plainTotal : e.share / plainTotal);
+  return [...merged.values()].filter((e) => e.share > 0).sort((a, b) => b.share - a.share || (a.set.moves.join() < b.set.moves.join() ? -1 : 1));
 }
 
 // Gimmick sets Daily Red leaves out (Showdown plays them, but they're odd in
@@ -685,6 +747,7 @@ function sampleSource(list, source) {
     if (list.forceZ) set = addZCrystal(dex, set);
     set = forcePikachu(dex, set, list);
     set = competitiveSpread(dex, set);
+    set = fixSet(dex, set);
     set = signatureSet(dex, set);
     if (!set) {
       dropped.set('a move only the Gen 3 starters (and a few others) keep', (dropped.get('a move only the Gen 3 starters (and a few others) keep') ?? 0) + 1);
@@ -744,7 +807,7 @@ for (const list of lists) {
     continue;
   }
   list.sets = [...merged.values()].sort((a, b) => b.share - a.share || (a.set.moves.join() < b.set.moves.join() ? -1 : 1));
-  if (list.kind === 'MEGA') list.sets = splitSignature(list.sets);
+  list.sets = splitSignature(splitMoveSwaps(list.sets), SIGNATURE_SHARE[list.kind] ?? SIGNATURE_SHARE.default);
   list.gens = [...new Set(sampled.map((r) => r.sets[0].gen))];
 }
 for (const id of leadSetsBySpecies.keys()) if (!leadsUsed.has(id)) problems.push(`lead sets for ${id}, which has no NORMAL list`);
