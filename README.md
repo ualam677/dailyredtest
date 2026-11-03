@@ -488,6 +488,11 @@ it instead of his entry in `src/data/trainers_frlg.party`. Every Pokémon gets
 one of its [Pokémon Showdown](https://pokemonshowdown.com) Random Battle sets
 (moves, item, ability, EVs, nature; see [Sets](#sets)) and perfect stats: all
 IVs maxed by hyper training (the real IVs keep Hidden Power's type).
+His recovery moves (Recover, Roost, Soft-Boiled, Slack Off, Milk Drink,
+Synthesis, Moonlight, Morning Sun, Shore Up, Wish, Rest, Strength Sap,
+Jungle Healing) have only 5 PP and no PP Ups (`LimitRecoveryPP` in
+`dailyred_red.c`); Healing Wish, Lunar Dance, Revival Blessing and draining
+attacks keep theirs.
 
 **Most days:**
 
