@@ -11043,10 +11043,10 @@ index 00000000..a8af713b
 +}
 diff --git a/src/dailyred_red.c b/src/dailyred_red.c
 new file mode 100644
-index 00000000..edecb805
+index 00000000..535d7aac
 --- /dev/null
 +++ b/src/dailyred_red.c
-@@ -0,0 +1,859 @@
+@@ -0,0 +1,895 @@
 +#include "global.h"
 +#include "dailyred.h"
 +#include "battle.h"
@@ -11641,12 +11641,48 @@ index 00000000..edecb805
 +    return TRAINER_MON_MALE;
 +}
 +
++// RED's recovery moves (Recover, Roost, Soft-Boiled, Synthesis, Wish, Rest,
++// Strength Sap...) have 5 PP. Not the healing moves that faint the user or
++// revive (Healing Wish, Lunar Dance, Revival Blessing), nor draining attacks.
++#define RED_RECOVERY_PP 5
++
++static bool32 IsRedRecoveryMove(u16 move)
++{
++    u32 effect = GetMoveEffect(move);
++
++    if (move == MOVE_STRENGTH_SAP)
++        return TRUE;
++    return IsHealingMove(move)
++        && GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS
++        && effect != EFFECT_HEALING_WISH
++        && effect != EFFECT_LUNAR_DANCE
++        && effect != EFFECT_REVIVAL_BLESSING;
++}
++
++static void LimitRecoveryPP(struct Pokemon *mon)
++{
++    u32 i, pp, bonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
++
++    for (i = 0; i < MAX_MON_MOVES; i++)
++    {
++        if (!IsRedRecoveryMove(GetMonData(mon, MON_DATA_MOVE1 + i)))
++            continue;
++        pp = GetMonData(mon, MON_DATA_PP1 + i);
++        if (pp > RED_RECOVERY_PP)
++            pp = RED_RECOVERY_PP;
++        SetMonData(mon, MON_DATA_PP1 + i, &pp);
++        bonuses &= ~gPPUpGetMask[i]; // no PP Ups, so nothing restores past 5
++    }
++    SetMonData(mon, MON_DATA_PP_BONUSES, &bonuses);
++}
++
 +static void CreateRedMon(struct Pokemon *mon, const struct RedMember *member, struct TrainerGenerator *trainerGen)
 +{
 +    struct DailyRedSet set = *member->set;
 +
 +    set.species = member->species; // a capped Pikachu
 +    DailyRed_CreateSetMon(mon, &set, member->level, GetRedGender(set.species), member->shiny, trainerGen);
++    LimitRecoveryPP(mon);
 +}
 +
 +static void BuildUsualTeam(struct RedTeam *team, u32 starter, u32 legendaryRoll, bool32 capPikachu, u32 *rng)
